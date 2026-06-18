@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/Crystaelix/Create-Simurail/issues"
+
+[[mods]]
+	modId = "simurail"
+	version = "0@VERSION@"
+	displayName = "Create Simurail"
+	description = "An experimental train mod."
+	logoFile = "simurail.logo.png"
+	authors = "TheLMiffy1111"
+	displayURL = "https://www.curseforge.com/minecraft/mc-mods/createsimurail"
+
+[[mixins]]
+	config = "simurail.mixins.json"
+
+[[dependencies.simurail]]
+	modId = "minecraft"
+	versionRange = "[1.21,1.21.2)"
+	type = "required"
+
+[[dependencies.simurail]]
+	modId = "sable"
+	versionRange = "[2,)"
+	type = "required"
+
+[[dependencies.simurail]]
+	modId = "simulated"
+	versionRange = "[1,)"
+	type = "required"

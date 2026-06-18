@@ -1,0 +1,819 @@
+package com.crystaelix.simurail.content.bogey;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.joml.Quaterniond;
+import org.joml.Vector3d;
+
+import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
+import com.crystaelix.simurail.api.math.Frame3d;
+import com.crystaelix.simurail.api.math.SimurailMath;
+import com.crystaelix.simurail.api.physics.AttachableBoxPhysicsObject;
+import com.crystaelix.simurail.api.physics.SimurailJoints;
+import com.crystaelix.simurail.config.SimurailConfig;
+import com.crystaelix.simurail.config.SimurailPhysicsConfig;
+import com.crystaelix.simurail.content.track.CurvedTrackSegment;
+import com.crystaelix.simurail.content.track.TrackSegment;
+import com.crystaelix.simurail.content.track.TrackSegmentHelper;
+import com.crystaelix.simurail.extension.SignalEdgeGroupExtension;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.trains.entity.TravellingPoint;
+import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.content.trains.graph.TrackEdge;
+import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackNode;
+import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
+import com.simibubi.create.content.trains.track.BezierConnection;
+
+import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.api.physics.constraint.ConstraintJointAxis;
+import dev.ryanhcode.sable.api.physics.constraint.FixedConstraintConfiguration;
+import dev.ryanhcode.sable.api.physics.constraint.FixedConstraintHandle;
+import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration;
+import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
+import dev.ryanhcode.sable.api.physics.force.ForceTotal;
+import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
+import dev.ryanhcode.sable.api.physics.mass.MassData;
+import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.companion.math.JOMLConversion;
+import dev.ryanhcode.sable.companion.math.Pose3d;
+import dev.ryanhcode.sable.companion.math.Pose3dc;
+import dev.ryanhcode.sable.mixinterface.clip_overwrite.ClipContextExtension;
+import dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyHelper;
+import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.createmod.catnip.data.Pair;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+
+public class PhysicsBogeyAxle {
+
+	public static final double ANGULAR_Y_LIMIT = Math.PI / 3;
+	public static final double ANGULAR_Z_LIMIT = Math.PI / 3;
+
+	protected final PhysicsBogeyBlockEntity bogey;
+	protected final boolean logicalFront;
+	protected final Frame3d axleFrame = new Frame3d();
+
+	protected final Vector3d lastOffset = new Vector3d();
+	protected final Vector3d targetOffset = new Vector3d();
+	protected double offsetTimer = 0;
+
+	protected TrackSegment trackSegment;
+	protected ServerSubLevel trackSubLevel;
+	protected Pose3dc trackSubLevelPose;
+
+	protected TrackGraph trackGraph;
+	protected TravellingPoint trackPoint = new TravellingPoint();
+	protected TravellingPoint probe = new TravellingPoint();
+
+	protected GenericConstraintHandle joint;
+	protected boolean yFixed = false;
+	protected boolean zFixed = false;
+	protected double yFixedTimer = 0;
+	protected double zFixedTimer = 0;
+	protected double speed;
+	protected double visualSpeed;
+	protected double trackRecheckTime = 0.5;
+
+	protected AttachableBoxPhysicsObject axleBox;
+	protected FixedConstraintHandle axleBoxJoint;
+
+	protected double kLateral;
+	protected double kVertical;
+
+	public PhysicsBogeyAxle(PhysicsBogeyBlockEntity bogey, boolean logicalFront) {
+		this.bogey = bogey;
+		this.logicalFront = logicalFront;
+	}
+
+	protected void init(ServerSubLevel subLevel) {
+		double axleOffset = bogey.options.type.axleSpacing() / 2;
+		targetOffset.set(
+				(logicalFront ? axleOffset : -axleOffset),
+				(bogey.isInverted() ? 0.5 : -1.5),
+				0);
+		if(offsetTimer > 0) {
+			targetOffset.lerp(lastOffset, offsetTimer, axleFrame.position);
+		}
+		else {
+			axleFrame.position.set(targetOffset);
+		}
+		if(trackSegment == null) {
+			trackRecheckTime = 0.05;
+		}
+		updateTrack(subLevel, 0);
+	}
+
+	protected void setOptions() {
+		lastOffset.set(axleFrame.position);
+		double axleOffset = bogey.options.type.axleSpacing() / 2;
+		targetOffset.set(
+				(logicalFront ? axleOffset : -axleOffset),
+				(bogey.isInverted() ? 0.5 : -1.5),
+				0);
+		offsetTimer = 1;
+		trackRecheckTime = 0.05;
+	}
+
+	protected void updateSpeedDecay() {
+		visualSpeed = visualSpeed * 0.95;
+	}
+
+	protected void updateSignalGroup() {
+		if(trackGraph != null && trackPoint.edge != null) {
+			UUID signalGroupId = trackPoint.edge.getEdgeData().getGroupAtPosition(trackGraph, trackPoint.position);
+			if(signalGroupId != null) {
+				SignalEdgeGroup signalGroup = Create.RAILWAYS.signalEdgeGroups.get(signalGroupId);
+				if(signalGroup != null) {
+					((SignalEdgeGroupExtension)signalGroup).simurail$queueBogey(bogey);
+				}
+			}
+		}
+	}
+
+	protected void updateOffset(ServerSubLevel subLevel, double timeStep) {
+		if(offsetTimer > 0) {
+			offsetTimer -= timeStep / SimurailConfig.SERVER.physics.axleSpacingUpdateTime.get();
+			if(offsetTimer > 0) {
+				targetOffset.lerp(lastOffset, offsetTimer, axleFrame.position);
+			}
+			else {
+				offsetTimer = 0;
+				axleFrame.position.set(targetOffset);
+			}
+		}
+	}
+
+	protected void updateTrack(ServerSubLevel subLevel, double timeStep) {
+		trackRecheckTime -= timeStep;
+
+		ServerLevel level = subLevel.getLevel();
+		axleFrame.transform(bogey.pivotPose, globalAxleFrame);
+		globalAxleFrame.transformInverse(subLevel.logicalPose(), bogeyAxleFrame);
+
+		t:if(trackSegment != null) {
+			trackSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, trackSegment.start());
+			trackSubLevelPose = trackSubLevel == null ? SimurailMath.POSE_I : trackSubLevel.logicalPose();
+			globalAxleFrame.transformInverse(trackSubLevelPose, trackAxleFrame);
+
+			boolean inverted = bogey.isInverted();
+			if(!trackSegment.inSegmentRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
+				// No longer on track segment
+				double t = trackSegment.projectT(trackAxleFrame.position);
+				if(trackSegment instanceof CurvedTrackSegment curve) {
+					CurvedTrackSegment nextSegment = curve.next(t < 0.5);
+					while(nextSegment != null) {
+						if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
+							break;
+						}
+						if(nextSegment.inProjectionRange(trackAxleFrame.position, trackAxleFrame.vertical)) {
+							trackSegment = nextSegment;
+							trackRecheckTime = SimurailConfig.SERVER.physics.axleTrackRecheckTime.get();
+							bogey.setChanged();
+							break t;
+						}
+						else {
+							nextSegment = nextSegment.next(t < 0.5);
+						}
+					}
+				}
+
+				updateGraph(false);
+				if(trackGraph != null) {
+					resetProbe(trackPoint);
+					probe.position = t < 0.5 ? 0.05 : probe.edge.getLength() - 0.05;
+					probe.travel(trackGraph, t < 0.5 ? -0.1 : 0.1,
+							followOrSteer(probe),
+							probe.ignoreEdgePoints(),
+							probe.ignoreTurns(),
+							$ -> true);
+					if(!probe.blocked) {
+						TrackSegment nextSegment = TrackSegmentHelper.fromTrackEdge(probe.edge, t < 0.5);
+						while(nextSegment != null) {
+							if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
+								break;
+							}
+							if(nextSegment.inProjectionRange(trackAxleFrame.position, trackAxleFrame.vertical)) {
+								trackSegment = nextSegment;
+								trackRecheckTime = SimurailConfig.SERVER.physics.axleTrackRecheckTime.get();
+								bogey.setChanged();
+								break t;
+							}
+							else if(nextSegment instanceof CurvedTrackSegment curve) {
+								nextSegment = curve.next(t < 0.5);
+							}
+							else {
+								break;
+							}
+						}
+					}
+				}
+
+				findTrack(subLevel);
+			}
+		}
+
+		if(trackRecheckTime <= 0) {
+			findTrack(subLevel);
+		}
+
+		if(!bogey.options.enabled) {
+			yFixed = zFixed = false;
+			yFixedTimer = zFixedTimer = 0;
+		}
+
+		RigidBodyHandle.of(subLevel.getLevel(), bogey.pivot).getLinearVelocity(globalAxleVel);
+
+		if(trackSegment != null) {
+			ServerSubLevel newTrackSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, trackSegment.start());
+			if(trackSubLevel != newTrackSubLevel) {
+				removeJoint();
+				trackSubLevel = newTrackSubLevel;
+			}
+			trackSubLevelPose = trackSubLevel == null ? SimurailMath.POSE_I : trackSubLevel.logicalPose();
+			globalAxleFrame.transformInverse(trackSubLevelPose, trackAxleFrame);
+
+			double t = trackSegment.projectT(trackAxleFrame.position);
+			trackSegment.frame(t, trackFrame);
+			if(trackAxleFrame.direction.dot(trackFrame.direction) < 0) {
+				trackFrame.direction.negate();
+				trackFrame.lateral.negate();
+			}
+			trackFrame.transform(trackSubLevelPose, globalTrackFrame);
+			globalTrackFrame.transformInverse(subLevel.logicalPose(), bogeyTrackFrame);
+
+			Sable.HELPER.getVelocity(subLevel.getLevel(), trackAxleFrame.position, globalTrackVel);
+			globalAxleVel.sub(globalTrackVel, globalRelVel);
+			subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
+			speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
+		}
+		else {
+			yFixed = zFixed = false;
+			yFixedTimer = zFixedTimer = 0;
+			removeJoint();
+			globalTrackFrame.set(globalAxleFrame);
+		}
+		globalTrackFrame.orientation(globalTrackRot);
+		updateGraph(true);
+	}
+
+	protected void updateGraph(boolean updatePosition) {
+		TrackEdge trackEdge = null;
+
+		if(trackSegment == null) {
+			trackGraph = null;
+		}
+		else {
+			if(trackGraph != null) {
+				trackEdge = trackSegment.graphEdge(trackGraph);
+				if(trackEdge == null) {
+					// Graph changed
+					trackGraph = null;
+				}
+			}
+			if(trackGraph == null) {
+				Pair<TrackGraph, TrackEdge> connection = trackSegment.graphConnection();
+				if(connection != null) {
+					trackGraph = connection.getFirst();
+					trackEdge = connection.getSecond();
+				}
+			}
+		}
+
+		if(trackEdge == null) {
+			trackPoint.node1 = null;
+			trackPoint.node2 = null;
+			trackPoint.edge = null;
+			trackPoint.position = 0;
+		}
+		else {
+			trackPoint.node1 = trackEdge.node1;
+			trackPoint.node2 = trackEdge.node2;
+			trackPoint.edge = trackEdge;
+			if(updatePosition) {
+				double t = Math.clamp(trackSegment.projectT(trackAxleFrame.position), 0, 1);
+				if(trackSegment instanceof CurvedTrackSegment curve) {
+					BezierConnection connection = curve.curve();
+					double graphLength = connection.getLength();
+					double quadratureLength = ((BezierConnectionExtension)connection).simurail$quadratureLength();
+					double quadraturePos = SimurailMath.bezierLength(connection, 0, curve.curveT(t));
+					trackPoint.position = graphLength / quadratureLength * quadraturePos;
+				}
+				else {
+					trackPoint.position = trackSegment.length() * t;
+				}
+			}
+			else {
+				trackPoint.position = 0;
+			}
+		}
+	}
+
+	protected void updateJoint(ServerSubLevel subLevel) {
+		if(!bogey.options.enabled || trackSegment == null) {
+			removeJoint();
+			return;
+		}
+
+		PhysicsBogeyAxle other = other();
+		if(other.trackSegment != null) {
+			globalTrackRot.nlerp(other().globalTrackRot, 0.5, globalTrackJointRot);
+		}
+		else {
+			globalTrackJointRot.set(globalTrackRot);
+		}
+		trackSubLevelPose.orientation().conjugate(trackJointRot).mul(globalTrackJointRot);
+		if(joint == null || !joint.isValid()) {
+			removeJoint();
+			SimurailPhysicsConfig config = SimurailConfig.SERVER.physics;
+			SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+			double linearDamping = config.axlePassiveLinearDamping.get();
+			double angularDamping = config.axlePassiveAngularDamping.get();
+			GenericConstraintConfiguration jointConfig = SimurailJoints.railJoint(
+					trackFrame.position, axleFrame.position,
+					trackJointRot, SimurailMath.ROT_I);
+			joint = physics.getPipeline().addConstraint(trackSubLevel, bogey.pivot, jointConfig);
+			joint.setContactsEnabled(false);
+			joint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, linearDamping, false, 0);
+			joint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, linearDamping, false, 0);
+			joint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, 0, angularDamping, false, 0);
+			joint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, angularDamping, false, 0);
+			joint.setLimit(ConstraintJointAxis.ANGULAR_Y, -ANGULAR_Y_LIMIT, ANGULAR_Y_LIMIT);
+			joint.setLimit(ConstraintJointAxis.ANGULAR_Z, -ANGULAR_Z_LIMIT, ANGULAR_Z_LIMIT);
+		}
+		else {
+			joint.setFrame1(trackFrame.position, trackJointRot);
+		}
+	}
+
+	protected void updateLimits(ServerSubLevel subLevel, double timeStep) {
+		if(trackSegment != null) {
+			kLateral = Math.abs(globalTrackCurvature.dot(globalAxleFrame.lateral));
+			kVertical = globalTrackCurvature.dot(globalAxleFrame.vertical);
+		}
+		else {
+			kLateral = 0;
+			kVertical = 0;
+		}
+
+		if(!bogey.options.enabled || trackSegment == null) {
+			removeJoint();
+			return;
+		}
+
+		SimurailPhysicsConfig config = SimurailConfig.SERVER.physics;
+
+		double yLimit = 0;
+		double zLimit = 0;
+
+		if(!yFixed) {
+			double yDist = SimurailMath.projectTLinePoint(trackFrame.position, trackFrame.vertical, trackAxleFrame.position);
+			yLimit = Math.max(Math.abs(yDist) - 0.5 * timeStep, 0);
+			yFixedTimer += timeStep;
+			yFixed = yLimit < 0.5 * timeStep || !bogey.options.allowVerticalMovement && yFixedTimer > 10 || yFixedTimer > 100;
+		}
+
+		if(!zFixed) {
+			double zDist = SimurailMath.projectTLinePoint(trackFrame.position, trackFrame.lateral, trackAxleFrame.position);
+			zLimit = Math.max(Math.abs(zDist) - 0.5 * timeStep, 0);
+			zFixedTimer += timeStep;
+			zFixed = zLimit < 0.5 * timeStep || zFixedTimer > 10;
+		}
+
+		double t = trackSegment.projectT(trackAxleFrame.position);
+		trackSubLevelPose.transformNormal(trackSegment.curvature(t, globalTrackCurvature));
+		double speedSq = speed * speed;
+		boolean checkVertical = bogey.isInverted() || !bogey.options.allowVerticalMovement;
+
+		if(kLateral > SimurailMath.EPSILON) {
+			double lateralMaxSpeedFactor = config.axleLateralMaxSpeedFactor.get();
+			double maxSpeedSq = lateralMaxSpeedFactor / kLateral;
+			if(speedSq > maxSpeedSq) {
+				zLimit = Float.MAX_VALUE;
+			}
+		}
+
+		if(checkVertical) {
+			if(Math.abs(kVertical) > SimurailMath.EPSILON && (bogey.isInverted() ? kVertical > 0 : kVertical < 0)) {
+				double verticalMaxSpeedFactor = config.axleVerticalMaxSpeedFactor.get();
+				double maxSpeedSq = verticalMaxSpeedFactor / Math.abs(kVertical);
+				if(speedSq > maxSpeedSq) {
+					yLimit = Float.MAX_VALUE;
+				}
+			}
+		}
+
+		if(checkVertical) {
+			joint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
+		}
+		else {
+			joint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Float.MAX_VALUE);
+		}
+
+		joint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);
+	}
+
+	protected void updateForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+		if(!bogey.options.enabled) {
+			removeJoint();
+			return;
+		}
+		if(trackSegment != null) {
+			removeAxleBox(subLevel);
+			updateTrackForces(subLevel, handle, timeStep);
+		}
+		else {
+			updateWorldForces(subLevel, handle, timeStep);
+		}
+	}
+
+	protected void updateTrackForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+		if(!bogey.options.enabled || trackSegment == null) {
+			removeJoint();
+			return;
+		}
+
+		SimurailPhysicsConfig config = SimurailConfig.SERVER.physics;
+		MassData massData = subLevel.getMassTracker();
+		queuedForce.zero();
+
+		{
+			double normalMass = 1 / massData.getInverseNormalMass(bogeyTrackFrame.position, bogeyTrackFrame.direction);
+			double friction = 1; // do we want to implement this?
+
+			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
+			double brakeStrength = bogey.getBrakeStrength();
+			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
+
+			double targetSpeedFactor = config.axleTargetSpeedFactor.get();
+			double targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
+			double targetSign = Math.signum(targetSpeed);
+			double diffSpeed = targetSpeed - speed;
+			double diffSign = Math.signum(diffSpeed);
+			double driveForce = 0;
+
+			if(targetSign == diffSign) {
+				double stress = bogey.calculateStressApplied();
+				double driveForceMultiplier = config.axleDriveForceFactor.get();
+				double driveMag = Math.min(Math.abs(diffSpeed), Math.abs(targetSpeed)) * stress * driveForceMultiplier;
+				driveForce = diffSign * driveMag * Math.clamp(friction, 0.05, 1);
+			}
+
+			queuedForce.fma((driveForce - brakeForce) * timeStep, bogeyTrackFrame.direction);
+
+			if(friction < 1) {
+				visualSpeed = Mth.lerp(friction, targetSpeed, speed);
+			}
+			else {
+				visualSpeed = speed;
+			}
+		}
+
+		handle.applyImpulseAtPoint(bogeyTrackFrame.position, queuedForce);
+
+		if(trackSubLevel != null) {
+			subLevel.logicalPose().transformNormal(queuedForce);
+			trackSubLevelPose.transformNormalInverse(queuedForce);
+			queuedForce.negate();
+			RigidBodyHandle.of(trackSubLevel).applyImpulseAtPoint(trackFrame.position, queuedForce);
+		}
+	}
+
+	protected void updateWorldForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+		if(!bogey.options.enabled || trackSegment != null || !bogey.options.type.groundDrivable()) {
+			return;
+		}
+		// TODO check if we want to move wheels out of ground
+		//createAxleBox(subLevel);
+
+		ServerLevel level = subLevel.getLevel();
+		Vec3 clipStart = bogey.pivotPose.transformPosition(new Vec3(axleFrame.position.x, axleFrame.position.y + 0.5, axleFrame.position.z));
+		Vec3 clipEnd = JOMLConversion.toMojang(globalAxleFrame.position);
+		ClipContext clipContext = new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
+		((ClipContextExtension)clipContext).sable$setIgnoredSubLevel(subLevel);
+		BlockHitResult clipResult = level.clip(clipContext);
+
+		SimurailPhysicsConfig config = SimurailConfig.SERVER.physics;
+		double targetSpeedFactor = config.axleTargetSpeedFactor.get();
+		double targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
+
+		if(clipResult.getType() == HitResult.Type.MISS) {
+			if(targetSpeed != 0) {
+				visualSpeed = targetSpeed;
+			}
+			return;
+		}
+
+		JOMLConversion.toJOML(clipResult.getLocation(), hitPos);
+		ServerSubLevel hitSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, hitPos);
+		Pose3dc hitSubLevelPose = hitSubLevel == null ? SimurailMath.POSE_I : hitSubLevel.logicalPose();
+
+		Sable.HELPER.getVelocity(level, hitPos, globalHitVel);
+		globalAxleVel.sub(globalHitVel, globalRelVel);
+		subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
+		speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
+
+		MassData massData = subLevel.getMassTracker();
+		queuedForce.zero();
+
+		{
+			double normalMass = 1 / massData.getInverseNormalMass(bogeyAxleFrame.position, bogeyAxleFrame.direction);
+			double friction = PhysicsBlockPropertyHelper.getFriction(level.getBlockState(clipResult.getBlockPos())) * 0.5;
+
+			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
+			double brakeStrength = bogey.getBrakeStrength();
+			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
+
+			double targetSign = Math.signum(targetSpeed);
+			double diffSpeed = targetSpeed - speed;
+			double diffSign = Math.signum(diffSpeed);
+			double driveForce = 0;
+
+			if(targetSign == diffSign) {
+				double stress = bogey.calculateStressApplied();
+				double driveForceMultiplier = config.axleDriveForceFactor.get();
+				double driveMag = Math.min(Math.abs(diffSpeed), Math.abs(targetSpeed)) * stress * driveForceMultiplier;
+				driveForce = diffSign * driveMag * Math.clamp(friction, 0.05, 1);
+			}
+
+			queuedForce.fma((driveForce - brakeForce) * timeStep, bogeyAxleFrame.direction);
+
+			if(friction < 1) {
+				visualSpeed = Mth.lerp(friction, targetSpeed, speed);
+			}
+			else {
+				visualSpeed = speed;
+			}
+		}
+
+		handle.applyImpulseAtPoint(bogeyAxleFrame.position, queuedForce);
+
+		if(hitSubLevel != null) {
+			subLevel.logicalPose().transformNormal(queuedForce);
+			hitSubLevelPose.transformNormalInverse(queuedForce);
+			queuedForce.negate();
+			RigidBodyHandle.of(hitSubLevel).applyImpulseAtPoint(hitPos, queuedForce);
+		}
+	}
+
+	protected void findTrack(ServerSubLevel subLevel) {
+		Pose3dc pivotPose = bogey.pivotPose;
+		axleFrame.transform(pivotPose, globalAxleFrame);
+		trackSegment = TrackSegmentHelper.findTrackSegment(subLevel.getLevel(), subLevel, globalAxleFrame.position, globalAxleFrame.direction, globalAxleFrame.vertical, bogey.isInverted(), bogey.options.type.trackTypes());
+		if(trackSegment != null) {
+			trackRecheckTime = SimurailConfig.SERVER.physics.axleTrackRecheckTime.get();
+		}
+		else {
+			trackRecheckTime = SimurailConfig.SERVER.physics.axleTrackCheckTime.get();
+		}
+		bogey.setChanged();
+	}
+
+	protected void resetProbe(TravellingPoint point) {
+		probe.node1 = point.node1;
+		probe.node2 = point.node2;
+		probe.edge = point.edge;
+		probe.position = point.position;
+	}
+
+	protected void removeJoint() {
+		if(joint != null) {
+			joint.remove();
+			joint = null;
+		}
+	}
+
+	protected void createAxleBox(ServerSubLevel subLevel) {
+		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+		Quaterniond rot = SimurailMath.rot(new Vector3d(1, 1, 0), new Vector3d(-1, 1, 0), new Quaterniond());
+		if(axleBox == null || axleBox.isRemoved()) {
+			Pose3d axleBoxPose = new Pose3d();
+			axleBoxPose.position().set(globalAxleFrame.position);
+			axleBoxPose.orientation().set(bogey.pivotPose.orientation()).mul(rot);
+			axleBox = new AttachableBoxPhysicsObject(subLevel, axleBoxPose, new Vector3d(Math.sqrt(0.5) * 0.0625, Math.sqrt(0.5) * 0.0625, 0.5), 0);
+			physics.addObject(axleBox);
+		}
+		if(axleBoxJoint == null || !axleBoxJoint.isValid()) {
+			FixedConstraintConfiguration jointConfig = new FixedConstraintConfiguration(axleFrame.position, new Vector3d(0, -0.3125, 0), rot);
+			axleBoxJoint = physics.getPipeline().addConstraint(bogey.pivot, axleBox, jointConfig);
+			axleBoxJoint.setContactsEnabled(false);
+		}
+	}
+
+	protected void removeAxleBox(ServerSubLevel subLevel) {
+		if(axleBoxJoint != null) {
+			axleBoxJoint.remove();
+			axleBoxJoint = null;
+		}
+		if(axleBox != null) {
+			SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+			physics.removeObject(axleBox);
+			axleBox = null;
+		}
+	}
+
+	protected void invalidate(ServerSubLevel subLevel) {
+		trackSegment = null;
+		trackGraph = null;
+		removeJoint();
+		removeAxleBox(subLevel);
+	}
+
+	protected ITrackSelector followOrSteer(TravellingPoint point) {
+		return (graph, pair) -> {
+			PhysicsBogeyAxle followingAxle = null;
+			TravellingPoint nextPoint = null;
+			if(isCurrentFront()) {
+				PhysicsBogeyBlockEntity nextBogey = bogey.getConnected(logicalFront);
+				if(nextBogey != null) {
+					followingAxle = nextBogey.getAxle(!bogey.getConnectedToFront(logicalFront));
+				}
+			}
+			else {
+				followingAxle = other();
+			}
+			if(followingAxle != null && followingAxle.trackGraph == graph) {
+				nextPoint = followingAxle.trackPoint;
+			}
+			if(nextPoint == null || nextPoint.edge == null) {
+				return steer(point).apply(graph, pair);
+			}
+			else {
+				MutableBoolean flag = new MutableBoolean(false);
+				Map.Entry<TrackNode, TrackEdge> result = follow(nextPoint, flag::setValue).apply(graph, pair);
+				if(flag.booleanValue()) {
+					return result;
+				}
+				else {
+					return steer(point).apply(graph, pair);
+				}
+			}
+		};
+	}
+
+	protected ITrackSelector steer(TravellingPoint point) {
+		return (graph, pair) -> {
+			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
+			double closest = -Double.MAX_VALUE;
+			Map.Entry<TrackNode, TrackEdge> best = null;
+
+			boolean forward = pair.getFirst();
+			double steerValue = bogey.getSteerValue();
+			Vector3d trackDir = JOMLConversion.toJOML(point.edge.getDirection(!forward));
+			boolean aligned = trackAxleFrame.direction.dot(trackDir) > 0;
+			Vector3d trackLat = trackDir.mul(aligned ? 1 : -1, new Vector3d()).cross(0, 1, 0).normalize();
+
+			Vector3d steerTarget = new Vector3d();
+			steerTarget.fma(forward ? 1 : -1, trackDir);
+			steerTarget.fma(steerValue, trackLat);
+
+			Vector3d checkDir = new Vector3d();
+
+			for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {
+				TrackEdge edge = entry.getValue();
+				Vec3 p1 = edge.getPosition(null, 0);
+				Vec3 p2 = edge.getPosition(null, 1);
+				checkDir.set(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z).normalize();
+				double dot = steerTarget.dot(checkDir);
+				if(dot > closest) {
+					closest = dot;
+					best = entry;
+				}
+			}
+			if(best == null) {
+				return validTargets.get(0);
+			}
+			return best;
+		};
+	}
+
+	protected ITrackSelector follow(TravellingPoint other, BooleanConsumer success) {
+		return (graph, pair) -> {
+			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
+			for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {
+				if(entry.getKey() == other.node1 || entry.getKey() == other.node2) {
+					if(success != null) {
+						success.accept(true);
+					}
+					return entry;
+				}
+			}
+
+			List<List<Map.Entry<TrackNode, TrackEdge>>> frontiers = new ArrayList<>(validTargets.size());
+			List<Set<TrackEdge>> visiteds = new ArrayList<>(validTargets.size());
+
+			for(Map.Entry<TrackNode, TrackEdge> validTarget : validTargets) {
+				List<Map.Entry<TrackNode, TrackEdge>> e = new ArrayList<>();
+				e.add(validTarget);
+				frontiers.add(e);
+				Set<TrackEdge> e2 = new HashSet<>();
+				e2.add(validTarget.getValue());
+				visiteds.add(e2);
+			}
+
+			for(int i = 0; i < 20; i++) {
+				for(int j = 0; j < validTargets.size(); j++) {
+					Map.Entry<TrackNode, TrackEdge> entry = validTargets.get(j);
+					List<Map.Entry<TrackNode, TrackEdge>> frontier = frontiers.get(j);
+					if(frontier.isEmpty()) {
+						continue;
+					}
+					Map.Entry<TrackNode, TrackEdge> currentEntry = frontier.remove(0);
+					for(Map.Entry<TrackNode, TrackEdge> nextEntry : graph.getConnectionsFrom(currentEntry.getKey()).entrySet()) {
+						TrackEdge nextEdge = nextEntry.getValue();
+						if(!visiteds.get(j).add(nextEdge)) {
+							continue;
+						}
+						if(!currentEntry.getValue().canTravelTo(nextEdge)) {
+							continue;
+						}
+						TrackNode nextNode = nextEntry.getKey();
+						if(nextNode == other.node1 || nextNode == other.node2) {
+							if(success != null) {
+								success.accept(true);
+							}
+							return entry;
+						}
+						frontier.add(nextEntry);
+					}
+				}
+			}
+
+			if(success != null) {
+				success.accept(false);
+			}
+
+			return validTargets.get(0);
+		};
+	}
+
+	protected boolean isCurrentFront() {
+		return logicalFront && speed > 0 || !logicalFront && speed < 0;
+	}
+
+	protected PhysicsBogeyAxle other() {
+		return this == bogey.axleFront ? bogey.axleBack : bogey.axleFront;
+	}
+
+	public boolean hasTrack() {
+		return trackSegment != null;
+	}
+
+	protected CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		if(trackSegment != null) {
+			tag.put("segment", trackSegment.write());
+		}
+		tag.putBoolean("y_fixed", yFixed);
+		tag.putBoolean("z_fixed", zFixed);
+		return tag;
+	}
+
+	protected void read(CompoundTag tag) {
+		if(tag.contains("segment")) {
+			trackSegment = TrackSegment.read(tag.getCompound("segment"));
+		}
+		yFixed = tag.getBoolean("y_fixed");
+		zFixed = tag.getBoolean("z_fixed");
+	}
+
+	// Mutable physics fields
+	protected final Frame3d globalAxleFrame = new Frame3d();
+	protected final Frame3d bogeyAxleFrame = new Frame3d();
+	protected final Frame3d trackAxleFrame = new Frame3d();
+
+	protected final Frame3d trackFrame = new Frame3d();
+	protected final Frame3d globalTrackFrame = new Frame3d();
+	protected final Frame3d bogeyTrackFrame = new Frame3d();
+	protected final Quaterniond globalTrackRot = new Quaterniond();
+
+	protected final Vector3d hitPos = new Vector3d();
+
+	protected final Quaterniond globalTrackJointRot = new Quaterniond();
+	protected final Quaterniond trackJointRot = new Quaterniond();
+
+	protected final Vector3d globalTrackCurvature = new Vector3d();
+
+	protected final ForceTotal forceTotal = new ForceTotal();
+	protected final Vector3d queuedForce = new Vector3d();
+
+	protected final Vector3d globalAxleVel = new Vector3d();
+	protected final Vector3d globalTrackVel = new Vector3d();
+	protected final Vector3d globalHitVel = new Vector3d();
+	protected final Vector3d globalRelVel = new Vector3d();
+	protected final Vector3d bogeyRelVel = new Vector3d();
+}

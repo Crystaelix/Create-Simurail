@@ -1,0 +1,22 @@
+{
+	"parent": "block/block",
+	"render_type": "solid",
+	"textures": {
+		"particle": "create:block/industrial_iron_block",
+		"coupler": "simurail:block/coupler/automatic/block"
+	},
+	"elements": [
+		{
+			"from": [5, 5, 14],
+			"to": [11, 11, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 6, 6], "rotation": 180, "texture": "#coupler"},
+				"east": {"uv": [0, 6, 6, 8], "rotation": 270, "texture": "#coupler"},
+				"south": {"uv": [6, 0, 12, 6], "rotation": 180, "texture": "#coupler", "cullface": "south"},
+				"west": {"uv": [0, 6, 6, 8], "rotation": 90, "texture": "#coupler"},
+				"up": {"uv": [0, 6, 6, 8], "rotation": 180, "texture": "#coupler"},
+				"down": {"uv": [0, 6, 6, 8], "texture": "#coupler"}
+			}
+		}
+	]
+}

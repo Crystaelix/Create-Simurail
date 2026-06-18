@@ -1,0 +1,8 @@
+{
+	"loader": "neoforge:obj",
+	"model": "simurail:models/block/coupler/automatic/shibata.obj",
+	"flip_v": true,
+	"textures": {
+		"head": "simurail:block/coupler/automatic/shibata"
+	}
+}

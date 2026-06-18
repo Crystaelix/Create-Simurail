@@ -1,0 +1,20 @@
+{
+	"required": true,
+	"package": "com.crystaelix.simurail.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"plugin": "com.crystaelix.simurail.mixin.SimurailMixinPlugin",
+	"mixins": [
+		"BogeyStyleAccessor",
+
+		"BezierConnectionMixin",
+		"GlobalRailwayManagerMixin",
+		"SignalEdgeGroupMixin",
+		"TrackBlockMixin",
+		"TrackBlockEntityMixin",
+
+		"compat.electroenergetics.PhysicsBogeyBlockMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

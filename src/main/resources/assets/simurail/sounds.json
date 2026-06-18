@@ -1,0 +1,20 @@
+{
+	"block.coupler.connect": {
+		"sounds": [
+			{
+				"type": "event",
+				"name": "block.copper_trapdoor.close"
+			}
+		],
+		"subtitle": "subtitles.simurail.block.coupler.connect"
+	},
+	"block.coupler.disconnect": {
+		"sounds": [
+			{
+				"type": "event",
+				"name": "block.iron_trapdoor.open"
+			}
+		],
+		"subtitle": "subtitles.simurail.block.coupler.disconnect"
+	}
+}

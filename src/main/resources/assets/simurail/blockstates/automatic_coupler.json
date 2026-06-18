@@ -1,0 +1,36 @@
+{
+	"variants": {
+		"facing=east,powered=false": {
+			"model": "simurail:block/coupler/automatic/normal",
+			"y": 90
+		},
+		"facing=west,powered=false": {
+			"model": "simurail:block/coupler/automatic/normal",
+			"y": -90
+		},
+		"facing=south,powered=false": {
+			"model": "simurail:block/coupler/automatic/normal",
+			"y": 180
+		},
+		"facing=north,powered=false": {
+			"model": "simurail:block/coupler/automatic/normal",
+			"y": 0
+		},
+		"facing=east,powered=true": {
+			"model": "simurail:block/coupler/automatic/powered",
+			"y": 90
+		},
+		"facing=west,powered=true": {
+			"model": "simurail:block/coupler/automatic/powered",
+			"y": -90
+		},
+		"facing=south,powered=true": {
+			"model": "simurail:block/coupler/automatic/powered",
+			"y": 180
+		},
+		"facing=north,powered=true": {
+			"model": "simurail:block/coupler/automatic/powered",
+			"y": 0
+		}
+	}
+}

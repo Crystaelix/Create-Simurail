@@ -1,0 +1,33 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# vscode
+.vscode
+
+# gradle
+build
+.gradle
+
+# macos
+*.DS_Store
+
+# java
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+
+# minecraft
+run

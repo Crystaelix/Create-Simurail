@@ -1,0 +1,60 @@
+{
+	"parent": "block/block",
+	"render_type": "cutout_mipped",
+	"textures": {
+		"particle": "simurail:block/physics_bogey/top",
+		"top": "simurail:block/physics_bogey/top",
+		"end": "simurail:block/physics_bogey/end",
+		"side": "simurail:block/physics_bogey/side",
+		"bottom": "simurail:block/physics_bogey/bottom",
+		"gearbox": "create:block/brass_gearbox",
+		"axis": "create:block/axis",
+		"axis_top": "create:block/axis_top"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 11, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 11], "rotation": 180, "texture": "#end"},
+				"east": {"uv": [0, 0, 16, 11], "rotation": 180, "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 11], "rotation": 180, "texture": "#end"},
+				"west": {"uv": [0, 0, 16, 11], "rotation": 180, "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#bottom"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#top"}
+			}
+		},
+		{
+			"from": [5, 5, 1],
+			"to": [11, 11, 0],
+			"faces": {
+				"north": {"uv": [5, 5, 11, 11], "texture": "#gearbox"},
+				"east": {"uv": [4, 5, 5, 11], "texture": "#gearbox"},
+				"west": {"uv": [11, 5, 12, 11], "texture": "#gearbox"},
+				"down": {"uv": [5, 11, 11, 12], "rotation": 180, "texture": "#gearbox"}
+			}
+		},
+		{
+			"from": [5, 5, 16],
+			"to": [11, 11, 15],
+			"faces": {
+				"east": {"uv": [11, 5, 12, 11], "texture": "#gearbox"},
+				"south": {"uv": [5, 5, 11, 11], "texture": "#gearbox"},
+				"west": {"uv": [4, 5, 5, 11], "texture": "#gearbox"},
+				"down": {"uv": [5, 11, 11, 12], "texture": "#gearbox"}
+			}
+		},
+		{
+			"from": [6, 6, 0],
+			"to": [10, 10, 16],
+			"faces": {
+				"north": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#axis_top"},
+				"east": {"uv": [6, 0, 10, 16], "rotation": 90, "texture": "#axis"},
+				"south": {"uv": [6, 6, 10, 10], "texture": "#axis_top"},
+				"west": {"uv": [6, 0, 10, 16], "rotation": 270, "texture": "#axis"},
+				"up": {"uv": [6, 0, 10, 16], "texture": "#axis"},
+				"down": {"uv": [6, 0, 10, 16], "rotation": 180, "texture": "#axis"}
+			}
+		}
+	]
+}

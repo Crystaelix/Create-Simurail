@@ -1,0 +1,18 @@
+{
+	"textures": {
+		"bar": "simurail:block/coupler/bar"
+	},
+	"elements": [
+		{
+			"from": [0, -1.5, -1.5],
+			"to": [3, 1.5, 1.5],
+			"faces": {
+				"north": {"uv": [0, 3, 3, 6], "texture": "#bar"},
+				"east": {"uv": [0, 6, 3, 9], "texture": "#bar"},
+				"south": {"uv": [0, 3, 3, 6], "texture": "#bar"},
+				"up": {"uv": [0, 3, 3, 6], "texture": "#bar"},
+				"down": {"uv": [0, 3, 3, 6], "texture": "#bar"}
+			}
+		}
+	]
+}

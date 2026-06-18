@@ -1,0 +1,48 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "simurail:physics_bogey",
+					"conditions": [
+						{
+							"condition": "minecraft:block_state_property",
+							"block": "simurail:physics_bogey",
+							"properties": {
+								"inverted": "false"
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "simurail:inverted_physics_bogey",
+					"conditions": [
+						{
+							"condition": "minecraft:block_state_property",
+							"block": "simurail:physics_bogey",
+							"properties": {
+								"inverted": "true"
+							}
+						}
+					]
+				}
+			],
+			"functions": [
+				{
+					"function": "minecraft:copy_name",
+					"source": "block_entity"
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:survives_explosion"
+				}
+			]
+		}
+	],
+	"random_sequence": "simurail:blocks/physics_bogey"
+}

@@ -1,0 +1,32 @@
+pluginManagement {
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+		maven {
+			url = "https://jitpack.io/"
+		}
+		maven {
+			url = "https://maven.crystaelix.com/releases/"
+		}
+		maven {
+			url = "https://maven.architectury.dev/"
+		}
+		maven {
+			url = "https://maven.fabricmc.net/"
+		}
+		maven {
+			url = "https://maven.minecraftforge.net/"
+		}
+	}
+	resolutionStrategy {
+		eachPlugin {
+			if(requested.id.id == "com.crystaelix.loom" && requested.version.startsWith("jitpack-")) {
+				useModule("com.github.Crystaelix:crystaelix-loom:${requested.version.substring(8)}")
+			}
+		}
+	}
+}
+
+plugins {
+	id "org.gradle.toolchains.foojay-resolver-convention" version "[0,)"
+}

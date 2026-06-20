@@ -67,7 +67,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public static final double LINEAR_Y_LIMIT = 0.5;
 	public static final double LINEAR_Z_LIMIT = 1;
 	public static final double ANGULAR_X_LIMIT = Math.PI / 12;
-	public static final double ANGULAR_Y_LIMIT = Math.PI * 5 / 12;
+	public static final double ANGULAR_Y_LIMIT = Math.PI / 4;
 	public static final double ANGULAR_Z_LIMIT = Math.PI / 4;
 
 	public static final Component NAME = Component.translatable("block.simurail.physics_bogey");
@@ -167,6 +167,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		bogeyData = null;
 		if(!level.isClientSide()) {
 			setChanged();
+			sendData();
 		}
 	}
 
@@ -577,7 +578,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 		// Linear Y
 		if(options.allowVerticalOffset) {
-			double offset = -localPivotOffset.y;
+			double offset = localPivotOffset.y;
 			double velocity = globalRelLinVel.dot(globalBasis.vertical);
 
 			double normalMass = 1 / massData.getInverseNormalMass(localCenter, SimurailMath.DIR_YP);
@@ -587,7 +588,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double stiffness = normalMass * frequency * frequency;
 			double damping = normalMass * frequency * dampingRate * 2;
 
-			double forceMag = (-stiffness * offset) - (damping * velocity);
+			double forceMag = stiffness * offset - damping * velocity;
 			forceMag /= bogeyCounts.activeVertical;
 
 			queuedForce.fma(forceMag * timeStep, globalBasis.vertical);
@@ -605,7 +606,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double stiffness = normalMass * frequency * frequency;
 			double damping = normalMass * frequency * dampingRate * 2;
 
-			double forceMag = (-stiffness * offset) - (damping * velocity);
+			double forceMag = stiffness * offset - damping * velocity;
 			forceMag /= bogeyCounts.activeLateral;
 
 			queuedForce.fma(forceMag * timeStep, globalBasis.lateral);
@@ -771,11 +772,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		double angle = distance / options.type.wheelRadius();
 		return (float)Math.toDegrees(angle) % 360;
 	}
-	
+
 	public boolean hasTrack() {
 		return axleFront.hasTrack() || axleBack.hasTrack();
 	}
-	
+
 	public boolean isDerailed() {
 		return !axleFront.hasTrack() || !axleBack.hasTrack();
 	}

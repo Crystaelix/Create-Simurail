@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.config;
 
-import net.createmod.catnip.config.ConfigBase;
-
 public class SimurailBlocksConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup connection = group(1, "steeringConnection", "Steering Connections");

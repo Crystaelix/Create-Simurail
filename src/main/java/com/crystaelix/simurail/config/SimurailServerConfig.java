@@ -1,10 +1,5 @@
 package com.crystaelix.simurail.config;
 
-import java.util.function.Supplier;
-
-import net.createmod.catnip.config.ConfigBase;
-import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
-
 public class SimurailServerConfig extends SimurailBaseConfig {
 
 	public final SimurailBlocksConfig blocks;

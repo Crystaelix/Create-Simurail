@@ -2,7 +2,6 @@ package com.crystaelix.simurail.config;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 

@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.config;
 
-import net.createmod.catnip.config.ConfigBase;
-
 public class SimurailPhysicsConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogeys");

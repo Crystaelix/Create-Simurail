@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.config;
 
-import net.createmod.catnip.config.ConfigBase;
-
 public class SimurailCompatConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup railways = group(1, "railways", "Steam 'n' Rails");

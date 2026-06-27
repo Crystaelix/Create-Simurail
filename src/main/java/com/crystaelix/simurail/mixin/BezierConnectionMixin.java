@@ -33,6 +33,6 @@ public abstract class BezierConnectionMixin implements BezierConnectionExtension
 		if(quadratureLength == 0) {
 			quadratureLength = simurail$controlPoints().length(0, 1);
 		}
-		return 0;
+		return quadratureLength;
 	}
 }

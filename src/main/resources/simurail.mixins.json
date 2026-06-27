@@ -8,9 +8,11 @@
 
 		"BezierConnectionMixin",
 		"GlobalRailwayManagerMixin",
+		"ObservedTrainNameSourceMixin",
 		"SignalEdgeGroupMixin",
 		"TrackBlockMixin",
 		"TrackBlockEntityMixin",
+		"TrackObserverMixin",
 
 		"compat.electroenergetics.PhysicsBogeyBlockMixin",
 		"compat.railways.TrackBufferBlockMixin"

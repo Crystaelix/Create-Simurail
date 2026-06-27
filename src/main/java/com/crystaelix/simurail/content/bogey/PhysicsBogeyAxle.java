@@ -24,6 +24,7 @@ import com.crystaelix.simurail.content.track.CurvedTrackSegment;
 import com.crystaelix.simurail.content.track.TrackSegment;
 import com.crystaelix.simurail.content.track.TrackSegmentHelper;
 import com.crystaelix.simurail.extension.SignalEdgeGroupExtension;
+import com.crystaelix.simurail.extension.TrackObserverExtension;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
@@ -75,6 +76,7 @@ public class PhysicsBogeyAxle {
 	protected double offsetTimer = 0;
 
 	protected TrackSegment trackSegment;
+	protected boolean trackReversed;
 	protected ServerSubLevel trackSubLevel;
 	protected Pose3dc trackSubLevelPose;
 
@@ -145,6 +147,26 @@ public class PhysicsBogeyAxle {
 					((SignalEdgeGroupExtension)signalGroup).simurail$queueBogey(bogey);
 				}
 			}
+		}
+	}
+
+	protected void updateInnerProbe() {
+		if(trackGraph != null && trackPoint.edge != null) {
+			resetProbe(trackPoint);
+			double travelDist = bogey.options.type.axleSpacing();
+			if(logicalFront) travelDist *= -1;
+			if(trackReversed) travelDist *= -1;
+			probe.travel(trackGraph,
+					travelDist,
+					followOtherOrSteer(probe),
+					(distance, couple) -> {
+						if(couple.getFirst() instanceof TrackObserverExtension observer) {
+							observer.simurail$keepAlive(bogey);
+						}
+						return false;
+					},
+					probe.ignoreTurns(),
+					$ -> true);
 		}
 	}
 
@@ -252,7 +274,8 @@ public class PhysicsBogeyAxle {
 
 			double t = trackSegment.projectT(trackAxleFrame.position);
 			trackSegment.frame(t, trackFrame);
-			if(trackAxleFrame.direction.dot(trackFrame.direction) < 0) {
+			trackReversed = trackAxleFrame.direction.dot(trackFrame.direction) < 0;
+			if(trackReversed) {
 				trackFrame.direction.negate();
 				trackFrame.lateral.negate();
 			}
@@ -657,6 +680,30 @@ public class PhysicsBogeyAxle {
 			else {
 				followingAxle = other();
 			}
+			if(followingAxle != null && followingAxle.trackGraph == graph) {
+				nextPoint = followingAxle.trackPoint;
+			}
+			if(nextPoint == null || nextPoint.edge == null) {
+				return steer(point).apply(graph, pair);
+			}
+			else {
+				MutableBoolean flag = new MutableBoolean(false);
+				Map.Entry<TrackNode, TrackEdge> result = follow(nextPoint, flag::setValue).apply(graph, pair);
+				if(flag.booleanValue()) {
+					return result;
+				}
+				else {
+					return steer(point).apply(graph, pair);
+				}
+			}
+		};
+	}
+
+
+	protected ITrackSelector followOtherOrSteer(TravellingPoint point) {
+		return (graph, pair) -> {
+			PhysicsBogeyAxle followingAxle = other();
+			TravellingPoint nextPoint = null;
 			if(followingAxle != null && followingAxle.trackGraph == graph) {
 				nextPoint = followingAxle.trackPoint;
 			}

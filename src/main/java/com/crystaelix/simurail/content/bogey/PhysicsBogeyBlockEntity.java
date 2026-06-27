@@ -436,6 +436,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				axleFront.updateSignalGroup();
 				axleBack.updateSignalGroup();
 
+				axleFront.updateInnerProbe();
+				axleBack.updateInnerProbe();
+
 				// TODO sfx
 			}
 			else {

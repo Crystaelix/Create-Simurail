@@ -1,7 +1,7 @@
 {
 	"block.simurail.physics_bogey": "Физическая тележка",
 	"block.simurail.automatic_coupler": "Авто-сцепка",
-	"block.simurail.gangway_frame": "Gangway Frame",
+	"block.simurail.gangway_frame": "Межвагонный переход",
 
 	"item.simurail.inverted_physics_bogey": "Инвертированная физическая тележка",
 	"item.simurail.steering_connector": "Соединительный провод",

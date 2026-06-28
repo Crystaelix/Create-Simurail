@@ -3,11 +3,11 @@
 	"block.simurail.automatic_coupler": "Авто-сцепка",
 	"block.simurail.gangway_frame": "Межвагонный переход",
 
-	"item.simurail.inverted_physics_bogey": "Инвертированная физическая тележка",
-	"item.simurail.steering_connector": "Соединительный провод",
+	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
+	"item.simurail.steering_connector": "Рулевой коннектор",
 
-	"item.simurail.steering_connector.same_block": "Та же позиция блока",
-	"item.simurail.steering_connector.out_of_range": "Вне диапазона",
+	"item.simurail.steering_connector.same_block": "Данная позиция уже занята",
+	"item.simurail.steering_connector.out_of_range": "Слишком далеко",
 	"item.simurail.steering_connector.connected": "Привязано",
 	"item.simurail.steering_connector.disconnected": "Не привязано",
 	"item.simurail.steering_connector.terminated": "Выбор сброшен",
@@ -30,7 +30,7 @@
 	"gui.simurail.physics_bogey.vertical": "Вертикальное перемещение",
 	"gui.simurail.physics_bogey.vertical.disallow": "Запрещено",
 	"gui.simurail.physics_bogey.vertical.allow": "Разрешено",
-	"gui.simurail.physics_bogey.control": "Сигнал управления",
+	"gui.simurail.physics_bogey.control": "При подаче сигнала",
 	"gui.simurail.physics_bogey.control.braking": "Торможение",
 	"gui.simurail.physics_bogey.control.braking_inverted": "Инвертированное торможение",
 	"gui.simurail.physics_bogey.control.strength": "Усиление",
@@ -55,8 +55,8 @@
 
 	"subtitles.simurail.block.coupler.connect": "Сцепка соединяется",
 	"subtitles.simurail.block.coupler.disconnect": "Сцепка расцепляется",
-	"subtitles.simurail.block.gangway.connect": "Gangway connects",
-	"subtitles.simurail.block.gangway.disconnect": "Gangway disconnects",
+	"subtitles.simurail.block.gangway.connect": "Межвагонный переход соединён",
+	"subtitles.simurail.block.gangway.disconnect": "Межвагонный переход разъединён",
 
 	"simulated_section.simurail.simurail": "Симурэйл",
 
@@ -217,7 +217,7 @@
 
 	"simurail_bogey_category.railways.special": "Специальная",
 	"simurail_bogey_entry.railways.invisible": "Невидимая",
-	"simurail_bogey_entry.railways.monobogey": "Монотележка",
+	"simurail_bogey_entry.railways.monobogey": "Монорельсовая тележка",
 	"simurail_bogey_entry.railways.narrow.standard": "Узкоколейная Стандартная S",
 	"simurail_bogey_entry.railways.narrow.scotch_yoke.1": "Узкоколейная Одноосная кулисно-приводная L",
 	"simurail_bogey_entry.railways.narrow.scotch_yoke.2": "Узкоколейная Двухосная кулисно-приводная L",

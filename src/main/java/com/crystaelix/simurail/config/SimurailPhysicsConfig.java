@@ -4,7 +4,7 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogeys");
 	public final ConfigFloat bogeyPivotMass = f(1, 0, Float.MAX_VALUE, "bogeyPivotMass", Units.mass, Comments.bogeyPivotMass);
-	public final ConfigFloat bogeyPassiveAngularDamping = f(1, 0, Float.MAX_VALUE, "bogeyPassiveAngularDamping", Units.angularDamping, Comments.bogeyPassiveAngularDamping);
+	public final ConfigFloat bogeyPassiveAngularDamping = f(10, 0, Float.MAX_VALUE, "bogeyPassiveAngularDamping", Units.angularDamping, Comments.bogeyPassiveAngularDamping);
 	public final ConfigFloat bogeyVerticalSpringFrequency = f(50, 0, Float.MAX_VALUE, "bogeyVerticalSpringFrequency", Units.angularVelocity, Comments.bogeyVerticalSpringFrequency);
 	public final ConfigFloat bogeyVerticalSpringDampingRate = f(1.2F, 0, Float.MAX_VALUE, "bogeyVerticalSpringDampingRate", Comments.bogeyVerticalSpringDampingRate);
 	public final ConfigFloat bogeyVerticalSpringMaxForce = f(10000, 0, Float.MAX_VALUE, "bogeyVerticalSpringMaxForce", Units.force, Comments.bogeyVerticalSpringMaxForce);

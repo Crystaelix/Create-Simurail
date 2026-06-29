@@ -634,19 +634,19 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 		// Angular X
 		{
+			double offset = SimurailMath.angle(globalBasis.vertical, globalPivotVert, globalBasis.direction);
+			double velocity = globalRelAngVel.dot(globalBasis.direction);
+
 			double kLateral = getSignedLateralCurvature();
 			double speed = getMovementSpeed();
 			double centAcc = speed * speed * kLateral;
 
-			double tiltStrength = options.getTiltStrength() * 0.1;
-			double tilt = Math.clamp(Math.atan(centAcc * tiltStrength), -TILT_LIMIT, TILT_LIMIT);
-
 			double torqueOffset = massData.getCenterOfMass().y() - localCenter.y();
 			double mass = massData.getMass();
-			double centTorque = mass * centAcc * torqueOffset;
+			double centTorque = mass * centAcc * torqueOffset * Math.cos(offset);
 
-			double offset = SimurailMath.angle(globalBasis.vertical, globalPivotVert, globalBasis.direction) + tilt;
-			double velocity = globalRelAngVel.dot(globalBasis.direction);
+			double tiltStrength = options.getTiltStrength() * 0.1;
+			double tilt = Math.clamp(Math.atan(centAcc * tiltStrength), -TILT_LIMIT, TILT_LIMIT);
 
 			double moment = SimurailMath.moment(massData, localCenter, localDir);
 
@@ -656,7 +656,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double damping = moment * frequency * dampingRate * 2;
 			double maxTorque = config.bogeyAngularSpringMaxTorque.get();
 
-			double torqueMag = (centTorque + stiffness * offset - damping * velocity) / getActiveBogeyCount(subLevel);
+			double torqueMag = (centTorque + stiffness * (offset + tilt) - damping * velocity) / getActiveBogeyCount(subLevel);
 			torqueMag = Math.clamp(torqueMag, -maxTorque, maxTorque);
 
 			queuedTorque.fma(torqueMag * timeStep, globalBasis.direction);

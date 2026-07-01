@@ -36,7 +36,7 @@
 	"gui.simurail.physics_bogey.control.braking_inverted": "Инвертированное торможение",
 	"gui.simurail.physics_bogey.control.strength": "Усиление",
 	"gui.simurail.physics_bogey.control.strength_inverted": "Инвертированное усиление",
-	"gui.simurail.physics_bogey.control.none": "Никакои",
+	"gui.simurail.physics_bogey.control.none": "Никакой",
 	"gui.simurail.physics_bogey.stress": "Сила тяги",
 	"gui.simurail.physics_bogey.tilt": "Сила наклона",
 	"gui.simurail.physics_bogey.connector": "Видимость кабеля подключения",
@@ -56,12 +56,12 @@
 	"gui.simurail.physics_bogey.track_type": "Тип пути",
 	"gui.simurail.physics_bogey.options": "Изменить опции тележки",
 
-	"subtitles.simurail.block.coupler.connect": "Сцепка соединяется",
-	"subtitles.simurail.block.coupler.disconnect": "Сцепка расцепляется",
+	"subtitles.simurail.block.coupler.connect": "Сцепка соединена",
+	"subtitles.simurail.block.coupler.disconnect": "Сцепка рассоединена",
 	"subtitles.simurail.block.gangway.connect": "Переход соединён",
 	"subtitles.simurail.block.gangway.disconnect": "Переход рассоединён",
 
-	"simulated_section.simurail.simurail": "Симурэйл",
+	"simulated_section.simurail.simurail": "Simurail",
 
 	"simurail_bogey_entry.create.standard.small": "Create Стандарт S",
 	"simurail_bogey_entry.create.standard.large": "Create Стандарт L",

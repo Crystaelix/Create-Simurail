@@ -84,13 +84,19 @@ public class PhysicsBogeyAxle {
 	protected TravellingPoint trackPoint = new TravellingPoint();
 	protected TravellingPoint probe = new TravellingPoint();
 
+	protected BlockHitResult clipResult;
+	protected ServerSubLevel clipSubLevel;
+
 	protected GenericConstraintHandle joint;
 	protected GenericConstraintHandle bogeyJoint;
 	protected boolean yFixed = false;
 	protected boolean zFixed = false;
 	protected double yFixedTimer = 0;
 	protected double zFixedTimer = 0;
+
 	protected double speed;
+	protected double targetSpeed;
+	protected double visualSpeedLerpFactor;
 	protected double visualSpeed;
 	protected double trackRecheckTime = 0.5;
 
@@ -135,8 +141,11 @@ public class PhysicsBogeyAxle {
 		trackRecheckTime = 0.05;
 	}
 
-	protected void updateSpeedDecay() {
+	protected void updateVisualSpeed() {
 		visualSpeed = visualSpeed * 0.95;
+		if(Math.abs(visualSpeed) < 0.125 && Math.abs(visualSpeed) - Math.abs(targetSpeed) > 0.01) {
+			visualSpeed = 0;
+		}
 	}
 
 	protected void updateSignalGroup() {
@@ -285,15 +294,23 @@ public class PhysicsBogeyAxle {
 
 			Sable.HELPER.getVelocity(subLevel.getLevel(), trackAxleFrame.position, globalTrackVel);
 			globalAxleVel.sub(globalTrackVel, globalRelVel);
-			subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
-			speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
 		}
 		else {
 			yFixed = zFixed = false;
 			yFixedTimer = zFixedTimer = 0;
 			removeJoint();
 			globalTrackFrame.set(globalAxleFrame);
+
+			clipResult = findGround(subLevel);
+			JOMLConversion.toJOML(clipResult.getLocation(), clipPos);
+			clipSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, clipPos);
+
+			Sable.HELPER.getVelocity(level, clipPos, globalHitVel);
+			globalAxleVel.sub(globalHitVel, globalRelVel);
 		}
+
+		subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
+		speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
 		globalTrackFrame.orientation(globalTrackRot);
 		updateGraph(true);
 	}
@@ -506,7 +523,7 @@ public class PhysicsBogeyAxle {
 			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 
 			double targetSpeedFactor = config.axleTargetSpeedFactor.get();
-			double targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
+			targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
 			double targetSign = Math.signum(targetSpeed);
 			double diffSpeed = targetSpeed - speed;
 			double diffSign = Math.signum(diffSpeed);
@@ -551,15 +568,10 @@ public class PhysicsBogeyAxle {
 		//createAxleBox(subLevel);
 
 		ServerLevel level = subLevel.getLevel();
-		Vec3 clipStart = bogey.pivotPose.transformPosition(new Vec3(axleFrame.position.x, axleFrame.position.y + 0.5, axleFrame.position.z));
-		Vec3 clipEnd = JOMLConversion.toMojang(globalAxleFrame.position);
-		ClipContext clipContext = new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
-		((ClipContextExtension)clipContext).sable$setIgnoredSubLevel(subLevel);
-		BlockHitResult clipResult = level.clip(clipContext);
 
 		SimurailPhysicsConfig config = SimurailConfig.SERVER.physics;
 		double targetSpeedFactor = config.axleTargetSpeedFactor.get();
-		double targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
+		targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
 
 		if(clipResult.getType() == HitResult.Type.MISS) {
 			if(targetSpeed != 0) {
@@ -568,15 +580,7 @@ public class PhysicsBogeyAxle {
 			return;
 		}
 
-		JOMLConversion.toJOML(clipResult.getLocation(), hitPos);
-		ServerSubLevel hitSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, hitPos);
-		Pose3dc hitSubLevelPose = hitSubLevel == null ? SimurailMath.POSE_I : hitSubLevel.logicalPose();
-
-		Sable.HELPER.getVelocity(level, hitPos, globalHitVel);
-		globalAxleVel.sub(globalHitVel, globalRelVel);
-		subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
-		speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
-
+		Pose3dc clipSubLevelPose = clipSubLevel == null ? SimurailMath.POSE_I : clipSubLevel.logicalPose();
 		MassData massData = subLevel.getMassTracker();
 		queuedForce.zero();
 
@@ -613,11 +617,11 @@ public class PhysicsBogeyAxle {
 
 		handle.applyImpulseAtPoint(bogeyAxleFrame.position, queuedForce);
 
-		if(hitSubLevel != null) {
+		if(clipSubLevel != null) {
 			subLevel.logicalPose().transformNormal(queuedForce);
-			hitSubLevelPose.transformNormalInverse(queuedForce);
+			clipSubLevelPose.transformNormalInverse(queuedForce);
 			queuedForce.negate();
-			RigidBodyHandle.of(hitSubLevel).applyImpulseAtPoint(hitPos, queuedForce);
+			RigidBodyHandle.of(clipSubLevel).applyImpulseAtPoint(clipPos, queuedForce);
 		}
 	}
 
@@ -632,6 +636,15 @@ public class PhysicsBogeyAxle {
 			trackRecheckTime = SimurailConfig.SERVER.physics.axleTrackCheckTime.get();
 		}
 		bogey.setChanged();
+	}
+
+	protected BlockHitResult findGround(ServerSubLevel subLevel) {
+		ServerLevel level = subLevel.getLevel();
+		Vec3 clipStart = bogey.pivotPose.transformPosition(new Vec3(axleFrame.position.x, axleFrame.position.y + 0.5, axleFrame.position.z));
+		Vec3 clipEnd = JOMLConversion.toMojang(globalAxleFrame.position);
+		ClipContext clipContext = new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
+		((ClipContextExtension)clipContext).sable$setIgnoredSubLevel(subLevel);
+		return level.clip(clipContext);
 	}
 
 	protected void resetProbe(TravellingPoint point) {
@@ -879,7 +892,7 @@ public class PhysicsBogeyAxle {
 	protected final Frame3d bogeyTrackFrame = new Frame3d();
 	protected final Quaterniond globalTrackRot = new Quaterniond();
 
-	protected final Vector3d hitPos = new Vector3d();
+	protected final Vector3d clipPos = new Vector3d();
 
 	protected final Quaterniond globalTrackJointRot = new Quaterniond();
 	protected final Quaterniond trackJointRot = new Quaterniond();

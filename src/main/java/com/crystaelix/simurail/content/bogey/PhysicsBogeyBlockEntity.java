@@ -459,8 +459,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				computerOverrides.reset();
 			}
 			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel) {
-				axleFront.updateSpeedDecay();
-				axleBack.updateSpeedDecay();
+				axleFront.updateVisualSpeed();
+				axleBack.updateVisualSpeed();
 
 				axleFront.updateSignalGroup();
 				axleBack.updateSignalGroup();

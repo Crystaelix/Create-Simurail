@@ -498,7 +498,7 @@ public class PhysicsBogeyAxle {
 		queuedForce.zero();
 
 		{
-			double normalMass = 1 / massData.getInverseNormalMass(bogeyTrackFrame.position, bogeyTrackFrame.direction);
+			double normalMass = 1 / massData.getInverseNormalMass(bogeyTrackFrame.position, bogeyTrackFrame.vertical);
 			double friction = getTrackFriction(trackSegment);
 
 			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
@@ -581,7 +581,7 @@ public class PhysicsBogeyAxle {
 		queuedForce.zero();
 
 		{
-			double normalMass = 1 / massData.getInverseNormalMass(bogeyAxleFrame.position, bogeyAxleFrame.direction);
+			double normalMass = 1 / massData.getInverseNormalMass(bogeyAxleFrame.position, bogeyAxleFrame.vertical);
 			double frictionFactor = config.axleDerailFrictionFactor.get();
 			double friction = PhysicsBlockPropertyHelper.getFriction(level.getBlockState(clipResult.getBlockPos())) * frictionFactor;
 

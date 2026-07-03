@@ -93,6 +93,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected BlockPos connectionBack;
 	protected UUID connectionBackSubLevelID;
 	protected boolean connectionBackToFront;
+	protected PhysicsBogeySteerGroup steerGroup;
 
 	// Physics components
 	protected final Vector3dc localCenter;
@@ -198,7 +199,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.logicalPose();
 			Pose3dc otherPose = otherSubLevel == null ? SimurailMath.POSE_I : otherSubLevel.logicalPose();
 			Vector3d selfNormal = selfPose.transformNormal(new Vector3d(selfDir.step()));
-			Vector3d otherNormal = selfPose.transformNormal(new Vector3d(otherDir.step()));
+			Vector3d otherNormal = otherPose.transformNormal(new Vector3d(otherDir.step()));
 			Vector3d selfPos = selfPose.transformPosition(JOMLConversion.atCenterOf(getBlockPos()));
 			Vector3d otherPos = otherPose.transformPosition(JOMLConversion.atCenterOf(other.getBlockPos()));
 			double x = otherPos.x - selfPos.x;
@@ -248,6 +249,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				connectionBackSubLevelID = otherSubLevel == null ? null : otherSubLevel.getUniqueId();
 				connectionBackToFront = otherFront;
 			}
+			if(steerGroup != null) {
+				steerGroup.invalidate();
+			}
 			if(!level.isClientSide()) {
 				setChanged();
 				sendData();
@@ -272,6 +276,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			connectionBackSubLevelID = otherSubLevel == null ? null : otherSubLevel.getUniqueId();
 			connectionBackToFront = otherFront;
 		}
+		if(steerGroup != null) {
+			steerGroup.invalidate();
+		}
 		if(!level.isClientSide()) {
 			setChanged();
 			sendData();
@@ -295,6 +302,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			connectionBack = null;
 			connectionBackSubLevelID = null;
 		}
+		if(steerGroup != null) {
+			steerGroup.invalidate();
+		}
 		if(!level.isClientSide()) {
 			setChanged();
 			sendData();
@@ -310,6 +320,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		else {
 			connectionBack = null;
 			connectionBackSubLevelID = null;
+		}
+		if(steerGroup != null) {
+			steerGroup.invalidate();
 		}
 		if(!level.isClientSide()) {
 			setChanged();
@@ -716,6 +729,13 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return Math.clamp(value / 15D, -1, 1);
 	}
 
+	public double getGroupSteerValue() {
+		if(steerGroup == null) {
+			PhysicsBogeySteerGroup.createAndUpdate(this);
+		}
+		return steerGroup.getSteerValue(this);
+	}
+
 	@Override
 	public Iterable<SubLevel> sable$getConnectionDependencies() {
 		ImmutableList.Builder<SubLevel> builder = ImmutableList.builderWithExpectedSize(2);
@@ -948,6 +968,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		connectionBack = back.getFirst();
 		connectionBackSubLevelID = back.getSecond();
 		connectionBackToFront = tag.getBoolean("connection_back_front");
+
+		if(steerGroup != null) {
+			steerGroup.invalidate();
+		}
 	}
 
 	// Mutable physics fields

@@ -762,7 +762,7 @@ public class PhysicsBogeyAxle {
 
 			boolean forward = pair.getFirst();
 			Vector3d trackDir = JOMLConversion.toJOML(point.edge.getDirection(!forward));
-			double steerValue = bogey.getSteerValue();
+			double steerValue = bogey.getGroupSteerValue();
 			Vector3d trackLat = trackAxleFrame.lateral;
 
 			Vector3d steerTarget = new Vector3d();

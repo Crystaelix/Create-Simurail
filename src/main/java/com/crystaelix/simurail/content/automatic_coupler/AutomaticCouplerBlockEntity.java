@@ -535,7 +535,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 						SimurailMath.rot(this.jointDir, this.jointRot);
 						SimurailMath.rot(partner.jointDir, partner.jointRot);
-						
+
 						if(jointPos.distanceSquared(partnerJointPos) > Mth.square(jointLength + 1)) {
 							removePartner();
 							removeJoint();
@@ -691,7 +691,10 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	@Override
 	public Iterable<SubLevel> sable$getConnectionDependencies() {
 		if(partnerSubLevelID != null) {
-			return List.of(SubLevelContainer.getContainer(level).getSubLevel(partnerSubLevelID));
+			SubLevel subLevel = SubLevelContainer.getContainer(level).getSubLevel(partnerSubLevelID);
+			if(subLevel != null) {
+				return List.of(subLevel);
+			}
 		}
 		return List.of();
 	}

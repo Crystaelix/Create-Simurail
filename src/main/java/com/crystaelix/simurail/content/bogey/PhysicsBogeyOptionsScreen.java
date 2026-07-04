@@ -208,7 +208,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		yOffsetInput.withRange(-10, 10 + 1);
 		yOffsetInput.withShiftStep(5);
 		yOffsetInput.titled(YOFFSET_TITLE.plainCopy());
-		yOffsetInput.format(i -> Component.literal(String.format("%.1f", i * 0.1F)));
+		yOffsetInput.format(i -> Component.literal(String.format("%.1fm", i * 0.1F)));
 		yOffsetInput.writingTo(yOffsetLabel);
 		yOffsetInput.setState((int)(options.getYOffset() * 10));
 		yOffsetInput.calling(i -> options.setYOffset(i * 0.1F));

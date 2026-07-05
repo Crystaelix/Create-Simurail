@@ -112,6 +112,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	// Client rendering components
 	protected final MovingQuaternionfLerp renderPivotRot = MovingQuaternionfLerp.of(2);
 	protected final MovingVector3fLerp renderPivotOffset = MovingVector3fLerp.of(2);
+	public float renderAxleOffset;
 	protected double distanceMoved;
 
 	public PhysicsBogeyBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -166,8 +167,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		else {
 			this.options.set(options);
 		}
-		axleFront.setOptions();
-		axleBack.setOptions();
+		axleFront.resetOffset();
+		axleBack.resetOffset();
 		bogeyData = null;
 		if(!level.isClientSide()) {
 			setChanged();
@@ -481,6 +482,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				axleFront.updateInnerProbe();
 				axleBack.updateInnerProbe();
 
+				axleFront.updateOffsetChange();
+				axleBack.updateOffsetChange();
+
 				// TODO sfx
 			}
 			else {
@@ -489,7 +493,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				resetPivotPose();
 			}
 			visualSpeed = Math.abs(axleFront.visualSpeed) > Math.abs(axleBack.visualSpeed) ? axleFront.visualSpeed : axleBack.visualSpeed;
-			if(!lastLocalPivotOffset.equals(localPivotOffset, 1E-4)|| !lastLocalPivotRot.equals(localPivotRot, 1E-4) || lastVisualSpeed != visualSpeed) {
+			if(!lastLocalPivotOffset.equals(localPivotOffset, 1E-4) || !lastLocalPivotRot.equals(localPivotRot, 1E-4) || lastVisualSpeed != visualSpeed) {
 				VeilPacketManager.tracking(this).sendPacket(new PhysicsBogeyRenderDataPacket(this));
 			}
 			lastLocalPivotOffset.set(localPivotOffset);
@@ -779,7 +783,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return super.createRenderBoundingBox().inflate(16);
 	}
 
-	protected void updateRenderData(Vector3dc pivotOffset, Quaterniondc pivotRot, double visualSpeed) {
+	protected void updateRenderData(Vector3dc pivotOffset, Quaterniondc pivotRot, float visualSpeed) {
 		this.localPivotOffset.set(pivotOffset);
 		this.localPivotRot.set(pivotRot);
 		this.visualSpeed = visualSpeed;

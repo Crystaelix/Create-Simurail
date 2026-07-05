@@ -44,6 +44,7 @@
 	"gui.simurail.physics_bogey.vertical": "Вертикальное перемещение",
 	"gui.simurail.physics_bogey.vertical.disallow": "Запрещено",
 	"gui.simurail.physics_bogey.vertical.allow": "Разрешено",
+	"gui.simurail.physics_bogey.axle": "Axle Offset",
 	"gui.simurail.physics_bogey.control": "При подаче редстоун сигнала",
 	"gui.simurail.physics_bogey.control.braking": "Торможение",
 	"gui.simurail.physics_bogey.control.braking_inverted": "Инвертированное торможение",

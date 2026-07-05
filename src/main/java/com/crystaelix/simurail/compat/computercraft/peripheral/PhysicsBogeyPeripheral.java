@@ -84,6 +84,18 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final double getAxleOffset() {
+		return blockEntity.getOptions().getAxleOffset();
+	}
+
+	@LuaFunction(mainThread = true)
+	public final void setAxleOffset(double axleOffset) {
+		blockEntity.getOptions().setAxleOffset((float)axleOffset);
+		blockEntity.setChanged();
+		blockEntity.sendData();
+	}
+
+	@LuaFunction
 	public final double getMaxStress() {
 		return blockEntity.getOptions().getStress();
 	}

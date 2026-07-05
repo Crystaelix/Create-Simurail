@@ -44,6 +44,7 @@
 	"gui.simurail.physics_bogey.vertical": "垂向移动",
 	"gui.simurail.physics_bogey.vertical.disallow": "禁止",
 	"gui.simurail.physics_bogey.vertical.allow": "允许",
+	"gui.simurail.physics_bogey.axle": "轮轴偏移",
 	"gui.simurail.physics_bogey.control": "控制信号",
 	"gui.simurail.physics_bogey.control.braking": "刹车",
 	"gui.simurail.physics_bogey.control.braking_inverted": "反向刹车",

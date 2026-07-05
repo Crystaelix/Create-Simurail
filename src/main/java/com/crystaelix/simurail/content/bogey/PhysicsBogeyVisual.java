@@ -66,6 +66,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 		poseStack.translate(0.5F, 0.5F, 0.5F);
 		poseStack.translate(pivotOffset.x, pivotOffset.y, pivotOffset.z);
 		poseStack.mulPose(pivotRot);
+		poseStack.translate(0, (blockEntity.isInverted() ? 1 : -1) * blockEntity.options.getAxleOffset(), 0);
 		poseStack.last().pose().rotate(SimurailMathf.ROT_ZNYPXP);
 		poseStack.last().normal().rotate(SimurailMathf.ROT_ZNYPXP);
 		poseStack.translate(0, -1.5F - 0.0078125F, 0);

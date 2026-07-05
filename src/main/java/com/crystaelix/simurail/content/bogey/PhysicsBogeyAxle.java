@@ -73,6 +73,7 @@ public class PhysicsBogeyAxle {
 
 	protected final Vector3d lastOffset = new Vector3d();
 	protected final Vector3d targetOffset = new Vector3d();
+	protected float vertOffset;
 	protected double offsetTimer = 0;
 
 	protected TrackSegment trackSegment;
@@ -113,11 +114,10 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void init(ServerSubLevel subLevel) {
-		double axleOffset = bogey.options.type.axleSpacing() / 2;
-		targetOffset.set(
-				(logicalFront ? axleOffset : -axleOffset),
-				(bogey.isInverted() ? 0.5 : -1.5),
-				0);
+		double latOffset = bogey.options.type.axleSpacing() / 2;
+		vertOffset = bogey.options.getAxleOffset();
+		targetOffset.x = logicalFront ? latOffset : -latOffset;
+		targetOffset.y = bogey.isInverted() ? 0.5 + vertOffset : -1.5 - vertOffset;
 		if(offsetTimer > 0) {
 			targetOffset.lerp(lastOffset, offsetTimer, axleFrame.position);
 		}
@@ -130,13 +130,12 @@ public class PhysicsBogeyAxle {
 		updateTrack(subLevel, 0);
 	}
 
-	protected void setOptions() {
+	protected void resetOffset() {
 		lastOffset.set(axleFrame.position);
-		double axleOffset = bogey.options.type.axleSpacing() / 2;
-		targetOffset.set(
-				(logicalFront ? axleOffset : -axleOffset),
-				(bogey.isInverted() ? 0.5 : -1.5),
-				0);
+		double latOffset = bogey.options.type.axleSpacing() / 2;
+		vertOffset = bogey.options.getAxleOffset();
+		targetOffset.x = logicalFront ? latOffset : -latOffset;
+		targetOffset.y = bogey.isInverted() ? 0.5 + vertOffset : -1.5 - vertOffset;
 		offsetTimer = 1;
 		trackRecheckTime = 0.05;
 	}
@@ -174,6 +173,12 @@ public class PhysicsBogeyAxle {
 					},
 					probe.ignoreTurns(),
 					$ -> true);
+		}
+	}
+
+	protected void updateOffsetChange() {
+		if(vertOffset != bogey.options.getAxleOffset()) {
+			resetOffset();
 		}
 	}
 
@@ -382,6 +387,9 @@ public class PhysicsBogeyAxle {
 
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
 		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+		if(offsetTimer > 0) {
+			removeJoint();
+		}
 		if(joint == null || !joint.isValid()) {
 			joint = null;
 			double linearDamping = config.axlePassiveLinearDamping.get();

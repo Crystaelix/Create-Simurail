@@ -22,6 +22,7 @@ public class PhysicsBogeyOptions {
 	public boolean renderBackConnector = true;
 	public PhysicsBogeyControlMode controlMode = PhysicsBogeyControlMode.BRAKING;
 
+	private float axleOffset = 0;
 	private float stress = 8;
 	private float tiltStrength = 0;
 
@@ -42,6 +43,7 @@ public class PhysicsBogeyOptions {
 		renderFrontConnector = other.renderFrontConnector;
 		renderBackConnector = other.renderBackConnector;
 		controlMode = other.controlMode;
+		axleOffset = other.axleOffset;
 		stress = other.stress;
 		tiltStrength = other.tiltStrength;
 		return this;
@@ -51,6 +53,15 @@ public class PhysicsBogeyOptions {
 		type = other.type;
 		renderFrontConnector = other.renderFrontConnector;
 		renderBackConnector = other.renderBackConnector;
+		return this;
+	}
+
+	public float getAxleOffset() {
+		return axleOffset;
+	}
+
+	public PhysicsBogeyOptions setAxleOffset(float axleOffset) {
+		this.axleOffset = Math.clamp(axleOffset, -1, 1);
 		return this;
 	}
 
@@ -180,6 +191,7 @@ public class PhysicsBogeyOptions {
 		tag.put("type", type.write());
 		tag.putShort("flags", getFlags());
 		tag.putByte("control_mode", (byte)controlMode.ordinal());
+		tag.putFloat("axle_offset", axleOffset);
 		tag.putFloat("stress", stress);
 		tag.putDouble("tilt_strength", tiltStrength);
 		return tag;
@@ -189,6 +201,7 @@ public class PhysicsBogeyOptions {
 		type = BogeyRenderedType.read(tag.getCompound("type"));
 		setFlags(tag.getShort("flags"));
 		controlMode = PhysicsBogeyControlMode.BY_ID.apply(tag.getByte("control_mode"));
+		axleOffset = Math.clamp(tag.getFloat("axle_offset"), -1, 1);
 		stress = Math.clamp(tag.getFloat("stress"), 0, 32);
 		tiltStrength = Math.clamp(tag.getFloat("tilt_strength"), 0, 1);
 		return this;
@@ -198,6 +211,7 @@ public class PhysicsBogeyOptions {
 		BogeyRenderedType.STREAM_CODEC.encode(buf, type);
 		buf.writeShort(getFlags());
 		PhysicsBogeyControlMode.STREAM_CODEC.encode(buf, controlMode);
+		buf.writeFloat(axleOffset);
 		buf.writeFloat(stress);
 		buf.writeFloat(tiltStrength);
 	}
@@ -206,6 +220,7 @@ public class PhysicsBogeyOptions {
 		type = BogeyRenderedType.STREAM_CODEC.decode(buf);
 		setFlags(buf.readShort());
 		controlMode = PhysicsBogeyControlMode.STREAM_CODEC.decode(buf);
+		axleOffset = buf.readFloat();
 		stress = buf.readFloat();
 		tiltStrength = buf.readFloat();
 		return this;

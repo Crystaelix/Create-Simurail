@@ -11,8 +11,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 
-	PHYSICS_BOGEY_OPTIONS("physics_bogey_options", 0, 0, 188, 233),
-	PHYSICS_BOGEY_OPTIONS_BOGEY_ICON("physics_bogey_options", 188, 0, 16, 16),
+	PHYSICS_BOGEY_OPTIONS("physics_bogey_options", 0, 0, 295, 183, 512, 256),
+	PHYSICS_BOGEY_OPTIONS_BOGEY_ICON("physics_bogey_options", 295, 0, 16, 16, 512, 256),
 
 	PHYSICS_BOGEY_MENU("physics_bogey_menu", 0, 0, 303, 203, 512, 256),
 	PHYSICS_BOGEY_MENU_CATEGORY("physics_bogey_menu", 303, 0, 123, 18, 512, 256),

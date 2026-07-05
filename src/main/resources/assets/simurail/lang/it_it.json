@@ -44,6 +44,7 @@
 	"gui.simurail.physics_bogey.vertical": "Vertical Movement",
 	"gui.simurail.physics_bogey.vertical.disallow": "Vieta",
 	"gui.simurail.physics_bogey.vertical.allow": "Permetti",
+	"gui.simurail.physics_bogey.axle": "Axle Offset",
 	"gui.simurail.physics_bogey.control": "Segnale di Controllo",
 	"gui.simurail.physics_bogey.control.braking": "Freno",
 	"gui.simurail.physics_bogey.control.braking_inverted": "Freno Invertito",

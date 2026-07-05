@@ -16,7 +16,7 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigFloat bogeyAngularSpringMaxTorque = f(5000, 0, Float.MAX_VALUE, "bogeyAngularSpringMaxTorque", Units.torque, Comments.bogeyAngularSpringMaxTorque);
 
 	public final ConfigGroup axle = group(1, "axle", "Physics Bogey Axles");
-	public final ConfigFloat axleSpacingUpdateTime = f(2, 0, Float.MAX_VALUE, "axleSpacingUpdateTime", Units.time, Comments.axleSpacingUpdateTime);
+	public final ConfigFloat axleSpacingUpdateTime = f(2, 0, 10, "axleSpacingUpdateTime", Units.time, Comments.axleSpacingUpdateTime);
 	public final ConfigFloat axlePassiveLinearDamping = f(100, 0, Float.MAX_VALUE, "axlePassiveLinearDamping", Units.damping, Comments.axlePassiveLinearDamping);
 	public final ConfigFloat axlePassiveAngularDamping = f(1, 0, Float.MAX_VALUE, "axlePassiveAngularDamping", Units.angularDamping, Comments.axlePassiveAngularDamping);
 	public final ConfigFloat axleStandardLateralMaxSpeedFactor = f(30, 0, Float.MAX_VALUE, "axleStandardLateralMaxSpeedFactor", Units.acceleration, Comments.axleStandardLateralMaxSpeedFactor);
@@ -25,8 +25,8 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigFloat axleTargetSpeedFactor = f(0.25F, 0, Float.MAX_VALUE, "axleTargetSpeedFactor", Units.velocity, Comments.axleTargetSpeedFactor);
 	public final ConfigFloat axleDriveForceFactor = f(0.5F, 0, Float.MAX_VALUE, "axleDriveForceFactor", Units.damping, Comments.axleDriveForceFactor);
 	public final ConfigFloat axleDerailFrictionFactor = f(0.5F, 0, 1, "axleDerailFrictionFactor", Comments.axleDerailFrictionFactor);
-	public final ConfigFloat axleTrackCheckTime = f(0.1F, 0, Float.MAX_VALUE, "axleTrackCheckTime", Units.time, Comments.axleTrackCheckTime);
-	public final ConfigFloat axleTrackRecheckTime = f(3, 0, Float.MAX_VALUE, "axleTrackRecheckTime", Units.time, Comments.axleTrackRecheckTime);
+	public final ConfigFloat axleTrackCheckTime = f(0.1F, 0, 5, "axleTrackCheckTime", Units.time, Comments.axleTrackCheckTime);
+	public final ConfigFloat axleTrackRecheckTime = f(3, 0, 60, "axleTrackRecheckTime", Units.time, Comments.axleTrackRecheckTime);
 
 	public final ConfigGroup coupler = group(1, "coupler", "Train Couplers");
 	public final ConfigFloat couplerPassiveLinearDamping = f(10, 0, Float.MAX_VALUE, "couplerPassiveLinearDamping", Units.damping, Comments.couplerPassiveLinearDamping);

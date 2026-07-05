@@ -48,6 +48,7 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 		poseStack.pushPose();
 		poseStack.translate(pivotOffset.x, pivotOffset.y, pivotOffset.z);
 		poseStack.mulPose(pivotRot);
+		poseStack.translate(0, (be.isInverted() ? 1 : -1) * be.options.getAxleOffset(), 0);
 		poseStack.last().pose().rotate(SimurailMathf.ROT_ZNYPXP);
 		poseStack.last().normal().rotate(SimurailMathf.ROT_ZNYPXP);
 		BogeyRenderedType type = be.options.type;

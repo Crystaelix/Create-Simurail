@@ -323,14 +323,14 @@
 	"simurail.ponder.gangway_frame.intro.text_6": "Межвагонный переход соединяется только с противоположным межвагонным переходом, который имеет ту же ориентацию и форму",
 
 	"simurail.ponder.gangway_frame.coupler.header": "Комбинирование межвагонных переходов с авто-сцепками",
-	"simurail.ponder.gangway_frame.coupler.text_1": "Межвагонные перехода могут быть комбирированы с авто-сцепками",
-	"simurail.ponder.gangway_frame.coupler.text_2": "Межвагонные перехода автоматически соединяются и разъединяются при соединении и разъединении авто-сцепок",
+	"simurail.ponder.gangway_frame.coupler.text_1": "Межвагонные переходы могут быть комбирированы с авто-сцепками",
+	"simurail.ponder.gangway_frame.coupler.text_2": "Межвагонные переходы автоматически соединяются и разъединяются при соединении и разъединении авто-сцепок",
 
 	"simurail.ponder.steering_connector.intro.header": "Соединение физических тележек с помощью рулевого провода",
 	"simurail.ponder.steering_connector.intro.text_1": "Рулевой провод — это инструмент, который соединяет физические тележки в группу рулевого управления.",
 	"simurail.ponder.steering_connector.intro.text_2": "Подключенные физические тележки следуют друг за другом на переключателях пути",
 	"simurail.ponder.steering_connector.intro.text_3": "Редстоун-сигнал может быть подан на любую подключенную физическую тележку, чтобы повернуть на стрелочных переводах",
-	"simurail.ponder.steering_connector.intro.text_4": "Для отключения кликните на тех же местах подключения, что и при подключении",
+	"simurail.ponder.steering_connector.intro.text_4": "Для отключения кликните на том же месте дважды",
 
 	"simurail.ponder.steering_connector.coupler.header": "Соединение рулевого провода с авто-сцепками",
 	"simurail.ponder.steering_connector.coupler.text_1": "Рулевой провод может соединять физическое тележки с авто-сцепками на одной и той же Simulated конструкции",

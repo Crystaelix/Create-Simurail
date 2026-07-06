@@ -78,8 +78,8 @@
 	"subtitles.simurail.block.gangway.connect": "Переход соединён",
 	"subtitles.simurail.block.gangway.disconnect": "Переход рассоединён",
 
-	"force_group.simurail.traction": "Traction",
-	"force_group.simurail.brake": "Brake",
+	"force_group.simurail.traction": "Тяга",
+	"force_group.simurail.brake": "Торможение",
 
 	"simulated_section.simurail.simurail": "Simurail",
 

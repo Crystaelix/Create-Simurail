@@ -78,6 +78,9 @@
 	"subtitles.simurail.block.gangway.connect": "Gangway connects",
 	"subtitles.simurail.block.gangway.disconnect": "Gangway disconnects",
 
+	"force_group.simurail.traction": "Traction",
+	"force_group.simurail.brake": "Brake",
+
 	"simulated_section.simurail.simurail": "Simurail",
 
 	"simurail_bogey_entry.create.standard.small": "Create Standard S",

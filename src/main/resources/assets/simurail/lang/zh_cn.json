@@ -78,6 +78,9 @@
 	"subtitles.simurail.block.gangway.connect": "风挡：连接",
 	"subtitles.simurail.block.gangway.disconnect": "风挡：断开",
 
+	"force_group.simurail.traction": "牵引力",
+	"force_group.simurail.brake": "煞车力",
+
 	"simulated_section.simurail.simurail": "模拟铁道",
 
 	"simurail_bogey_entry.create.standard.small": "小型机械动力标准",

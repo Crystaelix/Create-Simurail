@@ -70,13 +70,16 @@
 	"gui.simurail.physics_bogey.track_type": "Тип пути",
 	"gui.simurail.physics_bogey.options": "Изменить опции тележки",
 
+	"gui.simurail.gangway_frame.shape": "Форма",
+	"gui.simurail.gangway_frame.rest_length": "Длина в сложенном состоянии",
+
 	"subtitles.simurail.block.coupler.connect": "Сцепка соединена",
 	"subtitles.simurail.block.coupler.disconnect": "Сцепка рассоединена",
 	"subtitles.simurail.block.gangway.connect": "Переход соединён",
 	"subtitles.simurail.block.gangway.disconnect": "Переход рассоединён",
 
-	"gui.simurail.gangway_frame.shape": "Форма",
-	"gui.simurail.gangway_frame.rest_length": "Длина в сложенном состоянии",
+	"force_group.simurail.traction": "Traction",
+	"force_group.simurail.brake": "Brake",
 
 	"simulated_section.simurail.simurail": "Simurail",
 

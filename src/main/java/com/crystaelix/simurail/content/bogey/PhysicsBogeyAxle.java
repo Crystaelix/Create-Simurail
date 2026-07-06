@@ -20,6 +20,7 @@ import com.crystaelix.simurail.api.track.TrackTypeEntries;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
 import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.config.SimurailPhysicsConfig;
+import com.crystaelix.simurail.content.SimurailForceGroups;
 import com.crystaelix.simurail.content.track.CurvedTrackSegment;
 import com.crystaelix.simurail.content.track.TrackSegment;
 import com.crystaelix.simurail.content.track.TrackSegmentHelper;
@@ -40,7 +41,7 @@ import dev.ryanhcode.sable.api.physics.constraint.FixedConstraintConfiguration;
 import dev.ryanhcode.sable.api.physics.constraint.FixedConstraintHandle;
 import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration;
 import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
-import dev.ryanhcode.sable.api.physics.force.ForceTotal;
+import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.physics.mass.MassData;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
@@ -291,8 +292,10 @@ public class PhysicsBogeyAxle {
 				trackFrame.direction.negate();
 				trackFrame.lateral.negate();
 			}
-			trackFrame.transform(trackSubLevelPose, globalTrackFrame);
-			globalTrackFrame.transformInverse(subLevel.logicalPose(), bogeyTrackFrame);
+			trackFrame.orientation(globalTrackRot).premul(trackSubLevelPose.orientation());
+			bogeyForceFrame.set(trackFrame);
+			bogeyForceFrame.position.add(0, 0.5, 0);
+			bogeyForceFrame.transform(trackSubLevelPose).transformInverse(subLevel.logicalPose());
 
 			Sable.HELPER.getVelocity(subLevel.getLevel(), trackAxleFrame.position, globalTrackVel);
 			globalAxleVel.sub(globalTrackVel, globalRelVel);
@@ -301,7 +304,7 @@ public class PhysicsBogeyAxle {
 			yFixed = zFixed = false;
 			yFixedTimer = zFixedTimer = 0;
 			removeJoint();
-			globalTrackFrame.set(globalAxleFrame);
+			globalAxleFrame.orientation(globalTrackRot);
 
 			clipResult = findGround(subLevel);
 			JOMLConversion.toJOML(clipResult.getLocation(), clipPos);
@@ -313,7 +316,6 @@ public class PhysicsBogeyAxle {
 
 		subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
 		speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
-		globalTrackFrame.orientation(globalTrackRot);
 		updateGraph(true);
 	}
 
@@ -495,21 +497,21 @@ public class PhysicsBogeyAxle {
 		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit - 0.125, zLimit + 0.125);
 	}
 
-	protected void updateForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+	protected void updateForces(ServerSubLevel subLevel, double timeStep) {
 		if(!bogey.options.enabled) {
 			removeJoint();
 			return;
 		}
 		if(trackSegment != null) {
 			removeAxleBox(subLevel);
-			updateTrackForces(subLevel, handle, timeStep);
+			updateTrackForces(subLevel, timeStep);
 		}
 		else {
-			updateWorldForces(subLevel, handle, timeStep);
+			updateWorldForces(subLevel, timeStep);
 		}
 	}
 
-	protected void updateTrackForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+	protected void updateTrackForces(ServerSubLevel subLevel, double timeStep) {
 		if(!bogey.options.enabled || trackSegment == null) {
 			removeJoint();
 			return;
@@ -517,15 +519,13 @@ public class PhysicsBogeyAxle {
 
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
 		MassData massData = subLevel.getMassTracker();
-		queuedForce.zero();
 
 		{
-			double normalMass = 1 / massData.getInverseNormalMass(bogeyTrackFrame.position, bogeyTrackFrame.vertical);
+			double normalMass = 1 / massData.getInverseNormalMass(bogeyForceFrame.position, bogeyForceFrame.vertical);
 			double friction = getTrackFriction(trackSegment);
 
 			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
 			double brakeStrength = bogey.getBrakeStrength();
-			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 
 			double targetSpeedFactor = config.axleTargetSpeedFactor.get();
 			targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep();
@@ -541,7 +541,10 @@ public class PhysicsBogeyAxle {
 				driveForce = diffSign * driveMag * (1 - brakeStrength) * Math.clamp(friction, 0.05, 1);
 			}
 
-			queuedForce.fma((driveForce - brakeForce) * timeStep, bogeyTrackFrame.direction);
+			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
+
+			bogeyAxleFrame.direction.mul(driveForce * timeStep, queuedTractionForce);
+			bogeyAxleFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
 
 			if(friction < 1) {
 				visualSpeed = Mth.lerp(friction * 0.9 + 0.1, targetSpeed, speed);
@@ -551,13 +554,17 @@ public class PhysicsBogeyAxle {
 			}
 		}
 
-		handle.applyImpulseAtPoint(bogeyTrackFrame.position, queuedForce);
+		QueuedForceGroup tractionGroup = subLevel.getOrCreateQueuedForceGroup(SimurailForceGroups.TRACTION.get());
+		tractionGroup.applyAndRecordPointForce(bogeyForceFrame.position, queuedTractionForce);
+		QueuedForceGroup brakeGroup = subLevel.getOrCreateQueuedForceGroup(SimurailForceGroups.BRAKE.get());
+		brakeGroup.applyAndRecordPointForce(bogeyForceFrame.position, queuedBrakeForce);
 
 		if(trackSubLevel != null) {
-			subLevel.logicalPose().transformNormal(queuedForce);
-			trackSubLevelPose.transformNormalInverse(queuedForce);
-			queuedForce.negate();
-			RigidBodyHandle.of(trackSubLevel).applyImpulseAtPoint(trackFrame.position, queuedForce);
+			queuedReactionForce.set(queuedTractionForce).add(queuedBrakeForce);
+			subLevel.logicalPose().transformNormal(queuedReactionForce);
+			trackSubLevelPose.transformNormalInverse(queuedReactionForce);
+			queuedReactionForce.negate();
+			RigidBodyHandle.of(clipSubLevel).applyImpulseAtPoint(clipPos, queuedReactionForce);
 		}
 	}
 
@@ -565,7 +572,7 @@ public class PhysicsBogeyAxle {
 		return 1;
 	}
 
-	protected void updateWorldForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+	protected void updateWorldForces(ServerSubLevel subLevel, double timeStep) {
 		if(!bogey.options.enabled || trackSegment != null || !bogey.options.type.groundDrivable()) {
 			return;
 		}
@@ -587,7 +594,6 @@ public class PhysicsBogeyAxle {
 
 		Pose3dc clipSubLevelPose = clipSubLevel == null ? SimurailMath.POSE_I : clipSubLevel.logicalPose();
 		MassData massData = subLevel.getMassTracker();
-		queuedForce.zero();
 
 		{
 			double normalMass = 1 / massData.getInverseNormalMass(bogeyAxleFrame.position, bogeyAxleFrame.vertical);
@@ -596,7 +602,6 @@ public class PhysicsBogeyAxle {
 
 			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
 			double brakeStrength = bogey.getBrakeStrength();
-			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 
 			double targetSign = Math.signum(targetSpeed);
 			double diffSpeed = targetSpeed - speed;
@@ -610,7 +615,10 @@ public class PhysicsBogeyAxle {
 				driveForce = diffSign * driveMag * (1 - brakeStrength) * Math.clamp(friction, 0.05, 1);
 			}
 
-			queuedForce.fma((driveForce - brakeForce) * timeStep, bogeyAxleFrame.direction);
+			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
+
+			bogeyAxleFrame.direction.mul(driveForce * timeStep, queuedTractionForce);
+			bogeyAxleFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
 
 			if(friction < 1) {
 				visualSpeed = Mth.lerp(friction * 0.9 + 0.1, targetSpeed, speed);
@@ -620,13 +628,17 @@ public class PhysicsBogeyAxle {
 			}
 		}
 
-		handle.applyImpulseAtPoint(bogeyAxleFrame.position, queuedForce);
+		QueuedForceGroup tractionGroup = subLevel.getOrCreateQueuedForceGroup(SimurailForceGroups.TRACTION.get());
+		tractionGroup.applyAndRecordPointForce(bogeyForceFrame.position, queuedTractionForce);
+		QueuedForceGroup brakeGroup = subLevel.getOrCreateQueuedForceGroup(SimurailForceGroups.BRAKE.get());
+		brakeGroup.applyAndRecordPointForce(bogeyForceFrame.position, queuedBrakeForce);
 
 		if(clipSubLevel != null) {
-			subLevel.logicalPose().transformNormal(queuedForce);
-			clipSubLevelPose.transformNormalInverse(queuedForce);
-			queuedForce.negate();
-			RigidBodyHandle.of(clipSubLevel).applyImpulseAtPoint(clipPos, queuedForce);
+			queuedReactionForce.set(queuedTractionForce).add(queuedBrakeForce);
+			subLevel.logicalPose().transformNormal(queuedReactionForce);
+			clipSubLevelPose.transformNormalInverse(queuedReactionForce);
+			queuedReactionForce.negate();
+			RigidBodyHandle.of(clipSubLevel).applyImpulseAtPoint(clipPos, queuedReactionForce);
 		}
 	}
 
@@ -893,8 +905,7 @@ public class PhysicsBogeyAxle {
 	protected final Frame3d trackAxleFrame = new Frame3d();
 
 	protected final Frame3d trackFrame = new Frame3d();
-	protected final Frame3d globalTrackFrame = new Frame3d();
-	protected final Frame3d bogeyTrackFrame = new Frame3d();
+	protected final Frame3d bogeyForceFrame = new Frame3d();
 	protected final Quaterniond globalTrackRot = new Quaterniond();
 
 	protected final Vector3d clipPos = new Vector3d();
@@ -905,8 +916,9 @@ public class PhysicsBogeyAxle {
 
 	protected final Vector3d globalTrackCurvature = new Vector3d();
 
-	protected final ForceTotal forceTotal = new ForceTotal();
-	protected final Vector3d queuedForce = new Vector3d();
+	protected final Vector3d queuedBrakeForce = new Vector3d();
+	protected final Vector3d queuedTractionForce = new Vector3d();
+	protected final Vector3d queuedReactionForce = new Vector3d();
 
 	protected final Vector3d globalAxleVel = new Vector3d();
 	protected final Vector3d globalTrackVel = new Vector3d();

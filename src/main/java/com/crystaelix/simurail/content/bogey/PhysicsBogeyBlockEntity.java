@@ -577,8 +577,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		axleFront.updateLimits(subLevel, timeStep);
 		axleBack.updateLimits(subLevel, timeStep);
 
-		axleFront.updateForces(subLevel, handle, timeStep);
-		axleBack.updateForces(subLevel, handle, timeStep);
+		axleFront.updateForces(subLevel, timeStep);
+		axleBack.updateForces(subLevel, timeStep);
 	}
 
 	protected void updatePivotLimits(ServerSubLevel subLevel, double timeStep) {

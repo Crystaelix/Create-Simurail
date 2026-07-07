@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:automatic_coupler"
+	},
+	"pattern": [
+		"CIS"
+	],
+	"key": {
+		"C": {
+			"item": "create:cogwheel"
+		},
+		"I": {
+			"item": "create:industrial_iron_block"
+		},
+		"S": {
+			"tag": "c:plates/obsidian"
+		}
+	}
+}

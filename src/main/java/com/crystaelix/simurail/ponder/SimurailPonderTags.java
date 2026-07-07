@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.ponder;
 
 import com.crystaelix.simurail.content.SimurailBlocks;
+import com.crystaelix.simurail.content.SimurailItems;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
 import dev.simulated_team.simulated.index.SimPonderTags;
@@ -24,6 +25,7 @@ public class SimurailPonderTags {
 		helper.addToTag(AllCreatePonderTags.TRAIN_RELATED).
 		add(SimurailBlocks.PHYSICS_BOGEY.get()).
 		add(SimurailBlocks.AUTOMATIC_COUPLER.get()).
-		add(SimurailBlocks.GANGWAY_FRAME.get());
+		add(SimurailBlocks.GANGWAY_FRAME.get()).
+		add(SimurailItems.STEERING_CONNECTOR.get());
 	}
 }

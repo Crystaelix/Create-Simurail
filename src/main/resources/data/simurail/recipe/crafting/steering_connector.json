@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:steering_connector"
+	},
+	"pattern": [
+		"ICI"
+	],
+	"key": {
+		"I": {
+			"item": "create:industrial_iron_block"
+		},
+		"C": {
+			"item": "create:minecart_coupling"
+		}
+	}
+}

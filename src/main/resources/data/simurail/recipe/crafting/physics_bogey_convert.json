@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"count": 1,
+		"id": "simurail:physics_bogey"
+	},
+	"ingredients": [
+		{
+			"item": "simurail:inverted_physics_bogey"
+		}
+	]
+}

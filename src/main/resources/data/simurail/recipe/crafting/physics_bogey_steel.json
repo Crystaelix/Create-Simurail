@@ -1,0 +1,41 @@
+{
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:not",
+			"value": {
+				"type": "neoforge:tag_empty",
+				"tag": "c:ingots/steel"
+			}
+		}
+	],
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:physics_bogey"
+	},
+	"pattern": [
+		"STS",
+		"EPE",
+		"IAI"
+	],
+	"key": {
+		"T": {
+			"item": "create:railway_casing"
+		},
+		"P": {
+			"item": "create:precision_mechanism"
+		},
+		"A": {
+			"item": "create:shaft"
+		},
+		"S": {
+			"tag": "c:plates/obsidian"
+		},
+		"E": {
+			"item": "create:electron_tube"
+		},
+		"I": {
+			"tag": "c:ingots/steel"
+		}
+	}
+}

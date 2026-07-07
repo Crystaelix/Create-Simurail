@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 4,
+		"id": "simurail:gangway_frame"
+	},
+	"pattern": [
+		"ISS"
+	],
+	"key": {
+		"I": {
+			"item": "create:industrial_iron_block"
+		},
+		"S": {
+			"tag": "c:plates/obsidian"
+		}
+	}
+}

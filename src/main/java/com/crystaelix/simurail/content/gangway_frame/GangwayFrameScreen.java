@@ -30,7 +30,7 @@ public class GangwayFrameScreen extends AbstractSimiScreen implements MenuAccess
 	final GangwayFrameMenu menu;
 
 	final BlockPos pos;
-	GangwayFrameShape shape;
+	GangwayFrameBlockShape shape;
 	float restLength;
 
 	private SLabel shapeLabel;
@@ -71,11 +71,11 @@ public class GangwayFrameScreen extends AbstractSimiScreen implements MenuAccess
 		restLengthLabel.withShadow();
 
 		shapeInput = new SelectionScrollInput(x + 45, y + 23, 109, 18);
-		shapeInput.forOptions(GangwayFrameShape.NORMAL.stream().map(GangwayFrameShape::getDisplayName).toList());
+		shapeInput.forOptions(GangwayFrameBlockShape.NORMAL.stream().map(GangwayFrameBlockShape::getDisplayName).toList());
 		shapeInput.titled(SHAPE_TITLE.plainCopy());
 		shapeInput.writingTo(shapeLabel);
 		shapeInput.setState(shape.ordinal());
-		shapeInput.calling(i -> shape = GangwayFrameShape.BY_ID.apply(i));
+		shapeInput.calling(i -> shape = GangwayFrameBlockShape.BY_ID.apply(i));
 
 		restLengthInput = new ScrollInput(x + 45, y + 45, 109, 18);
 		restLengthInput.withRange(0, 15);

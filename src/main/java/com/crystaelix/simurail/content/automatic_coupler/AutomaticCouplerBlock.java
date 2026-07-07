@@ -6,7 +6,7 @@ import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
-import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -53,15 +53,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements IBE<AutomaticCouplerBlockEntity>, BlockSubLevelCollisionShape, BlockSubLevelAssemblyListener, ProperWaterloggedBlock, IWrenchable {
 
 	public static final MapCodec<AutomaticCouplerBlock> CODEC = simpleCodec(AutomaticCouplerBlock::new);
-	public static final EnumProperty<GangwayFrameShape> GANGWAY_SHAPE = EnumProperty.create("gangway_shape", GangwayFrameShape.class, GangwayFrameShape.COUPLER);
+	public static final EnumProperty<GangwayFrameBlockShape> GANGWAY_SHAPE = EnumProperty.create("gangway_shape", GangwayFrameBlockShape.class, GangwayFrameBlockShape.COUPLER);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public static final VoxelShaper SHAPES = VoxelShaper.forHorizontal(box(5, 5, 0, 11, 11, 3), Direction.SOUTH);
 	public static final VoxelShaper[] D_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 3), GangwayFrameShape.D.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
+			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 3), GangwayFrameBlockShape.D.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
 			toArray(VoxelShaper[]::new);
 	public static final VoxelShaper[] U_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 3), GangwayFrameShape.U.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
+			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 3), GangwayFrameBlockShape.U.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
 			toArray(VoxelShaper[]::new);
 	public static final VoxelShaper SUBLEVEL_SHAPES = VoxelShaper.forHorizontal(box(5, 5, 0, 11, 11, 0.25), Direction.SOUTH);
 	public static final VoxelShaper SUBLEVEL_D_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 0.25), box(0, 2, 0, 16, 4, 0.25)), Direction.SOUTH);
@@ -69,7 +69,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 
 	public AutomaticCouplerBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(GANGWAY_SHAPE, GangwayFrameShape.NONE).setValue(POWERED, false).setValue(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(GANGWAY_SHAPE, GangwayFrameBlockShape.NONE).setValue(POWERED, false).setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Level level = context.getLevel();
 		BlockState oldState = level.getBlockState(context.getClickedPos());
-		if(oldState.is(SimurailBlocks.GANGWAY_FRAME) && GangwayFrameShape.COUPLER.contains(oldState.getValue(GangwayFrameBlock.SHAPE))) {
+		if(oldState.is(SimurailBlocks.GANGWAY_FRAME) && GangwayFrameBlockShape.COUPLER.contains(oldState.getValue(GangwayFrameBlock.SHAPE))) {
 			BlockState state = defaultBlockState().
 					setValue(FACING, oldState.getValue(FACING)).
 					setValue(POWERED, oldState.getValue(POWERED)).
@@ -242,7 +242,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-		if(state.getValue(GANGWAY_SHAPE) == GangwayFrameShape.NONE) {
+		if(state.getValue(GANGWAY_SHAPE) == GangwayFrameBlockShape.NONE) {
 			return IWrenchable.super.onSneakWrenched(state, context);
 		}
 		Level level = context.getLevel();
@@ -275,7 +275,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 			be.removeGangwayPartner();
 			be.gangwayRestLength = 0;
 			be.gangwayColor = DyeColor.GRAY.getFireworkColor();
-			BlockState newState = state.setValue(GANGWAY_SHAPE, GangwayFrameShape.NONE);
+			BlockState newState = state.setValue(GANGWAY_SHAPE, GangwayFrameBlockShape.NONE);
 			level.setBlock(pos, newState, UPDATE_ALL);
 		}
 		IWrenchable.playRemoveSound(level, pos);

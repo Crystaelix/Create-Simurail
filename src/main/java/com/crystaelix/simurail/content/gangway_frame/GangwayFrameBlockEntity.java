@@ -75,7 +75,7 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 	}
 
 	@Override
-	public GangwayFrameShape getGangwayShape() {
+	public GangwayFrameBlockShape getGangwayShape() {
 		return getBlockState().getValue(GangwayFrameBlock.SHAPE);
 	}
 
@@ -190,7 +190,7 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 	public void tick() {
 		super.tick();
 		GangwayFrame partner = getGangwayPartner();
-		GangwayFrameShape shape = getGangwayShape();
+		GangwayFrameBlockShape shape = getGangwayShape();
 		Direction facing = getFacing();
 		boolean newHasPartner = partner != null || level instanceof PonderLevel && gangwayPartnerPos != null;
 
@@ -280,18 +280,26 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 					BlockPos partnerPos = cPartner.getBlockPos().relative(partnerOffset);
 					if(level.getBlockEntity(selfPos) instanceof GangwayFrame selfNeighbor &&
 							!visited.contains(selfNeighbor) &&
-							selfShape.adjacentTo(cw).contains(selfNeighbor.getGangwayShape()) &&
-							level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
-							selfNeighbor.getGangwayShape().connectsTo() == partnerNeighbor.getGangwayShape()) {
-						visited.add(selfNeighbor);
-						selfCouple.set(cw, selfNeighbor);
-						partnerCouple.set(cw, partnerNeighbor);
-						selfNeighbor.setGangwayPartner(partnerPos);
+							cSelf.getFacing() == selfNeighbor.getFacing()) {
+						GangwayFrameShape neighborShape = selfNeighbor.getGangwayShape();
+						int selfAdj = selfShape.adjacentTo(neighborShape, cw);
+						int neighborAdj = neighborShape.adjacentTo(selfShape, !cw);
+						if((selfAdj != 0 || neighborAdj != 0) &&
+								level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
+								cPartner.getFacing() == partnerNeighbor.getFacing() &&
+								neighborShape.connectsTo().equals(partnerNeighbor.getGangwayShape())) {
+							visited.add(selfNeighbor);
+							selfCouple.set(cw, selfNeighbor);
+							partnerCouple.set(cw, partnerNeighbor);
+							selfNeighbor.setGangwayPartner(partnerPos);
+							if(selfAdj < 0 || neighborAdj < 0) {
+								cw = !cw;
+							}
+							continue;
+						}
 					}
-					else {
-						selfCouple.set(cw, null);
-						partnerCouple.set(cw, null);
-					}
+					selfCouple.set(cw, null);
+					partnerCouple.set(cw, null);
 				}
 			}
 		}
@@ -314,9 +322,9 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 
 	@Override
 	public void setBlockState(BlockState blockState) {
-		GangwayFrameShape oldShape = getGangwayShape();
+		GangwayFrameBlockShape oldShape = getGangwayShape();
 		super.setBlockState(blockState);
-		GangwayFrameShape newShape = getGangwayShape();
+		GangwayFrameBlockShape newShape = getGangwayShape();
 		if(newShape != oldShape) {
 			removeGangwayPartner();
 		}

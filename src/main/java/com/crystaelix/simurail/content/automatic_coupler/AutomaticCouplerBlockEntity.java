@@ -22,6 +22,7 @@ import com.crystaelix.simurail.content.SimurailCouplers;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
 import com.crystaelix.simurail.content.steering_connector.SteeringConnectable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -150,7 +151,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public GangwayFrameShape getGangwayShape() {
+	public GangwayFrameBlockShape getGangwayShape() {
 		return getBlockState().getValue(AutomaticCouplerBlock.GANGWAY_SHAPE);
 	}
 
@@ -403,7 +404,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		init();
 		super.tick();
 		GangwayFrame gangwayPartner = getGangwayPartner();
-		GangwayFrameShape gangwayShape = getGangwayShape();
+		GangwayFrameBlockShape gangwayShape = getGangwayShape();
 		Direction facing = getFacing();
 		int shapeIndex = 0;
 
@@ -641,7 +642,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	public void tryConnectGangway() {
-		if(getGangwayShape() == GangwayFrameShape.NONE || isGangwayPowered()) {
+		if(getGangwayShape() == GangwayFrameBlockShape.NONE || isGangwayPowered()) {
 			return;
 		}
 		GangwayFrame partner = GangwayFrame.findGangwayPartner(this, level);
@@ -665,18 +666,26 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 					BlockPos partnerPos = cPartner.getBlockPos().relative(partnerOffset);
 					if(level.getBlockEntity(selfPos) instanceof GangwayFrame selfNeighbor &&
 							!visited.contains(selfNeighbor) &&
-							selfShape.adjacentTo(cw).contains(selfNeighbor.getGangwayShape()) &&
-							level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
-							selfNeighbor.getGangwayShape().connectsTo() == partnerNeighbor.getGangwayShape()) {
-						visited.add(selfNeighbor);
-						selfCouple.set(cw, selfNeighbor);
-						partnerCouple.set(cw, partnerNeighbor);
-						selfNeighbor.setGangwayPartner(partnerPos);
+							cSelf.getFacing() == selfNeighbor.getFacing()) {
+						GangwayFrameShape neighborShape = selfNeighbor.getGangwayShape();
+						int selfAdj = selfShape.adjacentTo(neighborShape, cw);
+						int neighborAdj = neighborShape.adjacentTo(selfShape, !cw);
+						if((selfAdj != 0 || neighborAdj != 0) &&
+								level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
+								cPartner.getFacing() == partnerNeighbor.getFacing() &&
+								neighborShape.connectsTo().equals(partnerNeighbor.getGangwayShape())) {
+							visited.add(selfNeighbor);
+							selfCouple.set(cw, selfNeighbor);
+							partnerCouple.set(cw, partnerNeighbor);
+							selfNeighbor.setGangwayPartner(partnerPos);
+							if(selfAdj < 0 || neighborAdj < 0) {
+								cw = !cw;
+							}
+							continue;
+						}
 					}
-					else {
-						selfCouple.set(cw, null);
-						partnerCouple.set(cw, null);
-					}
+					selfCouple.set(cw, null);
+					partnerCouple.set(cw, null);
 				}
 			}
 		}
@@ -684,7 +693,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	public void tryDisconnectGangway() {
 		removeGangwayPartner();
-		if(getGangwayShape() == GangwayFrameShape.NONE) {
+		if(getGangwayShape() == GangwayFrameBlockShape.NONE) {
 			return;
 		}
 		GangwayFrame.getNeighbors(this, level, 15).forEach(GangwayFrame::removeGangwayPartner);
@@ -713,9 +722,9 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	@Override
 	public void setBlockState(BlockState blockState) {
-		GangwayFrameShape oldShape = getGangwayShape();
+		GangwayFrameBlockShape oldShape = getGangwayShape();
 		super.setBlockState(blockState);
-		GangwayFrameShape newShape = getGangwayShape();
+		GangwayFrameBlockShape newShape = getGangwayShape();
 		if(newShape != oldShape) {
 			removeGangwayPartner();
 		}

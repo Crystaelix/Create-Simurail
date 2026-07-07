@@ -43,14 +43,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE<GangwayFrameBlockEntity>, BlockSubLevelCollisionShape, BlockSubLevelAssemblyListener, ProperWaterloggedBlock, IWrenchable {
 
 	public static final MapCodec<GangwayFrameBlock> CODEC = simpleCodec(GangwayFrameBlock::new);
-	public static final EnumProperty<GangwayFrameShape> SHAPE = EnumProperty.create("shape", GangwayFrameShape.class, GangwayFrameShape.NORMAL);
+	public static final EnumProperty<GangwayFrameBlockShape> SHAPE = EnumProperty.create("shape", GangwayFrameBlockShape.class, GangwayFrameBlockShape.NORMAL);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public static final double PI_DIV_6 = Math.PI / 6;
 
 	public GangwayFrameBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(SHAPE, GangwayFrameShape.U).setValue(POWERED, false).setValue(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(SHAPE, GangwayFrameBlockShape.U).setValue(POWERED, false).setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -68,16 +68,16 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Level level = context.getLevel();
 		BlockState oldState = level.getBlockState(context.getClickedPos());
-		if(oldState.is(SimurailBlocks.AUTOMATIC_COUPLER) && oldState.getValue(AutomaticCouplerBlock.GANGWAY_SHAPE) == GangwayFrameShape.NONE) {
+		if(oldState.is(SimurailBlocks.AUTOMATIC_COUPLER) && oldState.getValue(AutomaticCouplerBlock.GANGWAY_SHAPE) == GangwayFrameBlockShape.NONE) {
 			double hitY = context.getClickLocation().y - context.getClickedPos().getY();
-			GangwayFrameShape shape = hitY > 0.5 ? GangwayFrameShape.U : GangwayFrameShape.D;
+			GangwayFrameBlockShape shape = hitY > 0.5 ? GangwayFrameBlockShape.U : GangwayFrameBlockShape.D;
 			return oldState.setValue(AutomaticCouplerBlock.GANGWAY_SHAPE, shape);
 		}
 
 		Direction direction = context.getClickedFace();
-		GangwayFrameShape shape;
+		GangwayFrameBlockShape shape;
 		if(direction.getAxis() == Direction.Axis.Y) {
-			shape = direction == Direction.UP ? GangwayFrameShape.D : GangwayFrameShape.U;
+			shape = direction == Direction.UP ? GangwayFrameBlockShape.D : GangwayFrameBlockShape.U;
 			direction = context.getHorizontalDirection().getOpposite();
 		}
 		else {
@@ -90,15 +90,15 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 			};
 			double y = context.getClickLocation().y - context.getClickedPos().getY() - 0.5;
 			double angle = Math.atan2(y, x);
-			if     (angle > PI_DIV_6 * 5)  shape = GangwayFrameShape.L;
-			else if(angle > PI_DIV_6 * 4)  shape = GangwayFrameShape.LU;
-			else if(angle > PI_DIV_6 * 2)  shape = GangwayFrameShape.U;
-			else if(angle > PI_DIV_6 * 1)  shape = GangwayFrameShape.UR;
-			else if(angle > -PI_DIV_6 * 1) shape = GangwayFrameShape.R;
-			else if(angle > -PI_DIV_6 * 2) shape = GangwayFrameShape.RD;
-			else if(angle > -PI_DIV_6 * 4) shape = GangwayFrameShape.D;
-			else if(angle > -PI_DIV_6 * 5) shape = GangwayFrameShape.DL;
-			else                           shape = GangwayFrameShape.L;
+			if     (angle > PI_DIV_6 * 5)  shape = GangwayFrameBlockShape.L;
+			else if(angle > PI_DIV_6 * 4)  shape = GangwayFrameBlockShape.LU;
+			else if(angle > PI_DIV_6 * 2)  shape = GangwayFrameBlockShape.U;
+			else if(angle > PI_DIV_6 * 1)  shape = GangwayFrameBlockShape.UR;
+			else if(angle > -PI_DIV_6 * 1) shape = GangwayFrameBlockShape.R;
+			else if(angle > -PI_DIV_6 * 2) shape = GangwayFrameBlockShape.RD;
+			else if(angle > -PI_DIV_6 * 4) shape = GangwayFrameBlockShape.D;
+			else if(angle > -PI_DIV_6 * 5) shape = GangwayFrameBlockShape.DL;
+			else                           shape = GangwayFrameBlockShape.L;
 		}
 		BlockState state = defaultBlockState().
 				setValue(FACING, direction).
@@ -163,7 +163,7 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 
 	@Override
 	protected boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
-		return GangwayFrameShape.COUPLER.contains(state.getValue(SHAPE)) && useContext.getItemInHand().is(SimurailBlocks.AUTOMATIC_COUPLER.asItem());
+		return GangwayFrameBlockShape.COUPLER.contains(state.getValue(SHAPE)) && useContext.getItemInHand().is(SimurailBlocks.AUTOMATIC_COUPLER.asItem());
 	}
 
 	@Override

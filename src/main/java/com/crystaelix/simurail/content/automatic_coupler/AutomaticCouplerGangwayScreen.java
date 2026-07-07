@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailGuiTextures;
-import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.crystaelix.simurail.gui.SLabel;
 import com.google.common.collect.Lists;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -28,10 +28,10 @@ public class AutomaticCouplerGangwayScreen extends AutomaticCouplerBaseScreen {
 
 	public static final Component CONFIRM_TOOLTIP = Component.translatable("create.action.confirm");
 
-	public static final List<GangwayFrameShape> OPTIONS = List.of(GangwayFrameShape.D, GangwayFrameShape.U);
+	public static final List<GangwayFrameBlockShape> OPTIONS = List.of(GangwayFrameBlockShape.D, GangwayFrameBlockShape.U);
 
 	final BlockPos pos;
-	GangwayFrameShape shape;
+	GangwayFrameBlockShape shape;
 	float restLength;
 
 	private SLabel shapeLabel;
@@ -66,7 +66,7 @@ public class AutomaticCouplerGangwayScreen extends AutomaticCouplerBaseScreen {
 		restLengthLabel.withShadow();
 
 		shapeInput = new SelectionScrollInput(x + 45, y + 23, 109, 18);
-		shapeInput.forOptions(Lists.transform(OPTIONS, GangwayFrameShape::getDisplayName));
+		shapeInput.forOptions(Lists.transform(OPTIONS, GangwayFrameBlockShape::getDisplayName));
 		shapeInput.titled(SHAPE_TITLE.plainCopy());
 		shapeInput.writingTo(shapeLabel);
 		shapeInput.setState(OPTIONS.indexOf(shape));

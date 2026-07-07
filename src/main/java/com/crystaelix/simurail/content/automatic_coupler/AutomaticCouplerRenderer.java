@@ -15,7 +15,7 @@ import com.crystaelix.simurail.api.math.SimurailMathf;
 import com.crystaelix.simurail.api.util.RenderUtil;
 import com.crystaelix.simurail.content.SimurailPartialModels;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
-import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -116,7 +116,7 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 		}
 
 		Direction facing = be.getFacing();
-		GangwayFrameShape shape = be.getGangwayShape();
+		GangwayFrameBlockShape shape = be.getGangwayShape();
 		Vector3dc selfDir = be.getDirection();
 
 		shape.quad(facing, selfQuad);

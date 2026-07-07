@@ -293,8 +293,9 @@ public class PhysicsBogeyAxle {
 				trackFrame.lateral.negate();
 			}
 			trackFrame.orientation(globalTrackRot).premul(trackSubLevelPose.orientation());
+
 			bogeyForceFrame.set(trackFrame);
-			bogeyForceFrame.position.add(0, 0.5, 0);
+			bogeyForceFrame.position.fma(0.5, trackFrame.vertical);
 			bogeyForceFrame.transform(trackSubLevelPose).transformInverse(subLevel.logicalPose());
 
 			Sable.HELPER.getVelocity(subLevel.getLevel(), trackAxleFrame.position, globalTrackVel);
@@ -310,12 +311,16 @@ public class PhysicsBogeyAxle {
 			JOMLConversion.toJOML(clipResult.getLocation(), clipPos);
 			clipSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, clipPos);
 
+			bogeyForceFrame.set(axleFrame);
+			bogeyForceFrame.position.fma(0.5, axleFrame.vertical);
+			bogeyForceFrame.transform(bogey.pivotPose).transformInverse(subLevel.logicalPose());
+
 			Sable.HELPER.getVelocity(level, clipPos, globalHitVel);
 			globalAxleVel.sub(globalHitVel, globalRelVel);
 		}
 
 		subLevel.logicalPose().transformNormalInverse(globalRelVel, bogeyRelVel);
-		speed = bogeyRelVel.dot(bogeyAxleFrame.direction);
+		speed = bogeyRelVel.dot(bogeyForceFrame.direction);
 		updateGraph(true);
 	}
 
@@ -541,10 +546,13 @@ public class PhysicsBogeyAxle {
 				driveForce = diffSign * driveMag * (1 - brakeStrength) * Math.clamp(friction, 0.05, 1);
 			}
 
-			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
+			double speedSign = Math.signum(speed);
+			double speedSignMag = Math.clamp(Math.abs(speed), 0, 1);
+			double signFactor = (speedSignMag * speedSignMag * speedSignMag * 0.25 + speedSignMag * 0.75) * speedSign;
+			double brakeForce = signFactor * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 
-			bogeyAxleFrame.direction.mul(driveForce * timeStep, queuedTractionForce);
-			bogeyAxleFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
+			bogeyForceFrame.direction.mul(driveForce * timeStep, queuedTractionForce);
+			bogeyForceFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
 
 			if(friction < 1) {
 				visualSpeed = Mth.lerp(friction * 0.9 + 0.1, targetSpeed, speed);
@@ -564,7 +572,7 @@ public class PhysicsBogeyAxle {
 			subLevel.logicalPose().transformNormal(queuedReactionForce);
 			trackSubLevelPose.transformNormalInverse(queuedReactionForce);
 			queuedReactionForce.negate();
-			RigidBodyHandle.of(clipSubLevel).applyImpulseAtPoint(clipPos, queuedReactionForce);
+			RigidBodyHandle.of(trackSubLevel).applyImpulseAtPoint(trackFrame.position, queuedReactionForce);
 		}
 	}
 
@@ -596,7 +604,7 @@ public class PhysicsBogeyAxle {
 		MassData massData = subLevel.getMassTracker();
 
 		{
-			double normalMass = 1 / massData.getInverseNormalMass(bogeyAxleFrame.position, bogeyAxleFrame.vertical);
+			double normalMass = 1 / massData.getInverseNormalMass(bogeyForceFrame.position, bogeyForceFrame.vertical);
 			double frictionFactor = config.axleDerailFrictionFactor.get();
 			double friction = PhysicsBlockPropertyHelper.getFriction(level.getBlockState(clipResult.getBlockPos())) * frictionFactor;
 
@@ -615,10 +623,13 @@ public class PhysicsBogeyAxle {
 				driveForce = diffSign * driveMag * (1 - brakeStrength) * Math.clamp(friction, 0.05, 1);
 			}
 
-			double brakeForce = Math.clamp(speed, -1, 1) * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
+			double speedSign = Math.signum(speed);
+			double speedSignMag = Math.clamp(Math.abs(speed), 0, 1);
+			double signFactor = (speedSignMag * speedSignMag * speedSignMag * 0.25 + speedSignMag * 0.75) * speedSign;
+			double brakeForce = signFactor * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 
-			bogeyAxleFrame.direction.mul(driveForce * timeStep, queuedTractionForce);
-			bogeyAxleFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
+			bogeyForceFrame.direction.mul(driveForce * timeStep, queuedTractionForce);
+			bogeyForceFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
 
 			if(friction < 1) {
 				visualSpeed = Mth.lerp(friction * 0.9 + 0.1, targetSpeed, speed);

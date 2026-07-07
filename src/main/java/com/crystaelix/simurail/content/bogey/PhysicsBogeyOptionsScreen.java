@@ -173,7 +173,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		verticalInput.calling(i -> options.allowVerticalMovement = !menu.inverted && i == 1);
 
 		axleInput = new ScrollInput(x + 171, y + 64, 109, 18);
-		axleInput.withRange(-16, 17);
+		axleInput.withRange(-16, 16 + 1);
 		axleInput.withShiftStep(4);
 		axleInput.titled(AXLE_TITLE.plainCopy());
 		axleInput.format(i -> Component.literal(String.valueOf(i * 0.0625F)));
@@ -189,7 +189,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		controlInput.calling(i -> options.controlMode = PhysicsBogeyControlMode.BY_ID.apply(i));
 
 		stressInput = new ScrollInput(x + 31, y + 108, 109, 18);
-		stressInput.withRange(0, 32 * 2 + 1);
+		stressInput.withRange(0, 64 * 2 + 1);
 		stressInput.withShiftStep(4);
 		stressInput.titled(STRESS_TITLE.plainCopy());
 		stressInput.format(i -> Component.literal(String.valueOf(i * 0.5F)));
@@ -198,7 +198,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		stressInput.calling(i -> options.setStress(i * 0.5F));
 
 		tiltInput = new ScrollInput(x + 171, y + 108, 109, 18);
-		tiltInput.withRange(0, 101);
+		tiltInput.withRange(0, 100 + 1);
 		tiltInput.withShiftStep(5);
 		tiltInput.titled(TILT_TITLE.plainCopy());
 		tiltInput.format(i -> Component.literal(i + "%"));

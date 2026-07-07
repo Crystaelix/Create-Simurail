@@ -13,13 +13,13 @@ import net.minecraft.world.item.ItemStack;
 public class GangwayFrameMenu extends AbstractContainerMenu {
 
 	protected final BlockPos pos;
-	protected final GangwayFrameShape shape;
+	protected final GangwayFrameBlockShape shape;
 	protected final float restLength;
 
 	public GangwayFrameMenu(MenuType<GangwayFrameMenu> type, int windowId, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, windowId);
 		pos = extraData.readBlockPos();
-		shape = GangwayFrameShape.STREAM_CODEC.decode(extraData);
+		shape = GangwayFrameBlockShape.STREAM_CODEC.decode(extraData);
 		restLength = extraData.readFloat();
 	}
 
@@ -32,7 +32,7 @@ public class GangwayFrameMenu extends AbstractContainerMenu {
 
 	public static void prepare(RegistryFriendlyByteBuf extraData, GangwayFrameBlockEntity be) {
 		extraData.writeBlockPos(be.getBlockPos());
-		GangwayFrameShape.STREAM_CODEC.encode(extraData, be.getGangwayShape());
+		GangwayFrameBlockShape.STREAM_CODEC.encode(extraData, be.getGangwayShape());
 		extraData.writeFloat(be.restLength);
 	}
 

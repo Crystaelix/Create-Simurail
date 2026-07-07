@@ -21,9 +21,9 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigFloat axlePassiveAngularDamping = f(1, 0, Float.MAX_VALUE, "axlePassiveAngularDamping", Units.angularDamping, Comments.axlePassiveAngularDamping);
 	public final ConfigFloat axleStandardLateralMaxSpeedFactor = f(30, 0, Float.MAX_VALUE, "axleStandardLateralMaxSpeedFactor", Units.acceleration, Comments.axleStandardLateralMaxSpeedFactor);
 	public final ConfigFloat axleStandardVerticalMaxSpeedFactor = f(50, 0, Float.MAX_VALUE, "axleStandardVerticalMaxSpeedFactor", Units.acceleration, Comments.axleStandardVerticalMaxSpeedFactor);
-	public final ConfigFloat axleBrakeStrengthFactor = f(20, 0, Float.MAX_VALUE, "axleBrakeStrengthFactor", Units.force, Comments.axleBrakeStrengthFactor);
 	public final ConfigFloat axleTargetSpeedFactor = f(0.25F, 0, Float.MAX_VALUE, "axleTargetSpeedFactor", Units.velocity, Comments.axleTargetSpeedFactor);
 	public final ConfigFloat axleDriveForceFactor = f(0.5F, 0, Float.MAX_VALUE, "axleDriveForceFactor", Units.damping, Comments.axleDriveForceFactor);
+	public final ConfigFloat axleBrakeStrengthFactor = f(20, 0, Float.MAX_VALUE, "axleBrakeStrengthFactor", Units.acceleration, Comments.axleBrakeStrengthFactor);
 	public final ConfigFloat axleDerailFrictionFactor = f(0.5F, 0, 1, "axleDerailFrictionFactor", Comments.axleDerailFrictionFactor);
 	public final ConfigFloat axleTrackCheckTime = f(0.1F, 0, 5, "axleTrackCheckTime", Units.time, Comments.axleTrackCheckTime);
 	public final ConfigFloat axleTrackRecheckTime = f(3, 0, 60, "axleTrackRecheckTime", Units.time, Comments.axleTrackRecheckTime);
@@ -57,9 +57,9 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 		static String axlePassiveAngularDamping = "Passive angular damping between an axle of the Physics Bogey and its track.";
 		static String axleStandardLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogey and a standard track. Max speed is sqrt(factor / curvature).";
 		static String axleStandardVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogey and a standard track. Max speed is sqrt(factor / curvature).";
-		static String axleBrakeStrengthFactor = "Conversion of brake strength [0-1] to brake force between an axle of the Physics Bogey and its track.";
 		static String axleTargetSpeedFactor = "Conversion of RPM to target speed between an axle of the Physics Bogey and its track.";
 		static String axleDriveForceFactor = "Conversion of current and target speed difference to drive force between an axle of the Physics Bogey and its track.";
+		static String axleBrakeStrengthFactor = "Conversion of brake strength [0-1] to brake force between an axle of the Physics Bogey and its track.";
 		static String axleDerailFrictionFactor = "Factor of effective friction between an axle of the Physics Bogey and the ground when derailed.";
 		static String axleTrackCheckTime = "Inverval to find nearest track when derailed for an axle of the Physics Bogey.";
 		static String axleTrackRecheckTime = "Inverval to re-find nearest track for an axle of the Physics Bogey.";

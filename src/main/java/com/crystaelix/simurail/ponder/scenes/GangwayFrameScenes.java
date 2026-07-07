@@ -2,7 +2,7 @@ package com.crystaelix.simurail.ponder.scenes;
 
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
-import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.crystaelix.simurail.ponder.instruction.GangwayFramePartnerInstruction;
 import com.crystaelix.simurail.ponder.instruction.GangwayFrameRestLengthInstruction;
 import com.crystaelix.simurail.ponder.instruction.PhysicsBogeyVisualSpeedInstruction;
@@ -129,9 +129,9 @@ public class GangwayFrameScenes {
 		BlockState westState = SimurailBlocks.GANGWAY_FRAME.getDefaultState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST);
 		BlockState eastState = SimurailBlocks.GANGWAY_FRAME.getDefaultState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST);
 
-		world.setBlock(grid.at(4, 2, 5), westState.setValue(GangwayFrameBlock.SHAPE, GangwayFrameShape.LU), false);
-		world.setBlock(grid.at(4, 2, 3), westState.setValue(GangwayFrameBlock.SHAPE, GangwayFrameShape.UR), false);
-		world.setBlock(grid.at(3, 2, 5), eastState.setValue(GangwayFrameBlock.SHAPE, GangwayFrameShape.UR), false);
+		world.setBlock(grid.at(4, 2, 5), westState.setValue(GangwayFrameBlock.SHAPE, GangwayFrameBlockShape.LU), false);
+		world.setBlock(grid.at(4, 2, 3), westState.setValue(GangwayFrameBlock.SHAPE, GangwayFrameBlockShape.UR), false);
+		world.setBlock(grid.at(3, 2, 5), eastState.setValue(GangwayFrameBlock.SHAPE, GangwayFrameBlockShape.UR), false);
 		scene.addInstruction(new GangwayFrameRestLengthInstruction(grid.at(4, 2, 4), 0.375F));
 		scene.addInstruction(new GangwayFrameRestLengthInstruction(grid.at(4, 2, 5), 0.375F));
 		scene.addInstruction(new GangwayFrameRestLengthInstruction(grid.at(4, 2, 3), 0.375F));

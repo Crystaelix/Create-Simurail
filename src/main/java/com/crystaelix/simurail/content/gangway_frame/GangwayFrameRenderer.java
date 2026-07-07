@@ -49,7 +49,7 @@ public class GangwayFrameRenderer extends SmartBlockEntityRenderer<GangwayFrameB
 
 		BlockPos pos = be.getBlockPos();
 		Direction facing = be.getFacing();
-		GangwayFrameShape shape = be.getGangwayShape();
+		GangwayFrameBlockShape shape = be.getGangwayShape();
 		Vector3dc selfDir = be.getDirection();
 
 		shape.quad(facing, selfQuad);

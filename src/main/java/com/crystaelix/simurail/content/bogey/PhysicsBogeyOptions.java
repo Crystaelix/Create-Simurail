@@ -70,7 +70,7 @@ public class PhysicsBogeyOptions {
 	}
 
 	public PhysicsBogeyOptions setStress(float stress) {
-		this.stress = Math.clamp(stress, 0, 32);
+		this.stress = Math.clamp(stress, 0, 64);
 		return this;
 	}
 

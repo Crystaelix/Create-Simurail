@@ -75,13 +75,20 @@ public interface GangwayFrame {
 					BlockPos pos = curr.getBlockPos().relative(offset);
 					if(level.getBlockEntity(pos) instanceof GangwayFrame neighbor &&
 							!neighbors.contains(neighbor) &&
-							shape.adjacentTo(cw).contains(neighbor.getGangwayShape())) {
-						neighbors.add(neighbor);
-						couple.set(cw, neighbor);
+							curr.getFacing() == neighbor.getFacing()) {
+						GangwayFrameShape neighborShape = neighbor.getGangwayShape();
+						int currAdj = shape.adjacentTo(neighborShape, cw);
+						int neighborAdj = neighborShape.adjacentTo(shape, !cw);
+						if(currAdj != 0 || neighborAdj != 0) {
+							neighbors.add(neighbor);
+							couple.set(cw, neighbor);
+							if(currAdj < 0 || neighborAdj < 0) {
+								cw = !cw;
+							}
+							continue;
+						}
 					}
-					else {
-						couple.set(cw, null);
-					}
+					couple.set(cw, null);
 				}
 			}
 		}

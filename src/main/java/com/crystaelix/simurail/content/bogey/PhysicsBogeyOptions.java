@@ -202,7 +202,7 @@ public class PhysicsBogeyOptions {
 		setFlags(tag.getShort("flags"));
 		controlMode = PhysicsBogeyControlMode.BY_ID.apply(tag.getByte("control_mode"));
 		axleOffset = Math.clamp(tag.getFloat("axle_offset"), -1, 1);
-		stress = Math.clamp(tag.getFloat("stress"), 0, 32);
+		stress = Math.clamp(tag.getFloat("stress"), 0, 64);
 		tiltStrength = Math.clamp(tag.getFloat("tilt_strength"), 0, 1);
 		return this;
 	}

@@ -134,6 +134,16 @@ repositories {
 			includeGroup "curse.maven"
 		}
 	}
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://api.modrinth.com/maven/"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 def mcVersion = "1.21.1"
@@ -214,6 +224,8 @@ dependencies {
 	runtimeOnly "curse.maven:create-aeronauticstoolgun-1521349:8243840"
 	runtimeOnly("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.27:all") {transitive = false}
 	runtimeOnly "curse.maven:sable-schematic-tool-1526951:8247085"
+	runtimeOnly "curse.maven:create-aeronautics-automated-logistics-1537420:8348610"
+	runtimeOnly "maven.modrinth:create-automatics:UggaJy6l"
 
 	// Performance
 	runtimeOnly "curse.maven:yeetusexperimentus-635427:5444189"

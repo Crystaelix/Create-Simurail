@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.api.control;
 
-import java.util.OptionalDouble;
-
 import com.crystaelix.simurail.api.math.SimurailMath;
 
 public class ADRController implements FeedbackController {
@@ -12,7 +10,7 @@ public class ADRController implements FeedbackController {
 	private double disturbanceDecayRate;
 
 	private double lastTimeStep = 0;
-	private OptionalDouble cachedDisturbanceDecay = OptionalDouble.empty();
+	private double cachedDisturbanceDecay = -1;
 	private double z1 = 0;
 	private double z2 = 0;
 	private double z3 = 0;
@@ -44,15 +42,16 @@ public class ADRController implements FeedbackController {
 	}
 
 	public void setDisturbanceDecayRate(double disturbanceDecayRate) {
+		cachedDisturbanceDecay = -1;
 		this.disturbanceDecayRate = Math.abs(disturbanceDecayRate);
 	}
 
 	private double getDisturbanceDecay(double timeStep) {
-		if(cachedDisturbanceDecay.isEmpty() || Math.abs(lastTimeStep - timeStep) > SimurailMath.EPSILON) {
+		if(cachedDisturbanceDecay < 0 || Math.abs(lastTimeStep - timeStep) > SimurailMath.EPSILON) {
 			lastTimeStep = timeStep;
-			cachedDisturbanceDecay = OptionalDouble.of(Math.exp(-timeStep * disturbanceDecayRate));
+			cachedDisturbanceDecay = Math.exp(-timeStep * disturbanceDecayRate);
 		}
-		return cachedDisturbanceDecay.getAsDouble();
+		return cachedDisturbanceDecay;
 	}
 
 	@Override

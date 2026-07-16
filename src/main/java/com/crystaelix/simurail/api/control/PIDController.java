@@ -9,12 +9,14 @@ public class PIDController implements FeedbackController {
 	private double errorDecayRate;
 	private double integralGain;
 
+	private double lastTimeStep = 0;
+	private double cachedErrorDecay = -1;
 	private double error = 0;
 	private double force = 0;
 
 	public PIDController() {
 	}
-	
+
 	public PIDController(double frequency, double dampingRate, double errorDecayRate, double integralGain) {
 		this.frequency = Math.abs(frequency);
 		this.dampingRate = Math.abs(dampingRate);
@@ -33,11 +35,20 @@ public class PIDController implements FeedbackController {
 	}
 
 	public void setErrorDecayRate(double errorDecayRate) {
+		cachedErrorDecay = -1;
 		this.errorDecayRate = Math.abs(errorDecayRate);
 	}
 
 	public void setIntegralGain(double integralGain) {
 		this.integralGain = Math.abs(integralGain);
+	}
+
+	private double getErrorDecay(double timeStep) {
+		if(cachedErrorDecay < 0 || Math.abs(lastTimeStep - timeStep) > SimurailMath.EPSILON) {
+			lastTimeStep = timeStep;
+			cachedErrorDecay = Math.exp(-timeStep * errorDecayRate);
+		}
+		return cachedErrorDecay;
 	}
 
 	@Override
@@ -46,9 +57,8 @@ public class PIDController implements FeedbackController {
 			error = 0;
 			return force = 0;
 		}
-		double errorDecay = Math.exp(-timeStep * errorDecayRate);
-		error *= errorDecay;
-		error += offset * (errorDecayRate > SimurailMath.EPSILON ? (1 - errorDecay) / errorDecayRate : timeStep);
+		double errorDecay = getErrorDecay(timeStep);
+		error = error * errorDecay + offset * (errorDecayRate > SimurailMath.EPSILON ? (1 - errorDecay) / errorDecayRate : timeStep);
 		double integralWindup = integralGain * error;
 		double maxIntegralWindup = Math.abs(maxForce) / inertia * 0.75;
 		if(Math.abs(integralWindup) > maxIntegralWindup) {

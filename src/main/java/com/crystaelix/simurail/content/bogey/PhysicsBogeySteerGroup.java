@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 
 public record PhysicsBogeySteerGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanList orientation) {
 
-	public double getSteerValue(PhysicsBogeyBlockEntity target) {
-		double steer = target.getSteerValue();
+	public float getSteerValue(PhysicsBogeyBlockEntity target) {
+		float steer = target.getSteerValue();
 		if(steer != 0) {
 			return steer;
 		}
@@ -23,8 +23,8 @@ public record PhysicsBogeySteerGroup(List<PhysicsBogeyBlockEntity> bogeys, Boole
 			int backIndex = index + i;
 			if(frontIndex < 0 && backIndex >= bogeys.size()) break;
 
-			double front = frontIndex >= 0 ? bogeys.get(frontIndex).getSteerValue() : 0;
-			double back = backIndex < bogeys.size() ? bogeys.get(backIndex).getSteerValue() : 0;
+			float front = frontIndex >= 0 ? bogeys.get(frontIndex).getSteerValue() : 0;
+			float back = backIndex < bogeys.size() ? bogeys.get(backIndex).getSteerValue() : 0;
 			if(front == 0 && back == 0) continue;
 
 			boolean frontOrient = frontIndex >= 0 ? orientation.getBoolean(frontIndex) : orient;

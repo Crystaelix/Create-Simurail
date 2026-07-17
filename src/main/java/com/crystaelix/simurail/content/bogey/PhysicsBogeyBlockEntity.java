@@ -88,6 +88,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected final PhysicsBogeyOptions options;
 	protected CompoundTag bogeyData;
 	protected AbstractComputerBehaviour computerBehaviour;
+	protected final PhysicsBogeyControlOverrides navigatorOverrides = new PhysicsBogeyControlOverrides();
 	protected final PhysicsBogeyControlOverrides computerOverrides = new PhysicsBogeyControlOverrides();
 
 	// Connection components
@@ -182,6 +183,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			setChanged();
 			sendData();
 		}
+	}
+
+	public PhysicsBogeyControlOverrides getNavigatorOverrides() {
+		return navigatorOverrides;
 	}
 
 	public PhysicsBogeyControlOverrides getComputerOverrides() {
@@ -405,6 +410,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return front ? connectionFrontToFront : connectionBackToFront;
 	}
 
+	public boolean hasNavigator() {
+		return false;
+	}
+
 	// Sometimes physicsTick happens before tick?
 	public void init() {
 		if(initialized) {
@@ -479,6 +488,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(!level.isClientSide()) {
 			if(!computerBehaviour.hasAttachedComputer() && computerOverrides.hasOverrides()) {
 				computerOverrides.reset();
+			}
+			if(!hasNavigator() && navigatorOverrides.hasOverrides()) {
+				navigatorOverrides.reset();
 			}
 			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel) {
 				axleFront.updateVisualSpeed();
@@ -718,13 +730,16 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return count;
 	}
 
-	public double getControlStrength() {
-		return Math.clamp((isInverted() ? level.getSignal(getBlockPos().below(), Direction.DOWN) : level.getSignal(getBlockPos().above(), Direction.UP)) / 15D, 0, 1);
+	public float getControlStrength() {
+		return Math.clamp((isInverted() ? level.getSignal(getBlockPos().below(), Direction.DOWN) : level.getSignal(getBlockPos().above(), Direction.UP)) / 15F, 0, 1);
 	}
 
-	public double getBrakeStrength() {
+	public float getBrakeStrength() {
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
 			return computerOverrides.getBrakeStrength();
+		}
+		if(hasNavigator() && navigatorOverrides.overrideBrakeStrength) {
+			return navigatorOverrides.getBrakeStrength();
 		}
 		return switch(options.controlMode) {
 		case BRAKING -> getControlStrength();
@@ -733,9 +748,12 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		};
 	}
 
-	public double getSteerValue() {
+	public float getSteerValue() {
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideSteerValue) {
 			return computerOverrides.getSteerValue();
+		}
+		if(hasNavigator() && navigatorOverrides.overrideSteerValue) {
+			return navigatorOverrides.getSteerValue();
 		}
 		int value = switch(getFacing()) {
 		case EAST -> level.getSignal(getBlockPos().south(), Direction.SOUTH) - level.getSignal(getBlockPos().north(), Direction.NORTH);
@@ -744,10 +762,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		case NORTH -> level.getSignal(getBlockPos().east(), Direction.EAST) - level.getSignal(getBlockPos().west(), Direction.WEST);
 		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
 		};
-		return Math.clamp(value / 15D, -1, 1);
+		return Math.clamp(value / 15F, -1, 1);
 	}
 
-	public double getGroupSteerValue() {
+	public float getGroupSteerValue() {
 		if(steerGroup == null) {
 			PhysicsBogeySteerGroup.createAndUpdate(this);
 		}
@@ -773,23 +791,26 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return builder.build();
 	}
 
+	public float getStressMultiplier() {
+		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideStressMultiplier) {
+			return computerOverrides.getStressMultiplier();
+		}
+		if(hasNavigator() && navigatorOverrides.overrideStressMultiplier) {
+			return navigatorOverrides.getStressMultiplier();
+		}
+		return switch(options.controlMode) {
+		case STRENGTH -> getControlStrength();
+		case STRENGTH_INVERTED -> 1 - getControlStrength();
+		case null, default -> 1;
+		};
+	}
+
 	@Override
 	public float calculateStressApplied() {
 		if(!options.enabled) {
 			return 0;
 		}
-		float stressMultiplier;
-		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideStressMultiplier) {
-			stressMultiplier = (float)computerOverrides.getStressMultiplier();
-		}
-		else {
-			stressMultiplier = (float)switch(options.controlMode) {
-			case STRENGTH -> getControlStrength();
-			case STRENGTH_INVERTED -> 1 - getControlStrength();
-			case null, default -> 1;
-			};
-		}
-		return Math.abs(options.getStress()) * stressMultiplier;
+		return Math.abs(options.getStress()) * (float)getStressMultiplier();
 	}
 
 	public float getStressSign() {
@@ -912,6 +933,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			tag.put("axle_front", axleFront.write());
 			tag.put("axle_back", axleBack.write());
 			tag.put("computer_overrides", computerOverrides.write());
+			tag.put("navigator_overrides", navigatorOverrides.write());
 		}
 
 		if(localPivotOffset != null) {

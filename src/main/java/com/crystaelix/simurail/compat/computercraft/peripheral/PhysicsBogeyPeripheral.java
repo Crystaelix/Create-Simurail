@@ -129,18 +129,18 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final double getBrakeStrength() {
+		return blockEntity.getBrakeStrength();
+	}
+
+	@LuaFunction
 	public final boolean hasBrakeStrengthOverride() {
 		return blockEntity.getComputerOverrides().overrideBrakeStrength;
 	}
 
-	@LuaFunction
-	public final double getBrakeStrengthOverride() {
-		return blockEntity.getComputerOverrides().getBrakeStrength();
-	}
-
 	@LuaFunction(mainThread = true)
 	public final void setBrakeStrengthOverride(double brakeStrength) {
-		blockEntity.getComputerOverrides().setBrakeStrength(brakeStrength);
+		blockEntity.getComputerOverrides().setBrakeStrength((float)brakeStrength);
 		blockEntity.setChanged();
 	}
 
@@ -151,18 +151,18 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final double getSteerValue() {
+		return blockEntity.getSteerValue();
+	}
+
+	@LuaFunction
 	public final boolean hasSteerValueOverride() {
 		return blockEntity.getComputerOverrides().overrideSteerValue;
 	}
 
-	@LuaFunction
-	public final double getSteerValueOverride() {
-		return blockEntity.getComputerOverrides().getSteerValue();
-	}
-
 	@LuaFunction(mainThread = true)
 	public final void setSteerValueOverride(double steerValue) {
-		blockEntity.getComputerOverrides().setSteerValue(steerValue);
+		blockEntity.getComputerOverrides().setSteerValue((float)steerValue);
 		blockEntity.setChanged();
 	}
 
@@ -173,18 +173,18 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final double getStressMultiplier() {
+		return blockEntity.getStressMultiplier();
+	}
+
+	@LuaFunction
 	public final boolean hasStressMultiplierOverride() {
 		return blockEntity.getComputerOverrides().overrideStressMultiplier;
 	}
 
-	@LuaFunction
-	public final double getStressMultiplierOverride() {
-		return blockEntity.getComputerOverrides().getStressMultiplier();
-	}
-
 	@LuaFunction(mainThread = true)
 	public final void setStressMultiplierOverride(double stressMultiplier) {
-		blockEntity.getComputerOverrides().setStressMultiplier(stressMultiplier);
+		blockEntity.getComputerOverrides().setStressMultiplier((float)stressMultiplier);
 		blockEntity.setChanged();
 	}
 

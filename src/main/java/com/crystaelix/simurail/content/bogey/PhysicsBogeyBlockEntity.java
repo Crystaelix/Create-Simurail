@@ -12,6 +12,7 @@ import org.joml.Vector3f;
 
 import com.crystaelix.simurail.api.control.PIDController;
 import com.crystaelix.simurail.api.math.Basis3d;
+import com.crystaelix.simurail.api.math.Basis3dc;
 import com.crystaelix.simurail.api.math.MovingQuaternionfLerp;
 import com.crystaelix.simurail.api.math.MovingVector3fLerp;
 import com.crystaelix.simurail.api.math.SimurailMath;
@@ -115,6 +116,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected double lastVisualSpeed = 0;
 	protected final LerpedFloat lerpedCurvature = LerpedFloat.linear();
 	protected final PIDController rollController = new PIDController();
+	protected final PIDController yawController = new PIDController(40, 2, 1, 50);
+	protected final PIDController pitchController = new PIDController(40, 2, 1, 50);
 
 	// Client rendering components
 	protected final MovingQuaternionfLerp renderPivotRot = MovingQuaternionfLerp.of(2);
@@ -612,8 +615,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		double linYLimit = options.enabled && options.allowVerticalOffset && hasTrack ? LINEAR_Y_LIMIT : 0;
 		double linZLimit = options.enabled && options.allowLateralOffset && hasTrack ? LINEAR_Z_LIMIT : 0;
 		double angXLimit = options.enabled && hasTrack ? ANGULAR_X_LIMIT : 0;
-		double angYLimit = options.enabled && options.allowYawOffset && hasTrack ? ANGULAR_Y_LIMIT : 0;
-		double angZLimit = options.enabled && options.allowPitchOffset && bothTrack ? ANGULAR_Z_LIMIT : 0;
+		double angYLimit = options.enabled && hasTrack ? ANGULAR_Y_LIMIT : 0;
+		double angZLimit = options.enabled && bothTrack ? ANGULAR_Z_LIMIT : 0;
 
 		pivotJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -linYLimit, linYLimit);
 		pivotJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -linZLimit, linZLimit);
@@ -629,9 +632,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 		RigidBodyHandle pivotHandle = RigidBodyHandle.of(subLevel.getLevel(), pivot);
 		Vector3dc localDir = getDirection();
+		Vector3dc localLat = getLateral();
 		Quaterniond rot = subLevel.logicalPose().orientation();
 		globalBasis.orthogonalized(localDir, SimurailMath.DIR_YP).transform(rot);
-		pivotPose.transformNormal(SimurailMath.DIR_YP, globalPivotVert);
+		Basis3dc.I.transform(pivotPose, globalPivotBasis);
 		handle.getAngularVelocity(globalAngVel);
 		pivotHandle.getAngularVelocity(globalPivotAngVel);
 		globalAngVel.sub(globalPivotAngVel, globalRelAngVel);
@@ -675,7 +679,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 		// Angular X
 		{
-			double offset = SimurailMath.angle(globalBasis.vertical, globalPivotVert, globalBasis.direction);
+			double offset = SimurailMath.angle(globalBasis.vertical, globalPivotBasis.vertical, globalBasis.direction);
 			double velocity = globalRelAngVel.dot(globalBasis.direction);
 
 			lerpedCurvature.chase(getSignedLateralCurvature(), timeStep * 4, Chaser.EXP);
@@ -705,13 +709,45 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			queuedTorque.fma(torqueMag * timeStep, globalBasis.direction);
 		}
 
+		// Angular Y
+		if(!options.allowYawOffset) {
+			double offset = SimurailMath.angle(globalBasis.lateral, globalPivotBasis.lateral, globalBasis.vertical);
+			double velocity = globalRelAngVel.dot(globalBasis.vertical);
+
+			double momentMultiplier = config.bogeyAngularControllerMomentMultiplier.get();
+			double moment = SimurailMath.moment(massData, localCenter, SimurailMath.DIR_YP) * momentMultiplier;
+			double maxTorque = moment * 20;
+
+			double torqueMag = yawController.updateForce(moment, offset, velocity, maxTorque, timeStep);
+			queuedTorque.fma(torqueMag * timeStep, globalBasis.vertical);
+		}
+		else {
+			yawController.reset();
+		}
+
+		// Angular Z
+		if(!options.allowPitchOffset) {
+			double offset = SimurailMath.angle(globalBasis.direction, globalPivotBasis.direction, globalBasis.lateral);
+			double velocity = globalRelAngVel.dot(globalBasis.lateral);
+
+			double momentMultiplier = config.bogeyAngularControllerMomentMultiplier.get();
+			double moment = SimurailMath.moment(massData, localCenter, localLat) * momentMultiplier;
+			double maxTorque = moment * 20;
+
+			double torqueMag = pitchController.updateForce(moment, offset, velocity, maxTorque, timeStep);
+			queuedTorque.fma(torqueMag * timeStep, globalBasis.lateral);
+		}
+		else {
+			pitchController.reset();
+		}
+
 		rot.transformInverse(queuedTorque);
 		handle.applyTorqueImpulse(queuedTorque);
 
-		rot.transform(queuedTorque);
-		pivotPose.transformNormalInverse(queuedTorque);
-		queuedTorque.negate();
-		pivotHandle.applyTorqueImpulse(queuedTorque);
+		//rot.transform(queuedTorque);
+		//pivotPose.transformNormalInverse(queuedTorque);
+		//queuedTorque.negate();
+		//pivotHandle.applyTorqueImpulse(queuedTorque);
 	}
 
 	protected boolean isActive() {
@@ -1026,7 +1062,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	// Mutable physics fields
 	protected Basis3d globalBasis = new Basis3d();
-	protected Vector3d globalPivotVert = new Vector3d();
+	protected Basis3d globalPivotBasis = new Basis3d();
 	protected Vector3d globalAngVel = new Vector3d();
 	protected Vector3d globalPivotAngVel = new Vector3d();
 	protected Vector3d globalRelAngVel = new Vector3d();

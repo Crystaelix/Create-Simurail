@@ -758,10 +758,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected int getActiveBogeyCount(ServerSubLevel subLevel) {
 		int count = 0;
 		for(BlockEntitySubLevelActor actor : subLevel.getPlot().getBlockEntityActors()) {
-			if(actor instanceof PhysicsBogeyBlockEntity bogey) {
-				if(bogey.isActive()) {
-					++count;
-				}
+			if(actor instanceof PhysicsBogeyBlockEntity bogey && bogey.isActive()) {
+				++count;
 			}
 		}
 		return count;

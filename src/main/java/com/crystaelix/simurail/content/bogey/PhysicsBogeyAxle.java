@@ -89,7 +89,7 @@ public class PhysicsBogeyAxle {
 	protected BlockHitResult clipResult;
 	protected ServerSubLevel clipSubLevel;
 
-	protected GenericConstraintHandle joint;
+	protected GenericConstraintHandle trackJoint;
 	protected GenericConstraintHandle bogeyJoint;
 	protected boolean yFixed = false;
 	protected boolean zFixed = false;
@@ -389,14 +389,7 @@ public class PhysicsBogeyAxle {
 			return;
 		}
 
-		PhysicsBogeyAxle other = other();
-		if(other.trackSegment != null) {
-			globalTrackRot.nlerp(other().globalTrackRot, 0.5, globalTrackJointRot);
-		}
-		else {
-			globalTrackJointRot.set(globalTrackRot);
-		}
-		trackSubLevelPose.orientation().conjugate(trackJointRot).mul(globalTrackJointRot);
+		trackSubLevelPose.orientation().conjugate(trackJointRot).mul(globalTrackRot);
 		bogeyAxleFrame.orientation(bogeyTrackJointRot);
 
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
@@ -404,24 +397,24 @@ public class PhysicsBogeyAxle {
 		if(offsetTimer > 0) {
 			removeJoint();
 		}
-		if(joint == null || !joint.isValid()) {
-			joint = null;
+		if(trackJoint == null || !trackJoint.isValid()) {
+			trackJoint = null;
 			double linearDamping = config.axlePassiveLinearDamping.get();
 			double angularDamping = config.axlePassiveAngularDamping.get();
 			GenericConstraintConfiguration jointConfig = SimurailJoints.railJoint(
 					trackFrame.position, axleFrame.position,
 					trackJointRot, SimurailMath.ROT_I);
-			joint = physics.getPipeline().addConstraint(trackSubLevel, bogey.pivot, jointConfig);
-			joint.setContactsEnabled(false);
-			joint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, linearDamping, false, 0);
-			joint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, linearDamping, false, 0);
-			joint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, 0, angularDamping, false, 0);
-			joint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, angularDamping, false, 0);
-			joint.setLimit(ConstraintJointAxis.ANGULAR_Y, -ANGULAR_Y_LIMIT, ANGULAR_Y_LIMIT);
-			joint.setLimit(ConstraintJointAxis.ANGULAR_Z, -ANGULAR_Z_LIMIT, ANGULAR_Z_LIMIT);
+			trackJoint = physics.getPipeline().addConstraint(trackSubLevel, bogey.pivot, jointConfig);
+			trackJoint.setContactsEnabled(false);
+			trackJoint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, linearDamping, false, 0);
+			trackJoint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, linearDamping, false, 0);
+			trackJoint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, 0, angularDamping, false, 0);
+			trackJoint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, angularDamping, false, 0);
+			trackJoint.setLimit(ConstraintJointAxis.ANGULAR_Y, -ANGULAR_Y_LIMIT, ANGULAR_Y_LIMIT);
+			trackJoint.setLimit(ConstraintJointAxis.ANGULAR_Z, -ANGULAR_Z_LIMIT, ANGULAR_Z_LIMIT);
 		}
 		else {
-			joint.setFrame1(trackFrame.position, trackJointRot);
+			trackJoint.setFrame1(trackFrame.position, trackJointRot);
 		}
 		if(bogeyJoint == null || !bogeyJoint.isValid()) {
 			bogeyJoint = null;
@@ -497,19 +490,19 @@ public class PhysicsBogeyAxle {
 		}
 
 		if(checkVertical) {
-			joint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
+			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
 			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - 0.0625, yLimit + 0.0625);
 		}
 		else {
-			joint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Float.MAX_VALUE);
+			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Float.MAX_VALUE);
 			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - 0.0625, Float.MAX_VALUE);
 		}
 
-		joint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);
+		trackJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);
 		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit - 0.125, zLimit + 0.125);
 
 		double xDamping = Math.max(Math.abs(speed) * 0.5, 0.01);
-		joint.setMotor(ConstraintJointAxis.LINEAR_X, 0, 0, xDamping, false, 0);
+		trackJoint.setMotor(ConstraintJointAxis.LINEAR_X, 0, 0, xDamping, false, 0);
 	}
 
 	protected void updateForces(ServerSubLevel subLevel, double timeStep) {
@@ -693,9 +686,9 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void removeJoint() {
-		if(joint != null) {
-			joint.remove();
-			joint = null;
+		if(trackJoint != null) {
+			trackJoint.remove();
+			trackJoint = null;
 		}
 		if(bogeyJoint != null) {
 			bogeyJoint.remove();
@@ -931,7 +924,6 @@ public class PhysicsBogeyAxle {
 
 	protected final Vector3d clipPos = new Vector3d();
 
-	protected final Quaterniond globalTrackJointRot = new Quaterniond();
 	protected final Quaterniond trackJointRot = new Quaterniond();
 	protected final Quaterniond bogeyTrackJointRot = new Quaterniond();
 

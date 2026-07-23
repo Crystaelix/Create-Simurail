@@ -636,6 +636,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(!options.enabled || !isActive()) {
 			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, SimurailMath.EPSILON, false, 0);
 			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, SimurailMath.EPSILON, false, 0);
+			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_X, 0, 0, SimurailMath.EPSILON, false, 0);
 			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, 0, SimurailMath.EPSILON, false, 0);
 			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, SimurailMath.EPSILON, false, 0);
 			return;

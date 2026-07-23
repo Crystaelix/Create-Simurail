@@ -1,12 +1,12 @@
 package com.crystaelix.simurail.content;
 
-import com.crystaelix.simurail.content.steering_connector.SteeringConnectorInteractCallback;
+import com.crystaelix.simurail.content.connector.ConnectorInteractCallback;
 
 import dev.simulated_team.simulated.index.SimClickInteractions;
 
 public class SimurailInteractCallbacks {
 
-	public static final SteeringConnectorInteractCallback CONNECTOR = SimClickInteractions.register(new SteeringConnectorInteractCallback());
+	public static final ConnectorInteractCallback CONNECTOR = SimClickInteractions.register(new ConnectorInteractCallback());
 
 	public static void register() {
 	}

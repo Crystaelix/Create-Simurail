@@ -5,7 +5,7 @@ import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.ponder.scenes.AutomaticCouplerScenes;
 import com.crystaelix.simurail.ponder.scenes.GangwayFrameScenes;
 import com.crystaelix.simurail.ponder.scenes.PhysicsBogeyScenes;
-import com.crystaelix.simurail.ponder.scenes.SteeringConnectorScenes;
+import com.crystaelix.simurail.ponder.scenes.ConnectorScenes;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
@@ -27,8 +27,8 @@ public class SimurailPonderScenes {
 		addStoryBoard("gangway_frame/intro", GangwayFrameScenes::intro).
 		addStoryBoard("gangway_frame/coupler", GangwayFrameScenes::coupler);
 
-		helper.forComponents(SimurailItems.STEERING_CONNECTOR).
-		addStoryBoard("steering_connector/intro", SteeringConnectorScenes::intro).
-		addStoryBoard("steering_connector/coupler", SteeringConnectorScenes::coupler);
+		helper.forComponents(SimurailItems.CONNECTOR).
+		addStoryBoard("connector/intro", ConnectorScenes::intro).
+		addStoryBoard("connector/coupler", ConnectorScenes::coupler);
 	}
 }

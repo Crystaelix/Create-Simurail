@@ -21,10 +21,10 @@ import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailCouplers;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
+import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
-import com.crystaelix.simurail.content.steering_connector.SteeringConnectable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -69,7 +69,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, SteeringConnectable, GangwayFrame {
+public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable, GangwayFrame {
 
 	public static final double SHORT_LENGTH = 0.5;
 	public static final double LONG_LENGTH = 1;
@@ -215,7 +215,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 			partner.partnerSubLevelID = null;
 			if(!level.isClientSide()) {
 				if(partner.connectedPos != null && level.getBlockEntity(partner.connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
-					bogey.disconnectSteering(partner.connectedFront);
+					bogey.disconnect(partner.connectedFront);
 				}
 				partner.removeJoint();
 				partner.setChanged();
@@ -234,7 +234,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		partnerSubLevelID = null;
 		if(!level.isClientSide()) {
 			if(connectedPos != null && level.getBlockEntity(connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
-				bogey.disconnectSteering(connectedFront);
+				bogey.disconnect(connectedFront);
 			}
 			removeJoint();
 			setChanged();
@@ -251,7 +251,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public boolean canConnectSteeringTo(Direction selfDir, SteeringConnectable other, Direction otherDir) {
+	public boolean canConnectTo(Direction selfDir, ConnectorConnectable other, Direction otherDir) {
 		if(other instanceof PhysicsBogeyBlockEntity otherBogey) {
 			if(otherDir != getFacing() || Sable.HELPER.getContaining(this) != Sable.HELPER.getContaining(otherBogey)) {
 				return false;
@@ -267,7 +267,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public double connectionRange(SteeringConnectable other) {
+	public double connectionRange(ConnectorConnectable other) {
 		if(other instanceof PhysicsBogeyBlockEntity) {
 			return SimurailConfig.server().blocks.connectionCouplerRange.get();
 		}
@@ -275,7 +275,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public void connectSteering(boolean front, SteeringConnectable other, boolean otherFront) {
+	public void connect(boolean front, ConnectorConnectable other, boolean otherFront) {
 		if(other instanceof PhysicsBogeyBlockEntity bogey) {
 			connectedPos = bogey.getBlockPos();
 			connectedFront = otherFront;
@@ -283,7 +283,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public void disconnectSteering(boolean front) {
+	public void disconnect(boolean front) {
 		connectedPos = null;
 		setChanged();
 	}
@@ -460,17 +460,17 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 				SubLevel otherSubLevel = Sable.HELPER.getContaining(level, connectedPos);
 				BlockEntity be = level.getBlockEntity(connectedPos);
 				if(selfSubLevel != otherSubLevel) {
-					disconnectSteering(false);
+					disconnect(false);
 				}
 				else if(be instanceof PhysicsBogeyBlockEntity bogey) {
 					if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
 						if(partner.connectedPos != null && level.getBlockEntity(partner.connectedPos) instanceof PhysicsBogeyBlockEntity otherBogey) {
-							bogey.connectSteering(connectedFront, otherBogey, partner.connectedFront);
+							bogey.connect(connectedFront, otherBogey, partner.connectedFront);
 						}
 					}
 				}
 				else {
-					disconnectSteering(false);
+					disconnect(false);
 				}
 			}
 			if(partnerPos != null && !(level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity)) {

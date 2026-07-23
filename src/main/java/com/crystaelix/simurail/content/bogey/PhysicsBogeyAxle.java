@@ -142,7 +142,7 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void updateVisualSpeed() {
-		visualSpeed = visualSpeed * 0.95 * (1 - bogey.getBrakeStrength());
+		visualSpeed = visualSpeed * 0.95 * (1 - bogey.getGroupBrakeStrength());
 	}
 
 	protected void updateSignalGroup() {
@@ -533,7 +533,7 @@ public class PhysicsBogeyAxle {
 			double friction = getTrackFriction(trackSegment);
 
 			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
-			double brakeStrength = bogey.getBrakeStrength();
+			double brakeStrength = bogey.getGroupBrakeStrength();
 
 			double targetSpeedFactor = config.axleTargetSpeedFactor.get();
 			targetSpeed = bogey.getSpeed() * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep() * bogey.getStressSign();
@@ -612,7 +612,7 @@ public class PhysicsBogeyAxle {
 			double friction = PhysicsBlockPropertyHelper.getFriction(level.getBlockState(clipResult.getBlockPos())) * frictionFactor;
 
 			double brakeStrengthFactor = config.axleBrakeStrengthFactor.get();
-			double brakeStrength = bogey.getBrakeStrength();
+			double brakeStrength = bogey.getGroupBrakeStrength();
 
 			double targetSign = Math.signum(targetSpeed);
 			double diffSpeed = targetSpeed - speed;

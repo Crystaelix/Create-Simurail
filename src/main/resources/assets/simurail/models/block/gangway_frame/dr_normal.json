@@ -5,7 +5,7 @@
 	"model": "simurail:models/block/gangway_frame/dr.obj",
 	"flip_v": true,
 	"textures": {
-		"particle": "create:block/gangway_frame/bellows",
+		"particle": "simurail:block/gangway_frame/bellows_item",
 		"base": "simurail:block/gangway_frame/base_normal",
 		"side": "simurail:block/gangway_frame/base_diag"
 	}

@@ -32,11 +32,11 @@ public class PhysicsBogeyConnectionInstruction extends PonderInstruction {
 		if(pos1 != null && pos2 != null &&
 				world.getBlockEntity(pos1) instanceof PhysicsBogeyBlockEntity be1 &&
 				world.getBlockEntity(pos2) instanceof PhysicsBogeyBlockEntity be2) {
-			be1.connectSteering(front1, be2, front2);
+			be1.connect(front1, be2, front2);
 		}
 		if(pos1 != null && pos2 == null &&
 				world.getBlockEntity(pos1) instanceof PhysicsBogeyBlockEntity be1) {
-			be1.disconnectSteering(front1);
+			be1.disconnect(front1);
 		}
 	}
 }

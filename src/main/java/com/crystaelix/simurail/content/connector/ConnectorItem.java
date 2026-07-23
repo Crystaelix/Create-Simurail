@@ -1,4 +1,4 @@
-package com.crystaelix.simurail.content.steering_connector;
+package com.crystaelix.simurail.content.connector;
 
 import com.crystaelix.simurail.content.SimurailInteractCallbacks;
 
@@ -6,9 +6,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 
-public class SteeringConnectorItem extends Item {
+public class ConnectorItem extends Item {
 
-	public SteeringConnectorItem(Properties properties) {
+	public ConnectorItem(Properties properties) {
 		super(properties);
 	}
 

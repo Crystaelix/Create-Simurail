@@ -4,7 +4,7 @@
 	"block.simurail.gangway_frame": "风挡框",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理转向架",
-	"item.simurail.steering_connector": "转向连接器",
+	"item.simurail.connector": "转向架连接器",
 
 	"block.simurail.gangway_frame.d": "下",
 	"block.simurail.gangway_frame.u": "上",
@@ -19,12 +19,12 @@
 	"block.simurail.gangway_frame.ul": "长 左上",
 	"block.simurail.gangway_frame.ru": "长 右上",
 
-	"item.simurail.steering_connector.same_block": "方块位置相同",
-	"item.simurail.steering_connector.out_of_range": "超出范围",
-	"item.simurail.steering_connector.cannot_connect": "无法连接至此位置",
-	"item.simurail.steering_connector.connected": "已连接",
-	"item.simurail.steering_connector.disconnected": "已断开连接",
-	"item.simurail.steering_connector.terminated": "已取消选择",
+	"item.simurail.connector.same_block": "方块位置相同",
+	"item.simurail.connector.out_of_range": "超出范围",
+	"item.simurail.connector.cannot_connect": "无法连接至此位置",
+	"item.simurail.connector.connected": "已连接",
+	"item.simurail.connector.disconnected": "已断开连接",
+	"item.simurail.connector.terminated": "已取消选择",
 
 	"gui.simurail.no_options": "无选项",
 
@@ -327,13 +327,13 @@
     "simurail.ponder.gangway_frame.coupler.text_1": "风挡框可以与自动车钩结合使用",
     "simurail.ponder.gangway_frame.coupler.text_2": "风挡框会在自动车钩连接或断开时自动连接或断开",
 
-    "simurail.ponder.steering_connector.intro.header": "使用转向连接器连接物理转向架",
-    "simurail.ponder.steering_connector.intro.text_1": "转向连接器是一种将物理转向架连接成转向组的工具",
-    "simurail.ponder.steering_connector.intro.text_2": "已连接的物理转向架在轨道道岔处会相互连接",
-    "simurail.ponder.steering_connector.intro.text_3": "可以向任何已连接的物理转向架提供红石信号以在轨道道岔处转弯",
-    "simurail.ponder.steering_connector.intro.text_4": "要断开连接，请在同一位置点击两次",
+    "simurail.ponder.connector.intro.header": "使用转向架连接器连接物理转向架",
+    "simurail.ponder.connector.intro.text_1": "转向架连接器是一种将物理转向架连接成组的工具",
+    "simurail.ponder.connector.intro.text_2": "已连接的物理转向架在轨道道岔处会相互连接",
+    "simurail.ponder.connector.intro.text_3": "可以向任何已连接的物理转向架提供红石信号以刹车或在轨道道岔处转弯",
+    "simurail.ponder.connector.intro.text_4": "要断开连接，请在同一位置点击两次",
 
-    "simurail.ponder.steering_connector.coupler.header": "将物理转向架连接到自动车钩",
-    "simurail.ponder.steering_connector.coupler.text_1": "转向连接器可以将同一模拟机械装置上的物理转向架连接到自动车钩",
-    "simurail.ponder.steering_connector.coupler.text_2": "当自动车钩连接或断开时，转向连接也会自动连接或断开"
+    "simurail.ponder.connector.coupler.header": "将物理转向架连接到自动车钩",
+    "simurail.ponder.connector.coupler.text_1": "转向架连接器可以将同一模拟机械装置上的物理转向架连接到自动车钩",
+    "simurail.ponder.connector.coupler.text_2": "当自动车钩连接或断开时，转向架连接也会自动连接或断开"
 }

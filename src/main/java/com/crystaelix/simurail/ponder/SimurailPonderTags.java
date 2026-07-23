@@ -26,6 +26,6 @@ public class SimurailPonderTags {
 		add(SimurailBlocks.PHYSICS_BOGEY.get()).
 		add(SimurailBlocks.AUTOMATIC_COUPLER.get()).
 		add(SimurailBlocks.GANGWAY_FRAME.get()).
-		add(SimurailItems.STEERING_CONNECTOR.get());
+		add(SimurailItems.CONNECTOR.get());
 	}
 }

@@ -134,6 +134,11 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final double getGroupBrakeStrength() {
+		return blockEntity.getGroupBrakeStrength();
+	}
+
+	@LuaFunction
 	public final boolean hasBrakeStrengthOverride() {
 		return blockEntity.getComputerOverrides().overrideBrakeStrength;
 	}
@@ -153,6 +158,11 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	@LuaFunction
 	public final double getSteerValue() {
 		return blockEntity.getSteerValue();
+	}
+
+	@LuaFunction
+	public final double getGroupSteerValue() {
+		return blockEntity.getGroupSteerValue();
 	}
 
 	@LuaFunction

@@ -11,7 +11,7 @@
 		},
 		"has_recipe": {
 			"conditions": {
-				"recipe": "simurail:crafting/steering_connector"
+				"recipe": "simurail:crafting/connector"
 			},
 			"trigger": "minecraft:recipe_unlocked"
 		}
@@ -21,6 +21,6 @@
 		"has_recipe"
 	]],
 	"rewards": {
-		"recipes": ["simurail:crafting/steering_connector"]
+		"recipes": ["simurail:crafting/connector"]
 	}
 }

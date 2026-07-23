@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.objects.ObjectBooleanPair;
 import net.minecraft.world.level.Level;
 
-public record PhysicsBogeySteerGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanList orientation) {
+public record PhysicsBogeyGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanList orientation) {
 
 	public float getSteerValue(PhysicsBogeyBlockEntity target) {
 		float steer = target.getSteerValue();
@@ -41,13 +41,33 @@ public record PhysicsBogeySteerGroup(List<PhysicsBogeyBlockEntity> bogeys, Boole
 		return 0;
 	}
 
+	public float getBrakeStrength(PhysicsBogeyBlockEntity target) {
+		float steer = target.getBrakeStrength();
+		if(steer > 0) {
+			return steer;
+		}
+		int index = bogeys.indexOf(target);
+		for(int i = 1;; ++i) {
+			int frontIndex = index - i;
+			int backIndex = index + i;
+			if(frontIndex < 0 && backIndex >= bogeys.size()) break;
+
+			float front = frontIndex >= 0 ? bogeys.get(frontIndex).getBrakeStrength() : 0;
+			float back = backIndex < bogeys.size() ? bogeys.get(backIndex).getBrakeStrength() : 0;
+			if(front <= 0 && back <= 0) continue;
+
+			return Math.max(front, back);
+		}
+		return 0;
+	}
+
 	public void invalidate() {
 		for(PhysicsBogeyBlockEntity bogey : bogeys) {
-			bogey.steerGroup = null;
+			bogey.group = null;
 		}
 	}
 
-	public static PhysicsBogeySteerGroup createAndUpdate(PhysicsBogeyBlockEntity source) {
+	public static PhysicsBogeyGroup createAndUpdate(PhysicsBogeyBlockEntity source) {
 		SequencedSet<PhysicsBogeyBlockEntity> chain = new LinkedHashSet<>();
 		BooleanList orientation = new BooleanArrayList();
 
@@ -77,9 +97,9 @@ public record PhysicsBogeySteerGroup(List<PhysicsBogeyBlockEntity> bogeys, Boole
 			connection = nextBogey(curr, !toFront);
 		}
 
-		PhysicsBogeySteerGroup group = new PhysicsBogeySteerGroup(List.copyOf(chain), BooleanList.of(orientation.toBooleanArray()));
+		PhysicsBogeyGroup group = new PhysicsBogeyGroup(List.copyOf(chain), BooleanList.of(orientation.toBooleanArray()));
 		for(PhysicsBogeyBlockEntity bogey : chain) {
-			bogey.steerGroup = group;
+			bogey.group = group;
 		}
 		return group;
 	}

@@ -4,7 +4,7 @@
 	"block.simurail.gangway_frame": "Межвагонный переход",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
-	"item.simurail.steering_connector": "Рулевой провод",
+	"item.simurail.connector": "Рулевой провод",
 
 	"block.simurail.gangway_frame.d": "Низ",
 	"block.simurail.gangway_frame.u": "Верх",
@@ -19,12 +19,12 @@
 	"block.simurail.gangway_frame.ul": "Верхний длинный левый угол",
 	"block.simurail.gangway_frame.ru": "Верхний длинный правый угол",
 
-	"item.simurail.steering_connector.same_block": "Данная позиция уже занята",
-	"item.simurail.steering_connector.out_of_range": "Слишком далеко",
-	"item.simurail.steering_connector.cannot_connect": "Невозможно подключить на эту позицию",
-	"item.simurail.steering_connector.connected": "Привязано",
-	"item.simurail.steering_connector.disconnected": "Отвязано",
-	"item.simurail.steering_connector.terminated": "Выбор сброшен",
+	"item.simurail.connector.same_block": "Данная позиция уже занята",
+	"item.simurail.connector.out_of_range": "Слишком далеко",
+	"item.simurail.connector.cannot_connect": "Невозможно подключить на эту позицию",
+	"item.simurail.connector.connected": "Привязано",
+	"item.simurail.connector.disconnected": "Отвязано",
+	"item.simurail.connector.terminated": "Выбор сброшен",
 
 	"gui.simurail.no_options": "Нет настроек",
 
@@ -327,13 +327,13 @@
 	"simurail.ponder.gangway_frame.coupler.text_1": "Межвагонные переходы могут быть комбирированы с авто-сцепками",
 	"simurail.ponder.gangway_frame.coupler.text_2": "Межвагонные переходы автоматически соединяются и разъединяются при соединении и разъединении авто-сцепок",
 
-	"simurail.ponder.steering_connector.intro.header": "Соединение физических тележек с помощью рулевого провода",
-	"simurail.ponder.steering_connector.intro.text_1": "Рулевой провод — это инструмент, который соединяет физические тележки в группу рулевого управления.",
-	"simurail.ponder.steering_connector.intro.text_2": "Подключенные физические тележки следуют друг за другом на переключателях пути",
-	"simurail.ponder.steering_connector.intro.text_3": "Редстоун-сигнал может быть подан на любую подключенную физическую тележку, чтобы повернуть на стрелочных переводах",
-	"simurail.ponder.steering_connector.intro.text_4": "Для отключения кликните на том же месте дважды",
+	"simurail.ponder.connector.intro.header": "Соединение физических тележек с помощью рулевого провода",
+	"simurail.ponder.connector.intro.text_1": "Рулевой провод — это инструмент, который соединяет физические тележки в группу рулевого управления.",
+	"simurail.ponder.connector.intro.text_2": "Подключенные физические тележки следуют друг за другом на переключателях пути",
+	"simurail.ponder.connector.intro.text_3": "Редстоун-сигнал может быть подан на любую подключенную физическую тележку, чтобы повернуть на стрелочных переводах",
+	"simurail.ponder.connector.intro.text_4": "Для отключения кликните на том же месте дважды",
 
-	"simurail.ponder.steering_connector.coupler.header": "Соединение рулевого провода с авто-сцепками",
-	"simurail.ponder.steering_connector.coupler.text_1": "Рулевой провод может соединять физическое тележки с авто-сцепками на одной и той же Simulated конструкции",
-	"simurail.ponder.steering_connector.coupler.text_2": "Рулевой провод автоматически подключается и отключается при подключении и отключении авто-сцепок"
+	"simurail.ponder.connector.coupler.header": "Соединение рулевого провода с авто-сцепками",
+	"simurail.ponder.connector.coupler.text_1": "Рулевой провод может соединять физическое тележки с авто-сцепками на одной и той же Simulated конструкции",
+	"simurail.ponder.connector.coupler.text_2": "Рулевой провод автоматически подключается и отключается при подключении и отключении авто-сцепок"
 }

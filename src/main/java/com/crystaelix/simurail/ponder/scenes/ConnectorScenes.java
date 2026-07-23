@@ -19,7 +19,7 @@ import net.createmod.ponder.api.scene.VectorUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 
-public class SteeringConnectorScenes {
+public class ConnectorScenes {
 
 	public static void intro(SceneBuilder builder, SceneBuildingUtil util) {
 		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
@@ -29,7 +29,7 @@ public class SteeringConnectorScenes {
 		PositionUtil grid = util.grid();
 		VectorUtil vector = util.vector();
 
-		scene.title("steering_connector.intro", "header");
+		scene.title("connector.intro", "header");
 		scene.configureBasePlate(0, 0, 15);
 		scene.scaleSceneView(0.6F);
 		scene.showBasePlate();
@@ -56,7 +56,7 @@ public class SteeringConnectorScenes {
 		placeNearTarget().
 		text("1_description");
 		overlay.showControls(vector.topOf(9, 2, 7), Pointing.DOWN, 60).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(70);
 
 		bb = AABB.ofSize(
@@ -64,7 +64,7 @@ public class SteeringConnectorScenes {
 				0.4375, 1, 1);
 		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.1", bb, 20);
 		overlay.showControls(vector.topOf(5, 2, 7), Pointing.DOWN, 20).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(20);
 
 		scene.addInstruction(new PhysicsBogeyConnectionInstruction(grid.at(9, 2, 7), false, grid.at(5, 2, 7), true));
@@ -84,7 +84,7 @@ public class SteeringConnectorScenes {
 		overlay.showText(60).
 		pointAt(vector.centerOf(9, 3, 8)).
 		placeNearTarget().
-		text("3_steering");
+		text("3_control");
 		scene.idle(70);
 
 		overlay.showText(60).
@@ -99,11 +99,11 @@ public class SteeringConnectorScenes {
 				0.4375, 1, 1);
 		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.0", bb, 40);
 		overlay.showControls(vector.topOf(9, 2, 7), Pointing.DOWN, 15).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(20);
 
 		overlay.showControls(vector.topOf(9, 2, 7), Pointing.DOWN, 20).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(20);
 
 		scene.addInstruction(new PhysicsBogeyConnectionInstruction(grid.at(9, 2, 7), false, null, true));
@@ -118,7 +118,7 @@ public class SteeringConnectorScenes {
 		PositionUtil grid = util.grid();
 		VectorUtil vector = util.vector();
 
-		scene.title("steering_connector.coupler", "header");
+		scene.title("connector.coupler", "header");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(0.8F);
 		scene.showBasePlate();
@@ -146,7 +146,7 @@ public class SteeringConnectorScenes {
 		placeNearTarget().
 		text("1_description");
 		overlay.showControls(vector.centerOf(5, 2, 4), Pointing.DOWN, 60).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(70);
 
 		bb = AABB.ofSize(
@@ -154,7 +154,7 @@ public class SteeringConnectorScenes {
 				0.4375, 1, 1);
 		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.1", bb, 20);
 		overlay.showControls(vector.topOf(7, 2, 4), Pointing.DOWN, 20).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(30);
 
 		bb = AABB.ofSize(
@@ -162,7 +162,7 @@ public class SteeringConnectorScenes {
 				0.1875, 0.375, 0.375);
 		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.0", bb, 40);
 		overlay.showControls(vector.centerOf(3, 2, 4), Pointing.DOWN, 20).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(20);
 
 		bb = AABB.ofSize(
@@ -170,7 +170,7 @@ public class SteeringConnectorScenes {
 				0.4375, 1, 1);
 		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.1", bb, 20);
 		overlay.showControls(vector.topOf(1, 2, 4), Pointing.DOWN, 20).
-		rightClick().withItem(SimurailItems.STEERING_CONNECTOR.asStack());
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
 		scene.idle(30);
 
 		overlay.showText(60).

@@ -24,7 +24,7 @@ import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.config.SimurailPhysicsConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
-import com.crystaelix.simurail.content.steering_connector.SteeringConnectable;
+import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -68,7 +68,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Nameable, MenuProvider, BlockEntitySubLevelActor, SteeringConnectable {
+public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Nameable, MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable {
 
 	public static final double LINEAR_Y_LIMIT = 0.5;
 	public static final double LINEAR_Z_LIMIT = 1;
@@ -98,7 +98,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected BlockPos connectionBack;
 	protected UUID connectionBackSubLevelID;
 	protected boolean connectionBackToFront;
-	protected PhysicsBogeySteerGroup steerGroup;
+	protected PhysicsBogeyGroup group;
 
 	// Physics components
 	protected final Vector3dc localCenter;
@@ -206,7 +206,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	@Override
-	public boolean canConnectSteeringTo(Direction selfDir, SteeringConnectable other, Direction otherDir) {
+	public boolean canConnectTo(Direction selfDir, ConnectorConnectable other, Direction otherDir) {
 		if(other instanceof PhysicsBogeyBlockEntity) {
 			SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
 			SubLevel otherSubLevel = Sable.HELPER.getContaining(level, other.getBlockPos());
@@ -222,13 +222,13 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			return selfNormal.dot(x, y, z) > 0 && otherNormal.dot(x, y, z) < 0;
 		}
 		if(other instanceof AutomaticCouplerBlockEntity) {
-			return other.canConnectSteeringTo(otherDir, this, selfDir);
+			return other.canConnectTo(otherDir, this, selfDir);
 		}
 		return false;
 	}
 
 	@Override
-	public double connectionRange(SteeringConnectable other) {
+	public double connectionRange(ConnectorConnectable other) {
 		if(other instanceof PhysicsBogeyBlockEntity otherBogey) {
 			if(Sable.HELPER.getContaining(this) == Sable.HELPER.getContaining(otherBogey)) {
 				return SimurailConfig.server().blocks.connectionBogeyRangeSame.get();
@@ -244,12 +244,12 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	@Override
-	public void connectSteering(boolean front, SteeringConnectable other, boolean otherFront) {
+	public void connect(boolean front, ConnectorConnectable other, boolean otherFront) {
 		if(other instanceof PhysicsBogeyBlockEntity otherBogey) {
 			SubLevel otherSubLevel = Sable.HELPER.getContaining(otherBogey);
 			if(front) {
 				if(connectionFront != null) {
-					disconnectSteering(true);
+					disconnect(true);
 				}
 				connectionFront = otherBogey.getBlockPos();
 				connectionFrontSubLevelID = otherSubLevel == null ? null : otherSubLevel.getUniqueId();
@@ -257,28 +257,28 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			}
 			else {
 				if(connectionBack != null) {
-					disconnectSteering(false);
+					disconnect(false);
 				}
 				connectionBack = otherBogey.getBlockPos();
 				connectionBackSubLevelID = otherSubLevel == null ? null : otherSubLevel.getUniqueId();
 				connectionBackToFront = otherFront;
 			}
-			if(steerGroup != null) {
-				steerGroup.invalidate();
+			if(group != null) {
+				group.invalidate();
 			}
 			if(!level.isClientSide()) {
 				setChanged();
 				sendData();
 			}
 			// TODO sfx
-			otherBogey.propagateConnectSteering(otherFront, this, front);
+			otherBogey.propagateConnect(otherFront, this, front);
 		}
 		if(other instanceof AutomaticCouplerBlockEntity) {
-			other.connectSteering(otherFront, this, front);
+			other.connect(otherFront, this, front);
 		}
 	}
 
-	protected void propagateConnectSteering(boolean front, PhysicsBogeyBlockEntity otherBogey, boolean otherFront) {
+	protected void propagateConnect(boolean front, PhysicsBogeyBlockEntity otherBogey, boolean otherFront) {
 		SubLevel otherSubLevel = Sable.HELPER.getContaining(otherBogey);
 		if(front) {
 			connectionFront = otherBogey.getBlockPos();
@@ -290,8 +290,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			connectionBackSubLevelID = otherSubLevel == null ? null : otherSubLevel.getUniqueId();
 			connectionBackToFront = otherFront;
 		}
-		if(steerGroup != null) {
-			steerGroup.invalidate();
+		if(group != null) {
+			group.invalidate();
 		}
 		if(!level.isClientSide()) {
 			setChanged();
@@ -301,23 +301,23 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	@Override
-	public void disconnectSteering(boolean front) {
+	public void disconnect(boolean front) {
 		if(front) {
 			if(connectionFront != null && level.getBlockEntity(connectionFront) instanceof PhysicsBogeyBlockEntity otherBogey) {
-				otherBogey.propagateDisconnectSteering(connectionFrontToFront);
+				otherBogey.propagateDisconnect(connectionFrontToFront);
 			}
 			connectionFront = null;
 			connectionFrontSubLevelID = null;
 		}
 		else {
 			if(connectionBack != null && level.getBlockEntity(connectionBack) instanceof PhysicsBogeyBlockEntity otherBogey) {
-				otherBogey.propagateDisconnectSteering(connectionBackToFront);
+				otherBogey.propagateDisconnect(connectionBackToFront);
 			}
 			connectionBack = null;
 			connectionBackSubLevelID = null;
 		}
-		if(steerGroup != null) {
-			steerGroup.invalidate();
+		if(group != null) {
+			group.invalidate();
 		}
 		if(!level.isClientSide()) {
 			setChanged();
@@ -326,7 +326,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		// TODO sfx
 	}
 
-	protected void propagateDisconnectSteering(boolean front) {
+	protected void propagateDisconnect(boolean front) {
 		if(front) {
 			connectionFront = null;
 			connectionFrontSubLevelID = null;
@@ -335,8 +335,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			connectionBack = null;
 			connectionBackSubLevelID = null;
 		}
-		if(steerGroup != null) {
-			steerGroup.invalidate();
+		if(group != null) {
+			group.invalidate();
 		}
 		if(!level.isClientSide()) {
 			setChanged();
@@ -347,10 +347,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public void afterMove() {
 		if(connectionFront != null && level.getBlockEntity(connectionFront) instanceof PhysicsBogeyBlockEntity otherBogey) {
-			connectSteering(true, otherBogey, connectionFrontToFront);
+			connect(true, otherBogey, connectionFrontToFront);
 		}
 		if(connectionBack != null && level.getBlockEntity(connectionBack) instanceof PhysicsBogeyBlockEntity otherBogey) {
-			connectSteering(false, otherBogey, connectionBackToFront);
+			connect(false, otherBogey, connectionBackToFront);
 		}
 	}
 
@@ -552,14 +552,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 					SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
 					SubLevel otherSubLevel = Sable.HELPER.getContaining(other);
 					if(selfSubLevel != otherSubLevel && Sable.HELPER.distanceSquaredWithSubLevels(level, getBlockPos().getCenter(), connectionFront.getCenter()) > Mth.square(maxDist)) {
-						disconnectSteering(true);
+						disconnect(true);
 					}
 					else if(other.getConnected(connectionFrontToFront) != this) {
-						disconnectSteering(true);
+						disconnect(true);
 					}
 				}
 				else {
-					disconnectSteering(true);
+					disconnect(true);
 				}
 			}
 			if(connectionBack != null) {
@@ -567,14 +567,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 					SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
 					SubLevel otherSubLevel = Sable.HELPER.getContaining(other);
 					if(selfSubLevel != otherSubLevel && Sable.HELPER.distanceSquaredWithSubLevels(level, getBlockPos().getCenter(), connectionBack.getCenter()) > Mth.square(maxDist)) {
-						disconnectSteering(false);
+						disconnect(false);
 					}
 					else if(other.getConnected(connectionBackToFront) != this) {
-						disconnectSteering(true);
+						disconnect(true);
 					}
 				}
 				else {
-					disconnectSteering(false);
+					disconnect(false);
 				}
 			}
 		}
@@ -771,11 +771,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public float getBrakeStrength() {
-		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
-			return computerOverrides.getBrakeStrength();
-		}
 		if(hasNavigator() && navigatorOverrides.overrideBrakeStrength) {
 			return navigatorOverrides.getBrakeStrength();
+		}
+		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
+			return computerOverrides.getBrakeStrength();
 		}
 		return switch(options.controlMode) {
 		case BRAKING -> getControlStrength();
@@ -784,12 +784,19 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		};
 	}
 
-	public float getSteerValue() {
-		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideSteerValue) {
-			return computerOverrides.getSteerValue();
+	public float getGroupBrakeStrength() {
+		if(group == null) {
+			PhysicsBogeyGroup.createAndUpdate(this);
 		}
+		return group.getBrakeStrength(this);
+	}
+
+	public float getSteerValue() {
 		if(hasNavigator() && navigatorOverrides.overrideSteerValue) {
 			return navigatorOverrides.getSteerValue();
+		}
+		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideSteerValue) {
+			return computerOverrides.getSteerValue();
 		}
 		int value = switch(getFacing()) {
 		case EAST -> level.getSignal(getBlockPos().south(), Direction.SOUTH) - level.getSignal(getBlockPos().north(), Direction.NORTH);
@@ -802,10 +809,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public float getGroupSteerValue() {
-		if(steerGroup == null) {
-			PhysicsBogeySteerGroup.createAndUpdate(this);
+		if(group == null) {
+			PhysicsBogeyGroup.createAndUpdate(this);
 		}
-		return steerGroup.getSteerValue(this);
+		return group.getSteerValue(this);
 	}
 
 	@Override
@@ -1059,8 +1066,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		connectionBackSubLevelID = back.getSecond();
 		connectionBackToFront = tag.getBoolean("connection_back_front");
 
-		if(steerGroup != null) {
-			steerGroup.invalidate();
+		if(group != null) {
+			group.invalidate();
 		}
 	}
 

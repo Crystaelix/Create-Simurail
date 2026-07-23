@@ -4,7 +4,7 @@
 	"block.simurail.gangway_frame": "風擋框",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理轉向架",
-	"item.simurail.steering_connector": "轉向連接器",
+	"item.simurail.connector": "轉向架連接器",
 
 	"block.simurail.gangway_frame.d": "下",
 	"block.simurail.gangway_frame.u": "上",
@@ -19,12 +19,12 @@
 	"block.simurail.gangway_frame.ul": "長 左上",
 	"block.simurail.gangway_frame.ru": "長 右上",
 
-	"item.simurail.steering_connector.same_block": "方塊位置相同",
-	"item.simurail.steering_connector.out_of_range": "超出範圍",
-	"item.simurail.steering_connector.cannot_connect": "無法連接至此位置",
-	"item.simurail.steering_connector.connected": "已連接",
-	"item.simurail.steering_connector.disconnected": "已斷開連接",
-	"item.simurail.steering_connector.terminated": "已取消選擇",
+	"item.simurail.connector.same_block": "方塊位置相同",
+	"item.simurail.connector.out_of_range": "超出範圍",
+	"item.simurail.connector.cannot_connect": "無法連接至此位置",
+	"item.simurail.connector.connected": "已連接",
+	"item.simurail.connector.disconnected": "已斷開連接",
+	"item.simurail.connector.terminated": "已取消選擇",
 
 	"gui.simurail.no_options": "無選項",
 
@@ -327,13 +327,13 @@
 	"simurail.ponder.gangway_frame.coupler.text_1": "Gangway Frames can be combined with Automatic Couplers",
 	"simurail.ponder.gangway_frame.coupler.text_2": "Gangway Frames automatically connect and disconnect when Automatic Couplers connect and disconnect",
 
-	"simurail.ponder.steering_connector.intro.header": "Connecting Physics Bogies with the Steering Connector",
-	"simurail.ponder.steering_connector.intro.text_1": "The Steering Connector is a tool that connects Physics Bogies into a steering group",
-	"simurail.ponder.steering_connector.intro.text_2": "Connected Physics Bogies follow each other at track junctions",
-	"simurail.ponder.steering_connector.intro.text_3": "Redstone power can be provided at any connected Physics Bogie to turn at track junctions",
-	"simurail.ponder.steering_connector.intro.text_4": "To disconnect, click the same position twice",
+	"simurail.ponder.connector.intro.header": "Connecting Physics Bogies with the Bogie Connector",
+	"simurail.ponder.connector.intro.text_1": "The Bogie Connector is a tool that connects Physics Bogies into a group",
+	"simurail.ponder.connector.intro.text_2": "Connected Physics Bogies follow each other at track junctions",
+	"simurail.ponder.connector.intro.text_3": "Redstone power can be provided at any connected Physics Bogie to brake or to turn at track junctions",
+	"simurail.ponder.connector.intro.text_4": "To disconnect, click the same position twice",
 
-	"simurail.ponder.steering_connector.coupler.header": "Connecting Physics Bogies to Automatic Couplers",
-	"simurail.ponder.steering_connector.coupler.text_1": "The Steering Connector can connect Physics Bogies to Automatic Couplers on the same Simulated Contraption",
-	"simurail.ponder.steering_connector.coupler.text_2": "Steering automatically connects and disconnects when Automatic Couplers connect and disconnect"
+	"simurail.ponder.connector.coupler.header": "Connecting Physics Bogies to Automatic Couplers",
+	"simurail.ponder.connector.coupler.text_1": "The Bogie Connector can connect Physics Bogies to Automatic Couplers on the same Simulated Contraption",
+	"simurail.ponder.connector.coupler.text_2": "Bogies automatically connects and disconnects when Automatic Couplers connect and disconnect"
 }

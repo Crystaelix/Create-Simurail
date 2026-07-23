@@ -2,13 +2,13 @@
 	"type": "minecraft:crafting_shaped",
 	"result": {
 		"count": 1,
-		"id": "simurail:steering_connector"
+		"id": "simurail:connector"
 	},
 	"pattern": [
 		"SCS"
 	],
 	"key": {
-		"S": {"item": "c:plates/obsidian"},
+		"S": {"tag": "c:plates/obsidian"},
 		"C": {"item": "create:minecart_coupling"}
 	}
 }

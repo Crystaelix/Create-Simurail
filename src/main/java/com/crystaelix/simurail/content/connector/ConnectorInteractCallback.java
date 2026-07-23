@@ -1,4 +1,4 @@
-package com.crystaelix.simurail.content.steering_connector;
+package com.crystaelix.simurail.content.connector;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -30,7 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class SteeringConnectorInteractCallback implements InteractCallback {
+public class ConnectorInteractCallback implements InteractCallback {
 
 	public static final double MAX_LENGTH_SAME = 32;
 	public static final double MAX_LENGTH_DIFF = 12;
@@ -46,7 +46,7 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 		Level level = player.level();
 		BlockPos pos = context.getClickedPos();
 		BlockEntity be = level.getBlockEntity(pos);
-		if(!(be instanceof SteeringConnectable connectable)) {
+		if(!(be instanceof ConnectorConnectable connectable)) {
 			return false;
 		}
 		startPos = pos;
@@ -73,39 +73,39 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 					reset(true);
 					return new Result(true);
 				}
-				if(level.getBlockEntity(startPos) instanceof SteeringConnectable start) {
+				if(level.getBlockEntity(startPos) instanceof ConnectorConnectable start) {
 					HitResult clientHit = Minecraft.getInstance().hitResult;
 					if(clientHit instanceof BlockHitResult hit && hit.getType() != HitResult.Type.MISS && startPos != null) {
 						BlockPos endPos = hit.getBlockPos();
-						if(level.getBlockEntity(endPos) instanceof SteeringConnectable end) {
+						if(level.getBlockEntity(endPos) instanceof ConnectorConnectable end) {
 							Direction endDir = getDirection(end, hit.getLocation());
 							if(start == end && startDir != endDir) {
-								sendMessage("item.simurail.steering_connector.same_block", SimColors.NUH_UH_RED);
+								sendMessage("item.simurail.connector.same_block", SimColors.NUH_UH_RED);
 								return new Result(true);
 							}
 							if(start != end) {
-								if(!start.canConnectSteeringTo(startDir, end, endDir)) {
-									sendMessage("item.simurail.steering_connector.cannot_connect", SimColors.NUH_UH_RED);
+								if(!start.canConnectTo(startDir, end, endDir)) {
+									sendMessage("item.simurail.connector.cannot_connect", SimColors.NUH_UH_RED);
 									return new Result(true);
 								}
 								if(testRange(level, start, end)) {
-									sendMessage("item.simurail.steering_connector.out_of_range", SimColors.NUH_UH_RED);
+									sendMessage("item.simurail.connector.out_of_range", SimColors.NUH_UH_RED);
 									return new Result(true);
 								}
 							}
 
 							if(start == end) {
-								sendMessage("item.simurail.steering_connector.disconnected", SimColors.SUCCESS_LIME);
+								sendMessage("item.simurail.connector.disconnected", SimColors.SUCCESS_LIME);
 							}
 							else {
-								sendMessage("item.simurail.steering_connector.connected", SimColors.SUCCESS_LIME);
+								sendMessage("item.simurail.connector.connected", SimColors.SUCCESS_LIME);
 							}
 
 							boolean startFront = start.getFacing() == startDir;
 							boolean endFront = end.getFacing() == endDir;
 
 							player.swing(hand);
-							VeilPacketManager.server().sendPacket(new SteeringConnectPacket(startPos, startFront, endPos, endFront));
+							VeilPacketManager.server().sendPacket(new ConnectorConnectPacket(startPos, startFront, endPos, endFront));
 							reset(false);
 							return new Result(true);
 						}
@@ -117,7 +117,7 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 		return Result.empty();
 	}
 
-	private boolean testRange(Level level, SteeringConnectable start, SteeringConnectable end) {
+	private boolean testRange(Level level, ConnectorConnectable start, ConnectorConnectable end) {
 		double range = start.connectionRange(end);
 		BlockPos pos1 = start.getBlockPos();
 		BlockPos pos2 = end.getBlockPos();
@@ -137,16 +137,16 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 
 	public InteractionHand getHand(LocalPlayer player) {
 		InteractionHand hand = null;
-		if(player.getMainHandItem().is(SimurailItems.STEERING_CONNECTOR)) {
+		if(player.getMainHandItem().is(SimurailItems.CONNECTOR)) {
 			hand = InteractionHand.MAIN_HAND;
 		}
-		else if(player.getOffhandItem().is(SimurailItems.STEERING_CONNECTOR)) {
+		else if(player.getOffhandItem().is(SimurailItems.CONNECTOR)) {
 			hand = InteractionHand.OFF_HAND;
 		}
 		return hand;
 	}
 
-	public Direction getDirection(SteeringConnectable connectable, Vec3 clickLocation) {
+	public Direction getDirection(ConnectorConnectable connectable, Vec3 clickLocation) {
 		Vec3 offset = clickLocation.subtract(connectable.getBlockPos().getCenter());
 		Direction direction = connectable.getFacing();
 		return offset.x() * direction.getStepX() + offset.z * direction.getStepZ() >= 0 ? direction : direction.getOpposite();
@@ -154,7 +154,7 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 
 	public void reset(boolean sayMessage) {
 		if(sayMessage && startPos != null) {
-			sendMessage("item.simurail.steering_connector.terminated", SimColors.NUH_UH_RED);
+			sendMessage("item.simurail.connector.terminated", SimColors.NUH_UH_RED);
 		}
 		startPos = null;
 		startDir = null;
@@ -167,15 +167,15 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 
 	@Override
 	public void clientTick(Level level, LocalPlayer player) {
-		if(!player.getMainHandItem().is(SimurailItems.STEERING_CONNECTOR) && !player.getOffhandItem().is(SimurailItems.STEERING_CONNECTOR)) {
+		if(!player.getMainHandItem().is(SimurailItems.CONNECTOR) && !player.getOffhandItem().is(SimurailItems.CONNECTOR)) {
 			reset(true);
 			return;
 		}
 
 		if(startPos != null) {
-			if(level.getBlockEntity(startPos) instanceof SteeringConnectable start) {
+			if(level.getBlockEntity(startPos) instanceof ConnectorConnectable start) {
 				AABB aabb = start.getOutline(startDir);
-				Outliner.getInstance().showAABB("simurail.steering_connector", aabb).colored(SimColors.SUCCESS_LIME).lineWidth(0.0625F);
+				Outliner.getInstance().showAABB("simurail.connector", aabb).colored(SimColors.SUCCESS_LIME).lineWidth(0.0625F);
 			}
 			else {
 				reset(true);
@@ -186,20 +186,20 @@ public class SteeringConnectorInteractCallback implements InteractCallback {
 		if(clientHit != null && clientHit.getType() != HitResult.Type.MISS && clientHit instanceof BlockHitResult hit) {
 			BlockPos pos = hit.getBlockPos();
 			BlockEntity be = level.getBlockEntity(pos);
-			if(be instanceof SteeringConnectable end) {
+			if(be instanceof ConnectorConnectable end) {
 				Direction dir = getDirection(end, hit.getLocation());
 				int color = SimColors.SUCCESS_LIME;
 				if(startPos == null) {
 					color = SimColors.ACTIVE_YELLOW;
 				}
 				if(startPos != null && (pos.equals(startPos) && dir != startDir ||
-						level.getBlockEntity(startPos) instanceof SteeringConnectable start && start != end &&
-						(testRange(level, start, end) || !start.canConnectSteeringTo(startDir, end, dir)))) {
+						level.getBlockEntity(startPos) instanceof ConnectorConnectable start && start != end &&
+						(testRange(level, start, end) || !start.canConnectTo(startDir, end, dir)))) {
 					color = SimColors.NUH_UH_RED;
 				}
 
 				AABB aabb = end.getOutline(dir);
-				Outliner.getInstance().showAABB("simurail.steering_connector.selection", aabb).colored(color).lineWidth(0.0625F);
+				Outliner.getInstance().showAABB("simurail.connector.selection", aabb).colored(color).lineWidth(0.0625F);
 
 				if(startPos != null) {
 					Vec3 globalStart = Sable.HELPER.projectOutOfSubLevel(level, startPos.getCenter().add(startDir.getStepX() * 0.5, 0, startDir.getStepZ() * 0.5));

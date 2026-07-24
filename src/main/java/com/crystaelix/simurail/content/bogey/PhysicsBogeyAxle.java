@@ -500,9 +500,6 @@ public class PhysicsBogeyAxle {
 
 		trackJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);
 		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit - 0.125, zLimit + 0.125);
-
-		double xDamping = Math.max(Math.abs(speed) * 0.5, 0.01);
-		trackJoint.setMotor(ConstraintJointAxis.LINEAR_X, 0, 0, xDamping, false, 0);
 	}
 
 	protected void updateForces(ServerSubLevel subLevel, double timeStep) {

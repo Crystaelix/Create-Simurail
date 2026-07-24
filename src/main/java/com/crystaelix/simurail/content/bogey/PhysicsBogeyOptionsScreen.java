@@ -190,7 +190,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		controlInput.calling(i -> options.controlMode = PhysicsBogeyControlMode.BY_ID.apply(i));
 
 		stressInput = new ScrollInput(x + 31, y + 108, 109, 18);
-		stressInput.withRange(-64 * 2, 64 * 2 + 1);
+		stressInput.withRange(-128 * 2, 128 * 2 + 1);
 		stressInput.withShiftStep(4);
 		stressInput.titled(STRESS_TITLE.plainCopy());
 		stressInput.format(i -> Component.literal(String.valueOf(i * 0.5F)));

@@ -70,7 +70,7 @@ public class PhysicsBogeyOptions {
 	}
 
 	public PhysicsBogeyOptions setStress(float stress) {
-		this.stress = Math.clamp(stress, -64, 64);
+		this.stress = Math.clamp(stress, -128, 128);
 		return this;
 	}
 
@@ -202,7 +202,7 @@ public class PhysicsBogeyOptions {
 		setFlags(tag.getShort("flags"));
 		controlMode = PhysicsBogeyControlMode.BY_ID.apply(tag.getByte("control_mode"));
 		axleOffset = Math.clamp(tag.getFloat("axle_offset"), -1, 1);
-		stress = Math.clamp(tag.getFloat("stress"), -64, 64);
+		stress = Math.clamp(tag.getFloat("stress"), -128, 128);
 		tiltStrength = Math.clamp(tag.getFloat("tilt_strength"), 0, 1);
 		return this;
 	}

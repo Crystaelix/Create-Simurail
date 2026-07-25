@@ -28,7 +28,7 @@ import net.minecraft.core.BlockPos;
 
 public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticCouplerBlockEntity> implements SimpleDynamicVisual {
 
-	private boolean isShort;
+	private int lengthMode;
 	private CouplerType type;
 
 	private TransformedInstance bar;
@@ -40,14 +40,20 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 
 	@Override
 	public void beginFrame(DynamicVisual.Context context) {
-		if(bar == null || blockEntity.isShort != isShort) {
+		if(bar == null || blockEntity.couplerLengthMode != lengthMode) {
 			if(bar != null) {
 				bar.delete();
 				bar = null;
 			}
-			isShort = blockEntity.isShort;
+			lengthMode = blockEntity.couplerLengthMode;
+			PartialModel barModel = switch(lengthMode) {
+				case 0 -> SimurailPartialModels.COUPLER_BAR_SHORT;
+				case 1 -> SimurailPartialModels.COUPLER_BAR;
+				case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
+				default -> SimurailPartialModels.COUPLER_BAR;
+			};
 			bar = instancerProvider().
-					instancer(InstanceTypes.TRANSFORMED, Models.partial(isShort ? SimurailPartialModels.COUPLER_BAR_SHORT : SimurailPartialModels.COUPLER_BAR)).
+					instancer(InstanceTypes.TRANSFORMED, Models.partial(barModel)).
 					createInstance();
 			relight(bar);
 		}

@@ -73,10 +73,11 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	public static final double SHORT_LENGTH = 0.5;
 	public static final double LONG_LENGTH = 1;
+	public static final double EXTRA_LONG_LENGTH = 2;
 
 	protected boolean initialized = false;
 
-	protected boolean isShort = false;
+	protected int couplerLengthMode = 0;  // 0=SHORT, 1=LONG, 2=EXTRA_LONG
 	protected CouplerType type = SimurailCouplers.KNUCKLE;
 	protected int color = DyeColor.GRAY.getFireworkColor();
 
@@ -116,7 +117,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	public void cycleLength() {
-		isShort = !isShort;
+		couplerLengthMode = (couplerLengthMode + 1) % 3;
 		if(!level.isClientSide()) {
 			setChanged();
 			sendData();
@@ -378,7 +379,12 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	public double getLength() {
-		return (isShort ? SHORT_LENGTH : LONG_LENGTH) - 0.0625;
+		return switch(couplerLengthMode) {
+			case 0 -> SHORT_LENGTH - 0.0625;
+			case 1 -> LONG_LENGTH - 0.0625;
+			case 2 -> EXTRA_LONG_LENGTH - 0.0625;
+			default -> LONG_LENGTH - 0.0625;
+		};
 	}
 
 	public Vector3d getEndPosition(Vector3d dest) {
@@ -579,14 +585,14 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 						lastJointLength = jointLength;
 					}
 				}
+				else {
+					removePartner();
+					removeJoint();
+				}
 			}
 			else {
-				removePartner();
 				removeJoint();
 			}
-		}
-		else {
-			removeJoint();
 		}
 	}
 
@@ -737,7 +743,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	@Override
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
-		tag.putBoolean("is_short", isShort);
+		tag.putInt("coupler_length_mode", couplerLengthMode);
 		tag.putString("type", type.id().toString());
 		tag.putInt("color", color);
 
@@ -771,7 +777,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	@Override
 	public void writeSafe(CompoundTag tag, Provider registries) {
 		super.writeSafe(tag, registries);
-		tag.putBoolean("is_short", isShort);
+		tag.putInt("coupler_length_mode", couplerLengthMode);
 		tag.putString("type", type.id().toString());
 		tag.putInt("color", color);
 
@@ -783,7 +789,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
 
-		isShort = tag.getBoolean("is_short");
+		couplerLengthMode = tag.getInt("coupler_length_mode");
 		if(tag.contains("type")) {
 			type = CouplerTypeRegistry.get(ResourceLocation.tryParse(tag.getString("type")));
 			if(type == null) {

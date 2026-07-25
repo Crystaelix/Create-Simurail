@@ -77,7 +77,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	protected boolean initialized = false;
 
-	protected int couplerLengthMode = 0;  // 0=SHORT, 1=LONG, 2=EXTRA_LONG
+	protected int couplerLengthMode = 1;  // 0=SHORT, 1=LONG, 2=EXTRA_LONG
 	protected CouplerType type = SimurailCouplers.KNUCKLE;
 	protected int color = DyeColor.GRAY.getFireworkColor();
 

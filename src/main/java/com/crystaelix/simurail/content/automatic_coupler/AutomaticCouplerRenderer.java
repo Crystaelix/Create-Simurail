@@ -91,7 +91,12 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 			poseStack.pushPose();
 			poseStack.translate(0.5F, 0.5F, 0.5F);
 
-			PartialModel model = be.isShort ? SimurailPartialModels.COUPLER_BAR_SHORT : SimurailPartialModels.COUPLER_BAR;
+			PartialModel model = switch(be.couplerLengthMode) {
+				case 0 -> SimurailPartialModels.COUPLER_BAR_SHORT;
+				case 1 -> SimurailPartialModels.COUPLER_BAR;
+				case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
+				default -> SimurailPartialModels.COUPLER_BAR;
+			};
 			CachedBuffers.partial(model, air).
 			translate(couplerOffset).
 			rotate(couplerRot).

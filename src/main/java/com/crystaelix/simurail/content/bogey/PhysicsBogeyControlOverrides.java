@@ -54,7 +54,7 @@ public class PhysicsBogeyControlOverrides {
 	}
 
 	public void setStressMultiplier(float stressMultiplier) {
-		this.stressMultiplier = Math.clamp(stressMultiplier, 0, 1);
+		this.stressMultiplier = Math.clamp(stressMultiplier, -1, 1);
 		overrideStressMultiplier = true;
 	}
 

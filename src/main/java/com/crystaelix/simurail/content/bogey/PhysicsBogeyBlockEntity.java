@@ -853,11 +853,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(!options.enabled) {
 			return 0;
 		}
-		return Math.abs(options.getStress()) * (float)getStressMultiplier();
+		return Math.abs(options.getStress()) * Math.abs(getStressMultiplier());
 	}
 
 	public float getStressSign() {
-		return Math.signum(options.getStress());
+		return Math.signum(options.getStress()) * Math.signum(getStressMultiplier());
 	}
 
 	@Override

@@ -9,6 +9,7 @@ public class SimurailPartialModels {
 	public static final PartialModel
 	COUPLER_BAR = block("coupler/bar"),
 	COUPLER_BAR_SHORT = block("coupler/bar_short"),
+	COUPLER_BAR_EXTRA_LONG = block("coupler/bar_extra_long"),
 
 	AUTOMATIC_COUPLER_KNUCKLE = block("coupler/automatic/knuckle"),
 	AUTOMATIC_COUPLER_SHIBATA = block("coupler/automatic/shibata");

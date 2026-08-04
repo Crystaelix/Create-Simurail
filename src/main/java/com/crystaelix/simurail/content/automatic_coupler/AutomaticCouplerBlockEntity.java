@@ -77,7 +77,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	protected boolean initialized = false;
 
-	protected int couplerLengthMode = 1;  // 0=SHORT, 1=LONG, 2=EXTRA_LONG
+	protected int couplerLengthMode = 1; // 0=SHORT, 1=LONG, 2=EXTRA_LONG
 	protected CouplerType type = SimurailCouplers.KNUCKLE;
 	protected int color = DyeColor.GRAY.getFireworkColor();
 
@@ -117,7 +117,12 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	public void cycleLength() {
-		couplerLengthMode = (couplerLengthMode + 1) % 3;
+		if(partnerPos == null) {
+			couplerLengthMode = (couplerLengthMode + 1) % 3;
+		}
+		else if(couplerLengthMode != 2) {
+			couplerLengthMode = (couplerLengthMode + 1) % 2;
+		}
 		if(!level.isClientSide()) {
 			setChanged();
 			sendData();
@@ -380,11 +385,11 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	public double getLength() {
 		return switch(couplerLengthMode) {
-			case 0 -> SHORT_LENGTH - 0.0625;
-			case 1 -> LONG_LENGTH - 0.0625;
-			case 2 -> EXTRA_LONG_LENGTH - 0.0625;
-			default -> LONG_LENGTH - 0.0625;
-		};
+		case 0 -> SHORT_LENGTH;
+		case 1 -> LONG_LENGTH;
+		case 2 -> EXTRA_LONG_LENGTH;
+		default -> LONG_LENGTH;
+		} - 0.0625;
 	}
 
 	public Vector3d getEndPosition(Vector3d dest) {

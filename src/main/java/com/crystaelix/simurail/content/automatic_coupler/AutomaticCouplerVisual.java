@@ -47,10 +47,9 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 			}
 			lengthMode = blockEntity.couplerLengthMode;
 			PartialModel barModel = switch(lengthMode) {
-				case 0 -> SimurailPartialModels.COUPLER_BAR_SHORT;
-				case 1 -> SimurailPartialModels.COUPLER_BAR;
-				case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
-				default -> SimurailPartialModels.COUPLER_BAR;
+			default -> SimurailPartialModels.COUPLER_BAR;
+			case 1 -> SimurailPartialModels.COUPLER_BAR_SHORT;
+			case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
 			};
 			bar = instancerProvider().
 					instancer(InstanceTypes.TRANSFORMED, Models.partial(barModel)).

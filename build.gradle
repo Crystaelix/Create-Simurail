@@ -46,11 +46,7 @@ repositories {
 	exclusiveContent {
 		forRepository {
 			maven {
-				//url = "https://maven.createmod.net/"
-				url = "https://modmaven.dev/"
-				metadataSources {
-					artifact()
-				}
+				url = "https://maven.createmod.net/"
 			}
 		}
 		filter {

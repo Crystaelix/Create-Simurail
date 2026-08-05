@@ -1,7 +1,10 @@
 package com.crystaelix.simurail.content.bogey;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
@@ -26,6 +29,7 @@ import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Floats;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -62,6 +66,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -88,7 +93,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected final PhysicsBogeyOptions options;
 	protected CompoundTag bogeyData;
 	protected AbstractComputerBehaviour computerBehaviour;
-	protected final PhysicsBogeyControlOverrides navigatorOverrides = new PhysicsBogeyControlOverrides();
 	protected final PhysicsBogeyControlOverrides computerOverrides = new PhysicsBogeyControlOverrides();
 
 	// Connection components
@@ -116,6 +120,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected double lastVisualSpeed = 0;
 	protected final LerpedFloat lerpedCurvature = LerpedFloat.linear();
 
+	// Navigator components
+	protected float navigatorBrakeOverride = 0;
+
 	// Client rendering components
 	protected final MovingQuaternionfLerp renderPivotRot = MovingQuaternionfLerp.of(2);
 	protected final MovingVector3fLerp renderPivotOffset = MovingVector3fLerp.of(2);
@@ -123,6 +130,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected double distanceMoved;
 	protected float movementSpeed;
 	protected PhysicsBogeySounds sounds;
+	
+	public static final Set<PhysicsBogeyBlockEntity> LOADED_BOGEYS = Collections.newSetFromMap(new WeakHashMap<>());
 
 	public PhysicsBogeyBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
@@ -183,10 +192,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			setChanged();
 			sendData();
 		}
-	}
-
-	public PhysicsBogeyControlOverrides getNavigatorOverrides() {
-		return navigatorOverrides;
 	}
 
 	public PhysicsBogeyControlOverrides getComputerOverrides() {
@@ -413,6 +418,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public boolean hasNavigator() {
 		return false;
 	}
+	
+	@Override
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		if(level != null && !level.isClientSide()) {
+			LOADED_BOGEYS.add(this);
+		}
+	}
 
 	// Sometimes physicsTick happens before tick?
 	public void init() {
@@ -496,9 +509,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(!level.isClientSide()) {
 			if(!computerBehaviour.hasAttachedComputer() && computerOverrides.hasOverrides()) {
 				computerOverrides.reset();
-			}
-			if(!hasNavigator() && navigatorOverrides.hasOverrides()) {
-				navigatorOverrides.reset();
 			}
 			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel) {
 				axleFront.updateVisualSpeed();
@@ -765,36 +775,39 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		}
 		return count;
 	}
+	
+	public PhysicsBogeyGroup getGroup() {
+		if(group == null) {
+			PhysicsBogeyGroup.createAndUpdate(this);
+		}
+		return group;
+	}
 
 	public float getControlStrength() {
 		return Math.clamp((isInverted() ? level.getSignal(getBlockPos().below(), Direction.DOWN) : level.getSignal(getBlockPos().above(), Direction.UP)) / 15F, 0, 1);
 	}
 
 	public float getBrakeStrength() {
-		if(hasNavigator() && navigatorOverrides.overrideBrakeStrength) {
-			return navigatorOverrides.getBrakeStrength();
-		}
-		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
-			return computerOverrides.getBrakeStrength();
-		}
-		return switch(options.controlMode) {
+		float[] brakeStrengths = new float[3];
+		brakeStrengths[0] = switch(options.controlMode) {
 		case BRAKING -> getControlStrength();
 		case BRAKING_INVERTED -> 1 - getControlStrength();
 		case null, default -> 0;
 		};
+		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
+			brakeStrengths[1] = computerOverrides.getBrakeStrength();
+		}
+		if(hasNavigator()) {
+			brakeStrengths[2] = navigatorBrakeOverride;
+		}
+		return Floats.max(brakeStrengths);
 	}
 
 	public float getGroupBrakeStrength() {
-		if(group == null) {
-			PhysicsBogeyGroup.createAndUpdate(this);
-		}
-		return group.getBrakeStrength(this);
+		return getGroup().getBrakeStrength(this);
 	}
 
 	public float getSteerValue() {
-		if(hasNavigator() && navigatorOverrides.overrideSteerValue) {
-			return navigatorOverrides.getSteerValue();
-		}
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideSteerValue) {
 			return computerOverrides.getSteerValue();
 		}
@@ -809,10 +822,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public float getGroupSteerValue() {
-		if(group == null) {
-			PhysicsBogeyGroup.createAndUpdate(this);
-		}
-		return group.getSteerValue(this);
+		return getGroup().getSteerValue(this);
 	}
 
 	@Override
@@ -837,9 +847,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public float getStressMultiplier() {
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideStressMultiplier) {
 			return computerOverrides.getStressMultiplier();
-		}
-		if(hasNavigator() && navigatorOverrides.overrideStressMultiplier) {
-			return navigatorOverrides.getStressMultiplier();
 		}
 		return switch(options.controlMode) {
 		case STRENGTH -> getControlStrength();
@@ -980,7 +987,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			tag.put("axle_front", axleFront.write());
 			tag.put("axle_back", axleBack.write());
 			tag.put("computer_overrides", computerOverrides.write());
-			tag.put("navigator_overrides", navigatorOverrides.write());
 		}
 
 		if(localPivotOffset != null) {

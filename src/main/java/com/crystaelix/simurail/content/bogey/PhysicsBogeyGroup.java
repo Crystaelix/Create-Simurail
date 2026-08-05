@@ -7,9 +7,11 @@ import java.util.SequencedSet;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.objects.ObjectBooleanPair;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 
-public record PhysicsBogeyGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanList orientation) {
+public record PhysicsBogeyGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanList orientation, Component displayName) {
 
 	public float getSteerValue(PhysicsBogeyBlockEntity target) {
 		float steer = target.getSteerValue();
@@ -97,7 +99,21 @@ public record PhysicsBogeyGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanLis
 			connection = nextBogey(curr, !toFront);
 		}
 
-		PhysicsBogeyGroup group = new PhysicsBogeyGroup(List.copyOf(chain), BooleanList.of(orientation.toBooleanArray()));
+		Component displayName;
+		if(chain.getFirst().getBlockPos().compareTo(chain.getLast().getBlockPos()) <= 0) {
+			displayName = chain.stream().
+					filter(Nameable::hasCustomName).
+					findFirst().map(Nameable::getDisplayName).
+					orElseGet(chain.getFirst()::getDisplayName);
+		}
+		else {
+			displayName = chain.reversed().stream().
+					filter(Nameable::hasCustomName).
+					findFirst().map(Nameable::getDisplayName).
+					orElseGet(chain.getLast()::getDisplayName);
+		}
+
+		PhysicsBogeyGroup group = new PhysicsBogeyGroup(List.copyOf(chain), BooleanList.of(orientation.toBooleanArray()), displayName);
 		for(PhysicsBogeyBlockEntity bogey : chain) {
 			bogey.group = group;
 		}

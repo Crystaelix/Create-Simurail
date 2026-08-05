@@ -2,11 +2,15 @@
 	"required": true,
 	"package": "com.crystaelix.simurail.mixin",
 	"compatibilityLevel": "JAVA_21",
+	"mixinextras": {
+		"minVersion": "0.5.0"
+	},
 	"plugin": "com.crystaelix.simurail.mixin.SimurailMixinPlugin",
 	"mixins": [
 		"BogeyStyleAccessor",
 
 		"BezierConnectionMixin",
+		"ChainDriveBlockMixin",
 		"GlobalRailwayManagerMixin",
 		"ObservedTrainNameSourceMixin",
 		"SignalEdgeGroupMixin",

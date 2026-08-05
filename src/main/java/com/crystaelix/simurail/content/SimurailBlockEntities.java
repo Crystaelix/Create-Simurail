@@ -12,6 +12,8 @@ import com.crystaelix.simurail.content.gangway_frame.GangwayFrameRenderer;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
 public class SimurailBlockEntities {
 
 	private static final CreateRegistrate REGISTRATE = Simurail.registrate();
@@ -21,7 +23,6 @@ public class SimurailBlockEntities {
 			visual(() -> PhysicsBogeyVisual::new, false).
 			renderer(() -> PhysicsBogeyRenderer::new).
 			validBlocks(SimurailBlocks.PHYSICS_BOGEY).
-			registerCapability(PhysicsBogeyBlockEntity::registerCapabilities).
 			register();
 	public static final BlockEntityEntry<AutomaticCouplerBlockEntity> COUPLER = REGISTRATE.
 			blockEntity("coupler", AutomaticCouplerBlockEntity::new).
@@ -36,5 +37,9 @@ public class SimurailBlockEntities {
 			register();
 
 	public static void register() {
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		PhysicsBogeyBlockEntity.registerCapabilities(event);
 	}
 }

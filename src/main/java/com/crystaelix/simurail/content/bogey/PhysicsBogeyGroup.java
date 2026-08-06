@@ -99,19 +99,22 @@ public record PhysicsBogeyGroup(List<PhysicsBogeyBlockEntity> bogeys, BooleanLis
 			connection = nextBogey(curr, !toFront);
 		}
 
-		Component displayName;
-		if(chain.getFirst().getBlockPos().compareTo(chain.getLast().getBlockPos()) <= 0) {
-			displayName = chain.stream().
-					filter(Nameable::hasCustomName).
-					findFirst().map(Nameable::getDisplayName).
-					orElseGet(chain.getFirst()::getDisplayName);
+		int size = orientation.size();
+		if(chain.getFirst().getBlockPos().compareTo(chain.getLast().getBlockPos()) > 0) {
+			chain = chain.reversed();
+			for(int i = 0, j = size - 1, mid = size / 2; i < mid; ++i, --j) {
+				orientation.set(i, orientation.set(j, orientation.getBoolean(i)));
+			}
 		}
-		else {
-			displayName = chain.reversed().stream().
-					filter(Nameable::hasCustomName).
-					findFirst().map(Nameable::getDisplayName).
-					orElseGet(chain.getLast()::getDisplayName);
+		if(orientation.getBoolean(0)) {
+			for(int i = 0; i < size; ++i) {
+				orientation.set(i, !orientation.getBoolean(i));
+			}
 		}
+		Component displayName = chain.stream().
+				filter(Nameable::hasCustomName).
+				findFirst().map(Nameable::getDisplayName).
+				orElseGet(chain.getFirst()::getDisplayName);
 
 		PhysicsBogeyGroup group = new PhysicsBogeyGroup(List.copyOf(chain), BooleanList.of(orientation.toBooleanArray()), displayName);
 		for(PhysicsBogeyBlockEntity bogey : chain) {

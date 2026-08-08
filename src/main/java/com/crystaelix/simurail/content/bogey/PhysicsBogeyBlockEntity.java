@@ -778,7 +778,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	
 	public PhysicsBogeyGroup getGroup() {
 		if(group == null) {
-			PhysicsBogeyGroup.createAndUpdate(this);
+			PhysicsBogeyGroup.createAndAssign(this);
 		}
 		return group;
 	}

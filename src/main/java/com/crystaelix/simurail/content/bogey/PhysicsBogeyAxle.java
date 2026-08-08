@@ -78,7 +78,6 @@ public class PhysicsBogeyAxle {
 	protected double offsetTimer = 0;
 
 	protected TrackSegment trackSegment;
-	protected boolean trackReversed;
 	protected ServerSubLevel trackSubLevel;
 	protected Pose3dc trackSubLevelPose;
 
@@ -162,7 +161,6 @@ public class PhysicsBogeyAxle {
 			resetProbe(trackPoint);
 			double travelDist = bogey.options.type.axleSpacing();
 			if(logicalFront) travelDist *= -1;
-			if(trackReversed) travelDist *= -1;
 			probe.travel(trackGraph,
 					travelDist,
 					followOtherOrSteer(probe),
@@ -288,8 +286,8 @@ public class PhysicsBogeyAxle {
 
 			double t = trackSegment.projectT(trackAxleFrame.position);
 			trackSegment.frame(t, trackFrame);
-			trackReversed = trackAxleFrame.direction.dot(trackFrame.direction) < 0;
-			if(trackReversed) {
+			if(trackAxleFrame.direction.dot(trackFrame.direction) < 0) {
+				trackSegment = trackSegment.reverse();
 				trackFrame.direction.negate();
 				trackFrame.lateral.negate();
 			}
@@ -882,6 +880,14 @@ public class PhysicsBogeyAxle {
 
 	protected boolean isCurrentFront() {
 		return logicalFront && speed > 0 || !logicalFront && speed < 0;
+	}
+
+	public TrackGraph getTrackGraph() {
+		return trackGraph;
+	}
+
+	public TravellingPoint getTrackPoint() {
+		return trackPoint;
 	}
 
 	protected PhysicsBogeyAxle other() {

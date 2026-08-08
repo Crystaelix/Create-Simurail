@@ -58,6 +58,11 @@ public final class CurvedTrackSegment extends TrackSegment {
 	}
 
 	@Override
+	public CurvedTrackSegment reverse() {
+		return new CurvedTrackSegment(dimension, curve.secondary(), curve.getSegmentCount() - segment - 1);
+	}
+
+	@Override
 	public Frame3d frame(double t, Frame3d dest) {
 		double curveT = curveT(t);
 

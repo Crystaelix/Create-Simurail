@@ -29,6 +29,11 @@ public final class StraightTrackSegment extends TrackSegment {
 	}
 
 	@Override
+	public StraightTrackSegment reverse() {
+		return new StraightTrackSegment(trackEnd, trackStart, normal, material);
+	}
+
+	@Override
 	public TrackNodeLocation edgeStart() {
 		return trackStart;
 	}

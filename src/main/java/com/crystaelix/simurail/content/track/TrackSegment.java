@@ -49,6 +49,8 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 		return dimension;
 	}
 
+	public abstract TrackSegment reverse();
+
 	public Vector3dc start() {
 		return start;
 	}

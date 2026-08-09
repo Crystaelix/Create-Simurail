@@ -752,10 +752,12 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	@Override
 	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.putBoolean("coupler", true);
 		tag.putInt("coupler_length_mode", couplerLengthMode);
 		tag.putString("coupler_type", type.id().toString());
 		tag.putInt("coupler_color", color);
 		if(getGangwayShape() != GangwayFrameBlockShape.NONE) {
+			tag.putBoolean("gangway", true);
 			tag.putDouble("gangway_rest_length", gangwayRestLength);
 			tag.putInt("gangway_color", gangwayColor);
 		}
@@ -764,6 +766,10 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	@Override
 	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		boolean hasGangway = getGangwayShape() != GangwayFrameBlockShape.NONE;
+		if(!tag.getBoolean("coupler") && (!hasGangway || !tag.getBoolean("gangway"))) {
+			return false;
+		}
 		if(simulate) {
 			return true;
 		}
@@ -779,7 +785,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		if(tag.contains("coupler_color")) {
 			color = tag.getInt("coupler_color");
 		}
-		if(getGangwayShape() != GangwayFrameBlockShape.NONE) {
+		if(hasGangway) {
 			if(tag.contains("gangway_rest_length")) {
 				gangwayRestLength = tag.getFloat("gangway_rest_length");
 			}

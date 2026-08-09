@@ -338,6 +338,7 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 
 	@Override
 	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.putBoolean("gangway", true);
 		tag.putDouble("gangway_rest_length", restLength);
 		tag.putInt("gangway_color", color);
 		return true;
@@ -345,6 +346,9 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 
 	@Override
 	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if(!tag.getBoolean("gangway")) {
+			return false;
+		}
 		if(simulate) {
 			return true;
 		}

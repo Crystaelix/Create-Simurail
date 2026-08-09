@@ -31,6 +31,7 @@ import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Floats;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -73,7 +74,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Nameable, MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable {
+public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Nameable, MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable, ClipboardCloneable {
 
 	public static final double LINEAR_Y_LIMIT = 0.5;
 	public static final double LINEAR_Z_LIMIT = 1;
@@ -275,7 +276,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				setChanged();
 				sendData();
 			}
-			// TODO sfx
 			otherBogey.propagateConnect(otherFront, this, front);
 		}
 		if(other instanceof AutomaticCouplerBlockEntity) {
@@ -302,7 +302,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			setChanged();
 			sendData();
 		}
-		// TODO sfx
 	}
 
 	@Override
@@ -328,7 +327,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			setChanged();
 			sendData();
 		}
-		// TODO sfx
 	}
 
 	protected void propagateDisconnect(boolean front) {
@@ -347,7 +345,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			setChanged();
 			sendData();
 		}
-		// TODO sfx
 	}
 
 	public void afterMove() {
@@ -789,11 +786,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public float getBrakeStrength() {
 		float[] brakeStrengths = new float[3];
-		brakeStrengths[0] = switch(options.controlMode) {
+		brakeStrengths[0] = Mth.square(switch(options.controlMode) {
 		case BRAKING -> getControlStrength();
 		case BRAKING_INVERTED -> 1 - getControlStrength();
 		case null, default -> 0;
-		};
+		});
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
 			brakeStrengths[1] = computerOverrides.getBrakeStrength();
 		}
@@ -972,6 +969,33 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			}
 		}
 		computerBehaviour.removePeripheral();
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return isInverted() ? "inverted_physics_bogey" : "physics_bogey";
+	}
+
+	@Override
+	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.put("options", options.write());
+		return true;
+	}
+
+	@Override
+	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if(simulate) {
+			return true;
+		}
+		if(tag.contains("options")) {
+			options.read(tag.getCompound("options"));
+			bogeyData = null;
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+		return true;
 	}
 
 	@Override

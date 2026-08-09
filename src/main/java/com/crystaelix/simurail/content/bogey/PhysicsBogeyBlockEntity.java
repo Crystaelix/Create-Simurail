@@ -130,7 +130,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected double distanceMoved;
 	protected float movementSpeed;
 	protected PhysicsBogeySounds sounds;
-	
+
 	public static final Set<PhysicsBogeyBlockEntity> LOADED_BOGEYS = Collections.newSetFromMap(new WeakHashMap<>());
 
 	public PhysicsBogeyBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -418,7 +418,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public boolean hasNavigator() {
 		return false;
 	}
-	
+
 	@Override
 	public void setLevel(Level level) {
 		super.setLevel(level);
@@ -775,7 +775,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		}
 		return count;
 	}
-	
+
 	public PhysicsBogeyGroup getGroup() {
 		if(group == null) {
 			PhysicsBogeyGroup.createAndAssign(this);

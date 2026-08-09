@@ -53,6 +53,7 @@ import dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyH
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -84,6 +85,8 @@ public class PhysicsBogeyAxle {
 	protected TrackGraph trackGraph;
 	protected TravellingPoint trackPoint = new TravellingPoint();
 	protected TravellingPoint probe = new TravellingPoint();
+
+	protected List<Couple<TrackNode>> currentPath = new ArrayList<>();
 
 	protected BlockHitResult clipResult;
 	protected ServerSubLevel clipSubLevel;
@@ -233,7 +236,7 @@ public class PhysicsBogeyAxle {
 					resetProbe(trackPoint);
 					probe.position = t < 0.5 ? 0.05 : probe.edge.getLength() - 0.05;
 					probe.travel(trackGraph, t < 0.5 ? -0.1 : 0.1,
-							followOrSteer(probe),
+							control(probe),
 							probe.ignoreEdgePoints(),
 							probe.ignoreTurns(),
 							$ -> true);
@@ -727,7 +730,7 @@ public class PhysicsBogeyAxle {
 		removeAxleBox(subLevel);
 	}
 
-	protected ITrackSelector followOrSteer(TravellingPoint point) {
+	protected ITrackSelector control(TravellingPoint point) {
 		return (graph, pair) -> {
 			PhysicsBogeyAxle followingAxle = null;
 			TravellingPoint nextPoint = null;
@@ -744,7 +747,12 @@ public class PhysicsBogeyAxle {
 				nextPoint = followingAxle.trackPoint;
 			}
 			if(nextPoint == null || nextPoint.edge == null) {
-				return steer(point).apply(graph, pair);
+				if(!currentPath.isEmpty()) {
+					return navigate(currentPath).apply(graph, pair);
+				}
+				else {
+					return steer(point).apply(graph, pair);
+				}
 			}
 			else {
 				MutableBoolean flag = new MutableBoolean(false);
@@ -758,7 +766,6 @@ public class PhysicsBogeyAxle {
 			}
 		};
 	}
-
 
 	protected ITrackSelector followOtherOrSteer(TravellingPoint point) {
 		return (graph, pair) -> {
@@ -780,6 +787,25 @@ public class PhysicsBogeyAxle {
 					return steer(point).apply(graph, pair);
 				}
 			}
+		};
+	}
+
+	protected ITrackSelector navigate(List<Couple<TrackNode>> path) {
+		return (graph, pair) -> {
+			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
+			if(path.isEmpty()) {
+				return validTargets.get(0);
+			}
+			Couple<TrackNode> nodes = path.get(0);
+			TrackEdge targetEdge = graph.getConnection(nodes);
+			for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {
+				if(entry.getValue() != targetEdge) {
+					continue;
+				}
+				path.remove(0);
+				return entry;
+			}
+			return validTargets.get(0);
 		};
 	}
 
@@ -878,7 +904,7 @@ public class PhysicsBogeyAxle {
 		};
 	}
 
-	protected boolean isCurrentFront() {
+	public boolean isCurrentFront() {
 		return logicalFront && speed > 0 || !logicalFront && speed < 0;
 	}
 
@@ -890,12 +916,16 @@ public class PhysicsBogeyAxle {
 		return trackPoint;
 	}
 
-	protected PhysicsBogeyAxle other() {
+	public PhysicsBogeyAxle other() {
 		return this == bogey.axleFront ? bogey.axleBack : bogey.axleFront;
 	}
 
 	public boolean hasTrack() {
 		return trackSegment != null;
+	}
+
+	public void setCurrentPath(List<Couple<TrackNode>> path) {
+		currentPath = path;
 	}
 
 	protected CompoundTag write() {

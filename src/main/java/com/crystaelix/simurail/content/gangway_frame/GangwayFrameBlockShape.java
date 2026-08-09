@@ -15,7 +15,6 @@ import com.crystaelix.simurail.api.math.Quad3d;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

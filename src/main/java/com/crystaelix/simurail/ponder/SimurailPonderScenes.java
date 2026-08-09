@@ -3,9 +3,9 @@ package com.crystaelix.simurail.ponder;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.ponder.scenes.AutomaticCouplerScenes;
+import com.crystaelix.simurail.ponder.scenes.ConnectorScenes;
 import com.crystaelix.simurail.ponder.scenes.GangwayFrameScenes;
 import com.crystaelix.simurail.ponder.scenes.PhysicsBogeyScenes;
-import com.crystaelix.simurail.ponder.scenes.ConnectorScenes;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 

@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
+import com.crystaelix.simurail.content.bogey.PhysicsBogeyGroup;
 import com.crystaelix.simurail.extension.SignalEdgeGroupExtension;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -61,9 +62,28 @@ public abstract class SignalEdgeGroupMixin implements SignalEdgeGroupExtension {
 	}
 
 	@Override
+	public boolean simurail$isOccupiedUnless(PhysicsBogeyGroup group) {
+		if(intersectingResolved.isEmpty()) {
+			walkIntersecting(intersectingResolved::add);
+		}
+		for(SignalEdgeGroup edgeGroup : intersectingResolved) {
+			if(((SignalEdgeGroupExtension)edgeGroup).simurail$isThisOccupiedUnless(group)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public boolean simurail$isThisOccupiedUnless(PhysicsBogeyBlockEntity bogey) {
 		return bogeys.size() > 1 || !bogeys.contains(bogey) && !bogeys.isEmpty() || reserved != null || !trains.isEmpty();
 	}
+
+	@Override
+	public boolean simurail$isThisOccupiedUnless(PhysicsBogeyGroup group) {
+		return group.bogeys.stream().noneMatch(bogeys::contains) && !bogeys.isEmpty() || reserved != null || !trains.isEmpty();
+	}
+
 
 	@WrapMethod(method = "isThisOccupiedUnless(Lcom/simibubi/create/content/trains/entity/Train;)Z")
 	private boolean simurail$modifyIsOccupied(Train train, Operation<Boolean> original) {

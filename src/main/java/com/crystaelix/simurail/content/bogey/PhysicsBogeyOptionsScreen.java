@@ -17,7 +17,6 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 

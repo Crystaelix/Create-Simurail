@@ -11,6 +11,7 @@ import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -42,7 +43,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuProvider, GangwayFrame {
+public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuProvider, GangwayFrame, ClipboardCloneable {
 
 	protected BlockPos gangwayPartnerPos;
 	protected UUID gangwayPartnerSubLevelID;
@@ -328,6 +329,36 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 		if(newShape != oldShape) {
 			removeGangwayPartner();
 		}
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return "gangway_frame";
+	}
+
+	@Override
+	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.putDouble("gangway_rest_length", restLength);
+		tag.putInt("gangway_color", color);
+		return true;
+	}
+
+	@Override
+	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if(simulate) {
+			return true;
+		}
+		if(tag.contains("gangway_rest_length")) {
+			restLength = tag.getFloat("gangway_rest_length");
+		}
+		if(tag.contains("gangway_color")) {
+			color = tag.getInt("gangway_color");
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+		return true;
 	}
 
 	@Override

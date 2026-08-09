@@ -25,6 +25,7 @@ import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -69,7 +70,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable, GangwayFrame {
+public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable, GangwayFrame, ClipboardCloneable {
 
 	public static final double SHORT_LENGTH = 0.5;
 	public static final double LONG_LENGTH = 1;
@@ -742,6 +743,55 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		if(!level.isClientSide()) {
 			removeJoint();
 		}
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return "gangway_frame";
+	}
+
+	@Override
+	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.putInt("coupler_length_mode", couplerLengthMode);
+		tag.putString("coupler_type", type.id().toString());
+		tag.putInt("coupler_color", color);
+		if(getGangwayShape() != GangwayFrameBlockShape.NONE) {
+			tag.putDouble("gangway_rest_length", gangwayRestLength);
+			tag.putInt("gangway_color", gangwayColor);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if(simulate) {
+			return true;
+		}
+		if(tag.contains("coupler_length_mode")) {
+			couplerLengthMode = tag.getInt("coupler_length_mode");
+		}
+		if(tag.contains("coupler_type")) {
+			type = CouplerTypeRegistry.get(ResourceLocation.tryParse(tag.getString("coupler_type")));
+			if(type == null) {
+				type = SimurailCouplers.KNUCKLE;
+			}
+		}
+		if(tag.contains("coupler_color")) {
+			color = tag.getInt("coupler_color");
+		}
+		if(getGangwayShape() != GangwayFrameBlockShape.NONE) {
+			if(tag.contains("gangway_rest_length")) {
+				gangwayRestLength = tag.getFloat("gangway_rest_length");
+			}
+			if(tag.contains("gangway_color")) {
+				gangwayColor = tag.getInt("gangway_color");
+			}
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+		return true;
 	}
 
 	@Override

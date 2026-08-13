@@ -26,13 +26,17 @@ import com.crystaelix.simurail.content.track.TrackSegment;
 import com.crystaelix.simurail.content.track.TrackSegmentHelper;
 import com.crystaelix.simurail.extension.SignalEdgeGroupExtension;
 import com.crystaelix.simurail.extension.TrackObserverExtension;
+import com.machinezoo.noexception.CloseableScope;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
+import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
+import com.simibubi.create.content.trains.signal.TrackEdgePoint;
+import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.track.BezierConnection;
 
 import dev.ryanhcode.sable.Sable;
@@ -111,6 +115,8 @@ public class PhysicsBogeyAxle {
 	protected double kLateral;
 	protected double kVertical;
 
+	protected PhysicsBogeyProbeData probeData = new PhysicsBogeyProbeData();
+
 	public PhysicsBogeyAxle(PhysicsBogeyBlockEntity bogey, boolean logicalFront) {
 		this.bogey = bogey;
 		this.logicalFront = logicalFront;
@@ -175,6 +181,65 @@ public class PhysicsBogeyAxle {
 					},
 					probe.ignoreTurns(),
 					$ -> true);
+		}
+	}
+
+	protected void updateOuterProbe() {
+		try(CloseableScope scope = probeData.writeScope()) {
+			probeData.reset();
+			double travelDist = bogey.options.getProbeDistance();
+			if(travelDist > 0 && trackGraph != null && trackPoint.edge != null) {
+				resetProbe(trackPoint);
+				if(!logicalFront) travelDist *= -1;
+				double traveled = probe.travel(
+						trackGraph,
+						travelDist,
+						(isCurrentFront() ? control(probe) : steer(probe)),
+						(distance, couple) -> {
+							TrackEdgePoint point = couple.getFirst();
+							Couple<TrackNode> nodes = couple.getSecond();
+							TrackEdge edge = trackGraph.getConnection(nodes);
+							switch(point) {
+							case GlobalStation station -> {
+								if(probeData.stationDistance < 0) {
+									probeData.stationDistance = Math.abs(distance);
+									probeData.stationName = station.name;
+									probeData.stationId = station.id;
+									probeData.stationPos = edge.getPosition(trackGraph, station.getLocationOn(edge) / edge.getLength());
+									probeData.stationBlockPos = station.blockEntityPos;
+								}
+							}
+							case SignalBoundary signal -> {
+								if(probeData.signalDistance < 0) {
+									probeData.signalDistance = Math.abs(distance);
+									probeData.signalPos = edge.getPosition(trackGraph, signal.getLocationOn(edge) / edge.getLength());
+									probeData.signalAligned = signal.canNavigateVia(nodes.getSecond());
+									probeData.signalBidirectional = signal.blockEntities.both(ps -> !ps.isEmpty());
+								}
+								if(probeData.occupiedSignalDistance < 0) {
+									UUID signalEdgeGroupId = signal.getGroup(nodes.getSecond());
+									SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(signalEdgeGroupId);
+									SignalEdgeGroupExtension signalEdgeGroupE = (SignalEdgeGroupExtension)signalEdgeGroup;
+									if(signalEdgeGroup != null && (signal.isForcedRed(nodes.getSecond()) || signalEdgeGroupE.simurail$isOccupiedUnless(bogey.group))) {
+										probeData.occupiedSignalDistance = Math.abs(distance);
+										probeData.occupiedSignalPos = edge.getPosition(trackGraph, signal.getLocationOn(edge) / edge.getLength());
+										probeData.occupiedSignalAligned = signal.canNavigateVia(nodes.getSecond());
+										probeData.occupiedSignalBidirectional = signal.blockEntities.both(ps -> !ps.isEmpty());
+									}
+								}
+							}
+							case null, default -> {}
+							}
+							return false;
+						},
+						(distance, edge) -> {
+							// TODO turn data
+						},
+						$ -> true);
+				if(probe.blocked) {
+					probeData.blockedDistance = Math.abs(traveled);
+				}
+			}
 		}
 	}
 
@@ -748,7 +813,7 @@ public class PhysicsBogeyAxle {
 			}
 			if(nextPoint == null || nextPoint.edge == null) {
 				if(!currentPath.isEmpty()) {
-					return navigate(currentPath).apply(graph, pair);
+					return navigate(point, currentPath).apply(graph, pair);
 				}
 				else {
 					return steer(point).apply(graph, pair);
@@ -790,22 +855,22 @@ public class PhysicsBogeyAxle {
 		};
 	}
 
-	protected ITrackSelector navigate(List<Couple<TrackNode>> path) {
+	protected ITrackSelector navigate(TravellingPoint point, List<Couple<TrackNode>> path) {
 		return (graph, pair) -> {
 			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
 			if(path.isEmpty()) {
-				return validTargets.get(0);
+				return steer(point).apply(graph, pair);
 			}
-			Couple<TrackNode> nodes = path.get(0);
-			TrackEdge targetEdge = graph.getConnection(nodes);
-			for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {
-				if(entry.getValue() != targetEdge) {
-					continue;
+			for(Couple<TrackNode> targetEdge : path) {
+				for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {
+					TrackEdge candEdge = entry.getValue();
+					if(candEdge.node1 != targetEdge.getFirst() && candEdge.node2 != targetEdge.getSecond()) {
+						continue;
+					}
+					return entry;
 				}
-				path.remove(0);
-				return entry;
 			}
-			return validTargets.get(0);
+			return steer(point).apply(graph, pair);
 		};
 	}
 
@@ -914,6 +979,10 @@ public class PhysicsBogeyAxle {
 
 	public TravellingPoint getTrackPoint() {
 		return trackPoint;
+	}
+
+	public PhysicsBogeyProbeData getProbeData() {
+		return probeData;
 	}
 
 	public PhysicsBogeyAxle other() {

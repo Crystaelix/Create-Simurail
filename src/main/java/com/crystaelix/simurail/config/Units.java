@@ -3,6 +3,7 @@ package com.crystaelix.simurail.config;
 
 class Units {
 	static String time = "[in s]";
+	static String ticks = "[in ticks]";
 	static String mass = "[in kġ]";
 	static String moment = "[in kġ∙ṁ²]";
 	static String length = "[in ṁ]";

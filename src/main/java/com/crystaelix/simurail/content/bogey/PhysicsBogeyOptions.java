@@ -25,6 +25,7 @@ public class PhysicsBogeyOptions {
 	private float axleOffset = 0;
 	private float stress = 8;
 	private float tiltStrength = 0;
+	private float probeDistance = 0;
 
 	public PhysicsBogeyOptions() {}
 
@@ -46,6 +47,7 @@ public class PhysicsBogeyOptions {
 		axleOffset = other.axleOffset;
 		stress = other.stress;
 		tiltStrength = other.tiltStrength;
+		probeDistance = other.probeDistance;
 		return this;
 	}
 
@@ -80,6 +82,15 @@ public class PhysicsBogeyOptions {
 
 	public PhysicsBogeyOptions setTiltStrength(float tiltStrength) {
 		this.tiltStrength = Math.clamp(tiltStrength, 0, 1);
+		return this;
+	}
+
+	public float getProbeDistance() {
+		return probeDistance;
+	}
+
+	public PhysicsBogeyOptions setProbeDistance(float probeDistance) {
+		this.probeDistance = Math.clamp(probeDistance, 0, 128);
 		return this;
 	}
 
@@ -193,7 +204,8 @@ public class PhysicsBogeyOptions {
 		tag.putByte("control_mode", (byte)controlMode.ordinal());
 		tag.putFloat("axle_offset", axleOffset);
 		tag.putFloat("stress", stress);
-		tag.putDouble("tilt_strength", tiltStrength);
+		tag.putFloat("tilt_strength", tiltStrength);
+		tag.putFloat("probe_distance", probeDistance);
 		return tag;
 	}
 
@@ -204,6 +216,7 @@ public class PhysicsBogeyOptions {
 		axleOffset = Math.clamp(tag.getFloat("axle_offset"), -1, 1);
 		stress = Math.clamp(tag.getFloat("stress"), -128, 128);
 		tiltStrength = Math.clamp(tag.getFloat("tilt_strength"), 0, 1);
+		probeDistance = Math.clamp(tag.getFloat("probe_distance"), 0, 128);
 		return this;
 	}
 
@@ -214,6 +227,7 @@ public class PhysicsBogeyOptions {
 		buf.writeFloat(axleOffset);
 		buf.writeFloat(stress);
 		buf.writeFloat(tiltStrength);
+		buf.writeFloat(probeDistance);
 	}
 
 	public PhysicsBogeyOptions decode(ByteBuf buf) {
@@ -223,6 +237,7 @@ public class PhysicsBogeyOptions {
 		axleOffset = buf.readFloat();
 		stress = buf.readFloat();
 		tiltStrength = buf.readFloat();
+		probeDistance = buf.readFloat();
 		return this;
 	}
 }

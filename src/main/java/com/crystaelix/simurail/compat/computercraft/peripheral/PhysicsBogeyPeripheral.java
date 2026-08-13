@@ -1,10 +1,15 @@
 package com.crystaelix.simurail.compat.computercraft.peripheral;
 
+import java.util.UUID;
+
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyControlMode;
+import com.crystaelix.simurail.content.bogey.PhysicsBogeyProbeData;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SyncedPeripheral;
 
 import dan200.computercraft.api.lua.LuaFunction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEntity> {
 
@@ -118,6 +123,17 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final double getProbeDistance() {
+		return blockEntity.getOptions().getProbeDistance();
+	}
+
+	@LuaFunction(mainThread = true)
+	public final void setProbeDistance(double probeDistance) {
+		blockEntity.getOptions().setProbeDistance((float)probeDistance);
+		blockEntity.setChanged();
+	}
+
+	@LuaFunction
 	public final int getControlMode() {
 		return blockEntity.getOptions().controlMode.ordinal();
 	}
@@ -222,5 +238,94 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	@LuaFunction
 	public final double getVerticalCurvature() {
 		return blockEntity.getVerticalCurvature();
+	}
+
+	@LuaFunction
+	public final double getProbeStationDistance(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getStationDistance();
+	}
+
+	@LuaFunction
+	public final String getProbeStationName(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getStationName();
+	}
+
+	@LuaFunction
+	public final String getProbeStationId(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		UUID id = data.getStationId();
+		return id == null ? null : id.toString();
+	}
+
+	@LuaFunction
+	public final Object[] getProbeStationPos(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		Vec3 pos = data.getStationPos();
+		return pos == null ? null : new Object[] {pos.x, pos.y, pos.z};
+	}
+
+	@LuaFunction
+	public final Object[] getProbeStationBlockPos(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		BlockPos pos = data.getStationBlockPos();
+		return pos == null ? null : new Object[] {pos.getX(), pos.getY(), pos.getZ()};
+	}
+
+	@LuaFunction
+	public final double getProbeSignalDistance(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getSignalDistance();
+	}
+
+	@LuaFunction
+	public final Object[] getProbeSignalPos(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		Vec3 pos = data.getSignalPos();
+		return pos == null ? null : new Object[] {pos.x, pos.y, pos.z};
+	}
+
+	@LuaFunction
+	public final boolean getProbeSignalAligned(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.isSignalAligned();
+	}
+
+	@LuaFunction
+	public final boolean getProbeSignalBidirectional(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.isSignalBidirectional();
+	}
+
+	@LuaFunction
+	public final double getProbeOccupiedSignalDistance(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getOccupiedSignalDistance();
+	}
+
+	@LuaFunction
+	public final Object[] getProbeOccupiedSignalPos(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		Vec3 pos = data.getOccupiedSignalPos();
+		return pos == null ? null : new Object[] {pos.x, pos.y, pos.z};
+	}
+
+	@LuaFunction
+	public final boolean getProbeOccupiedSignalAligned(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.isOccupiedSignalAligned();
+	}
+
+	@LuaFunction
+	public final boolean getProbeOccupiedSignalBidirectional(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.isOccupiedSignalBidirectional();
+	}
+
+	@LuaFunction
+	public final double getProbeBlockedDistance(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getBlockedDistance();
 	}
 }

@@ -517,6 +517,12 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				axleFront.updateInnerProbe();
 				axleBack.updateInnerProbe();
 
+				if((level.getGameTime() + getBlockPos().asLong()) %
+						SimurailConfig.server().blocks.bogeyProbeInterval.get() == 0) {
+					axleFront.updateOuterProbe();
+					axleBack.updateOuterProbe();
+				}
+
 				axleFront.updateOffsetChange();
 				axleBack.updateOffsetChange();
 			}

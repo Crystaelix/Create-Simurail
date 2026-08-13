@@ -10,7 +10,6 @@
 		"BogeyStyleAccessor",
 
 		"BezierConnectionMixin",
-		"ChainDriveBlockMixin",
 		"GlobalRailwayManagerMixin",
 		"ObservedTrainNameSourceMixin",
 		"SignalEdgeGroupMixin",

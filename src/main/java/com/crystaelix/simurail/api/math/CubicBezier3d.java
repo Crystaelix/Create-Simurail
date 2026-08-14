@@ -287,11 +287,8 @@ public class CubicBezier3d implements CubicBezier3dc {
 
 	@Override
 	public double acceleration(double t, int component) {
-		double q0 = 3 * (handle1.get(component) - end1.get(component));
-		double q1 = 3 * (handle2.get(component) - handle1.get(component));
-		double q2 = 3 * (end2.get(component) - handle2.get(component));
-		double r0 = 2 * (q1 - q0);
-		double r1 = 2 * (q2 - q1);
+		double r0 = 6 * (handle2.get(component) - 2 * handle1.get(component) + end1.get(component));
+		double r1 = 6 * (end2.get(component) - 2 * handle2.get(component) + handle1.get(component));
 		return Mth.lerp(t, r0, r1);
 	}
 
@@ -300,15 +297,14 @@ public class CubicBezier3d implements CubicBezier3dc {
 		double vx = velocity(t, 0);
 		double vy = velocity(t, 1);
 		double vz = velocity(t, 2);
-		double vLenSq = Vector3d.lengthSquared(vx, vy, vz);
-
-		if(vLenSq < SimurailMath.EPSILON_SQ) {
-			return dest.zero();
-		}
-
 		double ax = acceleration(t, 0);
 		double ay = acceleration(t, 1);
 		double az = acceleration(t, 2);
+		double vLenSq = Vector3d.lengthSquared(vx, vy, vz);
+
+		if(vLenSq < SimurailMath.EPSILON_SQ) {
+			return dest.set(ax, ay, az);
+		}
 
 		double vLenSqInv = 1 / vLenSq;
 		double va = (vx * ax + vy * ay + vz * az) * vLenSqInv;

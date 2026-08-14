@@ -13,6 +13,7 @@ import org.joml.Vector3d;
 
 import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
 import com.crystaelix.simurail.api.math.Frame3d;
+import com.crystaelix.simurail.api.math.Frame3dc;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.physics.AttachableBoxPhysicsObject;
 import com.crystaelix.simurail.api.physics.SimurailJoints;
@@ -232,10 +233,7 @@ public class PhysicsBogeyAxle {
 							}
 							return false;
 						},
-						(distance, edge) -> {
-							// TODO turn data
-						},
-						$ -> true);
+						probe.ignoreTurns(), $ -> true);
 				if(probe.blocked) {
 					probeData.blockedDistance = Math.abs(traveled);
 				}
@@ -971,6 +969,18 @@ public class PhysicsBogeyAxle {
 
 	public boolean isCurrentFront() {
 		return logicalFront && speed > 0 || !logicalFront && speed < 0;
+	}
+
+	public Frame3dc getTrackFrame() {
+		return trackFrame;
+	}
+
+	public double getLateralCurvature() {
+		return kLateral;
+	}
+
+	public double getVerticalCurvature() {
+		return kVertical;
 	}
 
 	public TrackGraph getTrackGraph() {

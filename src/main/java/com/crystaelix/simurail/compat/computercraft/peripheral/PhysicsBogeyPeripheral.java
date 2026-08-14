@@ -1,6 +1,9 @@
 package com.crystaelix.simurail.compat.computercraft.peripheral;
 
+import java.util.Optional;
 import java.util.UUID;
+
+import org.joml.Vector3dc;
 
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyControlMode;
@@ -221,23 +224,70 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
-	public final boolean hasTrack() {
-		return blockEntity.hasTrack();
+	public final boolean hasTrack(Optional<Boolean> front) {
+		if(front.isPresent()) {
+			return blockEntity.getAxle(front.get()).hasTrack();
+		}
+		else {
+			return blockEntity.hasTrack();
+		}
 	}
 
 	@LuaFunction
-	public final boolean isDerailed() {
-		return blockEntity.isDerailed();
+	public final boolean isDerailed(Optional<Boolean> front) {
+		if(front.isPresent()) {
+			return !blockEntity.getAxle(front.get()).hasTrack();
+		}
+		else {
+			return blockEntity.isDerailed();
+		}
 	}
 
 	@LuaFunction
-	public final double getLateralCurvature() {
-		return blockEntity.getLateralCurvature();
+	public final double getLateralCurvature(Optional<Boolean> front) {
+		if(front.isPresent()) {
+			return blockEntity.getAxle(front.get()).getLateralCurvature();
+		}
+		else {
+			return blockEntity.getLateralCurvature();
+		}
 	}
 
 	@LuaFunction
-	public final double getVerticalCurvature() {
-		return blockEntity.getVerticalCurvature();
+	public final double getVerticalCurvature(Optional<Boolean> front) {
+		if(front.isPresent()) {
+			return blockEntity.getAxle(front.get()).getVerticalCurvature();
+		}
+		else {
+			return blockEntity.getVerticalCurvature();
+		}
+	}
+
+	@LuaFunction
+	public final Object[] getTrackPos(boolean front) {
+		if(!blockEntity.getAxle(front).hasTrack()) {
+			return null;
+		}
+		Vector3dc pos = blockEntity.getAxle(front).getTrackFrame().position();
+		return new Object[] {pos.x(), pos.y(), pos.z()};
+	}
+
+	@LuaFunction
+	public final Object[] getTrackDir(boolean front) {
+		if(!blockEntity.getAxle(front).hasTrack()) {
+			return null;
+		}
+		Vector3dc dir = blockEntity.getAxle(front).getTrackFrame().direction();
+		return new Object[] {dir.x(), dir.y(), dir.z()};
+	}
+
+	@LuaFunction
+	public final Object[] getTrackVert(boolean front) {
+		if(!blockEntity.getAxle(front).hasTrack()) {
+			return null;
+		}
+		Vector3dc vert = blockEntity.getAxle(front).getTrackFrame().vertical();
+		return new Object[] {vert.x(), vert.y(), vert.z()};
 	}
 
 	@LuaFunction

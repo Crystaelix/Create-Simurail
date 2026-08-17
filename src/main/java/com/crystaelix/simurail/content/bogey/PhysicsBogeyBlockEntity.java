@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.content.bogey;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import com.crystaelix.simurail.config.SimurailPhysicsConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Floats;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
@@ -123,6 +125,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	// Navigator components
 	protected float navigatorBrakeOverride = 0;
+
+	// Probe cache
+	protected Set<BlockPos> probeReaders = new HashSet<>();
 
 	// Client rendering components
 	protected final MovingQuaternionfLerp renderPivotRot = MovingQuaternionfLerp.of(2);
@@ -346,6 +351,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			sendData();
 		}
 	}
+	
+	public void beforeMove(BlockPos newPos) {
+		for(BlockPos readerPos : probeReaders) {
+			if(level.getBlockEntity(readerPos) instanceof ProbeReaderBlockEntity reader) {
+				reader.setTargetPos(newPos);
+			}
+		}
+	}
 
 	public void afterMove() {
 		if(connectionFront != null && level.getBlockEntity(connectionFront) instanceof PhysicsBogeyBlockEntity otherBogey) {
@@ -410,6 +423,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public boolean getConnectedToFront(boolean front) {
 		return front ? connectionFrontToFront : connectionBackToFront;
+	}
+
+	public void addProbeReader(BlockPos readerPos) {
+		probeReaders.add(readerPos);
+	}
+
+	public void removeProbeReader(BlockPos readerPos) {
+		probeReaders.remove(readerPos);
 	}
 
 	public boolean hasNavigator() {
@@ -678,14 +699,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double maxForce = config.bogeyVerticalSpringMaxForce.get();
 			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, stiffness, damping, true, maxForce);
 		}
-		else if(!options.allowYawOffset && !options.allowPitchOffset) {
-			double multiplier = 1;
-			double frequency = config.bogeyVerticalLockingSpringFrequency.get();
-			double dampingRate = config.bogeyVerticalLockingSpringDampingRate.get();
-			double stiffness = multiplier * frequency * frequency;
-			double damping = multiplier * frequency * dampingRate * 2;
-			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, stiffness, damping, false, 0);
-		}
 		else {
 			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, SimurailMath.EPSILON, false, 0);
 		}
@@ -698,14 +711,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double damping = frequency * dampingRate * 2;
 			double maxForce = config.bogeyLateralSpringMaxForce.get();
 			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, stiffness, damping, true, maxForce);
-		}
-		else if(!options.allowYawOffset && !options.allowPitchOffset) {
-			double multiplier = 1;
-			double frequency = config.bogeyLateralLockingSpringFrequency.get();
-			double dampingRate = config.bogeyLateralLockingSpringDampingRate.get();
-			double stiffness = multiplier * frequency * frequency;
-			double damping = multiplier * frequency * dampingRate * 2;
-			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, stiffness, damping, false, 0);
 		}
 		else {
 			motorJoint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, SimurailMath.EPSILON, false, 0);
@@ -733,32 +738,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double mass = massData.getMass();
 			double centTorque = mass * centAcc * torqueOffset / getActiveBogeyCount(subLevel);
 			queuedTorque.fma(Math.clamp(centTorque, -maxTorque, maxTorque) * timeStep, globalBasis.direction);
-		}
-
-		// Angular Y
-		if(!options.allowYawOffset) {
-			double multiplier = 1;
-			double frequency = config.bogeyYawLockingSpringFrequency.get();
-			double dampingRate = config.bogeyYawLockingSpringDampingRate.get();
-			double stiffness = multiplier * frequency * frequency;
-			double damping = multiplier * frequency * dampingRate * 2;
-			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, stiffness, damping, false, 0);
-		}
-		else {
-			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, 0, SimurailMath.EPSILON, false, 0);
-		}
-
-		// Angular Z
-		if(!options.allowPitchOffset) {
-			double multiplier = 1;
-			double frequency = config.bogeyPitchLockingSpringFrequency.get();
-			double dampingRate = config.bogeyPitchLockingSpringDampingRate.get();
-			double stiffness = multiplier * frequency * frequency;
-			double damping = multiplier * frequency * dampingRate * 2;
-			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, stiffness, damping, false, 0);
-		}
-		else {
-			motorJoint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, SimurailMath.EPSILON, false, 0);
 		}
 
 		rot.transformInverse(queuedTorque);
@@ -957,6 +936,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 					motorJoint = null;
 				}
 				createPivot(subLevel);
+				axleFront.resetOffset();
+				axleBack.resetOffset();
 			}
 		}
 	}

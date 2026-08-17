@@ -1,15 +1,19 @@
 package com.crystaelix.simurail.content.bogey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.joml.Quaterniond;
+import org.joml.Quaterniondc;
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
 import com.crystaelix.simurail.api.math.Frame3d;
@@ -60,10 +64,20 @@ import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Pair;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.StandingSignBlock;
+import net.minecraft.world.level.block.WallHangingSignBlock;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -80,6 +94,7 @@ public class PhysicsBogeyAxle {
 
 	protected final Vector3d lastOffset = new Vector3d();
 	protected final Vector3d targetOffset = new Vector3d();
+	protected final Vector3d staticAxleBogeyPos = new Vector3d();
 	protected float vertOffset;
 	protected double offsetTimer = 0;
 
@@ -134,6 +149,7 @@ public class PhysicsBogeyAxle {
 		else {
 			axleFrame.position.set(targetOffset);
 		}
+		staticAxleBogeyPos.set(targetOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
 		if(trackSegment == null) {
 			trackRecheckTime = 0.05;
 		}
@@ -191,6 +207,9 @@ public class PhysicsBogeyAxle {
 			double travelDist = bogey.options.getProbeDistance();
 			if(travelDist > 0 && trackGraph != null && trackPoint.edge != null) {
 				resetProbe(trackPoint);
+				//double resetDist = bogey.options.type.axleSpacing() * 0.5 - 0.0625;
+				//if(logicalFront) resetDist *= -1;
+				//probe.travel(trackGraph, resetDist, followOtherOrSteer(probe), probe.ignoreEdgePoints(), probe.ignoreTurns(), $ -> true);
 				if(!logicalFront) travelDist *= -1;
 				double traveled = probe.travel(
 						trackGraph,
@@ -208,11 +227,13 @@ public class PhysicsBogeyAxle {
 									probeData.stationId = station.id;
 									probeData.stationPos = edge.getPosition(trackGraph, station.getLocationOn(edge) / edge.getLength());
 									probeData.stationBlockPos = station.blockEntityPos;
+									probeData.stationPowered = bogey.getLevel().hasNeighborSignal(station.blockEntityPos);
 								}
 							}
 							case SignalBoundary signal -> {
 								if(probeData.signalDistance < 0) {
 									probeData.signalDistance = Math.abs(distance);
+									probeData.signalNames = getSignalNames(signal, nodes.getSecond());
 									probeData.signalPos = edge.getPosition(trackGraph, signal.getLocationOn(edge) / edge.getLength());
 									probeData.signalAligned = signal.canNavigateVia(nodes.getSecond());
 									probeData.signalBidirectional = signal.blockEntities.both(ps -> !ps.isEmpty());
@@ -223,22 +244,59 @@ public class PhysicsBogeyAxle {
 									SignalEdgeGroupExtension signalEdgeGroupE = (SignalEdgeGroupExtension)signalEdgeGroup;
 									if(signalEdgeGroup != null && (signal.isForcedRed(nodes.getSecond()) || signalEdgeGroupE.simurail$isOccupiedUnless(bogey.group))) {
 										probeData.occupiedSignalDistance = Math.abs(distance);
+										probeData.occupiedSignalNames = getSignalNames(signal, nodes.getSecond());
 										probeData.occupiedSignalPos = edge.getPosition(trackGraph, signal.getLocationOn(edge) / edge.getLength());
 										probeData.occupiedSignalAligned = signal.canNavigateVia(nodes.getSecond());
 										probeData.occupiedSignalBidirectional = signal.blockEntities.both(ps -> !ps.isEmpty());
+										probeData.occupiedSignalForced = signal.isForcedRed(nodes.getSecond());
 									}
 								}
 							}
-							case null, default -> {}
+							case null -> {}
+							default -> {
+								switch(point.getType().getId().toString()) {
+								case "railways:buffer" -> {
+									return true;
+								}
+								}
+							}
 							}
 							return false;
 						},
 						probe.ignoreTurns(), $ -> true);
 				if(probe.blocked) {
-					probeData.blockedDistance = Math.abs(traveled);
+					probeData.discontinuityDistance = Math.abs(traveled);
 				}
 			}
 		}
+	}
+
+	protected List<String> getSignalNames(SignalBoundary signal, TrackNode side) {
+		Set<BlockPos> signalBlocks = signal.blockEntities.get(signal.isPrimary(side)).keySet();
+		Level level = bogey.getLevel();
+		return signalBlocks.stream().
+				flatMap(pos -> Direction.stream().flatMap(dir -> {
+					BlockPos relative = pos.relative(dir);
+					BlockState state = level.getBlockState(relative);
+					if(dir == Direction.UP) {
+						if(state.getBlock() instanceof StandingSignBlock) {
+							return level.getBlockEntity(relative, BlockEntityType.SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
+						}
+					}
+					else if(dir == Direction.DOWN) {
+						return level.getBlockEntity(relative, BlockEntityType.HANGING_SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
+					}
+					else if(state.getBlock() instanceof WallSignBlock && dir == state.getValue(HorizontalDirectionalBlock.FACING)) {
+						return level.getBlockEntity(relative, BlockEntityType.SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
+					}
+					else if(state.getBlock() instanceof WallHangingSignBlock && dir.getAxis() != state.getValue(HorizontalDirectionalBlock.FACING).getAxis()) {
+						return level.getBlockEntity(relative, BlockEntityType.HANGING_SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
+					}
+					return Stream.of();
+				})).
+				flatMap(text -> Arrays.stream(text.getMessages(false))).
+				map(Component::getString).
+				toList();
 	}
 
 	protected void updateOffsetChange() {
@@ -257,6 +315,7 @@ public class PhysicsBogeyAxle {
 				offsetTimer = 0;
 				axleFrame.position.set(targetOffset);
 			}
+			staticAxleBogeyPos.set(targetOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
 		}
 	}
 
@@ -454,13 +513,13 @@ public class PhysicsBogeyAxle {
 		}
 
 		trackSubLevelPose.orientation().conjugate(trackJointRot).mul(globalTrackRot);
-		bogeyAxleFrame.orientation(bogeyTrackJointRot);
 
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
 		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
 		if(offsetTimer > 0) {
 			removeJoint();
 		}
+		boolean disableRotation = !bogey.options.allowYawOffset && !bogey.options.allowPitchOffset;
 		if(trackJoint == null || !trackJoint.isValid()) {
 			trackJoint = null;
 			double linearDamping = config.axlePassiveLinearDamping.get();
@@ -482,14 +541,18 @@ public class PhysicsBogeyAxle {
 		}
 		if(bogeyJoint == null || !bogeyJoint.isValid()) {
 			bogeyJoint = null;
+			Vector3dc bogeyJointPos = disableRotation ? staticAxleBogeyPos : bogeyAxleFrame.position;
+			Quaterniondc bogeyJointRot = disableRotation ? bogey.getJointOrientation() : bogeyAxleFrame.orientation(bogeyTrackJointRot);
 			GenericConstraintConfiguration jointConfig = SimurailJoints.freeJoint(
-					trackFrame.position, bogeyAxleFrame.position,
-					trackJointRot, bogeyTrackJointRot);
+					trackFrame.position, bogeyJointPos,
+					trackJointRot, bogeyJointRot);
 			bogeyJoint = physics.getPipeline().addConstraint(trackSubLevel, subLevel, jointConfig);
 		}
 		else {
+			Vector3dc jointPos = disableRotation ? staticAxleBogeyPos : bogeyAxleFrame.position;
+			Quaterniondc jointRot = disableRotation ? bogey.getJointOrientation() : bogeyAxleFrame.orientation(bogeyTrackJointRot);
 			bogeyJoint.setFrame1(trackFrame.position, trackJointRot);
-			bogeyJoint.setFrame2(bogeyAxleFrame.position, bogeyTrackJointRot);
+			bogeyJoint.setFrame2(jointPos, jointRot);
 		}
 	}
 
@@ -553,17 +616,21 @@ public class PhysicsBogeyAxle {
 			}
 		}
 
+		boolean disableRotation = !bogey.options.allowYawOffset && !bogey.options.allowPitchOffset;
+		double bogeyVerticalPlay = disableRotation ? 0 : 0.0625;
+		double bogeyLateralPlay = disableRotation ? 0 : 0.125;
+
 		if(checkVertical) {
 			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
-			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - 0.0625, yLimit + 0.0625);
+			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - bogeyVerticalPlay, yLimit + bogeyVerticalPlay);
 		}
 		else {
 			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Float.MAX_VALUE);
-			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - 0.0625, Float.MAX_VALUE);
+			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - bogeyVerticalPlay, Float.MAX_VALUE);
 		}
 
 		trackJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);
-		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit - 0.125, zLimit + 0.125);
+		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit - bogeyLateralPlay, zLimit + bogeyLateralPlay);
 	}
 
 	protected void updateForces(ServerSubLevel subLevel, double timeStep) {

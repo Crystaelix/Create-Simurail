@@ -237,6 +237,11 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 	}
 
 	@Override
+	protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+		IBE.onRemove(state, level, pos, newState);
+	}
+
+	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 		double hitY = target.getLocation().y - pos.getY();
 		if(hitY > 0.3 && hitY < 0.7) {
@@ -325,8 +330,8 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 	// Mixin overridable
 
 	@Override
-	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onPlace(state, level, pos, oldState, isMoving);
+	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+		super.onPlace(state, level, pos, oldState, movedByPiston);
 	}
 
 	@Override

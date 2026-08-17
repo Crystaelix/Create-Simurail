@@ -1,5 +1,6 @@
 package com.crystaelix.simurail.content.bogey;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.locks.StampedLock;
 
@@ -17,17 +18,22 @@ public class PhysicsBogeyProbeData {
 	protected UUID stationId;
 	protected Vec3 stationPos;
 	protected BlockPos stationBlockPos;
+	protected boolean stationPowered;
 	protected double signalDistance;
+	protected List<String> signalNames;
 	protected Vec3 signalPos;
 	protected boolean signalAligned;
 	protected boolean signalBidirectional;
 	protected double occupiedSignalDistance;
+	protected List<String> occupiedSignalNames;
 	protected Vec3 occupiedSignalPos;
 	protected boolean occupiedSignalAligned;
 	protected boolean occupiedSignalBidirectional;
-	protected double blockedDistance;
+	protected boolean occupiedSignalForced;
+	protected double discontinuityDistance;
 
 	protected PhysicsBogeyProbeData() {
+		reset();
 	}
 
 	protected void reset() {
@@ -35,13 +41,17 @@ public class PhysicsBogeyProbeData {
 		stationName = null;
 		stationPos = null;
 		stationBlockPos = null;
+		stationPowered = false;
 		signalDistance = -1;
+		signalNames = List.of();
 		signalPos = null;
 		signalAligned = false;
 		occupiedSignalDistance = -1;
+		occupiedSignalNames = List.of();
 		occupiedSignalPos = null;
 		occupiedSignalAligned = false;
-		blockedDistance = -1;
+		occupiedSignalForced = false;
+		discontinuityDistance = -1;
 	}
 
 	protected CloseableScope writeScope() {
@@ -108,6 +118,17 @@ public class PhysicsBogeyProbeData {
 			return stationBlockPos;
 		}
 	}
+	
+	public boolean isStationPowered() {
+		long stamp = lock.tryOptimisticRead();
+		boolean v = stationPowered;
+		if(lock.validate(stamp)) {
+			return v;
+		}
+		try(CloseableScope scope = readScope()) {
+			return stationPowered;
+		}
+	}
 
 	public double getSignalDistance() {
 		long stamp = lock.tryOptimisticRead();
@@ -117,6 +138,17 @@ public class PhysicsBogeyProbeData {
 		}
 		try(CloseableScope scope = readScope()) {
 			return signalDistance;
+		}
+	}
+
+	public List<String> getSignalNames() {
+		long stamp = lock.tryOptimisticRead();
+		List<String> v = signalNames;
+		if(lock.validate(stamp)) {
+			return v;
+		}
+		try(CloseableScope scope = readScope()) {
+			return signalNames;
 		}
 	}
 
@@ -164,6 +196,17 @@ public class PhysicsBogeyProbeData {
 		}
 	}
 
+	public List<String> getOccupiedSignalNames() {
+		long stamp = lock.tryOptimisticRead();
+		List<String> v = occupiedSignalNames;
+		if(lock.validate(stamp)) {
+			return v;
+		}
+		try(CloseableScope scope = readScope()) {
+			return occupiedSignalNames;
+		}
+	}
+
 	public Vec3 getOccupiedSignalPos() {
 		long stamp = lock.tryOptimisticRead();
 		Vec3 v = occupiedSignalPos;
@@ -197,14 +240,25 @@ public class PhysicsBogeyProbeData {
 		}
 	}
 
-	public double getBlockedDistance() {
+	public boolean isOccupiedSignalForced() {
 		long stamp = lock.tryOptimisticRead();
-		double v = blockedDistance;
+		boolean v = occupiedSignalForced;
 		if(lock.validate(stamp)) {
 			return v;
 		}
 		try(CloseableScope scope = readScope()) {
-			return blockedDistance;
+			return occupiedSignalForced;
+		}
+	}
+
+	public double getDiscontinuityDistance() {
+		long stamp = lock.tryOptimisticRead();
+		double v = discontinuityDistance;
+		if(lock.validate(stamp)) {
+			return v;
+		}
+		try(CloseableScope scope = readScope()) {
+			return discontinuityDistance;
 		}
 	}
 }

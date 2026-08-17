@@ -2,6 +2,7 @@
 	"block.simurail.physics_bogey": "物理转向架",
 	"block.simurail.automatic_coupler": "自动车钩",
 	"block.simurail.gangway_frame": "风挡框",
+	"block.simurail.probe_reader": "转向架探针读取器",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理转向架",
 	"item.simurail.connector": "转向架连接器",
@@ -19,14 +20,22 @@
 	"block.simurail.gangway_frame.ul": "长 左上",
 	"block.simurail.gangway_frame.ru": "长 右上",
 
+	"block.simurail.probe_reader.invalid": "读取器没有有效的目标，尝试重新放置它",
+	"block.simurail.probe_reader.set": "已选择目标位置",
+	"block.simurail.probe_reader.too_far": "目标位置离此处太远",
+	"block.simurail.probe_reader.success": "已绑定",
+	"block.simurail.probe_reader.clear": "已取消选择",
+
+	"item.simurail.connector.set": "已选择目标位置",
 	"item.simurail.connector.same_block": "方块位置相同",
 	"item.simurail.connector.out_of_range": "超出范围",
 	"item.simurail.connector.cannot_connect": "无法连接至此位置",
 	"item.simurail.connector.connected": "已连接",
 	"item.simurail.connector.disconnected": "已断开连接",
-	"item.simurail.connector.terminated": "已取消选择",
+	"item.simurail.connector.clear": "已取消选择",
 
 	"gui.simurail.no_options": "无选项",
+	"gui.simurail.controlled_by_computer": "由计算机控制",
 
 	"gui.simurail.physics_bogey.physics": "物理运行状态",
 	"gui.simurail.physics_bogey.physics.enabled": "启用",
@@ -53,12 +62,12 @@
 	"gui.simurail.physics_bogey.control.none": "无",
 	"gui.simurail.physics_bogey.stress": "驱动强度",
 	"gui.simurail.physics_bogey.tilt": "倾斜强度",
+	"gui.simurail.physics_bogey.probe": "探针距离",
 	"gui.simurail.physics_bogey.connector": "连接器缆线可见性",
 	"gui.simurail.physics_bogey.connector.visible": "可见",
 	"gui.simurail.physics_bogey.connector.invisible": "不可见",
 	"gui.simurail.physics_bogey.connector.front": "仅前",
 	"gui.simurail.physics_bogey.connector.back": "仅后",
-	"gui.simurail.physics_bogey.controlled_by_computer": "由计算机控制",
 	"gui.simurail.physics_bogey.type": "更换转向架类型",
 
 	"gui.simurail.physics_bogey.category": "类别",
@@ -72,6 +81,17 @@
 
 	"gui.simurail.gangway_frame.shape": "形状",
 	"gui.simurail.gangway_frame.rest_length": "静止长度",
+
+	"gui.simurail.probe_reader.mode": "模式",
+	"gui.simurail.probe_reader.mode.occupied_signal": "占用中信号",
+	"gui.simurail.probe_reader.mode.aligned_signal": "同方向信号",
+	"gui.simurail.probe_reader.mode.signal": "任意信号",
+	"gui.simurail.probe_reader.mode.station": "站点",
+	"gui.simurail.probe_reader.mode.powered_station": "充能站点",
+	"gui.simurail.probe_reader.mode.discontinuity": "轨道中断点",
+	"gui.simurail.probe_reader.filter": "名称过滤",
+	"gui.simurail.probe_reader.min": "最小距离",
+	"gui.simurail.probe_reader.max": "最大距离",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "物理转向架：移动",
 	"subtitles.simurail.block.coupler.connect": "车钩：连接",

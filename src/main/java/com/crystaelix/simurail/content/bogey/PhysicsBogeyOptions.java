@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.content.bogey;
 
 import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.config.SimurailConfig;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
@@ -90,7 +91,7 @@ public class PhysicsBogeyOptions {
 	}
 
 	public PhysicsBogeyOptions setProbeDistance(float probeDistance) {
-		this.probeDistance = Math.clamp(probeDistance, 0, 128);
+		this.probeDistance = Math.clamp(probeDistance, 0, 256);
 		return this;
 	}
 
@@ -216,7 +217,7 @@ public class PhysicsBogeyOptions {
 		axleOffset = Math.clamp(tag.getFloat("axle_offset"), -1, 1);
 		stress = Math.clamp(tag.getFloat("stress"), -128, 128);
 		tiltStrength = Math.clamp(tag.getFloat("tilt_strength"), 0, 1);
-		probeDistance = Math.clamp(tag.getFloat("probe_distance"), 0, 128);
+		probeDistance = Math.clamp(tag.getFloat("probe_distance"), 0, 256);
 		return this;
 	}
 

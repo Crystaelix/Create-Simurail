@@ -695,6 +695,6 @@ public class BlocksBogiesBogeys {
 	}
 
 	public static void wheelSpacing(BogeyEntry entry, double wheelSpacing) {
-		BogeyPropertyOverrides.setWheelSpacingOverride(entry.type(), Math.max(wheelSpacing / 16, 0.5));
+		BogeyPropertyOverrides.setWheelSpacingOverride(entry.type(), Math.max(Math.round(wheelSpacing / 16), 1));
 	}
 }

@@ -9,16 +9,16 @@
 		"id": "simurail:physics_bogey"
 	},
 	"pattern": [
-		"STS",
-		"EPE",
+		"SCS",
+		"RPR",
 		"IAI"
 	],
 	"key": {
-		"T": {"item": "create:railway_casing"},
+		"C": {"item": "create:railway_casing"},
 		"P": {"item": "create:precision_mechanism"},
 		"A": {"item": "create:shaft"},
 		"S": {"tag": "c:plates/brass"},
-		"E": {"item": "create:electron_tube"},
+		"R": {"item": "create:rose_quartz"},
 		"I": {"tag": "c:ingots/iron"}
 	}
 }

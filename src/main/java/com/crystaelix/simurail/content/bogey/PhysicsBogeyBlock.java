@@ -163,6 +163,11 @@ public class PhysicsBogeyBlock extends HorizontalKineticBlock implements IBE<Phy
 	}
 
 	@Override
+	public void beforeMove(ServerLevel originLevel, ServerLevel resultingLevel, BlockState newState, BlockPos oldPos, BlockPos newPos) {
+		withBlockEntityDo(originLevel, oldPos, bogey -> bogey.beforeMove(newPos));
+	}
+
+	@Override
 	public void afterMove(ServerLevel originLevel, ServerLevel resultingLevel, BlockState newState, BlockPos oldPos, BlockPos newPos) {
 		withBlockEntityDo(resultingLevel, newPos, PhysicsBogeyBlockEntity::afterMove);
 	}
@@ -170,8 +175,8 @@ public class PhysicsBogeyBlock extends HorizontalKineticBlock implements IBE<Phy
 	// Mixin overridable
 
 	@Override
-	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onPlace(state, level, pos, oldState, isMoving);
+	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+		super.onPlace(state, level, pos, oldState, movedByPiston);
 	}
 
 	@Override

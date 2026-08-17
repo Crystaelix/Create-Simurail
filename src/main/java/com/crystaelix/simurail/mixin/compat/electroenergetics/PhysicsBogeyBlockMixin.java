@@ -61,8 +61,8 @@ public abstract class PhysicsBogeyBlockMixin extends HorizontalKineticBlock impl
 	}
 
 	@WrapMethod(method = "onPlace")
-	private void simurail$electroenergetics$onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving, Operation<Void> original) {
-		original.call(state, level, pos, oldState, isMoving);
+	private void simurail$electroenergetics$onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston, Operation<Void> original) {
+		original.call(state, level, pos, oldState, movedByPiston);
 		LevelTickAccess<Block> blockTicks = level.getBlockTicks();
 		if(!blockTicks.hasScheduledTick(pos, this)) {
 			level.scheduleTick(pos, this, 1);

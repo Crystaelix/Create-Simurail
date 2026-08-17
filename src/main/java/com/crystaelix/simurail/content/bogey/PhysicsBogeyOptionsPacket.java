@@ -4,18 +4,16 @@ import com.crystaelix.simurail.Simurail;
 
 import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
-public record PhysicsBogeyOptionsPacket(BlockPos pos, PhysicsBogeyOptions options) implements CustomPacketPayload {
+public record PhysicsBogeyOptionsPacket(PhysicsBogeyOptions options) implements CustomPacketPayload {
 
 	public static final Type<PhysicsBogeyOptionsPacket> TYPE = new Type<>(Simurail.id("physics_bogey_options"));
-	public static final StreamCodec<ByteBuf, PhysicsBogeyOptionsPacket> CODEC = StreamCodec.composite(
-			BlockPos.STREAM_CODEC, PhysicsBogeyOptionsPacket::pos,
-			PhysicsBogeyOptions.STREAM_CODEC, PhysicsBogeyOptionsPacket::options,
-			PhysicsBogeyOptionsPacket::new);
+	public static final StreamCodec<ByteBuf, PhysicsBogeyOptionsPacket> CODEC =
+			PhysicsBogeyOptions.STREAM_CODEC.map(PhysicsBogeyOptionsPacket::new, PhysicsBogeyOptionsPacket::options);
 
 	@Override
 	public Type<PhysicsBogeyOptionsPacket> type() {
@@ -23,8 +21,7 @@ public record PhysicsBogeyOptionsPacket(BlockPos pos, PhysicsBogeyOptions option
 	}
 
 	public void handle(ServerPacketContext context) {
-		Level level = context.level();
-		if(level.getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(context.player().containerMenu instanceof PhysicsBogeyMenu menu && context.level().getBlockEntity(menu.pos) instanceof PhysicsBogeyBlockEntity bogey) {
 			bogey.setOptions(options);
 		}
 	}

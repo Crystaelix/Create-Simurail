@@ -1,0 +1,57 @@
+{
+	"variants": {
+		"facing=down,powered=false": {
+			"model": "simurail:block/probe_reader/normal",
+			"x": 180
+		},
+		"facing=up,powered=false": {
+			"model": "simurail:block/probe_reader/normal"
+		},
+		"facing=north,powered=false": {
+			"model": "simurail:block/probe_reader/normal",
+			"x": 90
+		},
+		"facing=south,powered=false": {
+			"model": "simurail:block/probe_reader/normal",
+			"x": 90,
+			"y": 180
+		},
+		"facing=east,powered=false": {
+			"model": "simurail:block/probe_reader/normal",
+			"x": 90,
+			"y": 90
+		},
+		"facing=west,powered=false": {
+			"model": "simurail:block/probe_reader/normal",
+			"x": 90,
+			"y": 270
+		},
+
+		"facing=down,powered=true": {
+			"model": "simurail:block/probe_reader/powered",
+			"x": 180
+		},
+		"facing=up,powered=true": {
+			"model": "simurail:block/probe_reader/powered"
+		},
+		"facing=north,powered=true": {
+			"model": "simurail:block/probe_reader/powered",
+			"x": 90
+		},
+		"facing=south,powered=true": {
+			"model": "simurail:block/probe_reader/powered",
+			"x": 90,
+			"y": 180
+		},
+		"facing=east,powered=true": {
+			"model": "simurail:block/probe_reader/powered",
+			"x": 90,
+			"y": 90
+		},
+		"facing=west,powered=true": {
+			"model": "simurail:block/probe_reader/powered",
+			"x": 90,
+			"y": 270
+		}
+	}
+}

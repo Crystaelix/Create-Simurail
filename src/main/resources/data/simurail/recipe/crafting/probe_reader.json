@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:probe_reader"
+	},
+	"pattern": [
+		"T",
+		"Q",
+		"C"
+	],
+	"key": {
+		"C": {"item": "create:railway_casing"},
+		"Q": {"tag": "c:gems/quartz"},
+		"T": {"item": "create:transmitter"}
+	}
+}

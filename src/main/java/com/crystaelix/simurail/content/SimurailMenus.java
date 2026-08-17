@@ -7,6 +7,8 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBaseScreen;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyMenu;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameMenu;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameScreen;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderMenu;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderScreen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.MenuEntry;
 
@@ -22,6 +24,9 @@ public class SimurailMenus {
 			register();
 	public static final MenuEntry<GangwayFrameMenu> GANGWAY_FRAME = REGISTRATE.
 			menu("gangway_frame", GangwayFrameMenu::new, () -> GangwayFrameScreen::new).
+			register();
+	public static final MenuEntry<ProbeReaderMenu> PROBE_READER = REGISTRATE.
+			menu("probe_reader", ProbeReaderMenu::new, () -> ProbeReaderScreen::new).
 			register();
 
 	public static void register() {

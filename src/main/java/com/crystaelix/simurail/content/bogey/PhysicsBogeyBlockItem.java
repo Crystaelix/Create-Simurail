@@ -7,9 +7,11 @@ import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
 import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
+import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.plot.LevelPlot;
 import net.minecraft.core.BlockPos;
@@ -31,6 +33,7 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 
 	@Override
 	protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		BlockPos relativePos = pos.relative(context.getClickedFace().getOpposite());
 		BlockState relativeState = context.getLevel().getBlockState(relativePos);
@@ -44,8 +47,24 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 		if(trackType != null && context.isSecondaryUseActive() && !context.replacingClickedOnBlock() && context.getClickedFace().getAxis() == Direction.Axis.Y) {
 			return placeSubLevel(context, state, trackType);
 		}
-		boolean result = context.getLevel().setBlock(pos, state, Block.UPDATE_ALL_IMMEDIATE);
+		boolean disableRotation = true;
+		boolean enableOffset = false;
+		if(Sable.HELPER.getContaining(level, pos) instanceof ServerSubLevel subLevel) {
+			for(BlockEntitySubLevelActor actor : subLevel.getPlot().getBlockEntityActors()) {
+				if(actor instanceof PhysicsBogeyBlockEntity) {
+					disableRotation = false;
+					break;
+				}
+			}
+		}
+		boolean result = level.setBlock(pos, state, Block.UPDATE_ALL_IMMEDIATE);
 		if(context.getLevel().getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {
+			if(disableRotation) {
+				bogey.options.setAngularType(0);
+			}
+			if(enableOffset) {
+				bogey.options.setLinearType(1);
+			}
 			if(trackType != null) {
 				bogey.options.type = BogeyRenderedType.getDefault(trackType, state.getValue(PhysicsBogeyBlock.INVERTED));
 			}

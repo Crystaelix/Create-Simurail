@@ -1,5 +1,6 @@
 package com.crystaelix.simurail.compat.computercraft.peripheral;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -324,9 +325,21 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final boolean getProbeStationPowered(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.isStationPowered();
+	}
+
+	@LuaFunction
 	public final double getProbeSignalDistance(boolean front) {
 		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
 		return data.getSignalDistance();
+	}
+
+	@LuaFunction
+	public final Collection<String> getProbeSignalNames(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getSignalNames();
 	}
 
 	@LuaFunction
@@ -355,6 +368,12 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
+	public final Collection<String> getProbeOccupiedSignalNames(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getOccupiedSignalNames();
+	}
+
+	@LuaFunction
 	public final Object[] getProbeOccupiedSignalPos(boolean front) {
 		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
 		Vec3 pos = data.getOccupiedSignalPos();
@@ -374,8 +393,14 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 	}
 
 	@LuaFunction
-	public final double getProbeBlockedDistance(boolean front) {
+	public final boolean getProbeOccupiedSignalForced(boolean front) {
 		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
-		return data.getBlockedDistance();
+		return data.isOccupiedSignalForced();
+	}
+
+	@LuaFunction
+	public final double getProbeDiscontinuityDistance(boolean front) {
+		PhysicsBogeyProbeData data = blockEntity.getAxle(front).getProbeData();
+		return data.getDiscontinuityDistance();
 	}
 }

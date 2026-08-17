@@ -51,6 +51,7 @@ public class ConnectorInteractCallback implements InteractCallback {
 		}
 		startPos = pos;
 		startDir = getDirection(connectable, context.getClickLocation());
+		sendMessage("item.simurail.connector.set", 0xFFFFFF);
 		return true;
 	}
 
@@ -154,7 +155,7 @@ public class ConnectorInteractCallback implements InteractCallback {
 
 	public void reset(boolean sayMessage) {
 		if(sayMessage && startPos != null) {
-			sendMessage("item.simurail.connector.terminated", SimColors.NUH_UH_RED);
+			sendMessage("item.simurail.connector.clear", 0xFFFFFF);
 		}
 		startPos = null;
 		startDir = null;

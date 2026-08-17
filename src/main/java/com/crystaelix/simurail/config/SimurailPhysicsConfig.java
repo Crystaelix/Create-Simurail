@@ -9,29 +9,17 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigFloat bogeyVerticalSpringFrequency = f(10, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyVerticalSpringFrequency);
 	public final ConfigFloat bogeyVerticalSpringDampingRate = f(1.25F, 0, Float.MAX_VALUE, "springDampingRate", Comments.bogeyVerticalSpringDampingRate);
 	public final ConfigFloat bogeyVerticalSpringMaxForce = f(10000, 0, Float.MAX_VALUE, "springMaxForce", Units.force, Comments.bogeyVerticalSpringMaxForce);
-	public final ConfigFloat bogeyVerticalLockingSpringFrequency = f(10, 0, Float.MAX_VALUE, "lockingSpringFrequency", Units.angularVelocity, Comments.bogeyVerticalLockingSpringFrequency);
-	public final ConfigFloat bogeyVerticalLockingSpringDampingRate = f(1.5F, 0, Float.MAX_VALUE, "lockingSpringDampingRate", Comments.bogeyVerticalLockingSpringDampingRate);
 
 	public final ConfigGroup bogeyLateral = group(2, "lateral", "Lateral Movement");
 	public final ConfigFloat bogeyLateralSpringFrequency = f(10, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyLateralSpringFrequency);
 	public final ConfigFloat bogeyLateralSpringDampingRate = f(1.25F, 0, Float.MAX_VALUE, "springDampingRate", Comments.bogeyLateralSpringDampingRate);
 	public final ConfigFloat bogeyLateralSpringMaxForce = f(10000, 0, Float.MAX_VALUE, "springMaxForce", Units.force, Comments.bogeyLateralSpringMaxForce);
-	public final ConfigFloat bogeyLateralLockingSpringFrequency = f(10, 0, Float.MAX_VALUE, "lockingSpringFrequency", Units.angularVelocity, Comments.bogeyLateralLockingSpringFrequency);
-	public final ConfigFloat bogeyLateralLockingSpringDampingRate = f(1.5F, 0, Float.MAX_VALUE, "lockingSpringDampingRate", Comments.bogeyLateralLockingSpringDampingRate);
 
 	public final ConfigGroup bogeyRoll = group(2, "roll", "Roll Movement");
 	public final ConfigFloat bogeyRollSpringFrequency = f(15, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyRollSpringFrequency);
 	public final ConfigFloat bogeyRollSpringDampingRate = f(1.25F, 0, Float.MAX_VALUE, "springDampingRate", Comments.bogeyRollSpringDampingRate);
 	public final ConfigFloat bogeyRollSpringMomentMultiplier = f(2, 0, Float.MAX_VALUE, "springMomentMultiplier", Comments.bogeyRollSpringMomentMultiplier);
 	public final ConfigFloat bogeyRollSpringMaxTorque = f(10000, 0, Float.MAX_VALUE, "springMaxTorque", Units.torque, Comments.bogeyRollSpringMaxTorque);
-
-	public final ConfigGroup bogeyYaw = group(2, "yaw", "Yaw Movement");
-	public final ConfigFloat bogeyYawLockingSpringFrequency = f(50, 0, Float.MAX_VALUE, "lockingSpringFrequency", Units.angularVelocity, Comments.bogeyYawLockingSpringFrequency);
-	public final ConfigFloat bogeyYawLockingSpringDampingRate = f(1.5F, 0, Float.MAX_VALUE, "lockingSpringDampingRate", Comments.bogeyYawLockingSpringDampingRate);
-
-	public final ConfigGroup bogeyPitch = group(2, "pitch", "Pitch Movement");
-	public final ConfigFloat bogeyPitchLockingSpringFrequency = f(50, 0, Float.MAX_VALUE, "lockingSpringFrequency", Units.angularVelocity, Comments.bogeyPitchLockingSpringFrequency);
-	public final ConfigFloat bogeyPitchLockingSpringDampingRate = f(1.5F, 0, Float.MAX_VALUE, "lockingSpringDampingRate", Comments.bogeyPitchLockingSpringDampingRate);
 
 	public final ConfigGroup axle = group(1, "axle", "Physics Bogie Axles");
 	public final ConfigFloat axleSpacingUpdateTime = f(2, 0, 10, "spacingUpdateTime", Units.time, Comments.axleSpacingUpdateTime);
@@ -62,21 +50,13 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 		static String bogeyVerticalSpringFrequency = "Vertical spring frequency between the Physics Bogey and its pivot when vertical offset is allowed.";
 		static String bogeyVerticalSpringDampingRate = "Vertical spring damping rate between the Physics Bogey and its pivot when vertical offset is allowed.";
 		static String bogeyVerticalSpringMaxForce = "Vertical spring maximum force between the Physics Bogey and its pivot when vertical offset is allowed.";
-		static String bogeyVerticalLockingSpringFrequency = "Vertical locking spring frequency between the Physics Bogey and its pivot when rotation offset is disallowed.";
-		static String bogeyVerticalLockingSpringDampingRate = "Vertical locking spring damping rate between the Physics Bogey and its pivot when rotation offset is disallowed.";
 		static String bogeyLateralSpringFrequency = "Lateral spring frequency between the Physics Bogey and its pivot when lateral offset is allowed.";
 		static String bogeyLateralSpringDampingRate = "Lateral spring damping rate between the Physics Bogey and its pivot when lateral offset is allowed.";
 		static String bogeyLateralSpringMaxForce = "Lateral spring maximum force between the Physics Bogey and its pivot when lateral offset is allowed.";
-		static String bogeyLateralLockingSpringFrequency = "Lateral locking spring frequency between the Physics Bogey and its pivot when rotation offset is disallowed.";
-		static String bogeyLateralLockingSpringDampingRate = "Lateral locking spring damping rate between the Physics Bogey and its pivot when rotation offset is disallowed.";
 		static String bogeyRollSpringFrequency = "Roll spring frequency between the Physics Bogey and its pivot.";
 		static String bogeyRollSpringDampingRate = "Roll spring damping rate between the Physics Bogey and its pivot.";
 		static String bogeyRollSpringMomentMultiplier = "Roll spring moment multiplier between the Physics Bogey and its pivot.";
 		static String bogeyRollSpringMaxTorque = "Roll spring maximum torque between the Physics Bogey and its pivot.";
-		static String bogeyYawLockingSpringFrequency = "Yaw locking spring frequency between the Physics Bogey and its pivot when yaw offset is disallowed.";
-		static String bogeyYawLockingSpringDampingRate = "Yaw locking spring damping rate between the Physics Bogey and its pivot when yaw offset is disallowed.";
-		static String bogeyPitchLockingSpringFrequency = "Pitch locking spring frequency between the Physics Bogey and its pivot when pitch offset is disallowed.";
-		static String bogeyPitchLockingSpringDampingRate = "Pitch locking spring damping rate between the Physics Bogey and its pivot when pitch offset is disallowed.";
 
 		static String axleSpacingUpdateTime = "Time to update the axle spacing when changed for the axles of the Physics Bogey.";
 		static String axlePassiveLinearDamping = "Passive linear damping between an axle of the Physics Bogey and its track.";

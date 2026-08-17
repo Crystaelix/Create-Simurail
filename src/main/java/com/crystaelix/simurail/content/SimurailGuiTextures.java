@@ -11,7 +11,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 
-	PHYSICS_BOGEY_OPTIONS("physics_bogey_options", 0, 0, 295, 183, 512, 256),
+	PHYSICS_BOGEY_OPTIONS("physics_bogey_options", 0, 0, 295, 205, 512, 256),
 	PHYSICS_BOGEY_OPTIONS_BOGEY_ICON("physics_bogey_options", 295, 0, 16, 16, 512, 256),
 
 	PHYSICS_BOGEY_MENU("physics_bogey_menu", 0, 0, 303, 203, 512, 256),
@@ -22,6 +22,8 @@ public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 	PHYSICS_BOGEY_MENU_OPTION_TEXT_VALUE("physics_bogey_menu", 303, 76, 104, 20, 512, 256),
 
 	GANGWAY_FRAME("gangway_frame", 0, 0, 188, 101),
+
+	PROBE_READER("probe_reader", 0, 0, 188, 123),
 	;
 
 	public final ResourceLocation location;
@@ -46,7 +48,6 @@ public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 		this(location, u, v, w, h, 256, 256);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void render(GuiGraphics graphics, int x, int y) {
 		graphics.blit(location, x, y, u, v, w, h, tW, tH);

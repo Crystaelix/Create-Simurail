@@ -193,6 +193,11 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 	}
 
 	@Override
+	protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+		IBE.onRemove(state, level, pos, newState);
+	}
+
+	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		Level level = context.getLevel();
 		if(level.isClientSide()) {

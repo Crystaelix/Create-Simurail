@@ -9,6 +9,7 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderer;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyVisual;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameRenderer;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -34,6 +35,10 @@ public class SimurailBlockEntities {
 			blockEntity("gangway_frame", GangwayFrameBlockEntity::new).
 			renderer(() -> GangwayFrameRenderer::new).
 			validBlocks(SimurailBlocks.GANGWAY_FRAME).
+			register();
+	public static final BlockEntityEntry<ProbeReaderBlockEntity> PROBE_READER = REGISTRATE.
+			blockEntity("probe_reader", ProbeReaderBlockEntity::new).
+			validBlocks(SimurailBlocks.PROBE_READER).
 			register();
 
 	public static void register() {

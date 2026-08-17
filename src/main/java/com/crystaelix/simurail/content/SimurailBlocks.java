@@ -6,6 +6,8 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockIt
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -36,6 +38,13 @@ public class SimurailBlocks {
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().dynamicShape().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			simpleItem().
+			register();
+	public static final BlockEntry<ProbeReaderBlock> PROBE_READER = REGISTRATE.
+			block("probe_reader", ProbeReaderBlock::new).
+			initialProperties(SharedProperties::softMetal).
+			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
+			item(ProbeReaderBlockItem::new).
+			build().
 			register();
 
 	public static void register() {

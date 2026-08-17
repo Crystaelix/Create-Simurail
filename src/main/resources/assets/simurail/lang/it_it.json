@@ -2,6 +2,7 @@
 	"block.simurail.physics_bogey": "Carrello Fisico",
 	"block.simurail.automatic_coupler": "Accopiatore Automatico",
 	"block.simurail.gangway_frame": "Gangway Frame",
+	"block.simurail.probe_reader": "Bogie Probe Reader",
 
 	"item.simurail.inverted_physics_bogey": "Carrello Fisico Invertito",
 	"item.simurail.connector": "Connettore dello Carrello",
@@ -19,14 +20,22 @@
 	"block.simurail.gangway_frame.ul": "Long Upper Left",
 	"block.simurail.gangway_frame.ru": "Long Upper Right",
 
+	"block.simurail.probe_reader.invalid": "Reader has no valid target, try placing it again",
+	"block.simurail.probe_reader.set": "Bersaglio selezionato",
+	"block.simurail.probe_reader.too_far": "La posizione selezionata è troppo distante",
+	"block.simurail.probe_reader.success": "Successfully bound",
+	"block.simurail.probe_reader.clear": "Selezione rimossa",
+
+	"item.simurail.connector.set": "Targeted position selected",
 	"item.simurail.connector.same_block": "Blocchi nella stessa posizione",
 	"item.simurail.connector.out_of_range": "Fuori raggio",
 	"item.simurail.connector.cannot_connect": "Impossibile connettersi a questa posizione",
 	"item.simurail.connector.connected": "Connesso",
 	"item.simurail.connector.disconnected": "Disconnesso",
-	"item.simurail.connector.terminated": "Selezione cancellata",
+	"item.simurail.connector.clear": "Selezione rimossa",
 
 	"gui.simurail.no_options": "Nessuna Opzione",
+	"gui.simurail.controlled_by_computer": "Controllato da Computer",
 
 	"gui.simurail.physics_bogey.physics": "Comportamento Fisico",
 	"gui.simurail.physics_bogey.physics.enabled": "Attivato",
@@ -53,12 +62,12 @@
 	"gui.simurail.physics_bogey.control.none": "Nessuno",
 	"gui.simurail.physics_bogey.stress": "Forza Trazione",
 	"gui.simurail.physics_bogey.tilt": "Forza Inclinazione",
+	"gui.simurail.physics_bogey.probe": "Probe Distance",
 	"gui.simurail.physics_bogey.connector": "Visibilità del Cavo Connettore",
 	"gui.simurail.physics_bogey.connector.visible": "Visibile",
 	"gui.simurail.physics_bogey.connector.invisible": "Invisibile",
 	"gui.simurail.physics_bogey.connector.front": "Solo Davanti",
 	"gui.simurail.physics_bogey.connector.back": "Solo Indietro",
-	"gui.simurail.physics_bogey.controlled_by_computer": "Controllato da Computer",
 	"gui.simurail.physics_bogey.type": "Cambia tipo di Carrello",
 
 	"gui.simurail.physics_bogey.category": "Categoria",
@@ -72,6 +81,17 @@
 
 	"gui.simurail.gangway_frame.shape": "Shape",
 	"gui.simurail.gangway_frame.rest_length": "Rest Length",
+
+	"gui.simurail.probe_reader.mode": "Mode",
+	"gui.simurail.probe_reader.mode.occupied_signal": "Occupied Signal",
+	"gui.simurail.probe_reader.mode.aligned_signal": "Aligned Signal",
+	"gui.simurail.probe_reader.mode.signal": "Any Signal",
+	"gui.simurail.probe_reader.mode.station": "Station",
+	"gui.simurail.probe_reader.mode.powered_station": "Powered Station",
+	"gui.simurail.probe_reader.mode.discontinuity": "Track Discontinuity",
+	"gui.simurail.probe_reader.filter": "Name Filter",
+	"gui.simurail.probe_reader.min": "Minimum Distance",
+	"gui.simurail.probe_reader.max": "Maximum Distance",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Rumore di ruote di Carrello Fisico",
 	"subtitles.simurail.block.coupler.connect": "Accopiatore si Connette",

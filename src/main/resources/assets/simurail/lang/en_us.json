@@ -2,6 +2,7 @@
 	"block.simurail.physics_bogey": "Physics Bogie",
 	"block.simurail.automatic_coupler": "Automatic Coupler",
 	"block.simurail.gangway_frame": "Gangway Frame",
+	"block.simurail.probe_reader": "Bogie Probe Reader",
 
 	"item.simurail.inverted_physics_bogey": "Inverted Physics Bogie",
 	"item.simurail.connector": "Bogie Connector",
@@ -19,14 +20,22 @@
 	"block.simurail.gangway_frame.ul": "Long Upper Left",
 	"block.simurail.gangway_frame.ru": "Long Upper Right",
 
+	"block.simurail.probe_reader.invalid": "Reader has no valid target, try placing it again",
+	"block.simurail.probe_reader.set": "Targeted position selected",
+	"block.simurail.probe_reader.too_far": "Targeted position is too far from here",
+	"block.simurail.probe_reader.success": "Successfully bound",
+	"block.simurail.probe_reader.clear": "Selection cleared",
+
+	"item.simurail.connector.set": "Targeted position selected",
 	"item.simurail.connector.same_block": "Same block position",
 	"item.simurail.connector.out_of_range": "Out of range",
 	"item.simurail.connector.cannot_connect": "Cannot connect to this position",
 	"item.simurail.connector.connected": "Connected",
 	"item.simurail.connector.disconnected": "Disconnected",
-	"item.simurail.connector.terminated": "Selection cleared",
+	"item.simurail.connector.clear": "Selection cleared",
 
 	"gui.simurail.no_options": "No Options",
+	"gui.simurail.controlled_by_computer": "Controlled by Computer",
 
 	"gui.simurail.physics_bogey.physics": "Physics Behavior",
 	"gui.simurail.physics_bogey.physics.enabled": "Enabled",
@@ -53,12 +62,12 @@
 	"gui.simurail.physics_bogey.control.none": "None",
 	"gui.simurail.physics_bogey.stress": "Drive Strength",
 	"gui.simurail.physics_bogey.tilt": "Tilt Strength",
+	"gui.simurail.physics_bogey.probe": "Probe Distance",
 	"gui.simurail.physics_bogey.connector": "Connector Cable Visibility",
 	"gui.simurail.physics_bogey.connector.visible": "Visible",
 	"gui.simurail.physics_bogey.connector.invisible": "Invisible",
 	"gui.simurail.physics_bogey.connector.front": "Only Front",
 	"gui.simurail.physics_bogey.connector.back": "Only Back",
-	"gui.simurail.physics_bogey.controlled_by_computer": "Controlled by Computer",
 	"gui.simurail.physics_bogey.type": "Change Bogie Type",
 
 	"gui.simurail.physics_bogey.category": "Category",
@@ -72,6 +81,17 @@
 
 	"gui.simurail.gangway_frame.shape": "Shape",
 	"gui.simurail.gangway_frame.rest_length": "Rest Length",
+
+	"gui.simurail.probe_reader.mode": "Mode",
+	"gui.simurail.probe_reader.mode.occupied_signal": "Occupied Signal",
+	"gui.simurail.probe_reader.mode.aligned_signal": "Aligned Signal",
+	"gui.simurail.probe_reader.mode.signal": "Any Signal",
+	"gui.simurail.probe_reader.mode.station": "Station",
+	"gui.simurail.probe_reader.mode.powered_station": "Powered Station",
+	"gui.simurail.probe_reader.mode.discontinuity": "Track Discontinuity",
+	"gui.simurail.probe_reader.filter": "Name Filter",
+	"gui.simurail.probe_reader.min": "Minimum Distance",
+	"gui.simurail.probe_reader.max": "Maximum Distance",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Physics Bogie wheels rumble",
 	"subtitles.simurail.block.coupler.connect": "Coupler connects",

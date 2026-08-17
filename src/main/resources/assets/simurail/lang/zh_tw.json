@@ -2,6 +2,7 @@
 	"block.simurail.physics_bogey": "物理轉向架",
 	"block.simurail.automatic_coupler": "自動連結器",
 	"block.simurail.gangway_frame": "風擋框",
+	"block.simurail.probe_reader": "轉向架探針讀取器",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理轉向架",
 	"item.simurail.connector": "轉向架連接器",
@@ -19,14 +20,22 @@
 	"block.simurail.gangway_frame.ul": "長 左上",
 	"block.simurail.gangway_frame.ru": "長 右上",
 
+	"block.simurail.probe_reader.invalid": "讀取器沒有有效的目標，請嘗試重新放置",
+	"block.simurail.probe_reader.set": "已選定目標位置",
+	"block.simurail.probe_reader.too_far": "目標位置離這裡太遠",
+	"block.simurail.probe_reader.success": "已綁定",
+	"block.simurail.probe_reader.clear": "已取消選擇",
+
+	"item.simurail.connector.set": "已選定目標位置",
 	"item.simurail.connector.same_block": "方塊位置相同",
 	"item.simurail.connector.out_of_range": "超出範圍",
 	"item.simurail.connector.cannot_connect": "無法連接至此位置",
 	"item.simurail.connector.connected": "已連接",
 	"item.simurail.connector.disconnected": "已斷開連接",
-	"item.simurail.connector.terminated": "已取消選擇",
+	"item.simurail.connector.clear": "已取消選擇",
 
 	"gui.simurail.no_options": "無選項",
+	"gui.simurail.controlled_by_computer": "由電腦控制",
 
 	"gui.simurail.physics_bogey.physics": "物理運行狀態",
 	"gui.simurail.physics_bogey.physics.enabled": "啟用",
@@ -53,12 +62,12 @@
 	"gui.simurail.physics_bogey.control.none": "無",
 	"gui.simurail.physics_bogey.stress": "驅動強度",
 	"gui.simurail.physics_bogey.tilt": "傾斜强度",
+	"gui.simurail.physics_bogey.probe": "探針距離",
 	"gui.simurail.physics_bogey.connector": "連接器纜線可見性",
 	"gui.simurail.physics_bogey.connector.visible": "可見",
 	"gui.simurail.physics_bogey.connector.invisible": "不可見",
 	"gui.simurail.physics_bogey.connector.front": "僅前",
 	"gui.simurail.physics_bogey.connector.back": "僅後",
-	"gui.simurail.physics_bogey.controlled_by_computer": "由電腦控制",
 	"gui.simurail.physics_bogey.type": "更換轉向架類型",
 
 	"gui.simurail.physics_bogey.category": "類別",
@@ -72,6 +81,17 @@
 
 	"gui.simurail.gangway_frame.shape": "形狀",
 	"gui.simurail.gangway_frame.rest_length": "靜止長度",
+
+	"gui.simurail.probe_reader.mode": "模式",
+	"gui.simurail.probe_reader.mode.occupied_signal": "占用中號誌",
+	"gui.simurail.probe_reader.mode.aligned_signal": "同方向號誌",
+	"gui.simurail.probe_reader.mode.signal": "任意號誌",
+	"gui.simurail.probe_reader.mode.station": "站點",
+	"gui.simurail.probe_reader.mode.powered_station": "充能站點",
+	"gui.simurail.probe_reader.mode.discontinuity": "軌道中斷點",
+	"gui.simurail.probe_reader.filter": "名稱過濾",
+	"gui.simurail.probe_reader.min": "最小距離",
+	"gui.simurail.probe_reader.max": "最大距離",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "物理轉向架車輪隆隆作響",
 	"subtitles.simurail.block.coupler.connect": "連結器連接",

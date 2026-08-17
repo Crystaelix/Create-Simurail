@@ -567,7 +567,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 			be.renderPivotOffset.step();
 			be.renderPivotRot.step();
 		}
-		VeilPacketManager.server().sendPacket(new PhysicsBogeyOptionsPacket(pos, options));
+		VeilPacketManager.server().sendPacket(new PhysicsBogeyOptionsPacket(options));
 		onClose();
 	}
 }

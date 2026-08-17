@@ -10,6 +10,7 @@ import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailBogeys;
 import com.crystaelix.simurail.content.SimurailCouplers;
+import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.SimurailForceGroups;
 import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.content.SimurailMenus;
@@ -47,6 +48,7 @@ public class Simurail {
 		SimurailItems.register();
 		SimurailBlockEntities.register();
 		SimurailMenus.register();
+		SimurailDataComponents.register(modEventBus);
 		SimurailSoundEvents.register(modEventBus);
 		SimurailForceGroups.register(modEventBus);
 		SimurailPackets.register();

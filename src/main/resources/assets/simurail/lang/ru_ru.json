@@ -2,6 +2,7 @@
 	"block.simurail.physics_bogey": "Физическая тележка",
 	"block.simurail.automatic_coupler": "Авто-сцепка",
 	"block.simurail.gangway_frame": "Межвагонный переход",
+	"block.simurail.probe_reader": "Bogie Probe Reader",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
 	"item.simurail.connector": "Рулевой провод",
@@ -19,14 +20,22 @@
 	"block.simurail.gangway_frame.ul": "Верхний длинный левый угол",
 	"block.simurail.gangway_frame.ru": "Верхний длинный правый угол",
 
+	"block.simurail.probe_reader.invalid": "Reader has no valid target, try placing it again",
+	"block.simurail.probe_reader.set": "Выбрана целевая позиция",
+	"block.simurail.probe_reader.too_far": "Целевая позиция слишком далеко...",
+	"block.simurail.probe_reader.success": "Successfully bound",
+	"block.simurail.probe_reader.clear": "Выбор сброшен",
+
+	"item.simurail.connector.set": "Выбрана целевая позиция",
 	"item.simurail.connector.same_block": "Данная позиция уже занята",
 	"item.simurail.connector.out_of_range": "Слишком далеко",
 	"item.simurail.connector.cannot_connect": "Невозможно подключить на эту позицию",
 	"item.simurail.connector.connected": "Привязано",
 	"item.simurail.connector.disconnected": "Отвязано",
-	"item.simurail.connector.terminated": "Выбор сброшен",
+	"item.simurail.connector.clear": "Выбор сброшен",
 
 	"gui.simurail.no_options": "Нет настроек",
+	"gui.simurail.controlled_by_computer": "Контроллируется компьютером",
 
 	"gui.simurail.physics_bogey.physics": "Физическое поведение",
 	"gui.simurail.physics_bogey.physics.enabled": "Включено",
@@ -53,12 +62,12 @@
 	"gui.simurail.physics_bogey.control.none": "Нет",
 	"gui.simurail.physics_bogey.stress": "Сила тяги",
 	"gui.simurail.physics_bogey.tilt": "Сила наклона",
+	"gui.simurail.physics_bogey.probe": "Probe Distance",
 	"gui.simurail.physics_bogey.connector": "Видимость рулевого провода",
 	"gui.simurail.physics_bogey.connector.visible": "Видим",
 	"gui.simurail.physics_bogey.connector.invisible": "Невидим",
 	"gui.simurail.physics_bogey.connector.front": "Только спереди",
 	"gui.simurail.physics_bogey.connector.back": "Только сзади",
-	"gui.simurail.physics_bogey.controlled_by_computer": "Контроллируется компьютером",
 	"gui.simurail.physics_bogey.type": "Изменить тип тележки",
 
 	"gui.simurail.physics_bogey.category": "Категория",
@@ -72,6 +81,17 @@
 
 	"gui.simurail.gangway_frame.shape": "Форма",
 	"gui.simurail.gangway_frame.rest_length": "Длина в сложенном состоянии",
+
+	"gui.simurail.probe_reader.mode": "Mode",
+	"gui.simurail.probe_reader.mode.occupied_signal": "Occupied Signal",
+	"gui.simurail.probe_reader.mode.aligned_signal": "Aligned Signal",
+	"gui.simurail.probe_reader.mode.signal": "Any Signal",
+	"gui.simurail.probe_reader.mode.station": "Station",
+	"gui.simurail.probe_reader.mode.powered_station": "Powered Station",
+	"gui.simurail.probe_reader.mode.discontinuity": "Track Discontinuity",
+	"gui.simurail.probe_reader.filter": "Name Filter",
+	"gui.simurail.probe_reader.min": "Minimum Distance",
+	"gui.simurail.probe_reader.max": "Maximum Distance",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Physics Bogie wheels rumble",
 	"subtitles.simurail.block.coupler.connect": "Сцепка соединена",

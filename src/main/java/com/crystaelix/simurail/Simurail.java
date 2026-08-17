@@ -18,10 +18,12 @@ import com.crystaelix.simurail.content.SimurailPackets;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.SimurailTracks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import net.createmod.catnip.config.ConfigBase;
+import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -38,7 +40,10 @@ public class Simurail {
 
 	public static final String MOD_ID = "simurail";
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = NonNullSupplier.
-			lazy(() -> (SimulatedRegistrate)new SimulatedRegistrate(id(MOD_ID), MOD_ID).defaultCreativeTab((ResourceKey<CreativeModeTab>)null));
+			lazy(() -> (SimulatedRegistrate)
+					new SimulatedRegistrate(id(MOD_ID), MOD_ID).
+					defaultCreativeTab((ResourceKey<CreativeModeTab>)null).
+					setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)));
 
 	public Simurail(IEventBus modEventBus, ModContainer modContainer) {
 		modEventBus.register(this);

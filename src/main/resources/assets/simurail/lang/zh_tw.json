@@ -25,6 +25,9 @@
 	"block.simurail.probe_reader.too_far": "目標位置離這裡太遠",
 	"block.simurail.probe_reader.success": "已綁定",
 	"block.simurail.probe_reader.clear": "已取消選擇",
+	"block.simurail.probe_reader.tooltip.summary": "Used to _read probe data_ as a _redstone signal_ from a _Physics Bogie_ with probing enabled. To place, click on the bogie side to read probe data from first.",
+	"block.simurail.probe_reader.tooltip.condition1": "右擊時",
+	"block.simurail.probe_reader.tooltip.behaviour1": "Opens the _Options Interface_ for configuration of which type of probe data to read.",
 
 	"item.simurail.connector.set": "已選定目標位置",
 	"item.simurail.connector.same_block": "方塊位置相同",

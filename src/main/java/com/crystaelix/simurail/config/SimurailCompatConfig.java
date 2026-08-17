@@ -16,11 +16,11 @@ public class SimurailCompatConfig extends SimurailBaseConfig {
 	}
 
 	static class Comments {
-		static String axleMonorailLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogey and a monorail track. Max speed is sqrt(factor / curvature).";
-		static String axleMonorailVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogey and a monorail track. Max speed is sqrt(factor / curvature).";
-		static String axleNarrowLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogey and a narrow track. Max speed is sqrt(factor / curvature).";
-		static String axleNarrowVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogey and a narrow track. Max speed is sqrt(factor / curvature).";
-		static String axleWideLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogey and a wide track. Max speed is sqrt(factor / curvature).";
-		static String axleWideVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogey and a wide track. Max speed is sqrt(factor / curvature).";
+		static String axleMonorailLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogie and a monorail track. Max speed is sqrt(factor / curvature).";
+		static String axleMonorailVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogie and a monorail track. Max speed is sqrt(factor / curvature).";
+		static String axleNarrowLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogie and a narrow track. Max speed is sqrt(factor / curvature).";
+		static String axleNarrowVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogie and a narrow track. Max speed is sqrt(factor / curvature).";
+		static String axleWideLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogie and a wide track. Max speed is sqrt(factor / curvature).";
+		static String axleWideVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogie and a wide track. Max speed is sqrt(factor / curvature).";
 	}
 }

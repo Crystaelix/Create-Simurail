@@ -46,29 +46,29 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	}
 
 	static class Comments {
-		static String bogeyPivotMass = "The mass of the pivot of the Physics Bogey.";
-		static String bogeyVerticalSpringFrequency = "Vertical spring frequency between the Physics Bogey and its pivot when vertical offset is allowed.";
-		static String bogeyVerticalSpringDampingRate = "Vertical spring damping rate between the Physics Bogey and its pivot when vertical offset is allowed.";
-		static String bogeyVerticalSpringMaxForce = "Vertical spring maximum force between the Physics Bogey and its pivot when vertical offset is allowed.";
-		static String bogeyLateralSpringFrequency = "Lateral spring frequency between the Physics Bogey and its pivot when lateral offset is allowed.";
-		static String bogeyLateralSpringDampingRate = "Lateral spring damping rate between the Physics Bogey and its pivot when lateral offset is allowed.";
-		static String bogeyLateralSpringMaxForce = "Lateral spring maximum force between the Physics Bogey and its pivot when lateral offset is allowed.";
-		static String bogeyRollSpringFrequency = "Roll spring frequency between the Physics Bogey and its pivot.";
-		static String bogeyRollSpringDampingRate = "Roll spring damping rate between the Physics Bogey and its pivot.";
-		static String bogeyRollSpringMomentMultiplier = "Roll spring moment multiplier between the Physics Bogey and its pivot.";
-		static String bogeyRollSpringMaxTorque = "Roll spring maximum torque between the Physics Bogey and its pivot.";
+		static String bogeyPivotMass = "The mass of the pivot of the Physics Bogie.";
+		static String bogeyVerticalSpringFrequency = "Vertical spring frequency between the Physics Bogie and its pivot when vertical offset is allowed.";
+		static String bogeyVerticalSpringDampingRate = "Vertical spring damping rate between the Physics Bogie and its pivot when vertical offset is allowed.";
+		static String bogeyVerticalSpringMaxForce = "Vertical spring maximum force between the Physics Bogie and its pivot when vertical offset is allowed.";
+		static String bogeyLateralSpringFrequency = "Lateral spring frequency between the Physics Bogie and its pivot when lateral offset is allowed.";
+		static String bogeyLateralSpringDampingRate = "Lateral spring damping rate between the Physics Bogie and its pivot when lateral offset is allowed.";
+		static String bogeyLateralSpringMaxForce = "Lateral spring maximum force between the Physics Bogie and its pivot when lateral offset is allowed.";
+		static String bogeyRollSpringFrequency = "Roll spring frequency between the Physics Bogie and its pivot.";
+		static String bogeyRollSpringDampingRate = "Roll spring damping rate between the Physics Bogie and its pivot.";
+		static String bogeyRollSpringMomentMultiplier = "Roll spring moment multiplier between the Physics Bogie and its pivot.";
+		static String bogeyRollSpringMaxTorque = "Roll spring maximum torque between the Physics Bogie and its pivot.";
 
-		static String axleSpacingUpdateTime = "Time to update the axle spacing when changed for the axles of the Physics Bogey.";
-		static String axlePassiveLinearDamping = "Passive linear damping between an axle of the Physics Bogey and its track.";
-		static String axlePassiveAngularDamping = "Passive angular damping between an axle of the Physics Bogey and its track.";
-		static String axleStandardLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogey and a standard track. Max speed is sqrt(factor / curvature).";
-		static String axleStandardVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogey and a standard track. Max speed is sqrt(factor / curvature).";
-		static String axleTargetSpeedFactor = "Conversion of RPM to target speed between an axle of the Physics Bogey and its track.";
-		static String axleDriveForceFactor = "Conversion of current and target speed difference to drive force between an axle of the Physics Bogey and its track.";
-		static String axleBrakeStrengthFactor = "Conversion of brake strength [0-1] to brake force between an axle of the Physics Bogey and its track.";
-		static String axleDerailFrictionFactor = "Factor of effective friction between an axle of the Physics Bogey and the ground when derailed.";
-		static String axleTrackCheckTime = "Inverval to find nearest track when derailed for an axle of the Physics Bogey.";
-		static String axleTrackRecheckTime = "Inverval to re-find nearest track for an axle of the Physics Bogey.";
+		static String axleSpacingUpdateTime = "Time to update the axle spacing when changed for the axles of the Physics Bogie.";
+		static String axlePassiveLinearDamping = "Passive linear damping between an axle of the Physics Bogie and its track.";
+		static String axlePassiveAngularDamping = "Passive angular damping between an axle of the Physics Bogie and its track.";
+		static String axleStandardLateralMaxSpeedFactor = "Lateral max speed factor between an axle of the Physics Bogie and a standard track. Max speed is sqrt(factor / curvature).";
+		static String axleStandardVerticalMaxSpeedFactor = "Vertical max speed factor between an axle of the Physics Bogie and a standard track. Max speed is sqrt(factor / curvature).";
+		static String axleTargetSpeedFactor = "Conversion of RPM to target speed between an axle of the Physics Bogie and its track.";
+		static String axleDriveForceFactor = "Conversion of current and target speed difference to drive force between an axle of the Physics Bogie and its track.";
+		static String axleBrakeStrengthFactor = "Conversion of brake strength [0-1] to brake force between an axle of the Physics Bogie and its track.";
+		static String axleDerailFrictionFactor = "Factor of effective friction between an axle of the Physics Bogie and the ground when derailed.";
+		static String axleTrackCheckTime = "Inverval to find nearest track when derailed for an axle of the Physics Bogie.";
+		static String axleTrackRecheckTime = "Inverval to re-find nearest track for an axle of the Physics Bogie.";
 
 		static String couplerPassiveLinearDamping = "Passive linear damping between a Train Coupler and its partner.";
 		static String couplerPassiveAngularDamping = "Passive angular damping between a Train Coupler and its partner.";

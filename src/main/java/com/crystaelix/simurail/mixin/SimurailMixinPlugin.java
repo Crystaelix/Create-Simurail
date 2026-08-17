@@ -25,6 +25,9 @@ public class SimurailMixinPlugin implements IMixinConfigPlugin {
 			return isLoaded("electroenergetics");
 		}
 		if(mixinClassName.contains("compat.railways")) {
+			if(mixinClassName.contains("TrackBufferBlockMixin")) {
+				return isLoaded("railways");
+			}
 			return isLoaded("railways");
 		}
 		return true;

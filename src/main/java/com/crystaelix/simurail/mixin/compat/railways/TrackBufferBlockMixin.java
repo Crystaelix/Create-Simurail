@@ -20,7 +20,6 @@ public abstract class TrackBufferBlockMixin extends HorizontalDirectionalBlock i
 
 	@Override
 	public VoxelShape getSubLevelCollisionShape(BlockGetter blockGetter, BlockState state) {
-		// TODO maybe make this based on state
 		return Shapes.block();
 	}
 }

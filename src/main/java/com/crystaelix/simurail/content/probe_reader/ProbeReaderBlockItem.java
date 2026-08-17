@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.content.probe_reader;
 
 import com.crystaelix.simurail.api.bogey.BogeyLinkData;
+import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.simibubi.create.AllSoundEvents;
@@ -27,10 +28,6 @@ public class ProbeReaderBlockItem extends BlockItem {
 
 	public ProbeReaderBlockItem(ProbeReaderBlock block, Properties properties) {
 		super(block, properties);
-	}
-
-	public double getMaxDistance() {
-		return 64;
 	}
 
 	public static Direction getDirection(PhysicsBogeyBlockEntity bogey, Vec3 clickLocation) {
@@ -74,12 +71,12 @@ public class ProbeReaderBlockItem extends BlockItem {
 			return InteractionResult.FAIL;
 		}
 		BlockState state = level.getBlockState(pos);
-		double maxDistance = getMaxDistance();
+		double range = SimurailConfig.server().blocks.probeReaderRange.get();
 		BogeyLinkData data = stack.get(SimurailDataComponents.BOGEY_LINK_DATA);
 		BlockPos selectedPos = data.position();
 		ResourceLocation selectedDim = data.dimension();
 		BlockPos placedPos = pos.relative(context.getClickedFace(), state.canBeReplaced() ? 0 : 1);
-		if(!selectedDim.equals(placedDim) || Sable.HELPER.distanceSquaredWithSubLevels(level, selectedPos.getCenter(), placedPos.getCenter()) > maxDistance) {
+		if(!selectedDim.equals(placedDim) || Sable.HELPER.distanceSquaredWithSubLevels(level, selectedPos.getCenter(), placedPos.getCenter()) > range * range) {
 			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.too_far").withColor(SimColors.NUH_UH_RED), true);
 			return InteractionResult.FAIL;
 		}

@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
+import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyProbeData;
@@ -16,7 +17,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
 import dev.ryanhcode.sable.Sable;
-import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
 import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
@@ -107,8 +107,9 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		if(getTargetPos() == null) {
 			return 0;
 		}
+		double range = SimurailConfig.server().blocks.probeReaderRange.get();
 		double distSq = Sable.HELPER.distanceSquaredWithSubLevels(level, getBlockPos().getCenter(), getTargetPos().getCenter());
-		if(distSq <= 64 * 64 && level.getBlockEntity(getTargetPos()) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(distSq <= range * range && level.getBlockEntity(getTargetPos()) instanceof PhysicsBogeyBlockEntity bogey) {
 			bogey.addProbeReader(getBlockPos());
 			PhysicsBogeyProbeData probeData = bogey.getAxle(targetFront).getProbeData();
 			switch(options.mode) {

@@ -8,7 +8,10 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 	public final ConfigFloat connectionCouplerRange = f(4, 1, 256, "couplerRange", Units.length, Comments.connectionCouplerRange);
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
-	public final ConfigInt bogeyProbeInterval = i(5, "bogeyProbeInterval", Units.ticks, Comments.bogeyProbeInterval);
+	public final ConfigInt bogeyProbeInterval = i(5, 1, 40, "bogeyProbeInterval", Units.ticks, Comments.bogeyProbeInterval);
+
+	public final ConfigGroup probeReader = group(1, "probeReader", "Bogie Probe Readers");
+	public final ConfigFloat probeReaderRange = f(64, 1, 512, "probeReaderRange", Units.length, Comments.probeReaderRange);
 
 	@Override
 	public String getName() {
@@ -16,10 +19,12 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 	}
 
 	static class Comments {
-		static String connectionBogeyRangeSame = "The maximum distance of connections between Physics Bogeys on the same sublevel.";
-		static String connectionBogeyRangeDifferent = "The maximum distance of connections between Physics Bogeys on different sublevels.";
-		static String connectionCouplerRange = "The maximum distance of connections between a Train Coupler and a Physics Bogey.";
+		static String connectionBogeyRangeSame = "The maximum distance of connections between Physics Bogies on the same sublevel.";
+		static String connectionBogeyRangeDifferent = "The maximum distance of connections between Physics Bogies on different sublevels.";
+		static String connectionCouplerRange = "The maximum distance of connections between a Train Coupler and a Physics Bogie.";
 
-		static String bogeyProbeInterval = "Interval to probe the track for track points for the Physics Bogey.";
+		static String bogeyProbeInterval = "Interval to probe the track for track points for the Physics Bogie.";
+
+		static String probeReaderRange = "Maximum distance between a Bogie Probe Reader and its targeted Physics Bogie.";
 	}
 }

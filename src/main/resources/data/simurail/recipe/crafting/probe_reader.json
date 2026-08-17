@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"result": {
-		"count": 1,
+		"count": 2,
 		"id": "simurail:probe_reader"
 	},
 	"pattern": [

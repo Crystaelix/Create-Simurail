@@ -121,10 +121,11 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 					}
 				}
 			}
-			case ALIGNED_SIGNAL, SIGNAL -> {
+			case ALIGNED_SIGNAL, OPPOSITE_SIGNAL, SIGNAL -> {
 				double distance = probeData.getSignalDistance();
 				if(distance >= 0) {
-					if(options.mode == ProbeReaderMode.SIGNAL || probeData.isSignalAligned()) {
+					if(options.mode == ProbeReaderMode.SIGNAL ||
+							options.mode == (probeData.isSignalAligned() ? ProbeReaderMode.ALIGNED_SIGNAL : ProbeReaderMode.OPPOSITE_SIGNAL)) {
 						if(lastFilter.isBlank() || probeData.getSignalNames().stream().anyMatch(matcher)) {
 							return distanceToSignal(distance);
 						}

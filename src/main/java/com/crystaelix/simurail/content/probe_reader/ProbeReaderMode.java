@@ -14,6 +14,7 @@ import net.minecraft.util.ByIdMap.OutOfBoundsStrategy;
 public enum ProbeReaderMode {
 	OCCUPIED_SIGNAL,
 	ALIGNED_SIGNAL,
+	OPPOSITE_SIGNAL,
 	SIGNAL,
 	STATION,
 	POWERED_STATION,

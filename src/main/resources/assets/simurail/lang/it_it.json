@@ -88,6 +88,7 @@
 	"gui.simurail.probe_reader.mode": "Mode",
 	"gui.simurail.probe_reader.mode.occupied_signal": "Occupied Signal",
 	"gui.simurail.probe_reader.mode.aligned_signal": "Aligned Signal",
+	"gui.simurail.probe_reader.mode.opposite_signal": "Opposite Signal",
 	"gui.simurail.probe_reader.mode.signal": "Any Signal",
 	"gui.simurail.probe_reader.mode.station": "Station",
 	"gui.simurail.probe_reader.mode.powered_station": "Powered Station",

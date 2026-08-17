@@ -88,6 +88,7 @@
 	"gui.simurail.probe_reader.mode": "模式",
 	"gui.simurail.probe_reader.mode.occupied_signal": "占用中信号",
 	"gui.simurail.probe_reader.mode.aligned_signal": "同方向信号",
+	"gui.simurail.probe_reader.mode.opposite_signal": "反方向信号",
 	"gui.simurail.probe_reader.mode.signal": "任意信号",
 	"gui.simurail.probe_reader.mode.station": "站点",
 	"gui.simurail.probe_reader.mode.powered_station": "充能站点",

@@ -34,6 +34,7 @@ public class ProbeReaderScreen extends AbstractSimiScreen implements MenuAccess<
 	public static final List<Component> MODE_OPTIONS = List.of(
 			Component.translatable("gui.simurail.probe_reader.mode.occupied_signal"),
 			Component.translatable("gui.simurail.probe_reader.mode.aligned_signal"),
+			Component.translatable("gui.simurail.probe_reader.mode.opposite_signal"),
 			Component.translatable("gui.simurail.probe_reader.mode.signal"),
 			Component.translatable("gui.simurail.probe_reader.mode.station"),
 			Component.translatable("gui.simurail.probe_reader.mode.powered_station"),

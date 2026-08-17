@@ -25,9 +25,9 @@
 	"block.simurail.probe_reader.too_far": "目标位置离此处太远",
 	"block.simurail.probe_reader.success": "已绑定",
 	"block.simurail.probe_reader.clear": "已取消选择",
-	"block.simurail.probe_reader.tooltip.summary": "Used to _read probe data_ as a _redstone signal_ from a _Physics Bogie_ with probing enabled. To place, click on the bogie side to read probe data from first.",
+	"block.simurail.probe_reader.tooltip.summary": "用于从已启用探针的_物理转向架_中_读取探测数据_并转化为_红石信号_。放置时，须先点击要读取数据的_转向架侧面_。",
 	"block.simurail.probe_reader.tooltip.condition1": "右击时",
-	"block.simurail.probe_reader.tooltip.behaviour1": "Opens the _Options Interface_ for configuration of which type of probe data to read.",
+	"block.simurail.probe_reader.tooltip.behaviour1": "打开_选项界面_，以配置需要读取的探测数据类型。",
 
 	"item.simurail.connector.set": "已选择目标位置",
 	"item.simurail.connector.same_block": "方块位置相同",

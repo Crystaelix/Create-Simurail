@@ -135,6 +135,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public float renderAxleOffset;
 	protected double distanceMoved;
 	protected float movementSpeed;
+	protected float lastMovementSpeed;
 	protected PhysicsBogeySounds sounds;
 
 	public static final Set<PhysicsBogeyBlockEntity> LOADED_BOGEYS = Collections.newSetFromMap(new WeakHashMap<>());
@@ -351,7 +352,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			sendData();
 		}
 	}
-	
+
 	public void beforeMove(BlockPos newPos) {
 		for(BlockPos readerPos : probeReaders) {
 			if(level.getBlockEntity(readerPos) instanceof ProbeReaderBlockEntity reader) {
@@ -553,12 +554,17 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				resetPivotPose();
 			}
 			visualSpeed = Math.abs(axleFront.visualSpeed) > Math.abs(axleBack.visualSpeed) ? axleFront.visualSpeed : axleBack.visualSpeed;
-			if(!lastLocalPivotOffset.equals(localPivotOffset, 1E-4) || !lastLocalPivotRot.equals(localPivotRot, 1E-4) || lastVisualSpeed != visualSpeed) {
+			movementSpeed = (float)getMovementSpeed();
+			if(!lastLocalPivotOffset.equals(localPivotOffset, 1E-4) ||
+					!lastLocalPivotRot.equals(localPivotRot, 1E-4) ||
+					lastVisualSpeed != visualSpeed ||
+					!Mth.equal(lastMovementSpeed, movementSpeed)) {
 				VeilPacketManager.tracking(this).sendPacket(new PhysicsBogeyRenderDataPacket(this));
 			}
 			lastLocalPivotOffset.set(localPivotOffset);
 			lastLocalPivotRot.set(localPivotRot);
 			lastVisualSpeed = visualSpeed;
+			lastMovementSpeed = movementSpeed;
 		}
 		else {
 			renderPivotOffset.step(localPivotOffset);

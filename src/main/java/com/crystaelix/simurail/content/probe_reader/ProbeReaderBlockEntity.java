@@ -1,9 +1,11 @@
 package com.crystaelix.simurail.content.probe_reader;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
 import com.crystaelix.simurail.config.SimurailConfig;
@@ -17,7 +19,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
 import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.createmod.catnip.data.Glob;
+import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,6 +46,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	protected AbstractComputerBehaviour computerBehaviour;
 
 	private BlockPos targetPos;
+	private UUID targetSubLevelID;
 	protected boolean targetFront;
 
 	protected String lastFilter = "";
@@ -186,6 +191,13 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 
 	public void setTargetPos(BlockPos targetPos) {
 		this.targetPos = targetPos;
+		if(targetPos != null) {
+			SubLevel targetSubLevel = Sable.HELPER.getContaining(level, targetPos);
+			targetSubLevelID = targetSubLevel == null ? null : targetSubLevel.getUniqueId();
+		}
+		else {
+			targetSubLevelID = null;
+		}
 	}
 
 	public boolean getTargetFront() {
@@ -221,8 +233,14 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		super.write(tag, registries, clientPacket);
 		if(!clientPacket) {
 			tag.put("options", options.write());
-			if(getTargetPos() != null) {
-				tag.put("target_pos", NbtUtils.writeBlockPos(getTargetPos()));
+			if(targetPos != null) {
+				Pair<BlockPos, UUID> target = SchematicContextUtil.writeTransform(targetPos, targetSubLevelID);
+				if(target.getFirst() != null) {
+					tag.put("target_pos", NbtUtils.writeBlockPos(target.getFirst()));
+					if(target.getSecond() != null) {
+						tag.putUUID("target_id", target.getSecond());
+					}
+				}
 			}
 			tag.putBoolean("target_front", targetFront);
 		}
@@ -239,7 +257,11 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		super.read(tag, registries, clientPacket);
 		if(!clientPacket) {
 			options.read(tag.getCompound("options"));
-			setTargetPos(NBTHelper.readBlockPos(tag, "target_pos"));
+			Pair<BlockPos, UUID> target = SchematicContextUtil.readTransform(
+					NbtUtils.readBlockPos(tag, "target_pos").orElse(null),
+					tag.hasUUID("target_id") ? tag.getUUID("target_id") : null);
+			targetPos = target.getFirst();
+			targetSubLevelID = target.getSecond();
 			targetFront = tag.getBoolean("target_front");
 		}
 	}

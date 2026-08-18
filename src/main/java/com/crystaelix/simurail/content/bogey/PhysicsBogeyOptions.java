@@ -1,7 +1,6 @@
 package com.crystaelix.simurail.content.bogey;
 
 import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
-import com.crystaelix.simurail.config.SimurailConfig;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;

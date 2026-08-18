@@ -1,6 +1,5 @@
 package com.crystaelix.simurail.api.bogey;
 
-import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -9,10 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 public record BogeyLinkData(BlockPos position, Direction direction, ResourceLocation dimension) {
 

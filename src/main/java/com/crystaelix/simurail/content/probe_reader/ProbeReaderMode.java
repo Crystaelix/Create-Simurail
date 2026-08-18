@@ -3,8 +3,6 @@ package com.crystaelix.simurail.content.probe_reader;
 import java.util.Locale;
 import java.util.function.IntFunction;
 
-import com.crystaelix.simurail.content.bogey.PhysicsBogeyControlMode;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

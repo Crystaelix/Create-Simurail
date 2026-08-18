@@ -5,7 +5,6 @@ import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 
-import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -42,7 +41,7 @@ public class ProbeReaderSelectionOutline {
 				lastShownPos = selectedPos;
 				lastShownDir = selectedDir;
 			}
-			Outliner.getInstance().showAABB("target", lastShownAABB).colored(SimColors.SUCCESS_LIME).lineWidth(0.0625F);
+			Outliner.getInstance().showAABB("target", lastShownAABB).colored(0x9EDE73).lineWidth(0.0625F);
 		}
 		else if(stack.is(SimurailBlocks.PROBE_READER.asItem())) {
 			Level level = Minecraft.getInstance().level;
@@ -58,7 +57,7 @@ public class ProbeReaderSelectionOutline {
 						lastShownPos = pos;
 						lastShownDir = dir;
 					}
-					Outliner.getInstance().showAABB("target", lastShownAABB).colored(SimColors.ACTIVE_YELLOW).lineWidth(0.0625F);
+					Outliner.getInstance().showAABB("target", lastShownAABB).colored(0xFFEB85).lineWidth(0.0625F);
 				}
 			}
 		}

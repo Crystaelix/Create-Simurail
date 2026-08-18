@@ -7,7 +7,6 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.simibubi.create.AllSoundEvents;
 
 import dev.ryanhcode.sable.Sable;
-import dev.simulated_team.simulated.util.SimColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -67,7 +66,7 @@ public class ProbeReaderBlockItem extends BlockItem {
 			if(level.isClientSide()) {
 				AllSoundEvents.DENY.playFrom(player);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.invalid").withColor(SimColors.NUH_UH_RED), true);
+			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.invalid").withColor(0xFF7171), true);
 			return InteractionResult.FAIL;
 		}
 		BlockState state = level.getBlockState(pos);
@@ -77,7 +76,7 @@ public class ProbeReaderBlockItem extends BlockItem {
 		ResourceLocation selectedDim = data.dimension();
 		BlockPos placedPos = pos.relative(context.getClickedFace(), state.canBeReplaced() ? 0 : 1);
 		if(!selectedDim.equals(placedDim) || Sable.HELPER.distanceSquaredWithSubLevels(level, selectedPos.getCenter(), placedPos.getCenter()) > range * range) {
-			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.too_far").withColor(SimColors.NUH_UH_RED), true);
+			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.too_far").withColor(0xFF7171), true);
 			return InteractionResult.FAIL;
 		}
 		InteractionResult useOn = super.useOn(context);
@@ -88,7 +87,7 @@ public class ProbeReaderBlockItem extends BlockItem {
 		if(!itemInHand.isEmpty()) {
 			stack.remove(SimurailDataComponents.BOGEY_LINK_DATA);
 		}
-		player.displayClientMessage(Component.translatable("block.simurail.probe_reader.success").withColor(SimColors.SUCCESS_LIME), true);
+		player.displayClientMessage(Component.translatable("block.simurail.probe_reader.success").withColor(0x9EDE73), true);
 		return useOn;
 	}
 

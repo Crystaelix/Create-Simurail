@@ -1,9 +1,6 @@
 package com.crystaelix.simurail.content.probe_reader;
 
 import com.crystaelix.simurail.content.SimurailMenus;
-import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
-import com.crystaelix.simurail.content.bogey.PhysicsBogeyMenu;
-import com.crystaelix.simurail.content.bogey.PhysicsBogeyOptions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;

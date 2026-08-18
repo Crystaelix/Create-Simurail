@@ -6,8 +6,6 @@ import net.createmod.catnip.gui.TextureSheetSegment;
 import net.createmod.catnip.gui.element.ScreenElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 

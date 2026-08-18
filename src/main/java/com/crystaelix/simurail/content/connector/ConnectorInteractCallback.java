@@ -8,7 +8,6 @@ import com.crystaelix.simurail.content.SimurailItems;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
-import dev.simulated_team.simulated.util.SimColors;
 import dev.simulated_team.simulated.util.click_interactions.InteractCallback;
 import foundry.veil.api.network.VeilPacketManager;
 import net.createmod.catnip.outliner.Outliner;
@@ -81,25 +80,25 @@ public class ConnectorInteractCallback implements InteractCallback {
 						if(level.getBlockEntity(endPos) instanceof ConnectorConnectable end) {
 							Direction endDir = getDirection(end, hit.getLocation());
 							if(start == end && startDir != endDir) {
-								sendMessage("item.simurail.connector.same_block", SimColors.NUH_UH_RED);
+								sendMessage("item.simurail.connector.same_block", 0xFF7171);
 								return new Result(true);
 							}
 							if(start != end) {
 								if(!start.canConnectTo(startDir, end, endDir)) {
-									sendMessage("item.simurail.connector.cannot_connect", SimColors.NUH_UH_RED);
+									sendMessage("item.simurail.connector.cannot_connect", 0xFF7171);
 									return new Result(true);
 								}
 								if(testRange(level, start, end)) {
-									sendMessage("item.simurail.connector.out_of_range", SimColors.NUH_UH_RED);
+									sendMessage("item.simurail.connector.out_of_range", 0xFF7171);
 									return new Result(true);
 								}
 							}
 
 							if(start == end) {
-								sendMessage("item.simurail.connector.disconnected", SimColors.SUCCESS_LIME);
+								sendMessage("item.simurail.connector.disconnected", 0x9EDE73);
 							}
 							else {
-								sendMessage("item.simurail.connector.connected", SimColors.SUCCESS_LIME);
+								sendMessage("item.simurail.connector.connected", 0x9EDE73);
 							}
 
 							boolean startFront = start.getFacing() == startDir;
@@ -176,7 +175,7 @@ public class ConnectorInteractCallback implements InteractCallback {
 		if(startPos != null) {
 			if(level.getBlockEntity(startPos) instanceof ConnectorConnectable start) {
 				AABB aabb = start.getOutline(startDir);
-				Outliner.getInstance().showAABB("simurail.connector", aabb).colored(SimColors.SUCCESS_LIME).lineWidth(0.0625F);
+				Outliner.getInstance().showAABB("simurail.connector", aabb).colored(0x9EDE73).lineWidth(0.0625F);
 			}
 			else {
 				reset(true);
@@ -189,14 +188,14 @@ public class ConnectorInteractCallback implements InteractCallback {
 			BlockEntity be = level.getBlockEntity(pos);
 			if(be instanceof ConnectorConnectable end) {
 				Direction dir = getDirection(end, hit.getLocation());
-				int color = SimColors.SUCCESS_LIME;
+				int color = 0x9EDE73;
 				if(startPos == null) {
-					color = SimColors.ACTIVE_YELLOW;
+					color = 0xFFEB85;
 				}
 				if(startPos != null && (pos.equals(startPos) && dir != startDir ||
 						level.getBlockEntity(startPos) instanceof ConnectorConnectable start && start != end &&
 						(testRange(level, start, end) || !start.canConnectTo(startDir, end, dir)))) {
-					color = SimColors.NUH_UH_RED;
+					color = 0xFF7171;
 				}
 
 				AABB aabb = end.getOutline(dir);

@@ -22,10 +22,9 @@ import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -229,7 +228,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	}
 
 	@Override
-	protected void write(CompoundTag tag, Provider registries, boolean clientPacket) {
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
 		if(!clientPacket) {
 			tag.put("options", options.write());
@@ -247,13 +246,13 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag, Provider registries) {
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
 		super.writeSafe(tag, registries);
 		tag.put("options", options.write());
 	}
 
 	@Override
-	protected void read(CompoundTag tag, Provider registries, boolean clientPacket) {
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
 		if(!clientPacket) {
 			options.read(tag.getCompound("options"));

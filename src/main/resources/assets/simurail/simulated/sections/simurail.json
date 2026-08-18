@@ -1,13 +1,11 @@
 {
 	"priority": 30000,
 	"title": {
-		"text": {
-			"translate": "simulated_section.simurail.simurail"
-		},
-		"background": "#aa39231c",
-		"color": "#ffffeb8c",
-		"secondary_color": "#ffcea05a"
+		"text": {"translate": "simulated_section.simurail.simurail"},
+		"background": "#AA39231C",
+		"color": "#FFFFEB8C",
+		"secondary_color": "#FFCEA05A"
 	},
-	"sprite": "simulated:default_banner",
+	"sprite": "simurail:banner",
 	"only_animate_on_hover": true
 }

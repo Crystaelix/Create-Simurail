@@ -3,7 +3,8 @@
 	"render_type": "cutout_mipped",
 	"textures": {
 		"particle": "create:block/railway_casing",
-		"base": "simurail:block/probe_reader"
+		"base": "simurail:block/probe_reader",
+		"antenna": "create:block/redstone_antenna"
 	},
 	"elements": [
 		{
@@ -21,13 +22,20 @@
 		{
 			"from": [7, 3, 7],
 			"to": [9, 9, 9],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 1, 0]},
 			"faces": {
 				"north": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
 				"east": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
 				"south": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
 				"west": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
 				"up": {"uv": [12.5, 0.5, 13.5, 1.5], "texture": "#base"}
+			}
+		},
+		{
+			"from": [5.5, 6, 5.5],
+			"to": [10.5, 6, 10.5],
+			"faces": {
+				"up": {"uv": [4, 0, 9, 5], "texture": "#antenna"},
+				"down": {"uv": [4, 0, 9, 5], "texture": "#antenna"}
 			}
 		}
 	]

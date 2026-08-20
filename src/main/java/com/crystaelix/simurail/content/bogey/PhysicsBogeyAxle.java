@@ -296,6 +296,7 @@ public class PhysicsBogeyAxle {
 				})).
 				flatMap(text -> Arrays.stream(text.getMessages(false))).
 				map(Component::getString).
+				filter(s -> !s.isBlank()).
 				toList();
 	}
 

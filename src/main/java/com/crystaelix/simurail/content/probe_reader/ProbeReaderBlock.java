@@ -55,10 +55,13 @@ public class ProbeReaderBlock extends WrenchableDirectionalBlock implements IBE<
 
 	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		if(stack.isEmpty()) {
+		if(!player.isSecondaryUseActive()) {
 			if(!level.isClientSide()) {
 				withBlockEntityDo(level, pos, be -> player.openMenu(be, buf -> ProbeReaderMenu.prepare(buf, be)));
 			}
+			return ItemInteractionResult.SUCCESS;
+		}
+		else if(stack.isEmpty()) {
 			return ItemInteractionResult.SUCCESS;
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

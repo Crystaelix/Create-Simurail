@@ -62,6 +62,9 @@ public class ProbeReaderBlock extends WrenchableDirectionalBlock implements IBE<
 			return ItemInteractionResult.SUCCESS;
 		}
 		else if(stack.isEmpty()) {
+			if(level.isClientSide()) {
+				withBlockEntityDo(level, pos, be -> ProbeReaderOutline.setTargetOutline(level, pos, be.getTargetPos(), be.getTargetFront()));
+			}
 			return ItemInteractionResult.SUCCESS;
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

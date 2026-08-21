@@ -1,6 +1,6 @@
 package com.crystaelix.simurail.events;
 
-import com.crystaelix.simurail.content.probe_reader.ProbeReaderSelectionOutline;
+import com.crystaelix.simurail.content.probe_reader.ProbeReaderOutline;
 
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -25,7 +25,10 @@ public class SimurailClientEvents {
 		if(!isGameActive()) {
 			return;
 		}
-		ProbeReaderSelectionOutline.clientTick();
+		if(pre) {
+			return;
+		}
+		ProbeReaderOutline.clientTick();
 	}
 
 	protected static boolean isGameActive() {

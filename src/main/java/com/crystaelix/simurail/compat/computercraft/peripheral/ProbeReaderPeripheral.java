@@ -27,7 +27,6 @@ public class ProbeReaderPeripheral extends SyncedPeripheral<ProbeReaderBlockEnti
 	@LuaFunction(mainThread = true)
 	public final void setTargetPos(int x, int y, int z) {
 		blockEntity.setTargetPos(new BlockPos(x, y, z));
-		blockEntity.setChanged();
 	}
 
 	@LuaFunction
@@ -38,7 +37,6 @@ public class ProbeReaderPeripheral extends SyncedPeripheral<ProbeReaderBlockEnti
 	@LuaFunction(mainThread = true)
 	public final void setTargetFront(boolean targetFront) {
 		blockEntity.setTargetFront(targetFront);
-		blockEntity.setChanged();
 	}
 	
 	@LuaFunction

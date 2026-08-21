@@ -201,6 +201,8 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		else {
 			targetSubLevelID = null;
 		}
+		setChanged();
+		sendData();
 	}
 
 	public boolean getTargetFront() {
@@ -209,6 +211,8 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 
 	public void setTargetFront(boolean targetFront) {
 		this.targetFront = targetFront;
+		setChanged();
+		sendData();
 	}
 
 	@Override
@@ -234,19 +238,17 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	@Override
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
-		if(!clientPacket) {
-			tag.put("options", options.write());
-			if(targetPos != null) {
-				Pair<BlockPos, UUID> target = SchematicContextUtil.writeTransform(targetPos, targetSubLevelID);
-				if(target.getFirst() != null) {
-					tag.put("target_pos", NbtUtils.writeBlockPos(target.getFirst()));
-					if(target.getSecond() != null) {
-						tag.putUUID("target_id", target.getSecond());
-					}
+		tag.put("options", options.write());
+		if(targetPos != null) {
+			Pair<BlockPos, UUID> target = SchematicContextUtil.writeTransform(targetPos, targetSubLevelID);
+			if(target.getFirst() != null) {
+				tag.put("target_pos", NbtUtils.writeBlockPos(target.getFirst()));
+				if(target.getSecond() != null) {
+					tag.putUUID("target_id", target.getSecond());
 				}
 			}
-			tag.putBoolean("target_front", targetFront);
 		}
+		tag.putBoolean("target_front", targetFront);
 	}
 
 	@Override
@@ -258,14 +260,12 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		if(!clientPacket) {
-			options.read(tag.getCompound("options"));
-			Pair<BlockPos, UUID> target = SchematicContextUtil.readTransform(
-					NbtUtils.readBlockPos(tag, "target_pos").orElse(null),
-					tag.hasUUID("target_id") ? tag.getUUID("target_id") : null);
-			targetPos = target.getFirst();
-			targetSubLevelID = target.getSecond();
-			targetFront = tag.getBoolean("target_front");
-		}
+		options.read(tag.getCompound("options"));
+		Pair<BlockPos, UUID> target = SchematicContextUtil.readTransform(
+				NbtUtils.readBlockPos(tag, "target_pos").orElse(null),
+				tag.hasUUID("target_id") ? tag.getUUID("target_id") : null);
+		targetPos = target.getFirst();
+		targetSubLevelID = target.getSecond();
+		targetFront = tag.getBoolean("target_front");
 	}
 }

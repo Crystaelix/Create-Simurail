@@ -99,7 +99,7 @@
 	"gui.simurail.probe_reader.mode.signal": "Любой сигнал",
 	"gui.simurail.probe_reader.mode.unpowered_station": "Незапитанная станция",
 	"gui.simurail.probe_reader.mode.powered_station": "Запитанная Станция",
-	"gui.simurail.probe_reader.mode.station": "Любой Станция",
+	"gui.simurail.probe_reader.mode.station": "Любая станция",
 	"gui.simurail.probe_reader.mode.discontinuity": "Прерывание пути",
 	"gui.simurail.probe_reader.filter": "Фильтр по названию",
 	"gui.simurail.probe_reader.min": "Минимальная дальность",

@@ -10,6 +10,7 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyVisual;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameRenderer;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -40,11 +41,17 @@ public class SimurailBlockEntities {
 			blockEntity("probe_reader", ProbeReaderBlockEntity::new).
 			validBlocks(SimurailBlocks.PROBE_READER).
 			register();
+	public static final BlockEntityEntry<RemoteControllerBlockEntity> REMOTE_CONTROLLER = REGISTRATE.
+			blockEntity("remote_controller", RemoteControllerBlockEntity::new).
+			validBlocks(SimurailBlocks.REMOTE_CONTROLLER).
+			register();
 
 	public static void register() {
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		PhysicsBogeyBlockEntity.registerCapabilities(event);
+		ProbeReaderBlockEntity.registerCapabilities(event);
+		RemoteControllerBlockEntity.registerCapabilities(event);
 	}
 }

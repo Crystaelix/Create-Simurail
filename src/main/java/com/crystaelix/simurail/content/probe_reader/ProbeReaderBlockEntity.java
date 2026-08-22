@@ -52,7 +52,6 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	protected Predicate<String> matcher = Predicates.alwaysTrue();
 
 	protected int signal;
-	protected boolean signalChanged;
 
 	public ProbeReaderBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -97,12 +96,11 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		}
 		int lastSignal = signal;
 		signal = calculateSignal();
-		signalChanged = signal != lastSignal;
 		BlockState state = getBlockState();
-		if((signal > 0) != state.getValue(BlockStateProperties.POWERED)) {
+		if(signal > 0 != state.getValue(BlockStateProperties.POWERED)) {
 			level.setBlockAndUpdate(getBlockPos(), state.cycle(BlockStateProperties.POWERED));
 		}
-		if(signalChanged) {
+		if(signal != lastSignal) {
 			updateSelfAndAttached(state);
 		}
 	}
@@ -140,11 +138,12 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 					}
 				}
 			}
-			case STATION, POWERED_STATION -> {
+			case UNPOWERED_STATION, POWERED_STATION, STATION -> {
 				double distance = probeData.getStationDistance();
 				if(distance >= 0) {
-					if(options.mode == ProbeReaderMode.STATION || probeData.isStationPowered()) {
-						if(matcher.test(probeData.getStationName())) {
+					if(options.mode == ProbeReaderMode.STATION ||
+							options.mode == (probeData.isStationPowered() ? ProbeReaderMode.POWERED_STATION : ProbeReaderMode.UNPOWERED_STATION)) {
+						if(lastFilter.isBlank() || matcher.test(probeData.getStationName())) {
 							return distanceToSignal(distance);
 						}
 					}
@@ -185,7 +184,6 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		BlockPos attachedPos = getBlockPos().relative(attachedFace);
 		level.blockUpdated(getBlockPos(), level.getBlockState(getBlockPos()).getBlock());
 		level.blockUpdated(attachedPos, level.getBlockState(attachedPos).getBlock());
-		signalChanged = false;
 	}
 
 	public BlockPos getTargetPos() {
@@ -224,7 +222,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	public void invalidate() {
 		super.invalidate();
 		computerBehaviour.removePeripheral();
-		if(!level.isClientSide() && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(!level.isClientSide() && targetPos != null && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
 			bogey.removeProbeReader(getBlockPos());
 		}
 	}

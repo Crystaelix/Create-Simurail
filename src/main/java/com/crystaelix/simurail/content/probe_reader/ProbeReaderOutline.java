@@ -5,6 +5,7 @@ import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 
+import dev.ryanhcode.sable.Sable;
 import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
@@ -46,14 +47,13 @@ public class ProbeReaderOutline {
 			if(!targetFront) {
 				dir = dir.getOpposite();
 			}
-			targetAABB = AABB.ofSize(
-					targetPos.getCenter().add(dir.getStepX() * 0.28125, 0, dir.getStepZ() * 0.28125),
-					dir.getStepX() == 0 ? 1 : 0.4375, 1, dir.getStepZ() == 0 ? 1 : 0.4375);
 			targetVec = targetPos.getCenter().add(dir.getStepX() * 0.5, 0, dir.getStepZ() * 0.5);
+			BogeyLinkData data = new BogeyLinkData(targetPos, dir, level.dimension().location());
+			targetAABB = data.getOutline();
 		}
 		else {
-			targetAABB = new AABB(targetPos);
 			targetVec = targetPos.getCenter();
+			targetAABB = new AABB(targetPos);
 		}
 		targetTicks = 200;
 	}

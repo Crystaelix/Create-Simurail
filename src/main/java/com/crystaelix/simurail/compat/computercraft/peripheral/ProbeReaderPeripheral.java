@@ -38,7 +38,7 @@ public class ProbeReaderPeripheral extends SyncedPeripheral<ProbeReaderBlockEnti
 	public final void setTargetFront(boolean targetFront) {
 		blockEntity.setTargetFront(targetFront);
 	}
-	
+
 	@LuaFunction
 	public final int getMode() {
 		return blockEntity.getOptions().mode.ordinal();

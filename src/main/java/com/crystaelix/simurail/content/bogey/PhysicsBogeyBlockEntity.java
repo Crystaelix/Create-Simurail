@@ -1,8 +1,11 @@
 package com.crystaelix.simurail.content.bogey;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
@@ -30,6 +33,7 @@ import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Floats;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
@@ -55,6 +59,7 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import dev.ryanhcode.sable.util.SableNBTUtils;
 import foundry.veil.api.network.VeilPacketManager;
+import it.unimi.dsi.fastutil.longs.LongIntPair;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.data.Pair;
@@ -128,6 +133,12 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	// Probe cache
 	protected Set<BlockPos> probeReaders = new HashSet<>();
+
+	// Controller cache
+	protected Set<BlockPos> remoteControllers = new HashSet<>();
+	protected Map<BlockPos, LongIntPair> remoteBrakeOverrides = new HashMap<>();
+	protected Map<BlockPos, LongIntPair> remoteLeftSteerOverrides = new HashMap<>();
+	protected Map<BlockPos, LongIntPair> remoteRightSteerOverrides = new HashMap<>();
 
 	// Client rendering components
 	protected final MovingQuaternionfLerp renderPivotRot = MovingQuaternionfLerp.of(2);
@@ -359,6 +370,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				reader.setTargetPos(newPos);
 			}
 		}
+		for(BlockPos controllerPos : remoteControllers) {
+			if(level.getBlockEntity(controllerPos) instanceof RemoteControllerBlockEntity controller) {
+				controller.setTargetPos(newPos);
+			}
+		}
 	}
 
 	public void afterMove() {
@@ -432,6 +448,44 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public void removeProbeReader(BlockPos readerPos) {
 		probeReaders.remove(readerPos);
+	}
+
+	public void addRemoteController(BlockPos controllerPos) {
+		remoteControllers.add(controllerPos);
+	}
+
+	public void setRemoteBrakeOverride(BlockPos controllerPos, int value) {
+		if(value > 0) {
+			remoteBrakeOverrides.put(controllerPos, LongIntPair.of(level.getGameTime(), value));
+		}
+		else {
+			remoteBrakeOverrides.remove(controllerPos);
+		}
+	}
+
+	public void setRemoteLeftSteerOverride(BlockPos controllerPos, int value) {
+		if(value != 0) {
+			remoteLeftSteerOverrides.put(controllerPos, LongIntPair.of(level.getGameTime(), value));
+		}
+		else {
+			remoteLeftSteerOverrides.remove(controllerPos);
+		}
+	}
+
+	public void setRemoteRightSteerOverride(BlockPos controllerPos, int value) {
+		if(value != 0) {
+			remoteRightSteerOverrides.put(controllerPos, LongIntPair.of(level.getGameTime(), value));
+		}
+		else {
+			remoteRightSteerOverrides.remove(controllerPos);
+		}
+	}
+
+	public void removeRemoteController(BlockPos controllerPos) {
+		remoteControllers.remove(controllerPos);
+		remoteBrakeOverrides.remove(controllerPos);
+		remoteLeftSteerOverrides.remove(controllerPos);
+		remoteRightSteerOverrides.remove(controllerPos);
 	}
 
 	public boolean hasNavigator() {
@@ -776,19 +830,37 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public float getBrakeStrength() {
-		float[] brakeStrengths = new float[3];
+		float[] brakeStrengths = new float[4];
 		brakeStrengths[0] = Mth.square(switch(options.controlMode) {
 		case BRAKING -> getControlStrength();
 		case BRAKING_INVERTED -> 1 - getControlStrength();
 		case null, default -> 0;
 		});
+		brakeStrengths[1] = getRemoteBrakeStrength();
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideBrakeStrength) {
-			brakeStrengths[1] = computerOverrides.getBrakeStrength();
+			brakeStrengths[2] = computerOverrides.getBrakeStrength();
 		}
 		if(hasNavigator()) {
-			brakeStrengths[2] = navigatorBrakeOverride;
+			brakeStrengths[3] = navigatorBrakeOverride;
 		}
 		return Floats.max(brakeStrengths);
+	}
+
+	public float getRemoteBrakeStrength() {
+		int value = 0;
+		long currentTime = level.getGameTime();
+		Iterator<Map.Entry<BlockPos, LongIntPair>> i = remoteBrakeOverrides.entrySet().iterator();
+		while(i.hasNext()) {
+			Map.Entry<BlockPos, LongIntPair> entry = i.next();
+			LongIntPair pair = entry.getValue();
+			if(currentTime - pair.leftLong() > 2) {
+				i.remove();
+			}
+			else if(pair.rightInt() > value) {
+				value = pair.rightInt();
+			}
+		}
+		return Mth.square(Math.clamp(value / 15F, 0, 1));
 	}
 
 	public float getGroupBrakeStrength() {
@@ -806,7 +878,37 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		case NORTH -> level.getSignal(getBlockPos().east(), Direction.EAST) - level.getSignal(getBlockPos().west(), Direction.WEST);
 		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
 		};
+		if(value == 0) {
+			return getRemoteSteerValue();
+		}
 		return Math.clamp(value / 15F, -1, 1);
+	}
+
+	public float getRemoteSteerValue() {
+		int left = 0, right = 0;
+		long currentTime = level.getGameTime();
+		Iterator<Map.Entry<BlockPos, LongIntPair>> i;
+		i = remoteLeftSteerOverrides.entrySet().iterator();
+		while(i.hasNext()) {
+			LongIntPair pair = i.next().getValue();
+			if(currentTime - pair.leftLong() > 2) {
+				i.remove();
+			}
+			else if(pair.rightInt() > left) {
+				left = pair.rightInt();
+			}
+		}
+		i = remoteRightSteerOverrides.entrySet().iterator();
+		while(i.hasNext()) {
+			LongIntPair pair = i.next().getValue();
+			if(currentTime - pair.leftLong() > 2) {
+				i.remove();
+			}
+			else if(pair.rightInt() > right) {
+				right = pair.rightInt();
+			}
+		}
+		return Math.clamp((right - left) / 15F, -1, 1);
 	}
 
 	public float getGroupSteerValue() {

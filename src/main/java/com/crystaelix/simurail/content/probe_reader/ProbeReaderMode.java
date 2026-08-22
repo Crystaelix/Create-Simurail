@@ -14,8 +14,9 @@ public enum ProbeReaderMode {
 	ALIGNED_SIGNAL,
 	OPPOSITE_SIGNAL,
 	SIGNAL,
-	STATION,
+	UNPOWERED_STATION,
 	POWERED_STATION,
+	STATION,
 	DISCONTINUITY;
 
 	public static final IntFunction<ProbeReaderMode> BY_ID = ByIdMap.continuous(ProbeReaderMode::ordinal, values(), OutOfBoundsStrategy.ZERO);

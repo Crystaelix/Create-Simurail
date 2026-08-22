@@ -9,6 +9,8 @@ import com.crystaelix.simurail.content.gangway_frame.GangwayFrameMenu;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameScreen;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderMenu;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderScreen;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerMenu;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerScreen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.MenuEntry;
 
@@ -27,6 +29,9 @@ public class SimurailMenus {
 			register();
 	public static final MenuEntry<ProbeReaderMenu> PROBE_READER = REGISTRATE.
 			menu("probe_reader", ProbeReaderMenu::new, () -> ProbeReaderScreen::new).
+			register();
+	public static final MenuEntry<RemoteControllerMenu> REMOTE_CONTROLLER = REGISTRATE.
+			menu("remote_controller", RemoteControllerMenu::new, () -> RemoteControllerScreen::new).
 			register();
 
 	public static void register() {

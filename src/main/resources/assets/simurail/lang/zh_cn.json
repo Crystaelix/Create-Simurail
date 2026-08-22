@@ -3,6 +3,7 @@
 	"block.simurail.automatic_coupler": "自动车钩",
 	"block.simurail.gangway_frame": "风挡框",
 	"block.simurail.probe_reader": "转向架探针读取器",
+	"block.simurail.remote_controller": "转向架远端控制器",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理转向架",
 	"item.simurail.connector": "转向架连接器",
@@ -28,6 +29,12 @@
 	"block.simurail.probe_reader.tooltip.summary": "用于从已启用探针的_物理转向架_中_读取探测数据_并转化为_红石信号_。放置时，须先点击要读取数据的_转向架侧面_。",
 	"block.simurail.probe_reader.tooltip.condition1": "右击时",
 	"block.simurail.probe_reader.tooltip.behaviour1": "打开_选项界面_，以配置需要读取的探测数据类型。",
+
+	"block.simurail.remote_controller.invalid": "控制器没有有效的目标，尝试重新放置它",
+	"block.simurail.remote_controller.set": "已选择目标位置",
+	"block.simurail.remote_controller.too_far": "目标位置离此处太远",
+	"block.simurail.remote_controller.success": "已绑定",
+	"block.simurail.remote_controller.clear": "已取消选择",
 
 	"item.simurail.connector.set": "已选择目标位置",
 	"item.simurail.connector.same_block": "方块位置相同",
@@ -90,12 +97,21 @@
 	"gui.simurail.probe_reader.mode.aligned_signal": "同方向信号",
 	"gui.simurail.probe_reader.mode.opposite_signal": "反方向信号",
 	"gui.simurail.probe_reader.mode.signal": "任意信号",
-	"gui.simurail.probe_reader.mode.station": "站点",
+	"gui.simurail.probe_reader.mode.unpowered_station": "未充能站点",
 	"gui.simurail.probe_reader.mode.powered_station": "充能站点",
+	"gui.simurail.probe_reader.mode.station": "任意站点",
 	"gui.simurail.probe_reader.mode.discontinuity": "轨道中断点",
 	"gui.simurail.probe_reader.filter": "名称过滤",
 	"gui.simurail.probe_reader.min": "最小距离",
 	"gui.simurail.probe_reader.max": "最大距离",
+
+	"gui.simurail.remote_controller.mode": "模式",
+	"gui.simurail.remote_controller.mode.braking": "刹车",
+	"gui.simurail.remote_controller.mode.braking_inverted": "反向刹车",
+	"gui.simurail.remote_controller.mode.steering_left": "左侧转向",
+	"gui.simurail.remote_controller.mode.steering_right": "右侧转向",
+	"gui.simurail.remote_controller.mode.vertical_movement": "切换垂向移动模式",
+	"gui.simurail.remote_controller.mode.enabled": "切换物理运行状态",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "物理转向架：移动",
 	"subtitles.simurail.block.coupler.connect": "车钩：连接",

@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.events;
 
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderOutline;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerOutline;
 
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -29,6 +30,7 @@ public class SimurailClientEvents {
 			return;
 		}
 		ProbeReaderOutline.clientTick();
+		RemoteControllerOutline.clientTick();
 	}
 
 	protected static boolean isGameActive() {

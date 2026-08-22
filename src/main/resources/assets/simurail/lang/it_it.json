@@ -3,6 +3,7 @@
 	"block.simurail.automatic_coupler": "Accopiatore Automatico",
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",
+	"block.simurail.remote_controller": "Bogie Remote Controller",
 
 	"item.simurail.inverted_physics_bogey": "Carrello Fisico Invertito",
 	"item.simurail.connector": "Connettore dello Carrello",
@@ -28,6 +29,12 @@
 	"block.simurail.probe_reader.tooltip.summary": "Used to _read probe data_ as a _redstone signal_ from a _Physics Bogie_ with probing enabled. To place, click on the _bogie side_ to read probe data from first.",
 	"block.simurail.probe_reader.tooltip.condition1": "Tasto destro",
 	"block.simurail.probe_reader.tooltip.behaviour1": "Opens the _Options Interface_ for configuration of which type of probe data to read.",
+
+	"block.simurail.remote_controller.invalid": "Controller has no valid target, try placing it again",
+	"block.simurail.remote_controller.set": "Bersaglio selezionato",
+	"block.simurail.remote_controller.too_far": "La posizione selezionata è troppo distante",
+	"block.simurail.remote_controller.success": "Successfully bound",
+	"block.simurail.remote_controller.clear": "Selezione rimossa",
 
 	"item.simurail.connector.set": "Targeted position selected",
 	"item.simurail.connector.same_block": "Blocchi nella stessa posizione",
@@ -90,12 +97,21 @@
 	"gui.simurail.probe_reader.mode.aligned_signal": "Aligned Signal",
 	"gui.simurail.probe_reader.mode.opposite_signal": "Opposite Signal",
 	"gui.simurail.probe_reader.mode.signal": "Any Signal",
-	"gui.simurail.probe_reader.mode.station": "Station",
+	"gui.simurail.probe_reader.mode.unpowered_station": "Unpowered Station",
 	"gui.simurail.probe_reader.mode.powered_station": "Powered Station",
+	"gui.simurail.probe_reader.mode.station": "Any Station",
 	"gui.simurail.probe_reader.mode.discontinuity": "Track Discontinuity",
 	"gui.simurail.probe_reader.filter": "Name Filter",
 	"gui.simurail.probe_reader.min": "Minimum Distance",
 	"gui.simurail.probe_reader.max": "Maximum Distance",
+
+	"gui.simurail.remote_controller.mode": "Mode",
+	"gui.simurail.remote_controller.mode.braking": "Braking",
+	"gui.simurail.remote_controller.mode.braking_inverted": "Inverted Braking",
+	"gui.simurail.remote_controller.mode.steering_left": "Left Steering",
+	"gui.simurail.remote_controller.mode.steering_right": "Right Steering",
+	"gui.simurail.remote_controller.mode.vertical_movement": "Toggle Vertical Movement",
+	"gui.simurail.remote_controller.mode.enabled": "Toggle Physics Behavior",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Rumore di ruote di Carrello Fisico",
 	"subtitles.simurail.block.coupler.connect": "Accopiatore si Connette",

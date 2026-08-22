@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 2,
+		"id": "simurail:remote_controller"
+	},
+	"pattern": [
+		"T",
+		"Q",
+		"C"
+	],
+	"key": {
+		"C": {"item": "create:railway_casing"},
+		"Q": {"item": "create:rose_quartz"},
+		"T": {"item": "create:transmitter"}
+	}
+}

@@ -3,6 +3,7 @@
 	"block.simurail.automatic_coupler": "自動連結器",
 	"block.simurail.gangway_frame": "風擋框",
 	"block.simurail.probe_reader": "轉向架探針讀取器",
+	"block.simurail.remote_controller": "轉向架遠端控制器",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理轉向架",
 	"item.simurail.connector": "轉向架連接器",
@@ -28,6 +29,12 @@
 	"block.simurail.probe_reader.tooltip.summary": "用於從已啟用探針的_物理轉向架_中_讀取探測數據_並轉化為_紅石訊號_。放置時，須先點擊要讀取數據的_轉向架側面_。",
 	"block.simurail.probe_reader.tooltip.condition1": "右擊時",
 	"block.simurail.probe_reader.tooltip.behaviour1": "開啟_選項介面_，以設定需要讀取的探測數據類型。",
+
+	"block.simurail.remote_controller.invalid": "控制器沒有有效的目標，請嘗試重新放置",
+	"block.simurail.remote_controller.set": "已選定目標位置",
+	"block.simurail.remote_controller.too_far": "目標位置離這裡太遠",
+	"block.simurail.remote_controller.success": "已綁定",
+	"block.simurail.remote_controller.clear": "已取消選擇",
 
 	"item.simurail.connector.set": "已選定目標位置",
 	"item.simurail.connector.same_block": "方塊位置相同",
@@ -90,12 +97,21 @@
 	"gui.simurail.probe_reader.mode.aligned_signal": "同方向號誌",
 	"gui.simurail.probe_reader.mode.opposite_signal": "反方向號誌",
 	"gui.simurail.probe_reader.mode.signal": "任意號誌",
-	"gui.simurail.probe_reader.mode.station": "站點",
+	"gui.simurail.probe_reader.mode.unpowered_station": "未充能站點",
 	"gui.simurail.probe_reader.mode.powered_station": "充能站點",
+	"gui.simurail.probe_reader.mode.station": "任意站點",
 	"gui.simurail.probe_reader.mode.discontinuity": "軌道中斷點",
 	"gui.simurail.probe_reader.filter": "名稱過濾",
 	"gui.simurail.probe_reader.min": "最小距離",
 	"gui.simurail.probe_reader.max": "最大距離",
+
+	"gui.simurail.remote_controller.mode": "模式",
+	"gui.simurail.remote_controller.mode.braking": "煞車",
+	"gui.simurail.remote_controller.mode.braking_inverted": "反向煞車",
+	"gui.simurail.remote_controller.mode.steering_left": "左側轉向",
+	"gui.simurail.remote_controller.mode.steering_right": "右側轉向",
+	"gui.simurail.remote_controller.mode.vertical_movement": "切換垂向移動模式",
+	"gui.simurail.remote_controller.mode.enabled": "切換物理運行狀態",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "物理轉向架車輪隆隆作響",
 	"subtitles.simurail.block.coupler.connect": "連結器連接",

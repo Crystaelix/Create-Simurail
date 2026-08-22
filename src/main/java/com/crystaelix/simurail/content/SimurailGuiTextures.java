@@ -22,6 +22,8 @@ public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 	GANGWAY_FRAME("gangway_frame", 0, 0, 188, 101),
 
 	PROBE_READER("probe_reader", 0, 0, 188, 123),
+	
+	REMOTE_CONTROLLER("remote_controller", 0, 0, 188, 79),
 	;
 
 	public final ResourceLocation location;

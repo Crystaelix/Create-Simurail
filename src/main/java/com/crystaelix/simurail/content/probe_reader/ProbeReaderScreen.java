@@ -36,8 +36,9 @@ public class ProbeReaderScreen extends AbstractSimiScreen implements MenuAccess<
 			Component.translatable("gui.simurail.probe_reader.mode.aligned_signal"),
 			Component.translatable("gui.simurail.probe_reader.mode.opposite_signal"),
 			Component.translatable("gui.simurail.probe_reader.mode.signal"),
-			Component.translatable("gui.simurail.probe_reader.mode.station"),
+			Component.translatable("gui.simurail.probe_reader.mode.unpowered_station"),
 			Component.translatable("gui.simurail.probe_reader.mode.powered_station"),
+			Component.translatable("gui.simurail.probe_reader.mode.station"),
 			Component.translatable("gui.simurail.probe_reader.mode.discontinuity"));
 
 	public static final Component COMPUTER_TOOLTIP = Component.translatable("gui.simurail.controlled_by_computer");

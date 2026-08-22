@@ -1,0 +1,49 @@
+{
+	"parent": "block/block",
+	"render_type": "cutout_mipped",
+	"textures": {
+		"particle": "create:block/railway_casing",
+		"base": "simurail:block/remote_controller"
+	},
+	"elements": [
+		{
+			"from": [2, 0, 2],
+			"to": [14, 3, 14],
+			"faces": {
+				"up": {"uv": [0, 0, 6, 6], "texture": "#base"},
+				"down": {"uv": [0, 7.5, 6, 13.5], "texture": "#base", "cullface": "down"}
+			}
+		},
+		{
+			"from": [2, 0, 4],
+			"to": [14, 3, 12],
+			"faces": {
+				"north": {"uv": [0, 6, 6, 7.5], "texture": "#base"},
+				"east": {"uv": [1, 6, 5, 7.5], "texture": "#base"},
+				"south": {"uv": [0, 6, 6, 7.5], "texture": "#base"},
+				"west": {"uv": [1, 6, 5, 7.5], "texture": "#base"}
+			}
+		},
+		{
+			"from": [4, 0, 2],
+			"to": [12, 3, 14],
+			"faces": {
+				"north": {"uv": [1, 6, 5, 7.5], "texture": "#base"},
+				"east": {"uv": [0, 6, 6, 7.5], "texture": "#base"},
+				"south": {"uv": [1, 6, 5, 7.5], "texture": "#base"},
+				"west": {"uv": [0, 6, 6, 7.5], "texture": "#base"}
+			}
+		},
+		{
+			"from": [7, 3, 7],
+			"to": [9, 9, 9],
+			"faces": {
+				"north": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
+				"east": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
+				"south": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
+				"west": {"uv": [12.5, 0.5, 13.5, 3.5], "texture": "#base"},
+				"up": {"uv": [12.5, 0.5, 13.5, 1.5], "texture": "#base"}
+			}
+		}
+	]
+}

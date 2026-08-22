@@ -13,6 +13,9 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 	public final ConfigGroup probeReader = group(1, "probeReader", "Bogie Probe Readers");
 	public final ConfigFloat probeReaderRange = f(64, 1, 512, "probeReaderRange", Units.length, Comments.probeReaderRange);
 
+	public final ConfigGroup remoteController = group(1, "remoteController", "Bogie Remote Controllers");
+	public final ConfigFloat remoteControllerRange = f(64, 1, 512, "remoteControllerRange", Units.length, Comments.remoteControllerRange);
+
 	@Override
 	public String getName() {
 		return "blocks";
@@ -26,5 +29,7 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 		static String bogeyProbeInterval = "Interval to probe the track for track points for the Physics Bogie.";
 
 		static String probeReaderRange = "Maximum distance between a Bogie Probe Reader and its targeted Physics Bogie.";
+
+		static String remoteControllerRange = "Maximum distance between a Bogie Remote Controller and its targeted Physics Bogie.";
 	}
 }

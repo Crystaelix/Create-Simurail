@@ -3,6 +3,7 @@
 	"block.simurail.automatic_coupler": "Automatic Coupler",
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",
+	"block.simurail.remote_controller": "Bogie Remote Controller",
 
 	"item.simurail.inverted_physics_bogey": "Inverted Physics Bogie",
 	"item.simurail.connector": "Bogie Connector",
@@ -20,7 +21,7 @@
 	"block.simurail.gangway_frame.ul": "Long Upper Left",
 	"block.simurail.gangway_frame.ru": "Long Upper Right",
 
-	"block.simurail.probe_reader.invalid": "Reader has no valid target, try placing it again",
+	"block.simurail.probe_reader.invalid": "No valid target, try placing it again",
 	"block.simurail.probe_reader.set": "Targeted position selected",
 	"block.simurail.probe_reader.too_far": "Targeted position is too far from here",
 	"block.simurail.probe_reader.success": "Successfully bound",
@@ -28,6 +29,12 @@
 	"block.simurail.probe_reader.tooltip.summary": "Used to _read probe data_ as a _redstone signal_ from a _Physics Bogie_ with probing enabled. To place, click on the _bogie side_ to read probe data from first.",
 	"block.simurail.probe_reader.tooltip.condition1": "When R-Clicked",
 	"block.simurail.probe_reader.tooltip.behaviour1": "Opens the _Options Interface_ for configuration of which type of probe data to read.",
+
+	"block.simurail.remote_controller.invalid": "Controller has no valid target, try placing it again",
+	"block.simurail.remote_controller.set": "Targeted position selected",
+	"block.simurail.remote_controller.too_far": "Targeted position is too far from here",
+	"block.simurail.remote_controller.success": "Successfully bound",
+	"block.simurail.remote_controller.clear": "Selection cleared",
 
 	"item.simurail.connector.set": "Targeted position selected",
 	"item.simurail.connector.same_block": "Same block position",
@@ -90,12 +97,21 @@
 	"gui.simurail.probe_reader.mode.aligned_signal": "Aligned Signal",
 	"gui.simurail.probe_reader.mode.opposite_signal": "Opposite Signal",
 	"gui.simurail.probe_reader.mode.signal": "Any Signal",
-	"gui.simurail.probe_reader.mode.station": "Station",
+	"gui.simurail.probe_reader.mode.unpowered_station": "Unpowered Station",
 	"gui.simurail.probe_reader.mode.powered_station": "Powered Station",
+	"gui.simurail.probe_reader.mode.station": "Any Station",
 	"gui.simurail.probe_reader.mode.discontinuity": "Track Discontinuity",
 	"gui.simurail.probe_reader.filter": "Name Filter",
 	"gui.simurail.probe_reader.min": "Minimum Distance",
 	"gui.simurail.probe_reader.max": "Maximum Distance",
+
+	"gui.simurail.remote_controller.mode": "Mode",
+	"gui.simurail.remote_controller.mode.braking": "Braking",
+	"gui.simurail.remote_controller.mode.braking_inverted": "Inverted Braking",
+	"gui.simurail.remote_controller.mode.steering_left": "Left Steering",
+	"gui.simurail.remote_controller.mode.steering_right": "Right Steering",
+	"gui.simurail.remote_controller.mode.vertical_movement": "Toggle Vertical Movement",
+	"gui.simurail.remote_controller.mode.enabled": "Toggle Physics Behavior",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Physics Bogie wheels rumble",
 	"subtitles.simurail.block.coupler.connect": "Coupler connects",

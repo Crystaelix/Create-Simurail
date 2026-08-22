@@ -8,6 +8,8 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
+import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -47,6 +49,13 @@ public class SimurailBlocks {
 			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "block.simurail.probe_reader")).
 			item(ProbeReaderBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<RemoteControllerBlock> REMOTE_CONTROLLER = REGISTRATE.
+			block("remote_controller", RemoteControllerBlock::new).
+			initialProperties(SharedProperties::softMetal).
+			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
+			item(RemoteControllerBlockItem::new).
 			build().
 			register();
 

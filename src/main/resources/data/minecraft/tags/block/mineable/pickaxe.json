@@ -2,6 +2,8 @@
 	"values": [
 		"simurail:physics_bogey",
 		"simurail:automatic_coupler",
-		"simurail:gangway_frame"
+		"simurail:gangway_frame",
+		"simurail:probe_reader",
+		"simurail:remote_controller"
 	]
 }

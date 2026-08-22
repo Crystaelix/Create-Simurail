@@ -94,8 +94,8 @@
 
 	"gui.simurail.probe_reader.mode": "Режим",
 	"gui.simurail.probe_reader.mode.occupied_signal": "Красный сигнал",
-	"gui.simurail.probe_reader.mode.aligned_signal": "Красный сигнал спереди",
-	"gui.simurail.probe_reader.mode.opposite_signal": "Красный сигнал сзади",
+	"gui.simurail.probe_reader.mode.aligned_signal": "Сигнал спереди",
+	"gui.simurail.probe_reader.mode.opposite_signal": "Сигнал сзади",
 	"gui.simurail.probe_reader.mode.signal": "Любой сигнал",
 	"gui.simurail.probe_reader.mode.unpowered_station": "Незапитанная станция",
 	"gui.simurail.probe_reader.mode.powered_station": "Запитанная Станция",

@@ -26,9 +26,6 @@
 	"block.simurail.probe_reader.too_far": "目标位置离此处太远",
 	"block.simurail.probe_reader.success": "已绑定",
 	"block.simurail.probe_reader.clear": "已取消选择",
-	"block.simurail.probe_reader.tooltip.summary": "用于从已启用探针的_物理转向架_中_读取探测数据_并转化为_红石信号_。放置时，须先点击要读取数据的_转向架侧面_。",
-	"block.simurail.probe_reader.tooltip.condition1": "右击时",
-	"block.simurail.probe_reader.tooltip.behaviour1": "打开_选项界面_，以配置需要读取的探测数据类型。",
 
 	"block.simurail.remote_controller.invalid": "控制器没有有效的目标，尝试重新放置它",
 	"block.simurail.remote_controller.set": "已选择目标位置",
@@ -375,5 +372,15 @@
 
     "simurail.ponder.connector.coupler.header": "将物理转向架连接到自动车钩",
     "simurail.ponder.connector.coupler.text_1": "转向架连接器可以将同一模拟机械装置上的物理转向架连接到自动车钩",
-    "simurail.ponder.connector.coupler.text_2": "当自动车钩连接或断开时，转向架连接也会自动连接或断开"
+    "simurail.ponder.connector.coupler.text_2": "当自动车钩连接或断开时，转向架连接也会自动连接或断开",
+
+	"simurail.ponder.probe_reader.intro.header": "Detecting Track Points using Bogie Probe Readers",
+	"simurail.ponder.probe_reader.intro.text_1": "Select the side of a Physics Bogie to read probe data from, then place it nearby",
+	"simurail.ponder.probe_reader.intro.text_2": "The Bogie Probe Reader reads the probe distance of various track points as a redstone signal",
+	"simurail.ponder.probe_reader.intro.text_3": "This requires the Probe Distance of the Physics Bogie to be set",
+	"simurail.ponder.probe_reader.intro.text_4": "Right click to configure track point mode, name filter, and distance settings",
+	"simurail.ponder.probe_reader.intro.text_5": "The Signal modes check for various states of Track Signals",
+	"simurail.ponder.probe_reader.intro.text_6": "Signals can be named for the name filter using signs",
+	"simurail.ponder.probe_reader.intro.text_7": "The Station modes check for various states of Track Stations",
+	"simurail.ponder.probe_reader.intro.text_8": "The Track Discontinuity mode checks for the end of the track"
 }

@@ -26,9 +26,6 @@
 	"block.simurail.probe_reader.too_far": "Целевая позиция слишком далеко...",
 	"block.simurail.probe_reader.success": "Успешно установлено",
 	"block.simurail.probe_reader.clear": "Выбор сброшен",
-	"block.simurail.probe_reader.tooltip.summary": "Используется для _чтения сигналов_ в качестве _редстоун сигнала_ с _Физической тележки_ с включенным поиском. Чтобы установить, нажмите ПКМ по _стороне тележки_ чтобы считывать сигналы с неё",
-	"block.simurail.probe_reader.tooltip.condition1": "ПКМ с пустой рукой",
-	"block.simurail.probe_reader.tooltip.behaviour1": "Открывает _Интерфейс Настроек_ для настройки типа сигналов, которые будут считываться",
 
 	"block.simurail.remote_controller.invalid": "Controller has no valid target, try placing it again",
 	"block.simurail.remote_controller.set": "Выбрана целевая позиция",
@@ -375,5 +372,15 @@
 
 	"simurail.ponder.connector.coupler.header": "Соединение рулевого провода с авто-сцепками",
 	"simurail.ponder.connector.coupler.text_1": "Рулевой провод может соединять физическое тележки с авто-сцепками на одной и той же Simulated конструкции",
-	"simurail.ponder.connector.coupler.text_2": "Рулевой провод автоматически подключается и отключается при подключении и отключении авто-сцепок"
+	"simurail.ponder.connector.coupler.text_2": "Рулевой провод автоматически подключается и отключается при подключении и отключении авто-сцепок",
+
+	"simurail.ponder.probe_reader.intro.header": "Detecting Track Points using Bogie Probe Readers",
+	"simurail.ponder.probe_reader.intro.text_1": "Select the side of a Physics Bogie to read probe data from, then place it nearby",
+	"simurail.ponder.probe_reader.intro.text_2": "The Bogie Probe Reader reads the probe distance of various track points as a redstone signal",
+	"simurail.ponder.probe_reader.intro.text_3": "This requires the Probe Distance of the Physics Bogie to be set",
+	"simurail.ponder.probe_reader.intro.text_4": "Right click to configure track point mode, name filter, and distance settings",
+	"simurail.ponder.probe_reader.intro.text_5": "The Signal modes check for various states of Track Signals",
+	"simurail.ponder.probe_reader.intro.text_6": "Signals can be named for the name filter using signs",
+	"simurail.ponder.probe_reader.intro.text_7": "The Station modes check for various states of Track Stations",
+	"simurail.ponder.probe_reader.intro.text_8": "The Track Discontinuity mode checks for the end of the track"
 }

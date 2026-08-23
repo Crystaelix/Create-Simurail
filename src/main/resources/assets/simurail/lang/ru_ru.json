@@ -375,7 +375,7 @@
 	"simurail.ponder.connector.coupler.text_2": "Рулевой провод автоматически подключается и отключается при подключении и отключении авто-сцепок",
 
 	"simurail.ponder.probe_reader.intro.header": "Detecting Track Points using Bogie Probe Readers",
-	"simurail.ponder.probe_reader.intro.text_1": "Select the side of a Physics Bogie to read probe data from, then place it nearby",
+	"simurail.ponder.probe_reader.intro.text_1": "To place a Bogie Probe Reader, select the side of a Physics Bogie to read probe data from, then place it nearby",
 	"simurail.ponder.probe_reader.intro.text_2": "The Bogie Probe Reader reads the probe distance of various track points as a redstone signal",
 	"simurail.ponder.probe_reader.intro.text_3": "This requires the Probe Distance of the Physics Bogie to be set",
 	"simurail.ponder.probe_reader.intro.text_4": "Right click to configure track point mode, name filter, and distance settings",

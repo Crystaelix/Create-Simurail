@@ -37,27 +37,27 @@ public class RemoteControllerBlockItem extends BlockItem {
 		ItemStack stack = context.getItemInHand();
 		Level level = context.getLevel();
 		if(player.isSecondaryUseActive() && stack.has(AllDataComponents.CLICK_TO_LINK_DATA)) {
-			if(level.isClientSide()) {
-				return InteractionResult.SUCCESS;
+			if(!level.isClientSide()) {
+				stack.remove(AllDataComponents.CLICK_TO_LINK_DATA);
+				player.displayClientMessage(Component.translatable("block.simurail.remote_controller.clear"), true);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.remote_controller.clear"), true);
-			stack.remove(AllDataComponents.CLICK_TO_LINK_DATA);
 			return InteractionResult.SUCCESS;
 		}
 		ResourceLocation placedDim = level.dimension().location();
 		if(!stack.has(AllDataComponents.CLICK_TO_LINK_DATA)) {
 			if(level.getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity) {
-				if(level.isClientSide()) {
-					return InteractionResult.SUCCESS;
+				if(!level.isClientSide()) {
+					stack.set(AllDataComponents.CLICK_TO_LINK_DATA, new ClickToLinkData(pos, placedDim));
+					player.displayClientMessage(Component.translatable("block.simurail.remote_controller.set"), true);
 				}
-				player.displayClientMessage(Component.translatable("block.simurail.remote_controller.set"), true);
-				stack.set(AllDataComponents.CLICK_TO_LINK_DATA, new ClickToLinkData(pos, placedDim));
 				return InteractionResult.SUCCESS;
 			}
-			if(level.isClientSide()) {
+			if(!level.isClientSide()) {
+				player.displayClientMessage(Component.translatable("block.simurail.remote_controller.invalid").withColor(0xFF7171), true);
+			}
+			else {
 				AllSoundEvents.DENY.playFrom(player);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.remote_controller.invalid").withColor(0xFF7171), true);
 			return InteractionResult.FAIL;
 		}
 		BlockState state = level.getBlockState(pos);
@@ -67,7 +67,9 @@ public class RemoteControllerBlockItem extends BlockItem {
 		ResourceLocation selectedDim = data.selectedDim();
 		BlockPos placedPos = pos.relative(context.getClickedFace(), state.canBeReplaced() ? 0 : 1);
 		if(!selectedDim.equals(placedDim) || Sable.HELPER.distanceSquaredWithSubLevels(level, selectedPos.getCenter(), placedPos.getCenter()) > range * range) {
-			player.displayClientMessage(Component.translatable("block.simurail.remote_controller.too_far").withColor(0xFF7171), true);
+			if(!level.isClientSide()) {
+				player.displayClientMessage(Component.translatable("block.simurail.remote_controller.too_far").withColor(0xFF7171), true);
+			}
 			return InteractionResult.FAIL;
 		}
 		InteractionResult useOn = super.useOn(context);
@@ -86,11 +88,10 @@ public class RemoteControllerBlockItem extends BlockItem {
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
 		if(player.isSecondaryUseActive() && stack.has(AllDataComponents.CLICK_TO_LINK_DATA)) {
-			if(level.isClientSide()) {
-				return InteractionResultHolder.success(stack);
+			if(!level.isClientSide()) {
+				player.displayClientMessage(Component.translatable("block.simurail.remote_controller.clear"), true);
+				stack.remove(AllDataComponents.CLICK_TO_LINK_DATA);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.remote_controller.clear"), true);
-			stack.remove(AllDataComponents.CLICK_TO_LINK_DATA);
 			return InteractionResultHolder.success(stack);
 		}
 		return super.use(level, player, usedHand);

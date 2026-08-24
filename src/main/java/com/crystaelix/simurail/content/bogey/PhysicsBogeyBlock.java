@@ -143,18 +143,13 @@ public class PhysicsBogeyBlock extends HorizontalKineticBlock implements IBE<Phy
 
 	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		if(!stack.isEmpty()) {
-			return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+		if(stack.isEmpty()) {
+			if(!level.isClientSide()) {
+				withBlockEntityDo(level, pos, be -> player.openMenu(be, buf -> PhysicsBogeyMenu.prepare(buf, be, player.isSecondaryUseActive())));
+			}
+			return ItemInteractionResult.SUCCESS;
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-	}
-
-	@Override
-	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-		if(!level.isClientSide()) {
-			withBlockEntityDo(level, pos, be -> player.openMenu(be, buf -> PhysicsBogeyMenu.prepare(buf, be, player.isSecondaryUseActive())));
-		}
-		return InteractionResult.SUCCESS;
 	}
 
 	@Override

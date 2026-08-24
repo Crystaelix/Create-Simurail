@@ -4,6 +4,7 @@ import com.crystaelix.simurail.content.SimurailInteractCallbacks;
 
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
 public class ConnectorItem extends Item {
@@ -12,11 +13,11 @@ public class ConnectorItem extends Item {
 		super(properties);
 	}
 
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        if(context.getPlayer().isLocalPlayer() && SimurailInteractCallbacks.CONNECTOR.tryStart(context)) {
-            return InteractionResult.SUCCESS;
-        }
-        return super.useOn(context);
-    }
+	@Override
+	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+		if(context.getPlayer().isLocalPlayer() && SimurailInteractCallbacks.CONNECTOR.tryStart(context)) {
+			return InteractionResult.SUCCESS;
+		}
+		return InteractionResult.PASS;
+	}
 }

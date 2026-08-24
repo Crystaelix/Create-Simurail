@@ -1,13 +1,10 @@
 package com.crystaelix.simurail.content.remote_controller;
 
-import com.crystaelix.simurail.api.bogey.BogeyLinkData;
 import com.crystaelix.simurail.content.SimurailBlocks;
-import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.redstone.displayLink.ClickToLinkBlockItem.ClickToLinkData;
 
-import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

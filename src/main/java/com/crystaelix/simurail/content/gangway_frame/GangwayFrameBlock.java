@@ -176,6 +176,9 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 			level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS);
 			return ItemInteractionResult.SUCCESS;
 		}
+		if(!stack.isEmpty()) {
+			return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 

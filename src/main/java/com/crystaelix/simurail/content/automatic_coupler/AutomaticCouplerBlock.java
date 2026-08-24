@@ -196,6 +196,9 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 				return ItemInteractionResult.SUCCESS;
 			}
 		}
+		if(!stack.isEmpty()) {
+			return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 

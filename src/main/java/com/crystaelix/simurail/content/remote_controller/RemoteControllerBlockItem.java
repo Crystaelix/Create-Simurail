@@ -16,7 +16,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -95,21 +94,5 @@ public class RemoteControllerBlockItem extends BlockItem {
 			return InteractionResultHolder.success(stack);
 		}
 		return super.use(level, player, usedHand);
-	}
-
-	@Override
-	protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
-		ClickToLinkData data = context.getItemInHand().get(AllDataComponents.CLICK_TO_LINK_DATA);
-		if(data != null) {
-			boolean result = super.placeBlock(context, state);
-			Level level = context.getLevel();
-			BlockPos pos = context.getClickedPos();
-			if(level.getBlockEntity(pos) instanceof RemoteControllerBlockEntity controller) {
-				BlockPos selectedPos = data.selectedPos();
-				controller.setTargetPos(selectedPos);
-			}
-			return result;
-		}
-		return super.placeBlock(context, state);
 	}
 }

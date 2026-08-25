@@ -10,7 +10,9 @@ import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyOptions;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.content.redstone.displayLink.ClickToLinkBlockItem.ClickToLinkData;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -160,17 +162,21 @@ public class RemoteControllerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	public void setPower(int power) {
-		boolean wasPowered = this.power > 0;
 		this.power = power;
-		if(power > 0 && power > 0 != wasPowered) {
-
-		}
 		setChanged();
 	}
 
 	@Override
 	public RemoteControllerMenu createMenu(int windowId, Inventory inv, Player player) {
 		return new RemoteControllerMenu(windowId, this);
+	}
+
+	@Override
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		ClickToLinkData data = componentInput.get(AllDataComponents.CLICK_TO_LINK_DATA);
+		if(data != null) {
+			setTargetPos(data.selectedPos());
+		}
 	}
 
 	@Override

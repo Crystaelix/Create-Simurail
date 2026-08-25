@@ -66,6 +66,7 @@ import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -1047,6 +1048,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				axleFront.resetOffset();
 				axleBack.resetOffset();
 			}
+		}
+	}
+
+	@Override
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		Component customName = componentInput.get(DataComponents.CUSTOM_NAME);
+		if(customName != null) {
+			setCustomName(customName);
 		}
 	}
 

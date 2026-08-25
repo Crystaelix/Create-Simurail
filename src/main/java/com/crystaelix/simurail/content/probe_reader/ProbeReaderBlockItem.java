@@ -17,7 +17,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -104,27 +103,5 @@ public class ProbeReaderBlockItem extends BlockItem {
 			return InteractionResultHolder.success(stack);
 		}
 		return super.use(level, player, usedHand);
-	}
-
-	@Override
-	protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
-		BogeyLinkData data = context.getItemInHand().get(SimurailDataComponents.BOGEY_LINK_DATA);
-		if(data != null) {
-			boolean result = super.placeBlock(context, state);
-			Level level = context.getLevel();
-			BlockPos pos = context.getClickedPos();
-			if(level.getBlockEntity(pos) instanceof ProbeReaderBlockEntity reader) {
-				BlockPos selectedPos = data.position();
-				Direction selectedDir = data.direction();
-				boolean selectedFront = true;
-				if(level.getBlockEntity(selectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
-					selectedFront = selectedDir != bogey.getFacing().getOpposite();
-				}
-				reader.setTargetPos(selectedPos);
-				reader.targetFront = selectedFront;
-			}
-			return result;
-		}
-		return super.placeBlock(context, state);
 	}
 }

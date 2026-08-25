@@ -5,11 +5,13 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import com.crystaelix.simurail.api.bogey.BogeyLinkData;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
 import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
+import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyProbeData;
 import com.google.common.base.Predicates;
@@ -216,6 +218,20 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	@Override
 	public ProbeReaderMenu createMenu(int windowId, Inventory inv, Player player) {
 		return new ProbeReaderMenu(windowId, this);
+	}
+
+	@Override
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		BogeyLinkData data = componentInput.get(SimurailDataComponents.BOGEY_LINK_DATA);
+		if(data != null) {
+			setTargetPos(data.position());
+			if(level.getBlockEntity(data.position()) instanceof PhysicsBogeyBlockEntity bogey) {
+				targetFront = data.direction() != bogey.getFacing().getOpposite();
+			}
+			else {
+				targetFront = true;
+			}
+		}
 	}
 
 	@Override

@@ -374,13 +374,13 @@
 	"simurail.ponder.connector.coupler.text_1": "Рулевой провод может соединять физическое тележки с авто-сцепками на одной и той же Simulated конструкции",
 	"simurail.ponder.connector.coupler.text_2": "Рулевой провод автоматически подключается и отключается при подключении и отключении авто-сцепок",
 
-	"simurail.ponder.probe_reader.intro.header": "Detecting Track Points using Bogie Probe Readers",
-	"simurail.ponder.probe_reader.intro.text_1": "To place a Bogie Probe Reader, select the side of a Physics Bogie to read probe data from, then place it nearby",
-	"simurail.ponder.probe_reader.intro.text_2": "The Bogie Probe Reader reads the probe distance of various track points as a redstone signal",
-	"simurail.ponder.probe_reader.intro.text_3": "This requires the Probe Distance of the Physics Bogie to be set",
-	"simurail.ponder.probe_reader.intro.text_4": "Right click to configure track point mode, name filter, and distance settings",
-	"simurail.ponder.probe_reader.intro.text_5": "The Signal modes check for various states of Track Signals",
-	"simurail.ponder.probe_reader.intro.text_6": "Signals can be named for the name filter using signs",
-	"simurail.ponder.probe_reader.intro.text_7": "The Station modes check for various states of Track Stations",
-	"simurail.ponder.probe_reader.intro.text_8": "The Track Discontinuity mode checks for the end of the track"
+	"simurail.ponder.probe_reader.intro.header": "Отслеживание Путевых Точек используя Тележные считыватели",
+	"simurail.ponder.probe_reader.intro.text_1": "Чтобы разместить Тележный считыватель, выберите сторону Физической тележки чтобы получать сигналы с неё, затем установите считыватель не далеко",
+	"simurail.ponder.probe_reader.intro.text_2": "Тележный считыватель получает сигнал от разных путевых точек в виде редстоун-сигнала",
+	"simurail.ponder.probe_reader.intro.text_3": "Это требует установки Дальности считывания в настройках Физической тележки",
+	"simurail.ponder.probe_reader.intro.text_4": "ПКМ чтобы настроить режим который будет считывать сигналы, фильтр по названию и настройки дальности",
+	"simurail.ponder.probe_reader.intro.text_5": "Режимы Сигналов проверяют различные состояния Путевых сигналов (светофоров)",
+	"simurail.ponder.probe_reader.intro.text_6": "Сигналы могут быть названы для Фильтра по названию с помощью табличек",
+	"simurail.ponder.probe_reader.intro.text_7": "Режимы Станций проверяют различные состояния Путевых станций",
+	"simurail.ponder.probe_reader.intro.text_8": "Режим Прерывания пути конец пути"
 }

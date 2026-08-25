@@ -12,10 +12,8 @@ import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
-import com.simibubi.create.foundation.item.ItemDescription;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
@@ -47,7 +45,6 @@ public class SimurailBlocks {
 			block("probe_reader", ProbeReaderBlock::new).
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
-			onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "block.simurail.probe_reader")).
 			item(ProbeReaderBlockItem::new).
 			build().
 			register();

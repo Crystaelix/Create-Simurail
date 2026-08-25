@@ -45,28 +45,28 @@ public class ProbeReaderBlockItem extends BlockItem {
 		ItemStack stack = context.getItemInHand();
 		Level level = context.getLevel();
 		if(player.isSecondaryUseActive() && stack.has(SimurailDataComponents.BOGEY_LINK_DATA)) {
-			if(level.isClientSide()) {
-				return InteractionResult.SUCCESS;
+			if(!level.isClientSide()) {
+				stack.remove(SimurailDataComponents.BOGEY_LINK_DATA);
+				player.displayClientMessage(Component.translatable("block.simurail.probe_reader.clear"), true);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.clear"), true);
-			stack.remove(SimurailDataComponents.BOGEY_LINK_DATA);
 			return InteractionResult.SUCCESS;
 		}
 		ResourceLocation placedDim = level.dimension().location();
 		if(!stack.has(SimurailDataComponents.BOGEY_LINK_DATA)) {
 			if(level.getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {
-				if(level.isClientSide()) {
-					return InteractionResult.SUCCESS;
+				if(!level.isClientSide()) {
+					Direction direction = getDirection(bogey, context.getClickLocation());
+					stack.set(SimurailDataComponents.BOGEY_LINK_DATA, new BogeyLinkData(pos, direction, placedDim));
+					player.displayClientMessage(Component.translatable("block.simurail.probe_reader.set"), true);
 				}
-				Direction direction = getDirection(bogey, context.getClickLocation());
-				player.displayClientMessage(Component.translatable("block.simurail.probe_reader.set"), true);
-				stack.set(SimurailDataComponents.BOGEY_LINK_DATA, new BogeyLinkData(pos, direction, placedDim));
 				return InteractionResult.SUCCESS;
 			}
-			if(level.isClientSide()) {
+			if(!level.isClientSide()) {
+				player.displayClientMessage(Component.translatable("block.simurail.probe_reader.invalid").withColor(0xFF7171), true);
+			}
+			else {
 				AllSoundEvents.DENY.playFrom(player);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.invalid").withColor(0xFF7171), true);
 			return InteractionResult.FAIL;
 		}
 		BlockState state = level.getBlockState(pos);
@@ -76,7 +76,9 @@ public class ProbeReaderBlockItem extends BlockItem {
 		ResourceLocation selectedDim = data.dimension();
 		BlockPos placedPos = pos.relative(context.getClickedFace(), state.canBeReplaced() ? 0 : 1);
 		if(!selectedDim.equals(placedDim) || Sable.HELPER.distanceSquaredWithSubLevels(level, selectedPos.getCenter(), placedPos.getCenter()) > range * range) {
-			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.too_far").withColor(0xFF7171), true);
+			if(!level.isClientSide()) {
+				player.displayClientMessage(Component.translatable("block.simurail.probe_reader.too_far").withColor(0xFF7171), true);
+			}
 			return InteractionResult.FAIL;
 		}
 		InteractionResult useOn = super.useOn(context);
@@ -95,11 +97,10 @@ public class ProbeReaderBlockItem extends BlockItem {
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
 		if(player.isSecondaryUseActive() && stack.has(SimurailDataComponents.BOGEY_LINK_DATA)) {
-			if(level.isClientSide()) {
-				return InteractionResultHolder.success(stack);
+			if(!level.isClientSide()) {
+				stack.remove(SimurailDataComponents.BOGEY_LINK_DATA);
+				player.displayClientMessage(Component.translatable("block.simurail.probe_reader.clear"), true);
 			}
-			player.displayClientMessage(Component.translatable("block.simurail.probe_reader.clear"), true);
-			stack.remove(SimurailDataComponents.BOGEY_LINK_DATA);
 			return InteractionResultHolder.success(stack);
 		}
 		return super.use(level, player, usedHand);

@@ -176,22 +176,20 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 			level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS);
 			return ItemInteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-	}
-
-	@Override
-	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-		if(!level.isClientSide()) {
-			withBlockEntityDo(level, pos, be -> {
-				if(be.getGangwayPartner() == null) {
-					be.tryConnectGangway();
-				}
-				else {
-					be.tryDisconnectGangway();
-				}
-			});
+		else if(stack.isEmpty()) {
+			if(!level.isClientSide()) {
+				withBlockEntityDo(level, pos, be -> {
+					if(be.getGangwayPartner() == null) {
+						be.tryConnectGangway();
+					}
+					else {
+						be.tryDisconnectGangway();
+					}
+				});
+			}
+			return ItemInteractionResult.SUCCESS;
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public class RemoteControllerBlockEntity extends SmartBlockEntity implements Men
 		BlockPos pos = getBlockPos();
 		double range = SimurailConfig.server().blocks.remoteControllerRange.get();
 		double distSq = Sable.HELPER.distanceSquaredWithSubLevels(level, pos.getCenter(), getTargetPos().getCenter());
-		if(level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(level.isLoaded(targetPos) && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
 			if(distSq > range * range) {
 				return;
 			}
@@ -177,7 +177,7 @@ public class RemoteControllerBlockEntity extends SmartBlockEntity implements Men
 	public void invalidate() {
 		super.invalidate();
 		computerBehaviour.removePeripheral();
-		if(!level.isClientSide() && targetPos != null && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(!level.isClientSide() && targetPos != null && level.isLoaded(targetPos) && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
 			bogey.removeRemoteController(getBlockPos());
 		}
 	}

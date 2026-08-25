@@ -5,8 +5,6 @@ import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailDataComponents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 
-import dev.ryanhcode.sable.Sable;
-import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

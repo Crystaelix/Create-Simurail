@@ -111,7 +111,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		}
 		double range = SimurailConfig.server().blocks.probeReaderRange.get();
 		double distSq = Sable.HELPER.distanceSquaredWithSubLevels(level, getBlockPos().getCenter(), getTargetPos().getCenter());
-		if(level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(level.isLoaded(targetPos) && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
 			if(distSq > range * range) {
 				bogey.removeProbeReader(getBlockPos());
 				return 0;
@@ -222,7 +222,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 	public void invalidate() {
 		super.invalidate();
 		computerBehaviour.removePeripheral();
-		if(!level.isClientSide() && targetPos != null && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(!level.isClientSide() && targetPos != null && level.isLoaded(targetPos) && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
 			bogey.removeProbeReader(getBlockPos());
 		}
 	}

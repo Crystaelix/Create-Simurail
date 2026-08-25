@@ -188,56 +188,48 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 			if(hitY > 0.3 && hitY < 0.7) {
 				withBlockEntityDo(level, pos, be -> be.setColor(dye.getDyeColor().getFireworkColor()));
 				level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS);
-				return ItemInteractionResult.SUCCESS;
 			}
 			else {
 				withBlockEntityDo(level, pos, be -> be.setGangwayColor(dye.getDyeColor().getFireworkColor()));
 				level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS);
-				return ItemInteractionResult.SUCCESS;
 			}
+			return ItemInteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-	}
-
-	@Override
-	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-		double hitY = hitResult.getLocation().y - hitResult.getBlockPos().getY();
-		if(hitY > 0.3 && hitY < 0.7) {
-			if(player.isSecondaryUseActive()) {
-				if(!state.getValue(POWERED)) {
-					BlockState newState = state.setValue(POWERED, true).setValue(TRIGGERED, true);
-					level.setBlock(pos, newState, UPDATE_CLIENTS);
-					if(!level.isClientSide()) {
-						withBlockEntityDo(level, pos, AutomaticCouplerBlockEntity::tryDisconnectGangway);
+		else if(stack.isEmpty()) {
+			if(hitY > 0.3 && hitY < 0.7) {
+				if(player.isSecondaryUseActive()) {
+					if(!state.getValue(POWERED)) {
+						BlockState newState = state.setValue(POWERED, true).setValue(TRIGGERED, true);
+						level.setBlock(pos, newState, UPDATE_CLIENTS);
+						if(!level.isClientSide()) {
+							withBlockEntityDo(level, pos, AutomaticCouplerBlockEntity::tryDisconnectGangway);
+						}
 					}
-					return InteractionResult.SUCCESS;
+					else if(state.getValue(TRIGGERED)) {
+						BlockState newState = state.setValue(POWERED, false).setValue(TRIGGERED, false);
+						level.setBlock(pos, newState, UPDATE_CLIENTS);
+					}
 				}
-				else if(state.getValue(TRIGGERED)) {
-					BlockState newState = state.setValue(POWERED, false).setValue(TRIGGERED, false);
-					level.setBlock(pos, newState, UPDATE_CLIENTS);
-					return InteractionResult.SUCCESS;
+				else {
+					withBlockEntityDo(level, pos, AutomaticCouplerBlockEntity::cycleLength);
+					IWrenchable.playRotateSound(level, pos);
 				}
 			}
 			else {
-				withBlockEntityDo(level, pos, AutomaticCouplerBlockEntity::cycleLength);
-				IWrenchable.playRotateSound(level, pos);
-				return InteractionResult.SUCCESS;
+				if(!level.isClientSide()) {
+					withBlockEntityDo(level, pos, be -> {
+						if(be.getGangwayPartner() == null) {
+							be.tryConnectGangway();
+						}
+						else {
+							be.tryDisconnectGangway();
+						}
+					});
+				}
 			}
+			return ItemInteractionResult.SUCCESS;
 		}
-		else {
-			if(!level.isClientSide()) {
-				withBlockEntityDo(level, pos, be -> {
-					if(be.getGangwayPartner() == null) {
-						be.tryConnectGangway();
-					}
-					else {
-						be.tryDisconnectGangway();
-					}
-				});
-			}
-			return InteractionResult.SUCCESS;
-		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

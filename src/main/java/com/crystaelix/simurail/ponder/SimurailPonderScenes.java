@@ -6,6 +6,7 @@ import com.crystaelix.simurail.ponder.scenes.AutomaticCouplerScenes;
 import com.crystaelix.simurail.ponder.scenes.ConnectorScenes;
 import com.crystaelix.simurail.ponder.scenes.GangwayFrameScenes;
 import com.crystaelix.simurail.ponder.scenes.PhysicsBogeyScenes;
+import com.crystaelix.simurail.ponder.scenes.ProbeReaderScenes;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
@@ -30,5 +31,8 @@ public class SimurailPonderScenes {
 		helper.forComponents(SimurailItems.CONNECTOR).
 		addStoryBoard("connector/intro", ConnectorScenes::intro).
 		addStoryBoard("connector/coupler", ConnectorScenes::coupler);
+
+		helper.forComponents(SimurailBlocks.PROBE_READER).
+		addStoryBoard("probe_reader/intro", ProbeReaderScenes::intro);
 	}
 }

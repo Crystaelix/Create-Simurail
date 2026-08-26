@@ -393,30 +393,24 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public Vector3dc getDirection() {
 		return switch(getFacing()) {
-		case EAST -> SimurailMath.DIR_XP;
-		case WEST -> SimurailMath.DIR_XN;
-		case SOUTH -> SimurailMath.DIR_ZP;
-		case NORTH -> SimurailMath.DIR_ZN;
+		case EAST -> SimurailMath.DIR_XP; case WEST -> SimurailMath.DIR_XN;
+		case SOUTH -> SimurailMath.DIR_ZP; case NORTH -> SimurailMath.DIR_ZN;
 		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
 		};
 	}
 
 	public Vector3dc getLateral() {
 		return switch(getFacing()) {
-		case EAST -> SimurailMath.DIR_ZP;
-		case WEST -> SimurailMath.DIR_ZN;
-		case SOUTH -> SimurailMath.DIR_XN;
-		case NORTH -> SimurailMath.DIR_XP;
+		case EAST -> SimurailMath.DIR_ZP; case WEST -> SimurailMath.DIR_ZN;
+		case SOUTH -> SimurailMath.DIR_XN; case NORTH -> SimurailMath.DIR_XP;
 		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
 		};
 	}
 
 	public Quaterniondc getJointOrientation() {
 		return switch(getFacing()) {
-		case EAST -> SimurailMath.ROT_XPYPZP;
-		case WEST -> SimurailMath.ROT_XNYPZN;
-		case SOUTH -> SimurailMath.ROT_ZPYPXN;
-		case NORTH -> SimurailMath.ROT_ZNYPXP;
+		case EAST -> SimurailMath.ROT_XPYPZP; case WEST -> SimurailMath.ROT_XNYPZN;
+		case SOUTH -> SimurailMath.ROT_ZPYPXN; case NORTH -> SimurailMath.ROT_ZNYPXP;
 		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
 		};
 	}

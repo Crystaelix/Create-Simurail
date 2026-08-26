@@ -1,5 +1,6 @@
 package com.crystaelix.simurail.content.bogey;
 
+import org.joml.Matrix3d;
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
@@ -10,9 +11,7 @@ import com.crystaelix.simurail.api.bogey.BogeyType;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
 import com.simibubi.create.content.trains.track.ITrackBlock;
-import com.simibubi.create.content.trains.track.TrackBlock;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
-import com.simibubi.create.content.trains.track.TrackShape;
 
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
@@ -56,74 +55,38 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 			if(BogeyType.hasDefault(type, inverted)) {
 				trackType = type;
 			}
-		}
-		a:if(trackType != null && context.isSecondaryUseActive() && !context.replacingClickedOnBlock()) {
-			state = state.setValue(BlockStateProperties.WATERLOGGED, false);
-			Vector3dc position;
-			Quaterniondc orientation;
-			TrackShape shape = relativeState.getOptionalValue(TrackBlock.SHAPE).orElse(null);
-			double offset = inverted ? -0.625 : 1.625;
-			switch(shape) {
-			case AN -> {
-				if(inverted ? clickedFace != Direction.DOWN && clickedFace != Direction.NORTH :
-					clickedFace != Direction.UP && clickedFace != Direction.SOUTH) break a;
-				offset *= SimurailMath.SQRT_2/2;
-				position = JOMLConversion.atCenterOf(relativePos).add(0, offset, offset);
-				orientation = new Quaterniond().rotateX(Math.PI / 4);
-			}
-			case AS -> {
-				if(inverted ? clickedFace != Direction.DOWN && clickedFace != Direction.SOUTH :
-					clickedFace != Direction.UP && clickedFace != Direction.NORTH) break a;
-				offset *= SimurailMath.SQRT_2/2;
-				position = JOMLConversion.atCenterOf(relativePos).add(0, offset, -offset);
-				orientation = new Quaterniond().rotateX(-Math.PI / 4);
-			}
-			case AE -> {
-				if(inverted ? clickedFace != Direction.DOWN && clickedFace != Direction.EAST :
-					clickedFace != Direction.UP && clickedFace != Direction.WEST) break a;
-				offset *= SimurailMath.SQRT_2/2;
-				position = JOMLConversion.atCenterOf(relativePos).add(-offset, offset, 0);
-				orientation = new Quaterniond().rotateZ(Math.PI / 4);
-			}
-			case AW -> {
-				if(inverted ? clickedFace != Direction.DOWN && clickedFace != Direction.WEST :
-					clickedFace != Direction.UP && clickedFace != Direction.EAST) break a;
-				offset *= SimurailMath.SQRT_2/2;
-				position = JOMLConversion.atCenterOf(relativePos).add(offset, offset, 0);
-				orientation = new Quaterniond().rotateZ(-Math.PI / 4);
-			}
-			case PD, CR_D -> {
-				if(inverted ? clickedFace != Direction.DOWN : clickedFace != Direction.UP) break a;
-				Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-				position = JOMLConversion.atBottomCenterOf(relativePos).add(0, offset, 0);
-				orientation = new Quaterniond().rotateY(direction.getAxis() == Direction.Axis.X ? -Math.PI / 4 : Math.PI / 4);
-			}
-			case ND -> {
-				if(inverted ? clickedFace != Direction.DOWN : clickedFace != Direction.UP) break a;
-				Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-				position = JOMLConversion.atBottomCenterOf(relativePos).add(0, offset, 0);
-				orientation = new Quaterniond().rotateY(direction.getAxis() == Direction.Axis.X ? Math.PI / 4 : -Math.PI / 4);
-			}
-			case ZO, XO, TN, TS, TE, TW, CR_O, CR_PDX, CR_PDZ, CR_NDX, CR_NDZ -> {
-				if(inverted ? clickedFace != Direction.DOWN : clickedFace != Direction.UP) break a;
-				position = JOMLConversion.atBottomCenterOf(relativePos).add(0, offset, 0);
-				orientation = SimurailMath.ROT_I;
-			}
-			case null, default -> {
-				if(relativeState.getBlock() instanceof ITrackBlock track) {
-					// Assume FlexiTrack-like
-					Vector3d normal = JOMLConversion.toJOML(track.getUpNormal(level, relativePos, relativeState));
-					double dot = normal.x * clickedFace.getStepX() + normal.y * clickedFace.getStepY() + normal.z * clickedFace.getStepZ();
-					if(inverted ? dot > -0.5 : dot < 0.5) break a;
-					state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST);
-					Vector3d direction = JOMLConversion.toJOML(track.getTrackAxes(level, relativePos, relativeState).get(0));
-					position = JOMLConversion.atBottomCenterOf(relativePos).fma(offset, normal);
-					orientation = SimurailMath.rot(direction, normal, new Quaterniond());
+			if(trackType != null && context.isSecondaryUseActive() && !context.replacingClickedOnBlock()) {
+				Vector3d trackNormal = JOMLConversion.toJOML(track.getUpNormal(level, relativePos, relativeState));
+				double dot = trackNormal.x * clickedFace.getStepX() + trackNormal.y * clickedFace.getStepY() + trackNormal.z * clickedFace.getStepZ();
+				if(inverted ? dot < 0.5 : dot > 0.5) {
+					Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+					Vector3dc bogeyDirection = switch(direction) {
+					case EAST -> SimurailMath.DIR_XP; case WEST -> SimurailMath.DIR_XN;
+					case SOUTH -> SimurailMath.DIR_ZP; case NORTH -> SimurailMath.DIR_ZN;
+					case null, default -> throw new IllegalArgumentException("Unexpected value: " + direction);
+					};
+					Vector3dc bogeyLateral = switch(direction) {
+					case EAST -> SimurailMath.DIR_ZP; case WEST -> SimurailMath.DIR_ZN;
+					case SOUTH -> SimurailMath.DIR_XN; case NORTH -> SimurailMath.DIR_XP;
+					case null, default -> throw new IllegalArgumentException("Unexpected value: " + direction);
+					};
+
+					Vector3d trackDirection = JOMLConversion.toJOML(track.getTrackAxes(level, relativePos, relativeState).get(0));
+					if(bogeyDirection.dot(trackDirection) < 0) trackDirection.mul(-1);
+					Vector3d trackLateral = trackDirection.cross(trackNormal, new Vector3d());
+
+					Matrix3d bogeyMatrix = new Matrix3d(bogeyDirection, SimurailMath.DIR_YP, bogeyLateral).transpose();
+					Matrix3d trackMatrix = new Matrix3d(trackDirection, trackNormal, trackLateral).mul(bogeyMatrix);
+
+					double offset = inverted ? -0.625 : 1.625;
+					Vector3d position = JOMLConversion.atBottomCenterOf(relativePos).
+							add(0, track.getElevationAtCenter(level, relativePos, relativeState), 0).
+							fma(offset, trackNormal);
+					Quaterniond orientation = new Quaterniond().setFromUnnormalized(trackMatrix);
+
+					return placeSubLevel(level, position, orientation, context.getPlayer(), context.getItemInHand(), state.setValue(BlockStateProperties.WATERLOGGED, false), trackType);
 				}
-				else break a;
 			}
-			}
-			return placeSubLevel(level, position, orientation, context.getPlayer(), context.getItemInHand(), state, trackType);
 		}
 
 		boolean disableRotation = true;

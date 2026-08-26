@@ -40,6 +40,10 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 		super(block, properties);
 	}
 
+	public BlockState defaultBlockState() {
+		return getBlock().defaultBlockState();
+	}
+
 	@Override
 	protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
 		Level level = context.getLevel();
@@ -56,36 +60,33 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 				trackType = type;
 			}
 			if(trackType != null && context.isSecondaryUseActive() && !context.replacingClickedOnBlock()) {
+				Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+				Vector3dc bogeyDirection = switch(direction) {
+				case EAST -> SimurailMath.DIR_XP; case WEST -> SimurailMath.DIR_XN;
+				case SOUTH -> SimurailMath.DIR_ZP; case NORTH -> SimurailMath.DIR_ZN;
+				case null, default -> throw new IllegalArgumentException("Unexpected value: " + direction);
+				};
+				Vector3dc bogeyLateral = switch(direction) {
+				case EAST -> SimurailMath.DIR_ZP; case WEST -> SimurailMath.DIR_ZN;
+				case SOUTH -> SimurailMath.DIR_XN; case NORTH -> SimurailMath.DIR_XP;
+				case null, default -> throw new IllegalArgumentException("Unexpected value: " + direction);
+				};
+
+				Vector3d trackDirection = JOMLConversion.toJOML(track.getTrackAxes(level, relativePos, relativeState).get(0));
+				if(bogeyDirection.dot(trackDirection) < 0) trackDirection.mul(-1);
 				Vector3d trackNormal = JOMLConversion.toJOML(track.getUpNormal(level, relativePos, relativeState));
-				double dot = trackNormal.x * clickedFace.getStepX() + trackNormal.y * clickedFace.getStepY() + trackNormal.z * clickedFace.getStepZ();
-				if(inverted ? dot < 0.5 : dot > 0.5) {
-					Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-					Vector3dc bogeyDirection = switch(direction) {
-					case EAST -> SimurailMath.DIR_XP; case WEST -> SimurailMath.DIR_XN;
-					case SOUTH -> SimurailMath.DIR_ZP; case NORTH -> SimurailMath.DIR_ZN;
-					case null, default -> throw new IllegalArgumentException("Unexpected value: " + direction);
-					};
-					Vector3dc bogeyLateral = switch(direction) {
-					case EAST -> SimurailMath.DIR_ZP; case WEST -> SimurailMath.DIR_ZN;
-					case SOUTH -> SimurailMath.DIR_XN; case NORTH -> SimurailMath.DIR_XP;
-					case null, default -> throw new IllegalArgumentException("Unexpected value: " + direction);
-					};
+				Vector3d trackLateral = trackDirection.cross(trackNormal, new Vector3d());
 
-					Vector3d trackDirection = JOMLConversion.toJOML(track.getTrackAxes(level, relativePos, relativeState).get(0));
-					if(bogeyDirection.dot(trackDirection) < 0) trackDirection.mul(-1);
-					Vector3d trackLateral = trackDirection.cross(trackNormal, new Vector3d());
+				Matrix3d bogeyMatrix = new Matrix3d(bogeyDirection, SimurailMath.DIR_YP, bogeyLateral).transpose();
+				Matrix3d trackMatrix = new Matrix3d(trackDirection, trackNormal, trackLateral).mul(bogeyMatrix);
 
-					Matrix3d bogeyMatrix = new Matrix3d(bogeyDirection, SimurailMath.DIR_YP, bogeyLateral).transpose();
-					Matrix3d trackMatrix = new Matrix3d(trackDirection, trackNormal, trackLateral).mul(bogeyMatrix);
+				double offset = inverted ? -0.625 : 1.625;
+				Vector3d position = JOMLConversion.atBottomCenterOf(relativePos).
+						add(0, track.getElevationAtCenter(level, relativePos, relativeState), 0).
+						fma(offset, trackNormal);
+				Quaterniond orientation = new Quaterniond().setFromUnnormalized(trackMatrix);
 
-					double offset = inverted ? -0.625 : 1.625;
-					Vector3d position = JOMLConversion.atBottomCenterOf(relativePos).
-							add(0, track.getElevationAtCenter(level, relativePos, relativeState), 0).
-							fma(offset, trackNormal);
-					Quaterniond orientation = new Quaterniond().setFromUnnormalized(trackMatrix);
-
-					return placeSubLevel(level, position, orientation, context.getPlayer(), context.getItemInHand(), state.setValue(BlockStateProperties.WATERLOGGED, false), trackType);
-				}
+				return placeSubLevel(level, position, orientation, context.getPlayer(), context.getItemInHand(), state.setValue(BlockStateProperties.WATERLOGGED, false), trackType);
 			}
 		}
 

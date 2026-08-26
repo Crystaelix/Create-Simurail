@@ -28,6 +28,20 @@ public class InvertedPhysicsBogeyBlockItem extends PhysicsBogeyBlockItem {
 	public void registerBlocks(Map<Block, Item> blockToItemMap, Item item) {}
 
 	@Override
+	public BlockState defaultBlockState() {
+		if(canPlace == null) {
+			canPlace = AllBogeyStyles.BOGEY_STYLES.values().stream().
+					flatMap(s -> s.validSizes().stream().map(s::getBlockForSize)).
+					anyMatch(AbstractBogeyBlock::canBeUpsideDown);
+		}
+		if(!canPlace) {
+			return null;
+		}
+		BlockState state = super.defaultBlockState();
+		return state == null ? null : state.setValue(PhysicsBogeyBlock.INVERTED, true);
+	}
+
+	@Override
 	protected BlockState getPlacementState(BlockPlaceContext context) {
 		if(canPlace == null) {
 			canPlace = AllBogeyStyles.BOGEY_STYLES.values().stream().

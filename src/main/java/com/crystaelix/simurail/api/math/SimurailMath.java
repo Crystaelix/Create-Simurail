@@ -34,9 +34,9 @@ public class SimurailMath {
 
 	public static final Quaterniondc ROT_I = new Quaterniond();
 	public static final Quaterniondc ROT_XPYPZP = ROT_I;
-	public static final Quaterniondc ROT_ZPYPXN = new Quaterniond(0, -SQRT_2/2, 0, SQRT_2/2);
+	public static final Quaterniondc ROT_ZPYPXN = new Quaterniond(0, -SQRT_2*0.5, 0, SQRT_2*0.5);
 	public static final Quaterniondc ROT_XNYPZN = new Quaterniond(0, 1, 0, 0);
-	public static final Quaterniondc ROT_ZNYPXP = new Quaterniond(0, SQRT_2/2, 0, SQRT_2/2);
+	public static final Quaterniondc ROT_ZNYPXP = new Quaterniond(0, SQRT_2*0.5, 0, SQRT_2*0.5);
 
 	public static final Pose3dc POSE_I = new Pose3d();
 

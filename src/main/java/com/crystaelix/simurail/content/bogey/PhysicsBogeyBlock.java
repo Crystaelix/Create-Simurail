@@ -69,28 +69,49 @@ public class PhysicsBogeyBlock extends HorizontalKineticBlock implements IBE<Phy
 		else if(mainDirection.getOpposite() == context.getHorizontalDirection()) {
 			mainDirection = mainDirection.getOpposite();
 		}
-		if(!context.replacingClickedOnBlock() && context.getClickedFace().getAxis() == Direction.Axis.Y) {
+		if(!context.replacingClickedOnBlock()) {
+			Direction clickedFace = context.getClickedFace();
 			BlockPos relativePos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
 			BlockState blockState = context.getLevel().getBlockState(relativePos);
 			if(blockState.hasProperty(TrackBlock.SHAPE)) {
 				switch(blockState.getValue(TrackBlock.SHAPE)) {
-				case XO, AE, AW, TE, TW, CR_PDX, CR_NDX: {
-					if(mainDirection.getAxis() == Direction.Axis.X) {
-						return mainDirection;
-					}
-					else {
-						return Direction.EAST;
-					}
-				}
-				case ZO, AN, AS, TN, TS, CR_PDZ, CR_NDZ: {
-					if(mainDirection.getAxis() == Direction.Axis.Z) {
-						return mainDirection;
-					}
-					else {
-						return Direction.SOUTH;
+				case XO, TE, TW, CR_PDX, CR_NDX -> {
+					if(clickedFace.getAxis() == Direction.Axis.Y && mainDirection.getAxis() != Direction.Axis.X) {
+						for(Direction direction : context.getNearestLookingDirections()) {
+							if(direction.getAxis() == Direction.Axis.X) {
+								return direction;
+							}
+						}
 					}
 				}
-				default:
+				case AE, AW -> {
+					if(clickedFace.getAxis() != Direction.Axis.Z && mainDirection.getAxis() != Direction.Axis.X) {
+						for(Direction direction : context.getNearestLookingDirections()) {
+							if(direction.getAxis() == Direction.Axis.X) {
+								return direction;
+							}
+						}
+					}
+				}
+				case ZO, TN, TS, CR_PDZ, CR_NDZ -> {
+					if(clickedFace.getAxis() == Direction.Axis.Y && mainDirection.getAxis() != Direction.Axis.Z) {
+						for(Direction direction : context.getNearestLookingDirections()) {
+							if(direction.getAxis() == Direction.Axis.Z) {
+								return direction;
+							}
+						}
+					}
+				}
+				case AN, AS -> {
+					if(clickedFace.getAxis() != Direction.Axis.X && mainDirection.getAxis() != Direction.Axis.Z) {
+						for(Direction direction : context.getNearestLookingDirections()) {
+							if(direction.getAxis() == Direction.Axis.Z) {
+								return direction;
+							}
+						}
+					}
+				}
+				case null, default -> {}
 				}
 			}
 		}

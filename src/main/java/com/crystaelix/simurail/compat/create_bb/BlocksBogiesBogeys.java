@@ -2,13 +2,20 @@ package com.crystaelix.simurail.compat.create_bb;
 
 import java.util.List;
 
+import com.crystaelix.simurail.api.bogey.BogeyAxlePositions;
 import com.crystaelix.simurail.api.bogey.BogeyPropertyOverrides;
 import com.crystaelix.simurail.api.bogey.BogeyType;
 import com.crystaelix.simurail.api.bogey.menu.BogeyDataSelectionOption;
 import com.crystaelix.simurail.api.bogey.menu.BogeyEntry;
 import com.crystaelix.simurail.api.bogey.menu.BogeyEntryCategory;
 import com.crystaelix.simurail.api.bogey.menu.BogeyMenuManager;
+import com.crystaelix.simurail.api.bogey.menu.BogeyCategory;
+import com.crystaelix.simurail.api.bogey.menu.BogeyMenuItem;
 import com.crystaelix.simurail.api.bogey.menu.BogeyParentCategory;
+import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
+import com.weido.create_bb.blocks.sizes.ExtraLargeBogieBlock;
+import com.weido.create_bb.blocks.sizes.LargeBogieBlock;
+import com.weido.create_bb.blocks.sizes.SmallBogieBlock;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
@@ -19,12 +26,14 @@ import net.minecraft.network.chat.Component;
 
 public class BlocksBogiesBogeys {
 
+	public static final String ROT_KEY = "IsForwards";	// mirror styles
+
 	public static final BogeyDataSelectionOption ROT = new BogeyDataSelectionOption(Component.translatable("simurail_bogey_option.create_bb.rot")).
 			options(List.of(
 					Component.translatable("simurail_bogey_option.create_bb.rot.normal"),
 					Component.translatable("simurail_bogey_option.create_bb.rot.rotated"))).
-			codec((extra, i) -> extra.putBoolean("IsForwards", i != 0),
-					extra -> (extra.getBoolean("IsForwards") ? 1 : 0));
+			codec((extra, i) -> extra.putBoolean(ROT_KEY, i != 0),
+					extra -> (extra.getBoolean(ROT_KEY) ? 1 : 0));
 
 	public static final BogeyEntry
 	STANDARD_1 = new BogeyEntry(
@@ -570,6 +579,7 @@ public class BlocksBogiesBogeys {
 					SCOTCH_YOKE));
 
 	public static void register() {
+		wheelCenterHeights(CREATE_BB);
 		BogeyMenuManager.addBogeyCategory(CREATE_BB);
 
 		// 1 S
@@ -684,6 +694,47 @@ public class BlocksBogiesBogeys {
 		wheelSpacing(PISTONLESS_L_6, 140);
 		wheelSpacing(RODLESS_L_6, 140);
 		wheelSpacing(SCOTCH_YOKE_L_6, 140);
+
+		axleCount(1,
+				STANDARD_1, STANDARD_1_OFFSET, TRAILING_1, WALSCHAERTS_LONG_L_1, GEARLESS_LONG_L_1, PISTONLESS_L_1,
+				SCOTCH_YOKE_L_1, WALSCHAERTS_LONG_XL_1, GEARLESS_LONG_XL_1, PISTONLESS_XL_1, SCOTCH_YOKE_XL_1);
+		axleCount(2,
+				TRAILING_2, WALSCHAERTS_LONG_L_2, WALSCHAERTS_EXTENDED_L_2, WALSCHAERTS_SHORT_L_2,
+				GEARLESS_LONG_L_2, GEARLESS_SHORT_L_2, PISTONLESS_L_2, RODLESS_L_2, SCOTCH_YOKE_L_2,
+				WALSCHAERTS_LONG_XL_2, WALSCHAERTS_EXTENDED_XL_2, WALSCHAERTS_SHORT_XL_2, GEARLESS_LONG_XL_2,
+				GEARLESS_SHORT_XL_2, PISTONLESS_XL_2, RODLESS_XL_2, SCOTCH_YOKE_XL_2);
+		axleCount(3,
+				STANDARD_3, TRAILING_3, WALSCHAERTS_LONG_L_3, WALSCHAERTS_SHORT_L_3, GEARLESS_LONG_L_3,
+				GEARLESS_SHORT_L_3, PISTONLESS_L_3, RODLESS_L_3, SCOTCH_YOKE_L_3, WALSCHAERTS_LONG_L_3_SPACED,
+				WALSCHAERTS_SHORT_L_3_SPACED, GEARLESS_LONG_L_3_SPACED, GEARLESS_SHORT_L_3_SPACED,
+				PISTONLESS_L_3_SPACED, RODLESS_L_3_SPACED, WALSCHAERTS_LONG_XL_3, WALSCHAERTS_SHORT_XL_3,
+				GEARLESS_LONG_XL_3, GEARLESS_SHORT_XL_3, PISTONLESS_XL_3, RODLESS_XL_3, SCOTCH_YOKE_XL_3,
+				WALSCHAERTS_LONG_XL_3_SPACED, WALSCHAERTS_SHORT_XL_3_SPACED, GEARLESS_LONG_XL_3_SPACED,
+				GEARLESS_SHORT_XL_3_SPACED, PISTONLESS_XL_3_SPACED, RODLESS_XL_3_SPACED);
+		axleCount(4,
+				STANDARD_4, TRAILING_4, WALSCHAERTS_LONG_L_4, WALSCHAERTS_SHORT_L_4, GEARLESS_LONG_L_4,
+				GEARLESS_SHORT_L_4, PISTONLESS_L_4, RODLESS_L_4, SCOTCH_YOKE_L_4, WALSCHAERTS_LONG_XL_4,
+				WALSCHAERTS_SHORT_XL_4, GEARLESS_LONG_XL_4, GEARLESS_SHORT_XL_4, PISTONLESS_XL_4, RODLESS_XL_4,
+				SCOTCH_YOKE_XL_4);
+		axleCount(5,
+				STANDARD_5, WALSCHAERTS_LONG_L_5, WALSCHAERTS_SHORT_L_5, GEARLESS_LONG_L_5, GEARLESS_SHORT_L_5,
+				PISTONLESS_L_5, RODLESS_L_5, SCOTCH_YOKE_L_5, WALSCHAERTS_LONG_XL_5, WALSCHAERTS_SHORT_XL_5,
+				GEARLESS_LONG_XL_5, GEARLESS_SHORT_XL_5, PISTONLESS_XL_5, RODLESS_XL_5, SCOTCH_YOKE_XL_5);
+		axleCount(6,
+				WALSCHAERTS_LONG_L_6, WALSCHAERTS_SHORT_L_6, GEARLESS_LONG_L_6, GEARLESS_SHORT_L_6, PISTONLESS_L_6,
+				RODLESS_L_6, SCOTCH_YOKE_L_6);
+
+
+		axlePositions(new double[] {-1, 0, 1}, STANDARD_3, TRAILING_3);
+		axlePositions(rot(-1), STANDARD_1_OFFSET);
+
+		// data from the models
+		axlePositions(rot(-1.6875, 0, 2.375),
+				WALSCHAERTS_LONG_L_3_SPACED, WALSCHAERTS_SHORT_L_3_SPACED, GEARLESS_LONG_L_3_SPACED,
+				GEARLESS_SHORT_L_3_SPACED, PISTONLESS_L_3_SPACED, RODLESS_L_3_SPACED);
+		axlePositions(rot(-2.25, 0, 3.4375),
+				WALSCHAERTS_LONG_XL_3_SPACED, WALSCHAERTS_SHORT_XL_3_SPACED, GEARLESS_LONG_XL_3_SPACED,
+				GEARLESS_SHORT_XL_3_SPACED, PISTONLESS_XL_3_SPACED, RODLESS_XL_3_SPACED);
 	}
 
 	public static BogeyType small(BogeyStyle style) {
@@ -694,7 +745,58 @@ public class BlocksBogiesBogeys {
 		return new BogeyType(style, BogeySizes.LARGE);
 	}
 
+	public static void axlePositions(double[] axlePositions, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxlePositionsOverride(entry.type(), axlePositions);
+		}
+	}
+
+	public static void axlePositions(BogeyAxlePositions axlePositions, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxlePositionsOverride(entry.type(), axlePositions);
+		}
+	}
+
+	public static BogeyAxlePositions rot(double... axlePositions) {
+		double[] turned = new double[axlePositions.length];
+		for(int i = 0; i < axlePositions.length; i++) {
+			turned[i] = -axlePositions[axlePositions.length - 1 - i];
+		}
+		return extra -> extra.getBoolean(ROT_KEY) ? turned : axlePositions;
+	}
+
+	public static void axleCount(int axleCount, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxleCountOverride(entry.type(), axleCount);
+		}
+	}
+
+	public static void wheelCenterHeights(BogeyCategory<?> category) {
+		for(BogeyMenuItem child : category.children()) {
+			if(child instanceof BogeyCategory<?> childCategory) {
+				wheelCenterHeights(childCategory);
+			}
+			else if(child instanceof BogeyEntry entry) {
+				AbstractBogeyBlock<?> block = entry.type().block();
+				if(block instanceof ExtraLargeBogieBlock) {
+					wheelCenterHeight(entry, 20 / 16D);
+				}
+				else if(block instanceof LargeBogieBlock) {
+					wheelCenterHeight(entry, 16 / 16D);
+				}
+				else if(block instanceof SmallBogieBlock) {
+					wheelCenterHeight(entry, 12 / 16D);
+				}
+			}
+		}
+	}
+
+	public static void wheelCenterHeight(BogeyEntry entry, double wheelCenterHeight) {
+		BogeyPropertyOverrides.setWheelCenterHeightOverride(entry.type(), wheelCenterHeight);
+	}
+
 	public static void wheelSpacing(BogeyEntry entry, double wheelSpacing) {
 		BogeyPropertyOverrides.setWheelSpacingOverride(entry.type(), Math.max(Math.round(wheelSpacing / 16), 1));
+		BogeyPropertyOverrides.setAxleSpacingOverride(entry.type(), wheelSpacing / 16);
 	}
 }

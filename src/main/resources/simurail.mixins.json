@@ -19,6 +19,9 @@
 
 		"SubLevelEntityCollisionMixin",
 
+		"PhysicsStaffDragSessionAccessor",
+		"PhysicsStaffServerHandlerAccessor",
+
 		"compat.electroenergetics.AutomaticCouplerBlockMixin",
 		"compat.electroenergetics.PhysicsBogeyBlockMixin",
 		"compat.railways.TrackBufferBlockMixin"

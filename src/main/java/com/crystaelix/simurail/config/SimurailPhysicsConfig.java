@@ -34,6 +34,15 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigFloat axleTrackCheckTime = f(0.1F, 0, 5, "trackCheckTime", Units.time, Comments.axleTrackCheckTime);
 	public final ConfigFloat axleTrackRecheckTime = f(3, 0, 60, "trackRecheckTime", Units.time, Comments.axleTrackRecheckTime);
 
+	public final ConfigGroup axleSlip = group(2, "slip", "Wheel Slip");
+	public final ConfigBool axleWheelSlip = b(true, "enabled", Comments.axleWheelSlip);
+	public final ConfigFloat axleAdhesionFactor = f(6, 0, Float.MAX_VALUE, "adhesionFactor", Units.acceleration, Comments.axleAdhesionFactor);
+	public final ConfigFloat axleSlipAcceleration = f(15, 0, Float.MAX_VALUE, "acceleration", Units.acceleration, Comments.axleSlipAcceleration);
+	public final ConfigFloat axleSlipDecay = f(20, 0, Float.MAX_VALUE, "decay", Units.acceleration, Comments.axleSlipDecay);
+	public final ConfigFloat axleSlipBindTime = f(0.75F, 0, Float.MAX_VALUE, "bindTime", Units.time, Comments.axleSlipBindTime);
+	public final ConfigFloat axleSlipBurstFactor = f(0.5F, 0, Float.MAX_VALUE, "burstFactor", Comments.axleSlipBurstFactor);
+	public final ConfigFloat axleSlipMaxSpeed = f(4, 0, Float.MAX_VALUE, "maxSpeed", Units.velocity, Comments.axleSlipMaxSpeed);
+
 	public final ConfigGroup coupler = group(1, "coupler", "Train Couplers");
 	public final ConfigFloat couplerPassiveLinearDamping = f(10, 0, Float.MAX_VALUE, "passiveLinearDamping", Units.damping, Comments.couplerPassiveLinearDamping);
 	public final ConfigFloat couplerPassiveAngularDamping = f(1, 0, Float.MAX_VALUE, "passiveAngularDamping", Units.angularDamping, Comments.couplerPassiveAngularDamping);
@@ -69,6 +78,13 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 		static String axleDerailFrictionFactor = "Factor of effective friction between an axle of the Physics Bogie and the ground when derailed.";
 		static String axleTrackCheckTime = "Inverval to find nearest track when derailed for an axle of the Physics Bogie.";
 		static String axleTrackRecheckTime = "Inverval to re-find nearest track for an axle of the Physics Bogie.";
+		static String axleWheelSlip = "Allow the wheels to lose their grip on the track. Very slightly affects physics while accelerating at low speeds.";
+		static String axleAdhesionFactor = "Maximum traction coefficient a Physics Bogie axle can transmit to its track, per unit of mass resting on that axle. Any drive force beyond this spins the wheels instead of moving the bogie.";
+		static String axleSlipAcceleration = "How quickly the wheels of the Physics Bogie spin up once they lose traction.";
+		static String axleSlipDecay = "How quickly the track drags slipping wheels of the Physics Bogie back to its own speed.";
+		static String axleSlipBindTime = "How long a drive of the Physics Bogie stays bound against wheels it cannot break loose, at the largest overload it can build up under, before all of it lets go at once. Set to 0 for wheels that break loose the moment they lose traction.";
+		static String axleSlipBurstFactor = "Temporary wheel rotation speed excess just after the wheel loses grip. Set to 0 for wheels that never overrun their drive speed.";
+		static String axleSlipMaxSpeed = "Speed above which the wheels of the Physics Bogie always keep their grip. Prevents the realistic behavior of a permanent slip for non progressive wheel acceleration.";
 
 		static String couplerPassiveLinearDamping = "Passive linear damping between a Train Coupler and its partner.";
 		static String couplerPassiveAngularDamping = "Passive angular damping between a Train Coupler and its partner.";

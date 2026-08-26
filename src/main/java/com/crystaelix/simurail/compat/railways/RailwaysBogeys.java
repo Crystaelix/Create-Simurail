@@ -269,6 +269,22 @@ public class RailwaysBogeys {
 
 		wheelSpacing(SCOTCH_YOKE_6, 140);
 
+		axleCount(1, $1);
+		axleCount(2, $2);
+		axleCount(3, $3);
+		axleCount(4, $4);
+		axleCount(5, $5);
+		axleCount(6, $6);
+
+		axleCount(0, INVISIBLE, INVISIBLE_ALT);
+		axleCount(1, NARROW_SCOTCH_YOKE_1, WIDE_SCOTCH_YOKE_L, WIDE_SCOTCH_YOKE_XXL);
+		axleCount(2, MONOBOGEY, NARROW_STANDARD_SMALL, NARROW_SCOTCH_YOKE_2, WIDE_STANDARD_SMALL);
+
+		// its wheel model reaches 1.375 across a 1.055 gauge
+		wheelWidth(NARROW_STANDARD_SMALL, 5 / 16D);
+		wheelWidth(NARROW_SCOTCH_YOKE_1, 5 / 16D);
+		wheelWidth(NARROW_SCOTCH_YOKE_2, 5 / 16D);
+
 		groundDrivable(INVISIBLE, false);
 		groundDrivable(INVISIBLE_ALT, false);
 	}
@@ -283,6 +299,21 @@ public class RailwaysBogeys {
 
 	public static void wheelSpacing(BogeyEntry entry, double wheelSpacing) {
 		BogeyPropertyOverrides.setWheelSpacingOverride(entry.type(), Math.max(Math.round(wheelSpacing / 16), 1));
+		BogeyPropertyOverrides.setAxleSpacingOverride(entry.type(), wheelSpacing / 16);
+	}
+
+	public static void axleCount(int axleCount, BogeyEntryCategory category) {
+		axleCount(axleCount, category.children().toArray(BogeyEntry[]::new));
+	}
+
+	public static void axleCount(int axleCount, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxleCountOverride(entry.type(), axleCount);
+		}
+	}
+
+	public static void wheelWidth(BogeyEntry entry, double wheelWidth) {
+		BogeyPropertyOverrides.setWheelWidthOverride(entry.type(), wheelWidth);
 	}
 
 	public static void groundDrivable(BogeyEntry entry, boolean groundDrivable) {

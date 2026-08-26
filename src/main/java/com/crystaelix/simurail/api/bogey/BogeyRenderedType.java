@@ -55,12 +55,45 @@ public final class BogeyRenderedType {
 		return type.block();
 	}
 
-	public double axleSpacing() {
+	public double wheelSpacing() {
 		return type.wheelSpacing();
+	}
+
+	public double axleSpacing() {
+		return type.axleSpacing();
 	}
 
 	public double wheelRadius() {
 		return type.wheelRadius();
+	}
+
+	public int axleCount() {
+		return type.axleCount();
+	}
+
+	/** @see BogeyType#axlePositions(CompoundTag) */
+	public double[] axlePositions() {
+		return type.axlePositions(extra);
+	}
+
+	public double wheelGauge() {
+		return type.wheelGauge();
+	}
+
+	public double wheelWidth() {
+		return type.wheelWidth();
+	}
+
+	public double railHeight() {
+		return type.railHeight();
+	}
+
+	public double wheelCenterHeight() {
+		return type.wheelCenterHeight();
+	}
+
+	public double wheelOuterRadius() {
+		return type.wheelOuterRadius();
 	}
 
 	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {

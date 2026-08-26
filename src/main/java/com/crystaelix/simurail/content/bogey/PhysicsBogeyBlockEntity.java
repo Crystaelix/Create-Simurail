@@ -23,6 +23,7 @@ import com.crystaelix.simurail.api.math.MovingQuaternionfLerp;
 import com.crystaelix.simurail.api.math.MovingVector3fLerp;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.physics.AttachableBoxPhysicsObject;
+import com.crystaelix.simurail.api.physics.SimurailPhysicsStaff;
 import com.crystaelix.simurail.api.physics.SimurailJoints;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.compat.SimurailCompat;
@@ -126,6 +127,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected final PhysicsBogeyAxle axleBack;
 	public double visualSpeed = 0;
 	protected double lastVisualSpeed = 0;
+	public double slipSpeed = 0;
+	protected double lastSlipSpeed = 0;
+	protected boolean staffRestrained = false;
 	protected final LerpedFloat lerpedCurvature = LerpedFloat.linear();
 
 	// Navigator components
@@ -148,6 +152,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected float movementSpeed;
 	protected float lastMovementSpeed;
 	protected PhysicsBogeySounds sounds;
+	protected PhysicsBogeyEffects effects;
 
 	public static final Set<PhysicsBogeyBlockEntity> LOADED_BOGEYS = Collections.newSetFromMap(new WeakHashMap<>());
 
@@ -583,7 +588,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			if(!computerBehaviour.hasAttachedComputer() && computerOverrides.hasOverrides()) {
 				computerOverrides.reset();
 			}
-			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel) {
+			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
+				staffRestrained = SimurailPhysicsStaff.isRestrained(subLevel);
+
 				axleFront.updateVisualSpeed();
 				axleBack.updateVisualSpeed();
 
@@ -606,18 +613,24 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				localPivotOffset.zero();
 				localPivotRot.set(getJointOrientation());
 				resetPivotPose();
+				staffRestrained = false;
+				axleFront.resetSlip();
+				axleBack.resetSlip();
 			}
 			visualSpeed = Math.abs(axleFront.visualSpeed) > Math.abs(axleBack.visualSpeed) ? axleFront.visualSpeed : axleBack.visualSpeed;
+			slipSpeed = Math.abs(axleFront.slipSpeed) > Math.abs(axleBack.slipSpeed) ? axleFront.slipSpeed : axleBack.slipSpeed;
 			movementSpeed = (float)getMovementSpeed();
 			if(!lastLocalPivotOffset.equals(localPivotOffset, 1E-4) ||
 					!lastLocalPivotRot.equals(localPivotRot, 1E-4) ||
 					lastVisualSpeed != visualSpeed ||
+					lastSlipSpeed != slipSpeed ||
 					!Mth.equal(lastMovementSpeed, movementSpeed)) {
 				VeilPacketManager.tracking(this).sendPacket(new PhysicsBogeyRenderDataPacket(this));
 			}
 			lastLocalPivotOffset.set(localPivotOffset);
 			lastLocalPivotRot.set(localPivotRot);
 			lastVisualSpeed = visualSpeed;
+			lastSlipSpeed = slipSpeed;
 			lastMovementSpeed = movementSpeed;
 		}
 		else {
@@ -629,6 +642,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 					sounds = new PhysicsBogeySounds(this);
 				}
 				sounds.tick();
+				if(effects == null) {
+					effects = new PhysicsBogeyEffects(this);
+				}
+				effects.tick();
 			}
 		}
 	}
@@ -962,10 +979,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return super.createRenderBoundingBox().inflate(16);
 	}
 
-	protected void updateRenderData(Vector3dc pivotOffset, Quaterniondc pivotRot, float visualSpeed, float movementSpeed) {
+	protected void updateRenderData(Vector3dc pivotOffset, Quaterniondc pivotRot, float visualSpeed, float slipSpeed, float movementSpeed) {
 		this.localPivotOffset.set(pivotOffset);
 		this.localPivotRot.set(pivotRot);
 		this.visualSpeed = visualSpeed;
+		this.slipSpeed = slipSpeed;
 		this.movementSpeed = movementSpeed;
 	}
 

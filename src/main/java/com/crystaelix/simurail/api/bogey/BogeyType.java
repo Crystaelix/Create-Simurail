@@ -7,6 +7,8 @@ import java.util.Set;
 import org.joml.Vector3f;
 
 import com.crystaelix.simurail.api.network.SimurailStreamCodecs;
+import com.crystaelix.simurail.api.track.TrackTypeEntries;
+import com.crystaelix.simurail.api.track.TrackTypeEntry;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
@@ -23,6 +25,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
 
 public final class BogeyType {
 
@@ -67,6 +71,80 @@ public final class BogeyType {
 			return BogeyPropertyOverrides.WHEEL_RADIUS_OVERRIDE.getDouble(this);
 		}
 		return block.getWheelRadius();
+	}
+
+	/**
+	 * Defaults to {@link #wheelSpacing()}, but permits overrides specifically for the axle.
+	 */
+	public double axleSpacing() {
+		if(BogeyPropertyOverrides.AXLE_SPACING_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.AXLE_SPACING_OVERRIDE.getDouble(this);
+		}
+		return wheelSpacing();
+	}
+
+	public int axleCount() {
+		if(BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.getInt(this);
+		}
+		return 2;
+	}
+
+	/**
+	 * Position of where each wheelset is drawn along it, or null for a style
+	 * that spreads them evenly over its {@link #axleSpacing()}.
+	 */
+	@Nullable
+	public double[] axlePositions(CompoundTag extra) {
+		BogeyAxlePositions axlePositions = BogeyPropertyOverrides.AXLE_POSITIONS_OVERRIDE.get(this);
+		return axlePositions != null ? axlePositions.get(extra) : null;
+	}
+
+	public TrackTypeEntry trackTypeEntry() {
+		TrackTypeEntry entry = null;
+		for(TrackType trackType : trackTypes()) {
+			TrackTypeEntry candidate = TrackTypeEntries.getEntry(trackType);
+			if(entry == null || candidate.gauge() > entry.gauge()) {
+				entry = candidate;
+			}
+		}
+		return entry != null ? entry : TrackTypeEntries.getEntry(TrackType.STANDARD);
+	}
+
+	public double wheelGauge() {
+		if(BogeyPropertyOverrides.WHEEL_GAUGE_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.WHEEL_GAUGE_OVERRIDE.getDouble(this);
+		}
+		return trackTypeEntry().gauge();
+	}
+
+	public double wheelWidth() {
+		if(BogeyPropertyOverrides.WHEEL_WIDTH_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.WHEEL_WIDTH_OVERRIDE.getDouble(this);
+		}
+		// defaults create's standard bogey's wheel
+		return 7 / 16D;
+	}
+
+	public double railHeight() {
+		return trackTypeEntry().railHeight();
+	}
+
+	/**
+	 * Distance from the tread of a wheel, the band of it that rides the rail head, reaches from its axis.
+	 */
+	public double wheelOuterRadius() {
+		if(BogeyPropertyOverrides.WHEEL_OUTER_RADIUS_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.WHEEL_OUTER_RADIUS_OVERRIDE.getDouble(this);
+		}
+		return wheelRadius();
+	}
+
+	public double wheelCenterHeight() {
+		if(BogeyPropertyOverrides.WHEEL_CENTER_HEIGHT_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.WHEEL_CENTER_HEIGHT_OVERRIDE.getDouble(this);
+		}
+		return railHeight() + wheelRadius();
 	}
 
 	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {

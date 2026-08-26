@@ -13,6 +13,8 @@ public record TrackTypeEntry(
 		Component displayName,
 		Component shortName,
 		boolean allowInverted,
+		double gauge,
+		double railHeight,
 		DoubleSupplier lateralMaxSpeedFactor,
 		DoubleSupplier verticalMaxSpeedFactor,
 		Supplier<BlockState> trackState) {

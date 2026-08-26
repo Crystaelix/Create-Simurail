@@ -88,6 +88,11 @@ public class PhysicsBogeyAxle {
 	public static final double ANGULAR_Y_LIMIT = Math.PI / 3;
 	public static final double ANGULAR_Z_LIMIT = Math.PI / 3;
 
+	public static final double MAX_SLIP_OVERLOAD = 2;
+	public static final double SLIP_GRIP_SPEED = 0.25;
+	public static final double SLIP_RELEASE_TIME = 0.1;
+	public static final double SLIP_FADE_BAND = 0.5;
+
 	protected final PhysicsBogeyBlockEntity bogey;
 	protected final boolean logicalFront;
 	protected final Frame3d axleFrame = new Frame3d();
@@ -122,6 +127,11 @@ public class PhysicsBogeyAxle {
 	protected double targetSpeed;
 	protected double visualSpeedLerpFactor;
 	protected double visualSpeed;
+
+	protected double slipSpeed;
+	protected double slipBind;
+	protected double slipBurst;
+
 	protected double trackRecheckTime = 0.5;
 
 	protected AttachableBoxPhysicsObject axleBox;
@@ -139,7 +149,7 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void init(ServerSubLevel subLevel) {
-		double latOffset = bogey.options.type.axleSpacing() / 2;
+		double latOffset = bogey.options.type.wheelSpacing() / 2;
 		vertOffset = bogey.options.getAxleOffset();
 		targetOffset.x = logicalFront ? latOffset : -latOffset;
 		targetOffset.y = bogey.isInverted() ? 0.5 + vertOffset : -1.5 - vertOffset;
@@ -158,7 +168,7 @@ public class PhysicsBogeyAxle {
 
 	protected void resetOffset() {
 		lastOffset.set(axleFrame.position);
-		double latOffset = bogey.options.type.axleSpacing() / 2;
+		double latOffset = bogey.options.type.wheelSpacing() / 2;
 		vertOffset = bogey.options.getAxleOffset();
 		targetOffset.x = logicalFront ? latOffset : -latOffset;
 		targetOffset.y = bogey.isInverted() ? 0.5 + vertOffset : -1.5 - vertOffset;
@@ -167,7 +177,16 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void updateVisualSpeed() {
-		visualSpeed = visualSpeed * 0.95 * (1 - bogey.getGroupBrakeStrength());
+		double decay = 0.95 * (1 - bogey.getGroupBrakeStrength());
+		visualSpeed = visualSpeed * decay;
+		slipSpeed = slipSpeed * decay;
+		slipBurst = slipBurst * decay;
+	}
+
+	protected void resetSlip() {
+		slipSpeed = 0;
+		slipBind = 0;
+		slipBurst = 0;
 	}
 
 	protected void updateSignalGroup() {
@@ -185,7 +204,7 @@ public class PhysicsBogeyAxle {
 	protected void updateInnerProbe() {
 		if(trackGraph != null && trackPoint.edge != null) {
 			resetProbe(trackPoint);
-			double travelDist = bogey.options.type.axleSpacing();
+			double travelDist = bogey.options.type.wheelSpacing();
 			if(logicalFront) travelDist *= -1;
 			probe.travel(trackGraph,
 					travelDist,
@@ -207,7 +226,7 @@ public class PhysicsBogeyAxle {
 			double travelDist = bogey.options.getProbeDistance();
 			if(travelDist > 0 && trackGraph != null && trackPoint.edge != null) {
 				resetProbe(trackPoint);
-				//double resetDist = bogey.options.type.axleSpacing() * 0.5 - 0.0625;
+				//double resetDist = bogey.options.type.wheelSpacing() * 0.5 - 0.0625;
 				//if(logicalFront) resetDist *= -1;
 				//probe.travel(trackGraph, resetDist, followOtherOrSteer(probe), probe.ignoreEdgePoints(), probe.ignoreTurns(), $ -> true);
 				if(!logicalFront) travelDist *= -1;
@@ -637,6 +656,7 @@ public class PhysicsBogeyAxle {
 	protected void updateForces(ServerSubLevel subLevel, double timeStep) {
 		if(!bogey.options.enabled) {
 			removeJoint();
+			resetSlip();
 			return;
 		}
 		if(trackSegment != null) {
@@ -644,6 +664,7 @@ public class PhysicsBogeyAxle {
 			updateTrackForces(subLevel, timeStep);
 		}
 		else {
+			resetSlip();
 			updateWorldForces(subLevel, timeStep);
 		}
 	}
@@ -678,6 +699,25 @@ public class PhysicsBogeyAxle {
 				driveForce = diffSign * driveMag * (1 - brakeStrength) * Math.clamp(friction, 0.05, 1);
 			}
 
+			if(!config.axleWheelSlip.get() || bogey.staffRestrained) {
+				resetSlip();
+			}
+			else {
+				double adhesionFactor = config.axleAdhesionFactor.get();
+				double slipAuthority = getSlipAuthority(config);
+				double overload = 0;
+				if(adhesionFactor > 0 && slipAuthority > 0) {
+					double maxTraction = adhesionFactor * normalMass * Math.clamp(friction, 0.05, 1);
+					if(maxTraction > SimurailMath.EPSILON && Math.abs(driveForce) > maxTraction) {
+						overload = (Math.abs(driveForce) / maxTraction - 1) * slipAuthority;
+						// wheels only give up as much of the drive as they have authority to at this speed,
+						// so a train already rolling keeps every bit of what it is putting down
+						driveForce = Mth.lerp(slipAuthority, driveForce, Math.copySign(maxTraction, driveForce));
+					}
+				}
+				updateSlipSpeed(config, overload, targetSign, friction, timeStep);
+			}
+
 			double speedSign = Math.signum(speed);
 			double speedSignMag = Math.clamp(Math.abs(speed), 0, 1);
 			double signFactor = (speedSignMag * speedSignMag * speedSignMag * 0.25 + speedSignMag * 0.75) * speedSign;
@@ -687,10 +727,10 @@ public class PhysicsBogeyAxle {
 			bogeyForceFrame.direction.mul(-brakeForce * timeStep, queuedBrakeForce);
 
 			if(friction < 1) {
-				visualSpeed = Mth.lerp(friction * 0.9 + 0.1, targetSpeed, speed);
+				visualSpeed = Mth.lerp(friction * 0.9 + 0.1, targetSpeed, speed) + slipSpeed;
 			}
 			else {
-				visualSpeed = speed;
+				visualSpeed = speed + slipSpeed;
 			}
 		}
 
@@ -706,6 +746,49 @@ public class PhysicsBogeyAxle {
 			queuedReactionForce.negate();
 			RigidBodyHandle.of(trackSubLevel).applyImpulseAtPoint(trackFrame.position, queuedReactionForce);
 		}
+	}
+
+	protected double getSlipAuthority(SimurailPhysicsConfig config) {
+		double maxSpeed = config.axleSlipMaxSpeed.get();
+		if(maxSpeed <= SimurailMath.EPSILON) {
+			return 0;
+		}
+		double fadeFrom = maxSpeed * (1 - SLIP_FADE_BAND);
+		return 1 - Math.clamp((Math.abs(speed) - fadeFrom) / (maxSpeed - fadeFrom), 0, 1);
+	}
+
+	protected void updateSlipSpeed(SimurailPhysicsConfig config, double overload, double driveSign, double friction, double timeStep) {
+		double decay = config.axleSlipDecay.get() * Math.clamp(friction, 0.05, 1) * timeStep;
+		double maxSlipSpeed = Math.abs(targetSpeed - speed);
+		double load = Math.min(overload, MAX_SLIP_OVERLOAD);
+
+		if(overload > 0 && slipBurst <= 0 && Math.abs(slipSpeed) < SLIP_GRIP_SPEED) {
+			slipBind += load * timeStep;
+			if(slipBind < config.axleSlipBindTime.get()) {
+				// Bound: the wheels are held to the rail, so nothing is slipping and nothing sparks yet
+				slipSpeed -= Math.copySign(Math.min(Math.abs(slipSpeed), decay), slipSpeed);
+				return;
+			}
+			// Breaking loose: the wind up starts going into the wheels, past their driven speed
+			slipBurst = maxSlipSpeed * config.axleSlipBurstFactor.get();
+			slipBind = 0;
+		}
+
+		double slipLimit = maxSlipSpeed + slipBurst;
+
+		if(slipBurst > 0 && Math.abs(slipSpeed) < slipLimit) {
+			// Still unloading
+			slipSpeed += driveSign * slipLimit * (timeStep / SLIP_RELEASE_TIME);
+		}
+		else if(overload > 0) {
+			slipSpeed += driveSign * load * config.axleSlipAcceleration.get() * timeStep;
+		}
+		else {
+			slipBind -= Math.min(slipBind, timeStep);
+		}
+		slipBurst -= Math.min(slipBurst, decay);
+		slipSpeed -= Math.copySign(Math.min(Math.abs(slipSpeed), decay), slipSpeed);
+		slipSpeed = Math.clamp(slipSpeed, -slipLimit, slipLimit);
 	}
 
 	protected double getTrackFriction(TrackSegment trackSegment) {

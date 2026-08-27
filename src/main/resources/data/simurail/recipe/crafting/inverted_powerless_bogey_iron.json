@@ -1,0 +1,24 @@
+{
+	"neoforge:conditions": [{
+		"type": "neoforge:tag_empty",
+		"tag": "c:ingots/steel"
+	}],
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:inverted_powerless_bogey"
+	},
+	"pattern": [
+		"IAI",
+		"RPR",
+		"SCS"
+	],
+	"key": {
+		"C": {"item": "create:andesite_casing"},
+		"P": {"item": "create:andesite_alloy"},
+		"A": {"item": "create:shaft"},
+		"S": {"item": "create:iron_sheet"},
+		"R": {"item": "create:cogwheel"},
+		"I": {"tag": "c:ingots/iron"}
+	}
+}

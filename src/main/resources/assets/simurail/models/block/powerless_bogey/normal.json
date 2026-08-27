@@ -4,7 +4,7 @@
 	"textures": {
 		"particle": "simurail:block/physics_bogey/top",
 		"top": "simurail:block/physics_bogey/top",
-		"side": "simurail:block/physics_bogey/side",
+		"side": "simurail:block/physics_bogey/sidep",
 		"bottom": "simurail:block/physics_bogey/bottom"
 	},
 	"elements": [

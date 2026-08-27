@@ -2,9 +2,9 @@
 	"type": "minecraft:crafting_shapeless",
 	"result": {
 		"count": 1,
-		"id": "simurail:powerless_bogey"
+		"id": "simurail:inverted_powerless_bogey"
 	},
 	"ingredients": [
-		{"item": "simurail:inverted_powerless_bogey"}
+		{"item": "simurail:powerless_bogey"}
 	]
 }

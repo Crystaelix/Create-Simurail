@@ -7,6 +7,7 @@
 	"block.simurail.remote_controller": "Bogie Remote Controller",
 
 	"item.simurail.inverted_physics_bogey": "Inverted Physics Bogie",
+	"item.simurail.inverted_powerless_bogey": "Inverted Powerless Bogie",
 	"item.simurail.connector": "Bogie Connector",
 
 	"block.simurail.gangway_frame.d": "Down",

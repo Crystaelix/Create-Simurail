@@ -1,0 +1,33 @@
+{
+	"neoforge:conditions": [{
+		"type": "neoforge:not",
+		"value": {
+			"type": "neoforge:tag_empty",
+			"tag": "c:ingots/steel"
+		}
+	}],
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_ingredient": {
+			"conditions": {
+				"items": [{
+					"items": "create:iron_sheet"
+				}]
+			},
+			"trigger": "minecraft:inventory_changed"
+		},
+		"has_recipe": {
+			"conditions": {
+				"recipe": "simurail:crafting/inverted_powerless_bogey_steel"
+			},
+			"trigger": "minecraft:recipe_unlocked"
+		}
+	},
+	"requirements": [[
+		"has_ingredient",
+		"has_recipe"
+	]],
+	"rewards": {
+		"recipes": ["simurail:crafting/inverted_powerless_bogey_steel"]
+	}
+}

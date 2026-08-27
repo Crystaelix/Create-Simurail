@@ -1,5 +1,6 @@
 {
 	"block.simurail.physics_bogey": "Physics Bogie",
+	"block.simurail.powerless_bogey": "Powerless Bogie",
 	"block.simurail.automatic_coupler": "Automatic Coupler",
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",

@@ -5,6 +5,8 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
+import com.crystaelix.simurail.content.bogey.PowerlessBogeyBlock;
+import com.crystaelix.simurail.content.bogey.PowerlessBogeyBlockItem;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
@@ -26,6 +28,13 @@ public class SimurailBlocks {
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_CYAN).sound(SoundType.NETHERITE_BLOCK)).
 			item(PhysicsBogeyBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<PowerlessBogeyBlock> POWERLESS_BOGEY = REGISTRATE.
+			block("powerless_bogey", PowerlessBogeyBlock::new).
+			initialProperties(SharedProperties::softMetal).
+			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_CYAN).sound(SoundType.NETHERITE_BLOCK)).
+			item(PowerlessBogeyBlockItem::new).
 			build().
 			register();
 	public static final BlockEntry<AutomaticCouplerBlock> AUTOMATIC_COUPLER = REGISTRATE.

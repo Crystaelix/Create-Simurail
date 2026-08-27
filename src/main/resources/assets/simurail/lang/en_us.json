@@ -382,5 +382,11 @@
 	"simurail.ponder.probe_reader.intro.text_5": "The Signal modes check for various states of Track Signals",
 	"simurail.ponder.probe_reader.intro.text_6": "Signals can be named for the name filter using signs",
 	"simurail.ponder.probe_reader.intro.text_7": "The Station modes check for various states of Track Stations",
-	"simurail.ponder.probe_reader.intro.text_8": "The Track Discontinuity mode checks for the end of the track"
+	"simurail.ponder.probe_reader.intro.text_8": "The Track Discontinuity mode checks for the end of the track",
+
+	"simurail.ponder.remote_controller.intro.header": "Controlling Bogie Behavior using Bogie Remote Controllers",
+	"simurail.ponder.remote_controller.intro.text_1": "To place a Bogie Remote Controller, select the a Physics Bogie, then place it nearby",
+	"simurail.ponder.remote_controller.intro.text_2": "The Bogie Remote Controller remotely sends redstone signals to a Physics Bogie, controlling and toggling its behavior",
+	"simurail.ponder.remote_controller.intro.text_3": "Right click to configure the control mode",
+	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie"
 }

@@ -71,6 +71,7 @@ public class ProbeReaderScenes {
 
 		overlay.showText(60).
 		pointAt(vector.centerOf(7, 3, 4)).
+		attachKeyFrame().
 		placeNearTarget().
 		text("4_options");
 		overlay.showControls(vector.centerOf(7, 3, 4), Pointing.DOWN, 60).

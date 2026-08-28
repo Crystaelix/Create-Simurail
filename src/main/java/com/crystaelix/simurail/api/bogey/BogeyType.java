@@ -4,9 +4,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import com.crystaelix.simurail.api.network.SimurailStreamCodecs;
+import com.crystaelix.simurail.api.track.TrackTypeEntries;
+import com.crystaelix.simurail.api.track.TrackTypeEntry;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
@@ -55,11 +58,33 @@ public final class BogeyType {
 		return block;
 	}
 
-	public double wheelSpacing() {
-		if(BogeyPropertyOverrides.WHEEL_SPACING_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.WHEEL_SPACING_OVERRIDE.getDouble(this);
+	public int logicalAxleSpacing() {
+		if(BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.getInt(this);
 		}
-		return block.getWheelPointSpacing();
+		return (int)Math.round(block.getWheelPointSpacing());
+	}
+
+	public double visualAxleSpacing() {
+		if(BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.getDouble(this);
+		}
+		return logicalAxleSpacing();
+	}
+
+	public int axleCount() {
+		if(BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.getInt(this);
+		}
+		return 2;
+	}
+
+	@Nullable
+	public double[] axlePositions(CompoundTag extra) {
+		if(BogeyPropertyOverrides.AXLE_POSITIONS_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.AXLE_POSITIONS_OVERRIDE.get(this).apply(extra);
+		}
+		return null;
 	}
 
 	public double wheelRadius() {
@@ -67,6 +92,31 @@ public final class BogeyType {
 			return BogeyPropertyOverrides.WHEEL_RADIUS_OVERRIDE.getDouble(this);
 		}
 		return block.getWheelRadius();
+	}
+
+	public TrackTypeEntry trackTypeEntry() {
+		TrackTypeEntry entry = null;
+		for(TrackType trackType : trackTypes()) {
+			TrackTypeEntry candidate = TrackTypeEntries.getEntry(trackType);
+			if(entry == null || candidate.width() > entry.width()) {
+				entry = candidate;
+			}
+		}
+		return entry != null ? entry : TrackTypeEntries.getEntry(TrackType.STANDARD);
+	}
+
+	public double trackWidth() {
+		if(BogeyPropertyOverrides.TRACK_WIDTH_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.TRACK_WIDTH_OVERRIDE.getDouble(this);
+		}
+		return trackTypeEntry().width();
+	}
+
+	public double trackHeight() {
+		if(BogeyPropertyOverrides.TRACK_HEIGHT_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.TRACK_HEIGHT_OVERRIDE.getDouble(this);
+		}
+		return trackTypeEntry().height();
 	}
 
 	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {

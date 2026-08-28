@@ -13,7 +13,10 @@ public record TrackTypeEntry(
 		Component displayName,
 		Component shortName,
 		boolean allowInverted,
+		double width,
+		double height,
 		DoubleSupplier lateralMaxSpeedFactor,
 		DoubleSupplier verticalMaxSpeedFactor,
+		DoubleSupplier adhesionFactor,
 		Supplier<BlockState> trackState) {
 }

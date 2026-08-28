@@ -2,6 +2,7 @@ package com.crystaelix.simurail;
 
 import com.crystaelix.simurail.content.SimurailInteractCallbacks;
 import com.crystaelix.simurail.content.SimurailPartialModels;
+import com.crystaelix.simurail.content.SimurailParticleProviders;
 import com.crystaelix.simurail.ponder.SimurailPonderPlugin;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
@@ -12,6 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = Simurail.MOD_ID, dist = Dist.CLIENT)
@@ -27,5 +29,10 @@ public class SimurailClient {
 	public void onClientSetup(FMLCommonSetupEvent event) {
 		SimurailPartialModels.register();
 		SimurailInteractCallbacks.register();
+	}
+
+	@SubscribeEvent
+	public void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
+		SimurailParticleProviders.register(event);
 	}
 }

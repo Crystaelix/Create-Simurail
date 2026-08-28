@@ -3,6 +3,7 @@ package com.crystaelix.simurail.api.bogey;
 import java.util.Objects;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
@@ -55,12 +56,33 @@ public final class BogeyRenderedType {
 		return type.block();
 	}
 
-	public double axleSpacing() {
-		return type.wheelSpacing();
+	public int logicalAxleSpacing() {
+		return type.logicalAxleSpacing();
+	}
+
+	public double visualAxleSpacing() {
+		return type.visualAxleSpacing();
+	}
+
+	public int axleCount() {
+		return type.axleCount();
+	}
+
+	@Nullable
+	public double[] axlePositions() {
+		return type.axlePositions(extra);
 	}
 
 	public double wheelRadius() {
 		return type.wheelRadius();
+	}
+
+	public double trackWidth() {
+		return type.trackWidth();
+	}
+
+	public double trackHeight() {
+		return type.trackHeight();
 	}
 
 	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {

@@ -226,48 +226,59 @@ public class RailwaysBogeys {
 		BogeyType.setDefault(CRTrackType.NARROW_GAUGE, false, NARROW_STANDARD_SMALL.type());
 		BogeyType.setDefault(CRTrackType.WIDE_GAUGE, false, WIDE_STANDARD_SMALL.type());
 
-		wheelSpacing(INVISIBLE, 0);
-		wheelSpacing(INVISIBLE_ALT, 0);
-		wheelSpacing(NARROW_STANDARD_SMALL, 20);
-		wheelSpacing(NARROW_SCOTCH_YOKE_1, 0);
-		wheelSpacing(NARROW_SCOTCH_YOKE_2, 24);
-		wheelSpacing(WIDE_STANDARD_SMALL, 48);
-		wheelSpacing(WIDE_SCOTCH_YOKE_L, 0);
-		wheelSpacing(WIDE_SCOTCH_YOKE_XXL, 0);
+		axleSpacing(INVISIBLE, 0);
+		axleSpacing(INVISIBLE_ALT, 0);
+		axleSpacing(NARROW_STANDARD_SMALL, 20);
+		axleSpacing(NARROW_SCOTCH_YOKE_1, 0);
+		axleSpacing(NARROW_SCOTCH_YOKE_2, 24);
+		axleSpacing(WIDE_STANDARD_SMALL, 48);
+		axleSpacing(WIDE_SCOTCH_YOKE_L, 0);
+		axleSpacing(WIDE_SCOTCH_YOKE_XXL, 0);
 
-		wheelSpacing(COILSPRING, 0);
-		wheelSpacing(LEAFSPRING, 0);
-		wheelSpacing(STANDARD_S_1, 0);
-		wheelSpacing(STANDARD_M_1, 0);
-		wheelSpacing(TRAILING_M_1, 0);
-		wheelSpacing(SCOTCH_YOKE_1, 0);
+		axleSpacing(COILSPRING, 0);
+		axleSpacing(LEAFSPRING, 0);
+		axleSpacing(STANDARD_S_1, 0);
+		axleSpacing(STANDARD_M_1, 0);
+		axleSpacing(TRAILING_M_1, 0);
+		axleSpacing(SCOTCH_YOKE_1, 0);
 
-		wheelSpacing(MODERN, 32);
-		wheelSpacing(BLOMBERG, 32);
-		wheelSpacing(Y25, 32);
-		wheelSpacing(FREIGHT, 32);
-		wheelSpacing(PASSENGER, 32);
-		wheelSpacing(ARCHBAR, 32);
-		wheelSpacing(STANDARD_M_2, 32);
-		wheelSpacing(TRAILING_M_2, 32);
-		wheelSpacing(SCOTCH_YOKE_2, 28);
-		
-		wheelSpacing(HEAVYWEIGHT, 48);
-		wheelSpacing(RADIAL, 48);
-		wheelSpacing(STANDARD_M_3, 48);
-		wheelSpacing(TRAILING_M_3, 48);
-		wheelSpacing(TENDER_M_3, 48);
-		wheelSpacing(SCOTCH_YOKE_3, 54);
+		axleSpacing(MODERN, 32);
+		axleSpacing(BLOMBERG, 32);
+		axleSpacing(Y25, 32);
+		axleSpacing(FREIGHT, 32);
+		axleSpacing(PASSENGER, 32);
+		axleSpacing(ARCHBAR, 32);
+		axleSpacing(STANDARD_M_2, 32);
+		axleSpacing(TRAILING_M_2, 32);
+		axleSpacing(SCOTCH_YOKE_2, 28);
 
-		wheelSpacing(STANDARD_M_4, 72);
-		wheelSpacing(TENDER_M_4, 72);
-		wheelSpacing(SCOTCH_YOKE_4, 84);
-		
-		wheelSpacing(STANDARD_M_5, 96);
-		wheelSpacing(TENDER_M_5, 96);
-		wheelSpacing(SCOTCH_YOKE_5, 108);
+		axleSpacing(HEAVYWEIGHT, 48);
+		axleSpacing(RADIAL, 48);
+		axleSpacing(STANDARD_M_3, 48);
+		axleSpacing(TRAILING_M_3, 48);
+		axleSpacing(TENDER_M_3, 48);
+		axleSpacing(SCOTCH_YOKE_3, 54);
 
-		wheelSpacing(SCOTCH_YOKE_6, 140);
+		axleSpacing(STANDARD_M_4, 72);
+		axleSpacing(TENDER_M_4, 72);
+		axleSpacing(SCOTCH_YOKE_4, 84);
+
+		axleSpacing(STANDARD_M_5, 96);
+		axleSpacing(TENDER_M_5, 96);
+		axleSpacing(SCOTCH_YOKE_5, 108);
+
+		axleSpacing(SCOTCH_YOKE_6, 140);
+
+		axleCount(0, INVISIBLE, INVISIBLE_ALT);
+		axleCount(1, NARROW_SCOTCH_YOKE_1, WIDE_SCOTCH_YOKE_L, WIDE_SCOTCH_YOKE_XXL);
+		axleCount(2, MONOBOGEY, NARROW_STANDARD_SMALL, NARROW_SCOTCH_YOKE_2, WIDE_STANDARD_SMALL);
+
+		axleCount(1, $1);
+		axleCount(2, $2);
+		axleCount(3, $3);
+		axleCount(4, $4);
+		axleCount(5, $5);
+		axleCount(6, $6);;
 
 		groundDrivable(INVISIBLE, false);
 		groundDrivable(INVISIBLE_ALT, false);
@@ -281,8 +292,21 @@ public class RailwaysBogeys {
 		return new BogeyType(style, BogeySizes.LARGE);
 	}
 
-	public static void wheelSpacing(BogeyEntry entry, double wheelSpacing) {
-		BogeyPropertyOverrides.setWheelSpacingOverride(entry.type(), Math.max(Math.round(wheelSpacing / 16), 1));
+	public static void axleSpacing(BogeyEntry entry, double axleSpacing) {
+		BogeyPropertyOverrides.setLogicalAxleSpacingOverride(entry.type(), (int)Math.round(axleSpacing / 16));
+		BogeyPropertyOverrides.setVisualAxleSpacingOverride(entry.type(), axleSpacing / 16);
+	}
+
+	public static void axleCount(int axleCount, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxleCountOverride(entry.type(), axleCount);
+		}
+	}
+
+	public static void axleCount(int axleCount, BogeyEntryCategory category) {
+		for(BogeyEntry entry : category.children()) {
+			BogeyPropertyOverrides.setAxleCountOverride(entry.type(), axleCount);
+		}
 	}
 
 	public static void groundDrivable(BogeyEntry entry, boolean groundDrivable) {

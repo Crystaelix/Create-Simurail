@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.config;
 
-import com.crystaelix.simurail.config.SimurailPhysicsConfig.Comments;
-
 public class SimurailCompatConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup railways = group(1, "railways", "Steam 'n' Rails");

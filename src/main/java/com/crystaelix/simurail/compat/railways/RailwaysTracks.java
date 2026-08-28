@@ -4,7 +4,6 @@ import com.crystaelix.simurail.api.track.TrackTypeEntries;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
 import com.crystaelix.simurail.config.SimurailConfig;
-import com.crystaelix.simurail.content.SimurailTracks;
 import com.railwayteam.railways.registry.CRBlocks;
 import com.railwayteam.railways.registry.CRTrackMaterials;
 import com.railwayteam.railways.registry.CRTrackMaterials.CRTrackType;

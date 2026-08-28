@@ -3,13 +3,11 @@ package com.crystaelix.simurail.content;
 import java.util.function.Supplier;
 
 import com.crystaelix.simurail.Simurail;
-import com.crystaelix.simurail.content.bogey.PhysicsBogeyWheelSparkParticle;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

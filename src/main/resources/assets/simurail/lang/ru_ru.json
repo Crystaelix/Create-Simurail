@@ -382,5 +382,11 @@
 	"simurail.ponder.probe_reader.intro.text_5": "Режимы Сигналов проверяют различные состояния Путевых сигналов (светофоров)",
 	"simurail.ponder.probe_reader.intro.text_6": "Сигналы могут быть названы для Фильтра по названию с помощью табличек",
 	"simurail.ponder.probe_reader.intro.text_7": "Режимы Станций проверяют различные состояния Путевых станций",
-	"simurail.ponder.probe_reader.intro.text_8": "Режим Прерывания пути конец пути"
+	"simurail.ponder.probe_reader.intro.text_8": "Режим Прерывания пути конец пути",
+
+	"simurail.ponder.remote_controller.intro.header": "Controlling Bogie Behavior using Bogie Remote Controllers",
+	"simurail.ponder.remote_controller.intro.text_1": "To place a Bogie Remote Controller, select the a Physics Bogie, then place it nearby",
+	"simurail.ponder.remote_controller.intro.text_2": "The Bogie Remote Controller remotely sends redstone signals to a Physics Bogie, controlling and toggling its behavior",
+	"simurail.ponder.remote_controller.intro.text_3": "Right click to configure the control mode",
+	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie"
 }

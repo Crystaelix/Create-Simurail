@@ -15,6 +15,7 @@ import com.crystaelix.simurail.content.SimurailForceGroups;
 import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.content.SimurailMenus;
 import com.crystaelix.simurail.content.SimurailPackets;
+import com.crystaelix.simurail.content.SimurailParticles;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.SimurailTracks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -56,6 +57,7 @@ public class Simurail {
 		SimurailDataComponents.register(modEventBus);
 		SimurailSoundEvents.register(modEventBus);
 		SimurailForceGroups.register(modEventBus);
+		SimurailParticles.register(modEventBus);
 		SimurailPackets.register();
 
 		SimurailConfig.register(modContainer);

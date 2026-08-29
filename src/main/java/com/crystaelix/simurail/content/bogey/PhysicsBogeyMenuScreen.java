@@ -307,7 +307,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 			BogeyEntry entry = selectedEntry.get();
 
 			selectedEntryLabel.text = entry.displayName();
-			axleSpacingLabel.text = Component.literal(String.valueOf(entry.type().wheelSpacing()));
+			axleSpacingLabel.text = Component.literal(String.valueOf(entry.type().logicalAxleSpacing()));
 
 			List<TrackTypeEntry> trackTypes = BogeyMenuManager.getTrackTypeEntries(entry.type());
 			trackTypeLabel.text = ComponentUtils.formatList(trackTypes, Component.literal("/"), trackTypes.size() > 1 ? TrackTypeEntry::shortName : TrackTypeEntry::displayName);

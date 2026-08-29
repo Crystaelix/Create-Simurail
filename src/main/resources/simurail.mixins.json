@@ -8,6 +8,8 @@
 	"plugin": "com.crystaelix.simurail.mixin.SimurailMixinPlugin",
 	"mixins": [
 		"BogeyStyleAccessor",
+		"PhysicsStaffDragSessionAccessor",
+		"PhysicsStaffServerHandlerAccessor",
 
 		"BezierConnectionMixin",
 		"GlobalRailwayManagerMixin",

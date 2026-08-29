@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.compat.create_bb;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.crystaelix.simurail.api.bogey.BogeyPropertyOverrides;
 import com.crystaelix.simurail.api.bogey.BogeyType;
@@ -15,16 +16,19 @@ import com.simibubi.create.content.trains.bogey.BogeyStyle;
 import com.weido.create_bb.BlocksBogies;
 import com.weido.create_bb.registry.BogieStyles;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 
 public class BlocksBogiesBogeys {
+
+	public static final String ROT_KEY = "IsForwards";
 
 	public static final BogeyDataSelectionOption ROT = new BogeyDataSelectionOption(Component.translatable("simurail_bogey_option.create_bb.rot")).
 			options(List.of(
 					Component.translatable("simurail_bogey_option.create_bb.rot.normal"),
 					Component.translatable("simurail_bogey_option.create_bb.rot.rotated"))).
-			codec((extra, i) -> extra.putBoolean("IsForwards", i != 0),
-					extra -> (extra.getBoolean("IsForwards") ? 1 : 0));
+			codec((extra, i) -> extra.putBoolean(ROT_KEY, i != 0),
+					extra -> (extra.getBoolean(ROT_KEY) ? 1 : 0));
 
 	public static final BogeyEntry
 	STANDARD_1 = new BogeyEntry(
@@ -573,117 +577,155 @@ public class BlocksBogiesBogeys {
 		BogeyMenuManager.addBogeyCategory(CREATE_BB);
 
 		// 1 S
-		wheelSpacing(STANDARD_1, 0);
-		wheelSpacing(TRAILING_1, 0);
+		axleSpacing(STANDARD_1, 0);
+		axleSpacing(TRAILING_1, 0);
 		// 1 L
-		wheelSpacing(WALSCHAERTS_LONG_L_1, 0);
-		wheelSpacing(GEARLESS_LONG_L_1, 0);
-		wheelSpacing(PISTONLESS_L_1, 0);
-		wheelSpacing(SCOTCH_YOKE_L_1, 0);
+		axleSpacing(WALSCHAERTS_LONG_L_1, 0);
+		axleSpacing(GEARLESS_LONG_L_1, 0);
+		axleSpacing(PISTONLESS_L_1, 0);
+		axleSpacing(SCOTCH_YOKE_L_1, 0);
 		// 1 XL
-		wheelSpacing(WALSCHAERTS_LONG_XL_1, 0);
-		wheelSpacing(GEARLESS_LONG_XL_1, 0);
-		wheelSpacing(PISTONLESS_XL_1, 0);
-		wheelSpacing(SCOTCH_YOKE_XL_1, 0);
+		axleSpacing(WALSCHAERTS_LONG_XL_1, 0);
+		axleSpacing(GEARLESS_LONG_XL_1, 0);
+		axleSpacing(PISTONLESS_XL_1, 0);
+		axleSpacing(SCOTCH_YOKE_XL_1, 0);
 		// 2 S
-		wheelSpacing(STANDARD_1_OFFSET, 32);
-		wheelSpacing(TRAILING_2, 32);
+		axleSpacing(STANDARD_1_OFFSET, 32);
+		axleSpacing(TRAILING_2, 32);
 		// 2 L
-		wheelSpacing(WALSCHAERTS_LONG_L_2, 28);
-		wheelSpacing(WALSCHAERTS_EXTENDED_L_2, 28);
-		wheelSpacing(WALSCHAERTS_SHORT_L_2, 28);
-		wheelSpacing(GEARLESS_LONG_L_2, 28);
-		wheelSpacing(GEARLESS_SHORT_L_2, 28);
-		wheelSpacing(PISTONLESS_L_2, 28);
-		wheelSpacing(RODLESS_L_2, 28);
-		wheelSpacing(SCOTCH_YOKE_L_2, 28);
+		axleSpacing(WALSCHAERTS_LONG_L_2, 28);
+		axleSpacing(WALSCHAERTS_EXTENDED_L_2, 28);
+		axleSpacing(WALSCHAERTS_SHORT_L_2, 28);
+		axleSpacing(GEARLESS_LONG_L_2, 28);
+		axleSpacing(GEARLESS_SHORT_L_2, 28);
+		axleSpacing(PISTONLESS_L_2, 28);
+		axleSpacing(RODLESS_L_2, 28);
+		axleSpacing(SCOTCH_YOKE_L_2, 28);
 		// 2 XL
-		wheelSpacing(WALSCHAERTS_LONG_XL_2, 36);
-		wheelSpacing(WALSCHAERTS_EXTENDED_XL_2, 36);
-		wheelSpacing(WALSCHAERTS_SHORT_XL_2, 36);
-		wheelSpacing(GEARLESS_LONG_XL_2, 36);
-		wheelSpacing(GEARLESS_SHORT_XL_2, 36);
-		wheelSpacing(PISTONLESS_XL_2, 36);
-		wheelSpacing(RODLESS_XL_2, 36);
-		wheelSpacing(SCOTCH_YOKE_XL_2, 36);
+		axleSpacing(WALSCHAERTS_LONG_XL_2, 36);
+		axleSpacing(WALSCHAERTS_EXTENDED_XL_2, 36);
+		axleSpacing(WALSCHAERTS_SHORT_XL_2, 36);
+		axleSpacing(GEARLESS_LONG_XL_2, 36);
+		axleSpacing(GEARLESS_SHORT_XL_2, 36);
+		axleSpacing(PISTONLESS_XL_2, 36);
+		axleSpacing(RODLESS_XL_2, 36);
+		axleSpacing(SCOTCH_YOKE_XL_2, 36);
 		// 3 S
-		wheelSpacing(STANDARD_3, 48);
-		wheelSpacing(TRAILING_3, 48);
+		axleSpacing(STANDARD_3, 32);
+		axleSpacing(TRAILING_3, 32);
 		// 3 L
-		wheelSpacing(WALSCHAERTS_LONG_L_3, 54);
-		wheelSpacing(WALSCHAERTS_SHORT_L_3, 54);
-		wheelSpacing(GEARLESS_LONG_L_3, 54);
-		wheelSpacing(GEARLESS_SHORT_L_3, 54);
-		wheelSpacing(PISTONLESS_L_3, 54);
-		wheelSpacing(RODLESS_L_3, 54);
-		wheelSpacing(SCOTCH_YOKE_L_3, 54);
+		axleSpacing(WALSCHAERTS_LONG_L_3, 54);
+		axleSpacing(WALSCHAERTS_SHORT_L_3, 54);
+		axleSpacing(GEARLESS_LONG_L_3, 54);
+		axleSpacing(GEARLESS_SHORT_L_3, 54);
+		axleSpacing(PISTONLESS_L_3, 54);
+		axleSpacing(RODLESS_L_3, 54);
+		axleSpacing(SCOTCH_YOKE_L_3, 54);
 		// 3 Spaced L
-		wheelSpacing(WALSCHAERTS_LONG_L_3_SPACED, 65);
-		wheelSpacing(WALSCHAERTS_SHORT_L_3_SPACED, 65);
-		wheelSpacing(GEARLESS_LONG_L_3_SPACED, 65);
-		wheelSpacing(GEARLESS_SHORT_L_3_SPACED, 65);
-		wheelSpacing(PISTONLESS_L_3_SPACED, 65);
-		wheelSpacing(RODLESS_L_3_SPACED, 65);
+		axleSpacing(WALSCHAERTS_LONG_L_3_SPACED, 65);
+		axleSpacing(WALSCHAERTS_SHORT_L_3_SPACED, 65);
+		axleSpacing(GEARLESS_LONG_L_3_SPACED, 65);
+		axleSpacing(GEARLESS_SHORT_L_3_SPACED, 65);
+		axleSpacing(PISTONLESS_L_3_SPACED, 65);
+		axleSpacing(RODLESS_L_3_SPACED, 65);
 		// 3 XL
-		wheelSpacing(WALSCHAERTS_LONG_XL_3, 72);
-		wheelSpacing(WALSCHAERTS_SHORT_XL_3, 72);
-		wheelSpacing(GEARLESS_LONG_XL_3, 72);
-		wheelSpacing(GEARLESS_SHORT_XL_3, 72);
-		wheelSpacing(PISTONLESS_XL_3, 72);
-		wheelSpacing(RODLESS_XL_3, 72);
-		wheelSpacing(SCOTCH_YOKE_XL_3, 72);
+		axleSpacing(WALSCHAERTS_LONG_XL_3, 72);
+		axleSpacing(WALSCHAERTS_SHORT_XL_3, 72);
+		axleSpacing(GEARLESS_LONG_XL_3, 72);
+		axleSpacing(GEARLESS_SHORT_XL_3, 72);
+		axleSpacing(PISTONLESS_XL_3, 72);
+		axleSpacing(RODLESS_XL_3, 72);
+		axleSpacing(SCOTCH_YOKE_XL_3, 72);
 		// 3 Spaced XL
-		wheelSpacing(WALSCHAERTS_LONG_XL_3_SPACED, 91);
-		wheelSpacing(WALSCHAERTS_SHORT_XL_3_SPACED, 91);
-		wheelSpacing(GEARLESS_LONG_XL_3_SPACED, 91);
-		wheelSpacing(GEARLESS_SHORT_XL_3_SPACED, 91);
-		wheelSpacing(PISTONLESS_XL_3_SPACED, 91);
-		wheelSpacing(RODLESS_XL_3_SPACED, 91);
+		axleSpacing(WALSCHAERTS_LONG_XL_3_SPACED, 91);
+		axleSpacing(WALSCHAERTS_SHORT_XL_3_SPACED, 91);
+		axleSpacing(GEARLESS_LONG_XL_3_SPACED, 91);
+		axleSpacing(GEARLESS_SHORT_XL_3_SPACED, 91);
+		axleSpacing(PISTONLESS_XL_3_SPACED, 91);
+		axleSpacing(RODLESS_XL_3_SPACED, 91);
 		// 4 S
-		wheelSpacing(STANDARD_4, 48);
-		wheelSpacing(TRAILING_4, 48);
+		axleSpacing(STANDARD_4, 48);
+		axleSpacing(TRAILING_4, 48);
 		// 4 L
-		wheelSpacing(WALSCHAERTS_LONG_L_4, 84);
-		wheelSpacing(WALSCHAERTS_SHORT_L_4, 84);
-		wheelSpacing(GEARLESS_LONG_L_4, 84);
-		wheelSpacing(GEARLESS_SHORT_L_4, 84);
-		wheelSpacing(PISTONLESS_L_4, 84);
-		wheelSpacing(RODLESS_L_4, 84);
-		wheelSpacing(SCOTCH_YOKE_L_4, 84);
+		axleSpacing(WALSCHAERTS_LONG_L_4, 84);
+		axleSpacing(WALSCHAERTS_SHORT_L_4, 84);
+		axleSpacing(GEARLESS_LONG_L_4, 84);
+		axleSpacing(GEARLESS_SHORT_L_4, 84);
+		axleSpacing(PISTONLESS_L_4, 84);
+		axleSpacing(RODLESS_L_4, 84);
+		axleSpacing(SCOTCH_YOKE_L_4, 84);
 		// 4 XL
-		wheelSpacing(WALSCHAERTS_LONG_XL_4, 108);
-		wheelSpacing(WALSCHAERTS_SHORT_XL_4, 108);
-		wheelSpacing(GEARLESS_LONG_XL_4, 108);
-		wheelSpacing(GEARLESS_SHORT_XL_4, 108);
-		wheelSpacing(PISTONLESS_XL_4, 108);
-		wheelSpacing(RODLESS_XL_4, 108);
-		wheelSpacing(SCOTCH_YOKE_XL_4, 108);
+		axleSpacing(WALSCHAERTS_LONG_XL_4, 108);
+		axleSpacing(WALSCHAERTS_SHORT_XL_4, 108);
+		axleSpacing(GEARLESS_LONG_XL_4, 108);
+		axleSpacing(GEARLESS_SHORT_XL_4, 108);
+		axleSpacing(PISTONLESS_XL_4, 108);
+		axleSpacing(RODLESS_XL_4, 108);
+		axleSpacing(SCOTCH_YOKE_XL_4, 108);
 		// 5 S
-		wheelSpacing(STANDARD_5, 64);
+		axleSpacing(STANDARD_5, 64);
 		// 5 L
-		wheelSpacing(WALSCHAERTS_LONG_L_5, 108);
-		wheelSpacing(WALSCHAERTS_SHORT_L_5, 108);
-		wheelSpacing(GEARLESS_LONG_L_5, 108);
-		wheelSpacing(GEARLESS_SHORT_L_5, 108);
-		wheelSpacing(PISTONLESS_L_5, 108);
-		wheelSpacing(RODLESS_L_5, 108);
-		wheelSpacing(SCOTCH_YOKE_L_5, 108);
+		axleSpacing(WALSCHAERTS_LONG_L_5, 108);
+		axleSpacing(WALSCHAERTS_SHORT_L_5, 108);
+		axleSpacing(GEARLESS_LONG_L_5, 108);
+		axleSpacing(GEARLESS_SHORT_L_5, 108);
+		axleSpacing(PISTONLESS_L_5, 108);
+		axleSpacing(RODLESS_L_5, 108);
+		axleSpacing(SCOTCH_YOKE_L_5, 108);
 		// 5 XL
-		wheelSpacing(WALSCHAERTS_LONG_XL_5, 144);
-		wheelSpacing(WALSCHAERTS_SHORT_XL_5, 144);
-		wheelSpacing(GEARLESS_LONG_XL_5, 144);
-		wheelSpacing(GEARLESS_SHORT_XL_5, 144);
-		wheelSpacing(PISTONLESS_XL_5, 144);
-		wheelSpacing(RODLESS_XL_5, 144);
-		wheelSpacing(SCOTCH_YOKE_XL_5, 144);
+		axleSpacing(WALSCHAERTS_LONG_XL_5, 144);
+		axleSpacing(WALSCHAERTS_SHORT_XL_5, 144);
+		axleSpacing(GEARLESS_LONG_XL_5, 144);
+		axleSpacing(GEARLESS_SHORT_XL_5, 144);
+		axleSpacing(PISTONLESS_XL_5, 144);
+		axleSpacing(RODLESS_XL_5, 144);
+		axleSpacing(SCOTCH_YOKE_XL_5, 144);
 		// 6 L
-		wheelSpacing(WALSCHAERTS_LONG_L_6, 140);
-		wheelSpacing(WALSCHAERTS_SHORT_L_6, 140);
-		wheelSpacing(GEARLESS_LONG_L_6, 140);
-		wheelSpacing(GEARLESS_SHORT_L_6, 140);
-		wheelSpacing(PISTONLESS_L_6, 140);
-		wheelSpacing(RODLESS_L_6, 140);
-		wheelSpacing(SCOTCH_YOKE_L_6, 140);
+		axleSpacing(WALSCHAERTS_LONG_L_6, 140);
+		axleSpacing(WALSCHAERTS_SHORT_L_6, 140);
+		axleSpacing(GEARLESS_LONG_L_6, 140);
+		axleSpacing(GEARLESS_SHORT_L_6, 140);
+		axleSpacing(PISTONLESS_L_6, 140);
+		axleSpacing(RODLESS_L_6, 140);
+		axleSpacing(SCOTCH_YOKE_L_6, 140);
+
+		axleCount(1,
+				STANDARD_1, STANDARD_1_OFFSET, TRAILING_1, WALSCHAERTS_LONG_L_1, GEARLESS_LONG_L_1, PISTONLESS_L_1,
+				SCOTCH_YOKE_L_1, WALSCHAERTS_LONG_XL_1, GEARLESS_LONG_XL_1, PISTONLESS_XL_1, SCOTCH_YOKE_XL_1);
+		axleCount(2,
+				TRAILING_2, WALSCHAERTS_LONG_L_2, WALSCHAERTS_EXTENDED_L_2, WALSCHAERTS_SHORT_L_2,
+				GEARLESS_LONG_L_2, GEARLESS_SHORT_L_2, PISTONLESS_L_2, RODLESS_L_2, SCOTCH_YOKE_L_2,
+				WALSCHAERTS_LONG_XL_2, WALSCHAERTS_EXTENDED_XL_2, WALSCHAERTS_SHORT_XL_2, GEARLESS_LONG_XL_2,
+				GEARLESS_SHORT_XL_2, PISTONLESS_XL_2, RODLESS_XL_2, SCOTCH_YOKE_XL_2);
+		axleCount(3,
+				STANDARD_3, TRAILING_3, WALSCHAERTS_LONG_L_3, WALSCHAERTS_SHORT_L_3, GEARLESS_LONG_L_3,
+				GEARLESS_SHORT_L_3, PISTONLESS_L_3, RODLESS_L_3, SCOTCH_YOKE_L_3, WALSCHAERTS_LONG_L_3_SPACED,
+				WALSCHAERTS_SHORT_L_3_SPACED, GEARLESS_LONG_L_3_SPACED, GEARLESS_SHORT_L_3_SPACED,
+				PISTONLESS_L_3_SPACED, RODLESS_L_3_SPACED, WALSCHAERTS_LONG_XL_3, WALSCHAERTS_SHORT_XL_3,
+				GEARLESS_LONG_XL_3, GEARLESS_SHORT_XL_3, PISTONLESS_XL_3, RODLESS_XL_3, SCOTCH_YOKE_XL_3,
+				WALSCHAERTS_LONG_XL_3_SPACED, WALSCHAERTS_SHORT_XL_3_SPACED, GEARLESS_LONG_XL_3_SPACED,
+				GEARLESS_SHORT_XL_3_SPACED, PISTONLESS_XL_3_SPACED, RODLESS_XL_3_SPACED);
+		axleCount(4,
+				STANDARD_4, TRAILING_4, WALSCHAERTS_LONG_L_4, WALSCHAERTS_SHORT_L_4, GEARLESS_LONG_L_4,
+				GEARLESS_SHORT_L_4, PISTONLESS_L_4, RODLESS_L_4, SCOTCH_YOKE_L_4, WALSCHAERTS_LONG_XL_4,
+				WALSCHAERTS_SHORT_XL_4, GEARLESS_LONG_XL_4, GEARLESS_SHORT_XL_4, PISTONLESS_XL_4, RODLESS_XL_4,
+				SCOTCH_YOKE_XL_4);
+		axleCount(5,
+				STANDARD_5, WALSCHAERTS_LONG_L_5, WALSCHAERTS_SHORT_L_5, GEARLESS_LONG_L_5, GEARLESS_SHORT_L_5,
+				PISTONLESS_L_5, RODLESS_L_5, SCOTCH_YOKE_L_5, WALSCHAERTS_LONG_XL_5, WALSCHAERTS_SHORT_XL_5,
+				GEARLESS_LONG_XL_5, GEARLESS_SHORT_XL_5, PISTONLESS_XL_5, RODLESS_XL_5, SCOTCH_YOKE_XL_5);
+		axleCount(6,
+				WALSCHAERTS_LONG_L_6, WALSCHAERTS_SHORT_L_6, GEARLESS_LONG_L_6, GEARLESS_SHORT_L_6, PISTONLESS_L_6,
+				RODLESS_L_6, SCOTCH_YOKE_L_6);
+
+		axlePositions(rot(-1), STANDARD_1_OFFSET);
+		// data from the models
+		axlePositions(rot(-1.6875, 0, 2.375),
+				WALSCHAERTS_LONG_L_3_SPACED, WALSCHAERTS_SHORT_L_3_SPACED, GEARLESS_LONG_L_3_SPACED,
+				GEARLESS_SHORT_L_3_SPACED, PISTONLESS_L_3_SPACED, RODLESS_L_3_SPACED);
+		axlePositions(rot(-2.25, 0, 3.4375),
+				WALSCHAERTS_LONG_XL_3_SPACED, WALSCHAERTS_SHORT_XL_3_SPACED, GEARLESS_LONG_XL_3_SPACED,
+				GEARLESS_SHORT_XL_3_SPACED, PISTONLESS_XL_3_SPACED, RODLESS_XL_3_SPACED);
 	}
 
 	public static BogeyType small(BogeyStyle style) {
@@ -694,7 +736,27 @@ public class BlocksBogiesBogeys {
 		return new BogeyType(style, BogeySizes.LARGE);
 	}
 
-	public static void wheelSpacing(BogeyEntry entry, double wheelSpacing) {
-		BogeyPropertyOverrides.setWheelSpacingOverride(entry.type(), Math.max(Math.round(wheelSpacing / 16), 1));
+	public static void axleSpacing(BogeyEntry entry, double axleSpacing) {
+		BogeyPropertyOverrides.setAxleSpacingOverride(entry.type(), axleSpacing / 16);
+	}
+
+	public static void axleCount(int axleCount, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxleCountOverride(entry.type(), axleCount);
+		}
+	}
+
+	public static void axlePositions(Function<CompoundTag, double[]> axlePositions, BogeyEntry... entries) {
+		for(BogeyEntry entry : entries) {
+			BogeyPropertyOverrides.setAxlePositionsOverride(entry.type(), axlePositions);
+		}
+	}
+
+	public static Function<CompoundTag, double[]> rot(double... axlePositions) {
+		double[] turned = new double[axlePositions.length];
+		for(int i = 0; i < axlePositions.length; i++) {
+			turned[i] = -axlePositions[axlePositions.length - 1 - i];
+		}
+		return extra -> extra.getBoolean(ROT_KEY) ? turned : axlePositions;
 	}
 }

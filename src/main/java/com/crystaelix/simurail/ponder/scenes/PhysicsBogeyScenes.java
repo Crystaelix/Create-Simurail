@@ -50,14 +50,15 @@ public class PhysicsBogeyScenes {
 		text("1_description");
 		scene.idle(70);
 
-		overlay.showText(60).
+		overlay.showText(100).
 		pointAt(vector.centerOf(10, 1, 7)).
+		attachKeyFrame().
 		placeNearTarget().
 		text("2_placing");
-		overlay.showControls(vector.centerOf(10, 1, 7), Pointing.DOWN, 60).
+		overlay.showControls(vector.centerOf(10, 1, 7), Pointing.DOWN, 100).
 		rightClick().whileSneaking().
 		withItem(SimurailBlocks.PHYSICS_BOGEY.asStack());
-		scene.idle(70);
+		scene.idle(110);
 
 		Selection carriageSelection = select.fromTo(10, 2, 6, 13, 3, 8);
 		world.showSectionAndMerge(carriageSelection.substract(select.position(10, 2, 7)), Direction.DOWN, carriageElement);

@@ -1,6 +1,5 @@
 package com.crystaelix.simurail.content.bogey;
 
-
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 

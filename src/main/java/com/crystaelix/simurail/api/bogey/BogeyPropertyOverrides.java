@@ -20,8 +20,8 @@ import net.minecraft.nbt.CompoundTag;
 public final class BogeyPropertyOverrides {
 
 	static final Object2IntMap<BogeyType> LOGICAL_AXLE_SPACING_OVERRIDE = new Object2IntOpenHashMap<>();
-	static final Object2IntMap<BogeyType> AXLE_COUNT_OVERRIDE = new Object2IntOpenHashMap<>();
 	static final Object2DoubleMap<BogeyType> VISUAL_AXLE_SPACING_OVERRIDE = new Object2DoubleOpenHashMap<>();
+	static final Object2IntMap<BogeyType> AXLE_COUNT_OVERRIDE = new Object2IntOpenHashMap<>();
 	static final Map<BogeyType, Function<CompoundTag, double[]>> AXLE_POSITIONS_OVERRIDE = new HashMap<>();
 	static final Object2DoubleMap<BogeyType> WHEEL_RADIUS_OVERRIDE = new Object2DoubleOpenHashMap<>();
 	static final Object2DoubleMap<BogeyType> TRACK_WIDTH_OVERRIDE = new Object2DoubleOpenHashMap<>();
@@ -33,12 +33,17 @@ public final class BogeyPropertyOverrides {
 		LOGICAL_AXLE_SPACING_OVERRIDE.put(type, Math.max(logicalAxleSpacing, 1));
 	}
 
-	public static void setAxleCountOverride(BogeyType type, int axleCount) {
-		AXLE_COUNT_OVERRIDE.put(type, axleCount);
-	}
-
 	public static void setVisualAxleSpacingOverride(BogeyType type, double visualAxleSpacing) {
 		VISUAL_AXLE_SPACING_OVERRIDE.put(type, visualAxleSpacing);
+	}
+
+	public static void setAxleSpacingOverride(BogeyType type, double axleSpacing) {
+		setLogicalAxleSpacingOverride(type, (int)Math.round(axleSpacing));
+		setVisualAxleSpacingOverride(type, axleSpacing);
+	}
+
+	public static void setAxleCountOverride(BogeyType type, int axleCount) {
+		AXLE_COUNT_OVERRIDE.put(type, axleCount);
 	}
 
 	public static void setAxlePositionsOverride(BogeyType type, Function<CompoundTag, double[]> axlePositions) {

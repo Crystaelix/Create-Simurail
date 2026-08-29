@@ -293,8 +293,7 @@ public class RailwaysBogeys {
 	}
 
 	public static void axleSpacing(BogeyEntry entry, double axleSpacing) {
-		BogeyPropertyOverrides.setLogicalAxleSpacingOverride(entry.type(), (int)Math.round(axleSpacing / 16));
-		BogeyPropertyOverrides.setVisualAxleSpacingOverride(entry.type(), axleSpacing / 16);
+		BogeyPropertyOverrides.setAxleSpacingOverride(entry.type(), axleSpacing / 16);
 	}
 
 	public static void axleCount(int axleCount, BogeyEntry... entries) {

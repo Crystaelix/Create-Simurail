@@ -69,7 +69,7 @@ public final class BogeyType {
 		if(BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.containsKey(this)) {
 			return BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.getDouble(this);
 		}
-		return logicalAxleSpacing();
+		return block.getWheelPointSpacing();
 	}
 
 	public int axleCount() {

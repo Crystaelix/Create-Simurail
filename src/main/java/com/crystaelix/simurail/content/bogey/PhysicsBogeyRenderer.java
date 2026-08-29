@@ -33,7 +33,9 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 
 	@Override
 	protected void renderSafe(PhysicsBogeyBlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
-		super.renderSafe(be, partialTick, poseStack, bufferSource, light, overlay);
+		if(!be.isPowerless()) {
+			super.renderSafe(be, partialTick, poseStack, bufferSource, light, overlay);
+		}
 		Level level = be.getLevel();
 		if(VisualizationManager.supportsVisualization(level)) {
 			return;
@@ -173,6 +175,9 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 
 	@Override
 	protected BlockState getRenderedBlockState(PhysicsBogeyBlockEntity be) {
+		if(be.isPowerless()) {
+			return Blocks.AIR.defaultBlockState();
+		}
 		return shaft(getRotationAxisOf(be));
 	}
 

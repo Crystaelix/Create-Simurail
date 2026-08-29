@@ -19,6 +19,7 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.createmod.ponder.api.scene.SelectionUtil;
 import net.createmod.ponder.api.scene.VectorUtil;
+import net.createmod.ponder.foundation.instruction.RotateSceneInstruction;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -50,17 +51,17 @@ public class GangwayFrameScenes {
 		scene.idle(10);
 
 		overlay.showText(60).
-		pointAt(vector.topOf(4, 2, 4)).
+		pointAt(vector.of(4.875, 3, 4.5)).
 		attachKeyFrame().
 		placeNearTarget().
 		text("1_description");
 		scene.idle(70);
 
 		overlay.showText(60).
-		pointAt(vector.topOf(4, 2, 4)).
+		pointAt(vector.of(4.875, 3, 4.5)).
 		placeNearTarget().
 		text("2_usage");
-		overlay.showControls(vector.topOf(4, 2, 4), Pointing.DOWN, 60).
+		overlay.showControls(vector.of(4.875, 3, 4.5), Pointing.DOWN, 60).
 		rightClick();
 		scene.idle(70);
 
@@ -85,7 +86,7 @@ public class GangwayFrameScenes {
 		scene.idle(10);
 
 		overlay.showText(60).
-		pointAt(vector.topOf(4, 2, 5)).
+		pointAt(vector.of(4.875, 3, 4.5)).
 		attachKeyFrame().
 		placeNearTarget().
 		text("4_multiple");
@@ -93,7 +94,7 @@ public class GangwayFrameScenes {
 		world.showSection(select.position(3, 2, 3).add(select.position(3, 2, 5)), Direction.DOWN);
 		scene.idle(70);
 
-		overlay.showControls(vector.topOf(4, 2, 4), Pointing.DOWN, 20).
+		overlay.showControls(vector.of(4.875, 3, 4.5), Pointing.DOWN, 20).
 		rightClick();
 		scene.idle(30);
 
@@ -105,7 +106,7 @@ public class GangwayFrameScenes {
 		scene.addInstruction(new GangwayFramePartnerInstruction(grid.at(3, 2, 5), grid.at(4, 2, 5)));
 		scene.idle(20);
 
-		overlay.showControls(vector.topOf(4, 2, 4), Pointing.DOWN, 20).
+		overlay.showControls(vector.of(4.875, 3, 4.5), Pointing.DOWN, 20).
 		rightClick();
 		scene.idle(30);
 
@@ -118,11 +119,11 @@ public class GangwayFrameScenes {
 		scene.idle(20);
 
 		overlay.showText(60).
-		pointAt(vector.topOf(4, 2, 4)).
+		pointAt(vector.of(4.875, 3, 5.5)).
 		attachKeyFrame().
 		placeNearTarget().
 		text("5_wrench");
-		overlay.showControls(vector.topOf(4, 2, 5), Pointing.DOWN, 60).
+		overlay.showControls(vector.of(4.875, 3, 5.5), Pointing.DOWN, 60).
 		rightClick().withItem(AllItems.WRENCH.asStack());
 		scene.idle(70);
 
@@ -141,12 +142,12 @@ public class GangwayFrameScenes {
 		scene.idle(10);
 
 		overlay.showText(60).
-		pointAt(vector.topOf(4, 2, 5)).
+		pointAt(vector.of(4.875, 3, 5.5)).
 		placeNearTarget().
 		text("6_shape");
 		scene.idle(70);
 
-		overlay.showControls(vector.topOf(4, 2, 4), Pointing.DOWN, 20).
+		overlay.showControls(vector.of(4.875, 3, 4.5), Pointing.DOWN, 20).
 		rightClick();
 		scene.idle(30);
 

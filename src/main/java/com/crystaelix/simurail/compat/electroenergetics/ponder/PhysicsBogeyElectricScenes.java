@@ -264,7 +264,7 @@ public class PhysicsBogeyElectricScenes {
 		scene.title("physics_bogey.third_rail", "header");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(0.75F);
-		scene.rotateCameraY(-90.0F);
+		scene.rotateCameraY(-90);
 		scene.showBasePlate();
 		scene.idle(10);
 

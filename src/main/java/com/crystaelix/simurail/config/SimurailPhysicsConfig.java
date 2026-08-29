@@ -45,7 +45,7 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigGroup standard = group(2, "standard", "Standard");
 	public final ConfigFloat standardLateralMaxSpeedFactor = f(30, 0, Float.MAX_VALUE, "lateralMaxSpeedFactor", Units.acceleration, Comments.standardLateralMaxSpeedFactor);
 	public final ConfigFloat standardVerticalMaxSpeedFactor = f(50, 0, Float.MAX_VALUE, "verticalMaxSpeedFactor", Units.acceleration, Comments.standardVerticalMaxSpeedFactor);
-	public final ConfigFloat standardAdhesionFactor = f(6, 0, Float.MAX_VALUE, "adhesionFactor", Units.acceleration, Comments.standardAdhesionFactor);
+	public final ConfigFloat standardAdhesionFactor = f(12, 0, Float.MAX_VALUE, "adhesionFactor", Units.acceleration, Comments.standardAdhesionFactor);
 
 	public final ConfigGroup coupler = group(1, "coupler", "Train Couplers");
 	public final ConfigFloat couplerPassiveLinearDamping = f(10, 0, Float.MAX_VALUE, "passiveLinearDamping", Units.damping, Comments.couplerPassiveLinearDamping);

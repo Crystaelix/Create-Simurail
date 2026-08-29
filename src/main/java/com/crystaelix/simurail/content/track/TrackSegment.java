@@ -150,12 +150,13 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 	}
 
 	public static boolean inProjectionRange(Vector3dc segmentStart, Vector3dc segmentDelta, Vector3dc segmentVertical, Vector3dc localPosition, Vector3dc localVertical) {
-		double t = SimurailMath.intersectPlaneLine(localPosition, localVertical, segmentStart, segmentVertical);
-		if(Double.isNaN(t)) {
-			return false;
-		}
-		Vector3d i = new Vector3d(localPosition).fma(t, localVertical);
-		double projT = SimurailMath.projectTLinePoint(segmentStart, segmentDelta, i);
+		// this seems to wrong idk
+		//double t = SimurailMath.intersectPlaneLine(localPosition, localVertical, segmentStart, segmentVertical);
+		//if(Double.isNaN(t)) {
+		//	return false;
+		//}
+		//Vector3d i = new Vector3d(localPosition).fma(t, localVertical);
+		double projT = SimurailMath.projectTLinePoint(segmentStart, segmentDelta, localPosition);
 		return projT >= -1/32D && projT <= 1 + 1/32D;
 	}
 

@@ -8,7 +8,7 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 	public final ConfigFloat connectionCouplerRange = f(4, 1, 256, "couplerRange", Units.length, Comments.connectionCouplerRange);
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
-	public final ConfigInt bogeyProbeInterval = i(5, 1, 40, "bogeyProbeInterval", Units.ticks, Comments.bogeyProbeInterval);
+	public final ConfigInt bogeyProbeInterval = i(2, 1, 40, "bogeyProbeInterval", Units.ticks, Comments.bogeyProbeInterval);
 
 	public final ConfigGroup probeReader = group(1, "probeReader", "Bogie Probe Readers");
 	public final ConfigFloat probeReaderRange = f(64, 1, 512, "probeReaderRange", Units.length, Comments.probeReaderRange);

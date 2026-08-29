@@ -1,5 +1,7 @@
 package com.crystaelix.simurail.ponder;
 
+import com.crystaelix.simurail.compat.SimurailCompat;
+import com.crystaelix.simurail.compat.electroenergetics.ponder.SimurailElectroEnergeticsPonderScenes;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.ponder.scenes.AutomaticCouplerScenes;
@@ -38,5 +40,9 @@ public class SimurailPonderScenes {
 
 		helper.forComponents(SimurailBlocks.REMOTE_CONTROLLER).
 		addStoryBoard("remote_controller/intro", RemoteControllerScenes::intro);
+
+		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () ->
+				SimurailElectroEnergeticsPonderScenes.register(registry)
+		);
 	}
 }

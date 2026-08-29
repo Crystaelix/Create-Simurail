@@ -355,8 +355,9 @@ public class PhysicsBogeyAxle {
 			if(!trackSegment.inSegmentRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
 				// No longer on track segment
 				double t = trackSegment.projectT(trackAxleFrame.position);
+				boolean reverse = t < 0.5;
 				if(trackSegment instanceof CurvedTrackSegment curve) {
-					CurvedTrackSegment nextSegment = curve.next(t < 0.5);
+					CurvedTrackSegment nextSegment = curve.next(reverse);
 					while(nextSegment != null) {
 						if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
 							break;
@@ -368,7 +369,7 @@ public class PhysicsBogeyAxle {
 							break t;
 						}
 						else {
-							nextSegment = nextSegment.next(t < 0.5);
+							nextSegment = nextSegment.next(reverse);
 						}
 					}
 				}
@@ -376,14 +377,14 @@ public class PhysicsBogeyAxle {
 				updateGraph(false);
 				if(trackGraph != null) {
 					resetProbe(trackPoint);
-					probe.position = t < 0.5 ? 0.05 : probe.edge.getLength() - 0.05;
-					probe.travel(trackGraph, t < 0.5 ? -0.1 : 0.1,
+					probe.position = reverse ? 0.05 : probe.edge.getLength() - 0.05;
+					probe.travel(trackGraph, reverse ? -0.1 : 0.1,
 							control(probe),
 							probe.ignoreEdgePoints(),
 							probe.ignoreTurns(),
 							$ -> true);
 					if(!probe.blocked) {
-						TrackSegment nextSegment = TrackSegmentHelper.fromTrackEdge(probe.edge, t < 0.5);
+						TrackSegment nextSegment = TrackSegmentHelper.fromTrackEdge(probe.edge, reverse);
 						while(nextSegment != null) {
 							if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
 								break;
@@ -395,7 +396,7 @@ public class PhysicsBogeyAxle {
 								break t;
 							}
 							else if(nextSegment instanceof CurvedTrackSegment curve) {
-								nextSegment = curve.next(t < 0.5);
+								nextSegment = curve.next(reverse);
 							}
 							else {
 								break;

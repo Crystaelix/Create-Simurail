@@ -41,7 +41,7 @@ public final class CurvedTrackSegment extends TrackSegment {
 		curveStart = new TrackNodeLocation(curve.starts.getFirst()).in(dimension);
 		curveStart.yOffsetPixels = curve.yOffsetAt(curve.starts.getFirst());
 		curveEnd = new TrackNodeLocation(curve.starts.getSecond()).in(dimension);
-		curveStart.yOffsetPixels = curve.yOffsetAt(curve.starts.getSecond());
+		curveEnd.yOffsetPixels = curve.yOffsetAt(curve.starts.getSecond());
 	}
 
 	public BezierConnection curve() {

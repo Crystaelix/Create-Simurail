@@ -179,6 +179,7 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 			tag.putString("type", "curved");
 			tag.put("curve", curve.curve().write(BlockPos.ZERO));
 			tag.putInt("segment", curve.segment());
+			tag.putBoolean("reversed", curve.reversed());
 		}
 		}
 		tag.putString("dimension", dimension().location().toString());
@@ -202,7 +203,8 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 		case "curved" -> {
 			BezierConnection curve = new BezierConnection(tag.getCompound("curve"), BlockPos.ZERO);
 			int segment = tag.getInt("segment");
-			return new CurvedTrackSegment(dimension, curve, segment);
+			boolean reversed = tag.getBoolean("reversed");
+			return new CurvedTrackSegment(dimension, curve, segment, reversed);
 		}
 		}
 		return null;

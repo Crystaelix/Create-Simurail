@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
 import com.crystaelix.simurail.content.track.CurvedTrackSegmentCache;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.track.BezierConnection;
@@ -40,12 +41,19 @@ public abstract class TrackBlockEntityMixin extends SmartBlockEntity {
 		}
 	}
 
-	@Inject(method = "addConnection", at = @At("TAIL"))
+
+	@Inject(method = "addConnection", at = @At("RETURN"))
 	public void simurail$onAddConnection(BezierConnection connection, CallbackInfo ci) {
-		if(!level.isClientSide()) {
-			CurvedTrackSegmentCache cache = CurvedTrackSegmentCache.getOrCreateCache(level.dimension());
-			cache.addCurve(connection);
+		if(level == null) {
+			return;
 		}
+		BezierConnection stored = connections.getOrDefault(connection.getKey(), connection);
+		((BezierConnectionExtension)stored).simurail$invalidateCurve();
+		if(level.isClientSide()) {
+			return;
+		}
+		CurvedTrackSegmentCache cache = CurvedTrackSegmentCache.getOrCreateCache(level.dimension());
+		cache.addCurve(stored);
 	}
 
 	@Inject(method = "removeConnection", at = @At("RETURN"))

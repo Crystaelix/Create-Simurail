@@ -7,4 +7,6 @@ public interface BezierConnectionExtension {
 	CubicBezier3dc simurail$controlPoints();
 
 	double simurail$quadratureLength();
+
+	void simurail$invalidateCurve();
 }

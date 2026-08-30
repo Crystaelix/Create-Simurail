@@ -30,6 +30,9 @@ public class SimurailMixinPlugin implements IMixinConfigPlugin {
 			}
 			return isLoaded("railways");
 		}
+		if(mixinClassName.contains("compat.railx")) {
+			return isLoaded("railx");
+		}
 		return true;
 	}
 

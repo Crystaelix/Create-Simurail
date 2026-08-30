@@ -512,9 +512,13 @@ public class PhysicsBogeyAxle {
 				double t = Math.clamp(trackSegment.projectT(trackAxleFrame.position), 0, 1);
 				if(trackSegment instanceof CurvedTrackSegment curve) {
 					BezierConnection connection = curve.curve();
-					double graphLength = connection.getLength();
+					// reverse edge measures its length along the secondary
+					double graphLength = trackEdge.getLength();
 					double quadratureLength = ((BezierConnectionExtension)connection).simurail$quadratureLength();
 					double quadraturePos = SimurailMath.length(connection, 0, curve.curveT(t));
+					if(curve.reversed()) {
+						quadraturePos = quadratureLength - quadraturePos;
+					}
 					trackPoint.position = graphLength / quadratureLength * quadraturePos;
 				}
 				else {

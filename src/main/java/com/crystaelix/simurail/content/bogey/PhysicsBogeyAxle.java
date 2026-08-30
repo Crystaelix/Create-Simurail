@@ -127,11 +127,11 @@ public class PhysicsBogeyAxle {
 	protected double targetSpeed;
 	protected double visualSpeedLerpFactor;
 	protected double visualSpeed;
-	
+
 	protected double slipSpeed;
 	protected double slipBind;
 	protected double slipBurst;
-	
+
 	protected double trackRecheckTime = 0.5;
 
 	protected AttachableBoxPhysicsObject axleBox;
@@ -703,7 +703,7 @@ public class PhysicsBogeyAxle {
 				double driveMag = Math.min(Math.abs(diffSpeed), Math.abs(targetSpeed)) * stress * driveForceMultiplier;
 				driveForce = diffSign * driveMag * (1 - brakeStrength) * Math.clamp(friction, 0.05, 1);
 			}
-			
+
 			if(!config.axleSlipEnabled.get() || bogey.staffRestrained) {
 				resetSlip();
 			}
@@ -725,7 +725,7 @@ public class PhysicsBogeyAxle {
 			}
 
 			double speedSign = Math.signum(speed);
-			double speedSignMag = Math.clamp(Math.abs(speed), 0, 1);
+			double speedSignMag = Math.clamp(Math.abs(speed) * 1.75, 0, 1);
 			double signFactor = (speedSignMag * speedSignMag * speedSignMag * 0.25 + speedSignMag * 0.75) * speedSign;
 			double brakeForce = signFactor * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 
@@ -757,7 +757,7 @@ public class PhysicsBogeyAxle {
 	protected double getTrackFriction(TrackSegment trackSegment) {
 		return 1;
 	}
-	
+
 	protected double getSlipAuthority(SimurailPhysicsConfig config) {
 		double maxSpeed = config.axleSlipMaxSpeed.get();
 		if(maxSpeed <= SimurailMath.EPSILON) {
@@ -845,7 +845,7 @@ public class PhysicsBogeyAxle {
 			}
 
 			double speedSign = Math.signum(speed);
-			double speedSignMag = Math.clamp(Math.abs(speed), 0, 1);
+			double speedSignMag = Math.clamp(Math.abs(speed) * 1.75, 0, 1);
 			double signFactor = (speedSignMag * speedSignMag * speedSignMag * 0.25 + speedSignMag * 0.75) * speedSign;
 			double brakeForce = signFactor * (brakeStrengthFactor * brakeStrength) * normalMass * Math.max(friction, 0.05);
 

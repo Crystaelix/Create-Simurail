@@ -29,11 +29,24 @@ public final class CurvedTrackSegment extends TrackSegment {
 		return segment / curve.getSegmentCount();
 	}
 
+	private static Vector3d curvePosition(BezierConnection curve, double t) {
+		return SimurailMath.position(curve, t, new Vector3d());
+	}
+
+	private static Vector3d curveNormal(BezierConnection curve, double t) {
+		Vector3d direction = SimurailMath.velocity(curve, t, new Vector3d());
+		Vector3d vertical = SimurailMath.slerp(
+				JOMLConversion.toJOML(curve.normals.getFirst()),
+				JOMLConversion.toJOML(curve.normals.getSecond()), t, new Vector3d());
+		Vector3d lateral = direction.cross(vertical, new Vector3d());
+		return lateral.cross(direction, vertical).normalize();
+	}
+
 	public CurvedTrackSegment(ResourceKey<Level> dimension, BezierConnection curve, int segment) {
 		super(dimension,
-				JOMLConversion.toJOML(curve.getPosition(segmentT(segment, curve))),
-				JOMLConversion.toJOML(curve.getPosition(segmentT(segment + 1, curve))),
-				JOMLConversion.toJOML(curve.getNormal(segmentT(segment + 0.5, curve))),
+				curvePosition(curve, segmentT(segment, curve)),
+				curvePosition(curve, segmentT(segment + 1, curve)),
+				curveNormal(curve, segmentT(segment + 0.5, curve)),
 				curve.getMaterial());
 		this.curve = curve;
 		this.segment = segment;

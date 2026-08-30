@@ -45,18 +45,21 @@ public final class CurvedTrackSegment extends TrackSegment {
 	}
 
 	// A curve's secondary resolves to a different shape than its primary, so always anchor on the primary
-	private record Form(BezierConnection curve, int segment, boolean reversed) {
-
-		static Form of(BezierConnection curve, int segment, boolean reversed) {
+	record Form(BezierConnection curve, int segment, boolean reversed) {
+		Form(BezierConnection curve, int segment, boolean reversed) {
 			if(curve.isPrimary()) {
-				return new Form(curve, segment, reversed);
+				this.curve = curve;
+				this.segment = segment;
+				this.reversed = reversed;
 			}
-			// Segment counts differ between the two, so remap through t
-			BezierConnection primary = curve.secondary();
-			int primaryCount = primary.getSegmentCount();
-			double t = 1 - (segment + 0.5) / curve.getSegmentCount();
-			int primarySegment = Math.clamp((int)(t * primaryCount), 0, Math.max(primaryCount - 1, 0));
-			return new Form(primary, primarySegment, !reversed);
+			else {
+				// Segment counts differ between the two, so remap through t
+				this.curve = curve.secondary();
+				int primaryCount = this.curve.getSegmentCount();
+				double t = 1 - (segment + 0.5) / curve.getSegmentCount();
+				this.segment = Math.clamp((int)(t * primaryCount), 0, Math.max(primaryCount - 1, 0));
+				this.reversed = !reversed;
+			}
 		}
 	}
 
@@ -65,7 +68,7 @@ public final class CurvedTrackSegment extends TrackSegment {
 	}
 
 	public CurvedTrackSegment(ResourceKey<Level> dimension, BezierConnection curve, int segment, boolean reversed) {
-		this(dimension, Form.of(curve, segment, reversed));
+		this(dimension, new Form(curve, segment, reversed));
 	}
 
 	private CurvedTrackSegment(ResourceKey<Level> dimension, Form form) {

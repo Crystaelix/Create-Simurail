@@ -103,6 +103,11 @@
 	"gui.simurail.probe_reader.min": "Минимальная дальность",
 	"gui.simurail.probe_reader.max": "Максимальная дальность",
 
+	"gui.simurail.physics_roller.mode": "Roller Mode",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "Clear and Pave",
+	"gui.simurail.physics_roller.mode.straight_fill": "Fill",
+	"gui.simurail.physics_roller.mode.wide_fill": "Fill Wide",
+
 	"gui.simurail.remote_controller.mode": "Режим",
 	"gui.simurail.remote_controller.mode.braking": "Торможение",
 	"gui.simurail.remote_controller.mode.braking_inverted": "Инвертированное торможение",

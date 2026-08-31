@@ -4,6 +4,7 @@
 		"simurail:automatic_coupler",
 		"simurail:gangway_frame",
 		"simurail:probe_reader",
+		"simurail:physics_roller",
 		"simurail:remote_controller"
 	]
 }

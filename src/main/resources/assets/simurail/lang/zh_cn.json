@@ -4,6 +4,7 @@
 	"block.simurail.gangway_frame": "风挡框",
 	"block.simurail.probe_reader": "转向架探针读取器",
 	"block.simurail.remote_controller": "转向架远端控制器",
+	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理转向架",
 	"item.simurail.connector": "转向架连接器",

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:physics_roller"
+	},
+	"pattern": [
+		"E",
+		"C",
+		"W"
+	],
+	"key": {
+		"C": {"item": "create:brass_casing"},
+		"E": {"item": "create:electron_tube"},
+		"W": {"item": "create:crushing_wheel"}
+	}
+}

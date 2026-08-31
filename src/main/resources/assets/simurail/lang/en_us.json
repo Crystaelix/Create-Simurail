@@ -4,6 +4,7 @@
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",
 	"block.simurail.remote_controller": "Bogie Remote Controller",
+	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "Inverted Physics Bogie",
 	"item.simurail.connector": "Bogie Connector",

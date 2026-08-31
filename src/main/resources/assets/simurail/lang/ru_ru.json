@@ -4,6 +4,7 @@
 	"block.simurail.gangway_frame": "Межвагонный переход",
 	"block.simurail.probe_reader": "Тележный считыватель",
 	"block.simurail.remote_controller": "Удалённый тележечный контроллер",
+	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
 	"item.simurail.connector": "Рулевой провод",

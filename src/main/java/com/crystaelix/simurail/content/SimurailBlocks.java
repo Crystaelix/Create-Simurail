@@ -5,6 +5,8 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlock;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockItem;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
@@ -46,6 +48,13 @@ public class SimurailBlocks {
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			item(ProbeReaderBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<PhysicsRollerBlock> PHYSICS_ROLLER = REGISTRATE.
+			block("physics_roller", PhysicsRollerBlock::new).
+			initialProperties(SharedProperties::softMetal).
+			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_YELLOW).sound(SoundType.METAL)).
+			item(PhysicsRollerBlockItem::new).
 			build().
 			register();
 	public static final BlockEntry<RemoteControllerBlock> REMOTE_CONTROLLER = REGISTRATE.

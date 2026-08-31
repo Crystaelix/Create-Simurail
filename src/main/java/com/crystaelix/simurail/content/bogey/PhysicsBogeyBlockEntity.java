@@ -542,7 +542,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
 		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
 		if(pivot == null || pivot.isRemoved()) {
-			pivot = new AttachableBoxPhysicsObject(subLevel, pivotPose, new Vector3d(0.5, 0.125, 0.125), config.bogeyPivotMass.get());
+			pivot = new AttachableBoxPhysicsObject(subLevel, pivotPose, new Vector3d(0.5, 0.125, 0.125).mul(subLevel.logicalPose().scale()), config.bogeyPivotMass.get());
 			physics.addObject(pivot);
 		}
 		if(pivotJoint == null || !pivotJoint.isValid()) {

@@ -144,6 +144,16 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://jitpack.io/"
+			}
+		}
+		filter {
+			includeModule("com.github.misterblusky9", "pocket")
+		}
+	}
 }
 
 def mcVersion = "1.21.1"
@@ -243,6 +253,7 @@ dependencies {
 	runtimeOnly "curse.maven:drive-by-wire-with-sable-1520378:8247104"
 	runtimeOnly "curse.maven:create-deco-509285:7943181"
 	runtimeOnly "curse.maven:create-aeronauticstoolgun-1521349:8701394"
+	runtimeOnly "com.github.misterblusky9:pocket:4c8c1dc9b5"
 
 	// Performance
 	runtimeOnly "curse.maven:yeetusexperimentus-635427:5444189"

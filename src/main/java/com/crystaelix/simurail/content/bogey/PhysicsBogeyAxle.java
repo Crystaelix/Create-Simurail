@@ -160,7 +160,8 @@ public class PhysicsBogeyAxle {
 		else {
 			currentOffset.set(targetOffset);
 		}
-		axleFrame.position.set(currentOffset);
+		double scale = subLevel.logicalPose().scale().x;
+		axleFrame.position.set(currentOffset).mul(scale);
 		staticAxleBogeyPos.set(currentOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
 		if(trackSegment == null) {
 			trackRecheckTime = 0.05;
@@ -336,7 +337,8 @@ public class PhysicsBogeyAxle {
 			else {
 				currentOffset.set(targetOffset);
 			}
-			axleFrame.position.set(currentOffset);
+			double scale = subLevel.logicalPose().scale().x;
+			axleFrame.position.set(currentOffset).mul(scale);
 			staticAxleBogeyPos.set(currentOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
 		}
 	}

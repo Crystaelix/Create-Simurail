@@ -1,6 +1,8 @@
 name: build
 on:
   push:
+    branches:
+      - 'main'
     paths:
       - 'src/**'
   workflow_dispatch:

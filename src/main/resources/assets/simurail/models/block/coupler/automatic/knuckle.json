@@ -4,8 +4,8 @@
 	},
 	"elements": [
 		{
-			"from": [-5, -2, -2],
-			"to": [-3, 2, 2],
+			"from": [-5, -2, -2.5],
+			"to": [-3, 2, 2.5],
 			"faces": {
 				"north": {"uv": [0, 0, 2, 4], "rotation": 180, "texture": "#head"},
 				"south": {"uv": [0, 0, 2, 4], "texture": "#head"},

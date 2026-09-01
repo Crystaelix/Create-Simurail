@@ -185,7 +185,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	public AABB getOutline(Direction direction) {
 		return AABB.ofSize(
 				getBlockPos().getCenter().add(direction.getStepX() * 0.40625, 0, direction.getStepZ() * 0.40625),
-				direction.getStepX() == 0 ? 0.375 : 0.1875, 0.375, direction.getStepZ() == 0 ? 0.375 : 0.1875);
+				direction.getStepX() == 0 ? 0.5 : 0.1875, 0.375, direction.getStepZ() == 0 ? 0.5 : 0.1875);
 	}
 
 	public void setPartner(BlockPos partnerPos) {

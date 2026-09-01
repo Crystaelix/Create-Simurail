@@ -959,14 +959,14 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	@Override
 	public float calculateStressApplied() {
-		if(!options.enabled || isPowerless()) {
+		if(!options.enabled || isUnpowered()) {
 			return 0;
 		}
 		return Math.abs(options.getStress()) * Math.abs(getStressMultiplier());
 	}
 
-	public boolean isPowerless() {
-		return getBlockState().getBlock() instanceof PowerlessBogeyBlock;
+	public boolean isUnpowered() {
+		return getBlockState().getBlock() instanceof UnpoweredPhysicsBogeyBlock;
 	}
 
 	public float getStressSign() {

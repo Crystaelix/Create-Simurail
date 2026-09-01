@@ -1,13 +1,13 @@
 {
 	"block.simurail.physics_bogey": "Physics Bogie",
-	"block.simurail.powerless_bogey": "Powerless Bogie",
+	"block.simurail.unpowered_physics_bogey": "Unpowered Physics Bogie",
 	"block.simurail.automatic_coupler": "Automatic Coupler",
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",
 	"block.simurail.remote_controller": "Bogie Remote Controller",
 
 	"item.simurail.inverted_physics_bogey": "Inverted Physics Bogie",
-	"item.simurail.inverted_powerless_bogey": "Inverted Powerless Bogie",
+	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
 	"item.simurail.connector": "Bogie Connector",
 
 	"block.simurail.gangway_frame.d": "Down",

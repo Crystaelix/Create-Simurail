@@ -8,14 +8,14 @@
 		"has_ingredient": {
 			"conditions": {
 				"items": [{
-					"items": "create:iron_sheet"
+					"items": "create:train_casing"
 				}]
 			},
 			"trigger": "minecraft:inventory_changed"
 		},
 		"has_recipe": {
 			"conditions": {
-				"recipe": "simurail:crafting/powerless_bogey_iron"
+				"recipe": "simurail:crafting/inverted_unpowered_physics_bogey_iron"
 			},
 			"trigger": "minecraft:recipe_unlocked"
 		}
@@ -25,6 +25,6 @@
 		"has_recipe"
 	]],
 	"rewards": {
-		"recipes": ["simurail:crafting/powerless_bogey_iron"]
+		"recipes": ["simurail:crafting/inverted_unpowered_physics_bogey_iron"]
 	}
 }

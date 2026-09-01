@@ -11,17 +11,17 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class InvertedPowerlessBogeyBlockItem extends PowerlessBogeyBlockItem {
+public class InvertedUnpoweredPhysicsBogeyBlockItem extends UnpoweredPhysicsBogeyBlockItem {
 
 	private Boolean canPlace;
 
-	public InvertedPowerlessBogeyBlockItem(Properties properties) {
-		super(SimurailBlocks.POWERLESS_BOGEY.get(), properties);
+	public InvertedUnpoweredPhysicsBogeyBlockItem(Properties properties) {
+		super(SimurailBlocks.UNPOWERED_PHYSICS_BOGEY.get(), properties);
 	}
 
 	@Override
 	public String getDescriptionId() {
-		return "item.simurail.inverted_powerless_bogey";
+		return "item.simurail.inverted_unpowered_physics_bogey";
 	}
 
 	@Override

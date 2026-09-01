@@ -39,7 +39,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 	public PhysicsBogeyVisual(VisualizationContext context, PhysicsBogeyBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
-		if(blockEntity.isPowerless()) {
+		if(blockEntity.isUnpowered()) {
 			rotatingModel.delete();
 		}
 	}
@@ -247,14 +247,14 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 	@Override
 	public void update(float partialTick) {
-		if(!blockEntity.isPowerless()) {
+		if(!blockEntity.isUnpowered()) {
 			super.update(partialTick);
 		}
 	}
 
 	@Override
 	public void updateLight(float partialTick) {
-		if(!blockEntity.isPowerless()) {
+		if(!blockEntity.isUnpowered()) {
 			super.updateLight(partialTick);
 		}
 		if(pivot != null) {
@@ -267,7 +267,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 	@Override
 	protected void _delete() {
-		if(!blockEntity.isPowerless()) {
+		if(!blockEntity.isUnpowered()) {
 			super._delete();
 		}
 		if(pivot != null) {
@@ -291,7 +291,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 	@Override
 	public void collectCrumblingInstances(Consumer<Instance> consumer) {
-		if(!blockEntity.isPowerless()) {
+		if(!blockEntity.isUnpowered()) {
 			super.collectCrumblingInstances(consumer);
 		}
 		if(pivot != null) {

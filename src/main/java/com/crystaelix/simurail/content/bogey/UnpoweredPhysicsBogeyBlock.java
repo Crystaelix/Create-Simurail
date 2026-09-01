@@ -8,9 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PowerlessBogeyBlock extends PhysicsBogeyBlock {
+public class UnpoweredPhysicsBogeyBlock extends PhysicsBogeyBlock {
 
-	public PowerlessBogeyBlock(Properties properties) {
+	public UnpoweredPhysicsBogeyBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -22,7 +22,7 @@ public class PowerlessBogeyBlock extends PhysicsBogeyBlock {
 	@Override
 	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
 		if(state.getValue(INVERTED)) {
-			return new ItemStack(SimurailItems.INVERTED_POWERLESS_BOGEY.get());
+			return new ItemStack(SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY.get());
 		}
 		return new ItemStack(this);
 	}

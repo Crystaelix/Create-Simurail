@@ -3,19 +3,19 @@
 	"criteria": {
 		"has_ingredient": {
 			"conditions": {
-				"items": [{"items": "simurail:powerless_bogey"}]
+				"items": [{"items": "simurail:unpowered_physics_bogey"}]
 			},
 			"trigger": "minecraft:inventory_changed"
 		},
 		"has_recipe": {
 			"conditions": {
-				"recipe": "simurail:crafting/inverted_powerless_bogey_convert"
+				"recipe": "simurail:crafting/physics_bogey_unpowered"
 			},
 			"trigger": "minecraft:recipe_unlocked"
 		}
 	},
 	"requirements": [["has_ingredient", "has_recipe"]],
 	"rewards": {
-		"recipes": ["simurail:crafting/inverted_powerless_bogey_convert"]
+		"recipes": ["simurail:crafting/physics_bogey_unpowered"]
 	}
 }

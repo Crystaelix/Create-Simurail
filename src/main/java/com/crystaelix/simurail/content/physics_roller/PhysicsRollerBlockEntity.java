@@ -79,6 +79,9 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 	// wheel anim client side
 	protected float animatedSpeed;
 
+	// animation in ponder
+	protected float manuallyAnimatedSpeed;
+
 	public PhysicsRollerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -156,7 +159,11 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 	}
 
 	public float getAnimatedSpeed() {
-		return animatedSpeed;
+		return manuallyAnimatedSpeed != 0 ? manuallyAnimatedSpeed : animatedSpeed;
+	}
+
+	public void setAnimatedSpeed(float speed) {
+		manuallyAnimatedSpeed = speed;
 	}
 
 	@Override
@@ -342,6 +349,10 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		PhysicsRollerMode rollingMode = mode.get();
 		int maxDepth = rollingMode == PhysicsRollerMode.TUNNEL_PAVE ? 0 : AllConfigs.server().kinetics.rollerFillDepth.get();
 
+		if(rollingMode != PhysicsRollerMode.TUNNEL_PAVE && !isFillGrounded(visitedPos, maxDepth, stateToPaveWith)) {
+			return;
+		}
+
 		for(int yOffset = 0; yOffset <= maxDepth; ++yOffset) {
 			Set<BlockPos> currentLayer = new HashSet<>();
 			if(rollingMode == PhysicsRollerMode.WIDE_FILL) {
@@ -372,6 +383,22 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		}
 	}
 
+	protected boolean isFillGrounded(BlockPos visitedPos, int maxDepth, BlockState stateToPaveWith) {
+		for(int yOffset = 1; yOffset <= maxDepth + 1; ++yOffset) {
+			BlockPos supportPos = visitedPos.below(yOffset);
+			if(!level.isLoaded(supportPos)) {
+				return false;
+			}
+
+			BlockState support = level.getBlockState(supportPos);
+			if(support.is(stateToPaveWith.getBlock()) || !isReplaceableByPaving(supportPos, support)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	protected PaveResult tryFill(BlockPos targetPos, List<IItemHandler> materials, BlockState toPlace) {
 		if(!level.isLoaded(targetPos) || isOutOfBounds(targetPos)) {
 			return PaveResult.FAIL;
@@ -381,8 +408,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		if(existing.is(toPlace.getBlock())) {
 			return PaveResult.PASS;
 		}
-		if(!existing.is(BlockTags.LEAVES) && !existing.canBeReplaced() &&
-				(!existing.getCollisionShape(level, targetPos).isEmpty() || existing.is(BlockTags.PORTALS))) {
+		if(!isReplaceableByPaving(targetPos, existing)) {
 			return PaveResult.FAIL;
 		}
 
@@ -392,6 +418,14 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 		level.setBlockAndUpdate(targetPos, toPlace);
 		return PaveResult.SUCCESS;
+	}
+
+	protected boolean isReplaceableByPaving(BlockPos pos, BlockState state) {
+		if(state.is(BlockTags.LEAVES) || state.canBeReplaced()) {
+			return true;
+		}
+
+		return state.getCollisionShape(level, pos).isEmpty() && !state.is(BlockTags.PORTALS);
 	}
 
 	protected boolean isOutOfBounds(BlockPos pos) {

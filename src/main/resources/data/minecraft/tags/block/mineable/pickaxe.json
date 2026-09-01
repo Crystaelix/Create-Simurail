@@ -1,6 +1,7 @@
 {
 	"values": [
 		"simurail:physics_bogey",
+		"simurail:unpowered_physics_bogey",
 		"simurail:automatic_coupler",
 		"simurail:gangway_frame",
 		"simurail:probe_reader",

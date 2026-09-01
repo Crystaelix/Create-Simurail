@@ -57,16 +57,16 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
-	public static final VoxelShaper SHAPES = VoxelShaper.forHorizontal(box(5, 5, 0, 11, 11, 3), Direction.SOUTH);
+	public static final VoxelShaper SHAPES = VoxelShaper.forHorizontal(box(4, 5, 0, 12, 11, 3), Direction.SOUTH);
 	public static final VoxelShaper[] D_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 3), GangwayFrameBlockShape.D.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
+			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 3), GangwayFrameBlockShape.D.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
 			toArray(VoxelShaper[]::new);
 	public static final VoxelShaper[] U_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 3), GangwayFrameBlockShape.U.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
+			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 3), GangwayFrameBlockShape.U.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
 			toArray(VoxelShaper[]::new);
-	public static final VoxelShaper SUBLEVEL_SHAPES = VoxelShaper.forHorizontal(box(5, 5, 0, 11, 11, 0.25), Direction.SOUTH);
-	public static final VoxelShaper SUBLEVEL_D_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 0.25), box(0, 2, 0, 16, 4, 0.25)), Direction.SOUTH);
-	public static final VoxelShaper SUBLEVEL_U_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(5, 5, 0, 11, 11, 0.25), box(0, 12, 0, 16, 14, 0.25)), Direction.SOUTH);
+	public static final VoxelShaper SUBLEVEL_SHAPES = VoxelShaper.forHorizontal(box(4, 5, 0, 12, 11, 0.25), Direction.SOUTH);
+	public static final VoxelShaper SUBLEVEL_D_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 0.25), box(0, 2, 0, 16, 4, 0.25)), Direction.SOUTH);
+	public static final VoxelShaper SUBLEVEL_U_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 0.25), box(0, 12, 0, 16, 14, 0.25)), Direction.SOUTH);
 
 	public AutomaticCouplerBlock(Properties properties) {
 		super(properties);

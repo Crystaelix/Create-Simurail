@@ -1,5 +1,6 @@
 {
 	"block.simurail.physics_bogey": "物理轉向架",
+	"block.simurail.unpowered_physics_bogey": "無動力物理轉向架",
 	"block.simurail.automatic_coupler": "自動連結器",
 	"block.simurail.gangway_frame": "風擋框",
 	"block.simurail.probe_reader": "轉向架探針讀取器",
@@ -7,6 +8,7 @@
 	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理轉向架",
+	"item.simurail.inverted_unpowered_physics_bogey": "倒置無動力物理轉向架",
 	"item.simurail.connector": "轉向架連接器",
 
 	"block.simurail.gangway_frame.d": "下",

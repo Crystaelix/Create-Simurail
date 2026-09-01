@@ -1,5 +1,6 @@
 {
 	"values": [
-		"simurail:physics_bogey"
+		"simurail:physics_bogey",
+		"simurail:unpowered_physics_bogey"
 	]
 }

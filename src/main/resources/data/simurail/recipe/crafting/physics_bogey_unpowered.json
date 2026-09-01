@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:physics_bogey"
+	},
+	"pattern": [
+		"SBS",
+		" P "
+	],
+	"key": {
+		"B": {"item": "simurail:unpowered_physics_bogey"},
+		"S": {"tag": "c:plates/brass"},
+		"P": {"item": "create:precision_mechanism"}
+	}
+}

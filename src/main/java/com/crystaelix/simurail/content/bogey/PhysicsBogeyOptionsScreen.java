@@ -17,6 +17,7 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.ItemLike;
 
 public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 
@@ -69,6 +70,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 
 	final BlockPos pos;
 	final PhysicsBogeyOptions options;
+	final boolean unpowered;
 	final boolean inverted;
 
 	private SLabel physicsLabel;
@@ -100,6 +102,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		super(menu, title);
 		pos = menu.pos;
 		options = menu.options;
+		unpowered = menu.unpowered;
 		inverted = menu.inverted;
 	}
 
@@ -196,7 +199,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		controlInput.calling(i -> options.controlMode = PhysicsBogeyControlMode.BY_ID.apply(i));
 
 		stressInput = new ScrollInput(x + 31, y + 108, 109, 18);
-		stressInput.withRange(-128 * 2, 128 * 2 + 1);
+		stressInput.withRange(unpowered ? 0 : -128 * 2, unpowered ? 1 : 128 * 2 + 1);
 		stressInput.withShiftStep(4);
 		stressInput.titled(STRESS_TITLE.plainCopy());
 		stressInput.format(i -> Component.literal(String.valueOf(i * 0.5F)));
@@ -241,10 +244,20 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 			addRenderableWidget(physicsInput);
 			addRenderableWidget(rotationInput);
 			addRenderableWidget(offsetInput);
-			addRenderableWidget(verticalInput);
+			if(!inverted) {
+				addRenderableWidget(verticalInput);
+			}
+			else {
+				verticalLabel.withTooltip(List.of(VERTICAL_TITLE.plainCopy().withColor(0x5391E1)));
+			}
 			addRenderableWidget(axleInput);
 			addRenderableWidget(controlInput);
-			addRenderableWidget(stressInput);
+			if(!unpowered) {
+				addRenderableWidget(stressInput);
+			}
+			else {
+				stressLabel.withTooltip(List.of(STRESS_TITLE.plainCopy().withColor(0x5391E1)));
+			}
 			addRenderableWidget(tiltInput);
 			addRenderableWidget(probeInput);
 		}
@@ -258,18 +271,28 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 			offsetLabel.withTooltip(List.of(
 					OFFSET_TITLE.plainCopy().withColor(0x5391E1),
 					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
-			verticalLabel.withTooltip(List.of(
-					VERTICAL_TITLE.plainCopy().withColor(0x5391E1),
-					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
+			if(!inverted) {
+				verticalLabel.withTooltip(List.of(
+						VERTICAL_TITLE.plainCopy().withColor(0x5391E1),
+						COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
+			}
+			else {
+				verticalLabel.withTooltip(List.of(VERTICAL_TITLE.plainCopy().withColor(0x5391E1)));
+			}
 			axleLabel.withTooltip(List.of(
 					AXLE_TITLE.plainCopy().withColor(0x5391E1),
 					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
 			controlLabel.withTooltip(List.of(
 					CONTROL_TITLE.plainCopy().withColor(0x5391E1),
 					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
-			stressLabel.withTooltip(List.of(
-					STRESS_TITLE.plainCopy().withColor(0x5391E1),
-					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
+			if(!unpowered) {
+				stressLabel.withTooltip(List.of(
+						STRESS_TITLE.plainCopy().withColor(0x5391E1),
+						COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
+			}
+			else {
+				stressLabel.withTooltip(List.of(STRESS_TITLE.plainCopy().withColor(0x5391E1)));
+			}
 			tiltLabel.withTooltip(List.of(
 					TILT_TITLE.plainCopy().withColor(0x5391E1),
 					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
@@ -305,8 +328,14 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		renderBlock(graphics, mouseX, mouseY, partialTicks, guiLeft, guiTop, BACKGROUND);
 	}
 
+	private ItemLike getBlock() {
+		return unpowered ?
+				inverted ? SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY : SimurailBlocks.UNPOWERED_PHYSICS_BOGEY :
+					inverted ? SimurailItems.INVERTED_PHYSICS_BOGEY : SimurailBlocks.PHYSICS_BOGEY;
+	}
+
 	private void renderBlock(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, TextureSheetSegment background) {
-		GuiGameElement.GuiRenderBuilder builder = GuiGameElement.of(inverted ? SimurailItems.INVERTED_PHYSICS_BOGEY : SimurailBlocks.PHYSICS_BOGEY);
+		GuiGameElement.GuiRenderBuilder builder = GuiGameElement.of(getBlock());
 		builder.at(guiLeft + background.getWidth() + 6, guiTop + background.getHeight() - 56, -200);
 		builder.scale(5);
 		builder.render(graphics);

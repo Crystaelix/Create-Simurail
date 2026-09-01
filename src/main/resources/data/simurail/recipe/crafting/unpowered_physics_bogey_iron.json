@@ -1,0 +1,23 @@
+{
+	"neoforge:conditions": [{
+		"type": "neoforge:tag_empty",
+		"tag": "c:ingots/steel"
+	}],
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:unpowered_physics_bogey"
+	},
+	"pattern": [
+		" C ",
+		"RPR",
+		"IAI"
+	],
+	"key": {
+		"C": {"item": "create:railway_casing"},
+		"P": {"item": "create:andesite_alloy"},
+		"A": {"item": "create:shaft"},
+		"R": {"item": "create:rose_quartz"},
+		"I": {"tag": "c:ingots/iron"}
+	}
+}

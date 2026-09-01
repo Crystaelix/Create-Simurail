@@ -1,5 +1,6 @@
 {
 	"block.simurail.physics_bogey": "Физическая тележка",
+	"block.simurail.unpowered_physics_bogey": "Unpowered Physics Bogie",
 	"block.simurail.automatic_coupler": "Авто-сцепка",
 	"block.simurail.gangway_frame": "Межвагонный переход",
 	"block.simurail.probe_reader": "Тележный считыватель",
@@ -7,6 +8,7 @@
 	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
+	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
 	"item.simurail.connector": "Рулевой провод",
 
 	"block.simurail.gangway_frame.d": "Низ",

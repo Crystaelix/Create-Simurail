@@ -17,14 +17,21 @@ public class SimurailPonderTags {
 
 		helper.addToTag(SimPonderTags.PHYSICS_BEHAVIOR).
 		add(SimurailBlocks.PHYSICS_BOGEY.get()).
+		add(SimurailItems.INVERTED_PHYSICS_BOGEY.get()).
+		add(SimurailBlocks.UNPOWERED_PHYSICS_BOGEY.get()).
+		add(SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY.get()).
 		add(SimurailBlocks.AUTOMATIC_COUPLER.get()).
 		add(SimurailBlocks.PHYSICS_ROLLER.get());
 
 		helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES).
-		add(SimurailBlocks.PHYSICS_BOGEY.get());
+		add(SimurailBlocks.PHYSICS_BOGEY.get()).
+		add(SimurailItems.INVERTED_PHYSICS_BOGEY.get());
 
 		helper.addToTag(AllCreatePonderTags.TRAIN_RELATED).
 		add(SimurailBlocks.PHYSICS_BOGEY.get()).
+		add(SimurailItems.INVERTED_PHYSICS_BOGEY.get()).
+		add(SimurailBlocks.UNPOWERED_PHYSICS_BOGEY.get()).
+		add(SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY.get()).
 		add(SimurailBlocks.AUTOMATIC_COUPLER.get()).
 		add(SimurailBlocks.GANGWAY_FRAME.get()).
 		add(SimurailItems.CONNECTOR.get()).

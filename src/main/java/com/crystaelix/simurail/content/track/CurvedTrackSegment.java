@@ -16,11 +16,13 @@ import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import net.createmod.catnip.data.Couple;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public final class CurvedTrackSegment extends TrackSegment {
 
 	final BezierConnection curve;
 	final int segment;
+	final boolean reversed;
 
 	final TrackNodeLocation curveStart;
 	final TrackNodeLocation curveEnd;
@@ -42,19 +44,49 @@ public final class CurvedTrackSegment extends TrackSegment {
 		return lateral.cross(direction, vertical).normalize();
 	}
 
-	public CurvedTrackSegment(ResourceKey<Level> dimension, BezierConnection curve, int segment) {
-		super(dimension,
-				curvePosition(curve, segmentT(segment, curve)),
-				curvePosition(curve, segmentT(segment + 1, curve)),
-				curveNormal(curve, segmentT(segment + 0.5, curve)),
-				curve.getMaterial());
-		this.curve = curve;
-		this.segment = segment;
+	// A curve's secondary resolves to a different shape than its primary, so always anchor on the primary
+	record Form(BezierConnection curve, int segment, boolean reversed) {
+		Form(BezierConnection curve, int segment, boolean reversed) {
+			if(curve.isPrimary()) {
+				this.curve = curve;
+				this.segment = segment;
+				this.reversed = reversed;
+			}
+			else {
+				// Segment counts differ between the two, so remap through t
+				this.curve = curve.secondary();
+				int primaryCount = this.curve.getSegmentCount();
+				double t = 1 - (segment + 0.5) / curve.getSegmentCount();
+				this.segment = Math.clamp((int)(t * primaryCount), 0, Math.max(primaryCount - 1, 0));
+				this.reversed = !reversed;
+			}
+		}
+	}
 
-		curveStart = new TrackNodeLocation(curve.starts.getFirst()).in(dimension);
-		curveStart.yOffsetPixels = curve.yOffsetAt(curve.starts.getFirst());
-		curveEnd = new TrackNodeLocation(curve.starts.getSecond()).in(dimension);
-		curveEnd.yOffsetPixels = curve.yOffsetAt(curve.starts.getSecond());
+	public CurvedTrackSegment(ResourceKey<Level> dimension, BezierConnection curve, int segment) {
+		this(dimension, curve, segment, false);
+	}
+
+	public CurvedTrackSegment(ResourceKey<Level> dimension, BezierConnection curve, int segment, boolean reversed) {
+		this(dimension, new Form(curve, segment, reversed));
+	}
+
+	private CurvedTrackSegment(ResourceKey<Level> dimension, Form form) {
+		super(dimension,
+				curvePosition(form.curve(), segmentT(form.reversed() ? form.segment() + 1 : form.segment(), form.curve())),
+				curvePosition(form.curve(), segmentT(form.reversed() ? form.segment() : form.segment() + 1, form.curve())),
+				curveNormal(form.curve(), segmentT(form.segment() + 0.5, form.curve())),
+				form.curve().getMaterial());
+		this.curve = form.curve();
+		this.segment = form.segment();
+		this.reversed = form.reversed();
+
+		Vec3 startEnd = reversed ? curve.starts.getSecond() : curve.starts.getFirst();
+		Vec3 endEnd = reversed ? curve.starts.getFirst() : curve.starts.getSecond();
+		curveStart = new TrackNodeLocation(startEnd).in(dimension);
+		curveStart.yOffsetPixels = curve.yOffsetAt(startEnd);
+		curveEnd = new TrackNodeLocation(endEnd).in(dimension);
+		curveEnd.yOffsetPixels = curve.yOffsetAt(endEnd);
 	}
 
 	public BezierConnection curve() {
@@ -65,14 +97,20 @@ public final class CurvedTrackSegment extends TrackSegment {
 		return segment;
 	}
 
+	public boolean reversed() {
+		return reversed;
+	}
+
 	public double curveT(double t) {
 		int iterations = 2;
-		return SimurailMath.segmentToCurveT(curve, segmentT(segment, curve), segmentT(segment + 1, curve), t, iterations);
+		return SimurailMath.segmentToCurveT(curve,
+				segmentT(segment, curve), segmentT(segment + 1, curve),
+				reversed ? 1 - t : t, iterations);
 	}
 
 	@Override
 	public CurvedTrackSegment reverse() {
-		return new CurvedTrackSegment(dimension, curve.secondary(), curve.getSegmentCount() - segment - 1);
+		return new CurvedTrackSegment(dimension, curve, segment, !reversed);
 	}
 
 	@Override
@@ -80,6 +118,9 @@ public final class CurvedTrackSegment extends TrackSegment {
 		double curveT = curveT(t);
 
 		SimurailMath.velocity(curve, curveT, dest.direction);
+		if(reversed) {
+			dest.direction.negate();
+		}
 
 		Vector3d normal1 = JOMLConversion.toJOML(curve.normals.getFirst());
 		Vector3d normal2 = JOMLConversion.toJOML(curve.normals.getSecond());
@@ -114,24 +155,30 @@ public final class CurvedTrackSegment extends TrackSegment {
 		TrackNode endNode = graph.locateNode(curveEnd);
 		if(startNode != null && endNode != null) {
 			TrackEdge edge = graph.getConnection(Couple.create(startNode, endNode));
-			if(edge != null && edge.isTurn() && BezierHashStrategy.INSTANCE.equals(curve, edge.getTurn())) {
-				return edge;
+			if(edge != null && edge.isTurn()) {
+				BezierConnection turn = edge.getTurn();
+				if(!turn.isPrimary()) {
+					turn = turn.secondary();
+				}
+				if(BezierHashStrategy.INSTANCE.equals(curve, turn)) {
+					return edge;
+				}
 			}
 		}
 		return null;
 	}
 
 	public CurvedTrackSegment next(boolean reverse) {
-		int nextSegment = segment + (reverse ? -1 : 1);
+		int nextSegment = segment + (reverse != reversed ? -1 : 1);
 		if(nextSegment < 0 || nextSegment >= curve.getSegmentCount()) {
 			return null;
 		}
-		return new CurvedTrackSegment(dimension, curve, nextSegment);
+		return new CurvedTrackSegment(dimension, curve, nextSegment, reversed);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dimension, BezierHashStrategy.INSTANCE.hashCode(curve), segment);
+		return Objects.hash(dimension, BezierHashStrategy.INSTANCE.hashCode(curve), segment, reversed);
 	}
 
 	@Override
@@ -143,6 +190,7 @@ public final class CurvedTrackSegment extends TrackSegment {
 			return dimension.equals(other.dimension) &&
 					BezierHashStrategy.INSTANCE.equals(curve, other.curve) &&
 					segment == other.segment &&
+					reversed == other.reversed &&
 					material == other.material;
 		}
 		return false;

@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 public class PhysicsBogeyMenu extends AbstractContainerMenu {
 
 	protected final BlockPos pos;
+	protected final boolean unpowered;
 	protected final boolean inverted;
 	protected final boolean isCustomName;
 	protected final boolean hasComputer;
@@ -22,6 +23,7 @@ public class PhysicsBogeyMenu extends AbstractContainerMenu {
 	public PhysicsBogeyMenu(MenuType<PhysicsBogeyMenu> type, int windowId, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, windowId);
 		pos = extraData.readBlockPos();
+		unpowered = extraData.readBoolean();
 		inverted = extraData.readBoolean();
 		isCustomName = extraData.readBoolean();
 		hasComputer = extraData.readBoolean();
@@ -32,6 +34,7 @@ public class PhysicsBogeyMenu extends AbstractContainerMenu {
 	public PhysicsBogeyMenu(int windowId, PhysicsBogeyBlockEntity be) {
 		super(SimurailMenus.PHYSICS_BOGEY.get(), windowId);
 		pos = be.getBlockPos();
+		unpowered = be.isUnpowered();
 		inverted = be.isInverted();
 		isCustomName = be.hasCustomName();
 		hasComputer = be.computerBehaviour.hasAttachedComputer();
@@ -41,6 +44,7 @@ public class PhysicsBogeyMenu extends AbstractContainerMenu {
 
 	public static void prepare(RegistryFriendlyByteBuf extraData, PhysicsBogeyBlockEntity be, boolean secondary) {
 		extraData.writeBlockPos(be.getBlockPos());
+		extraData.writeBoolean(be.isUnpowered());
 		extraData.writeBoolean(be.isInverted());
 		extraData.writeBoolean(be.hasCustomName());
 		extraData.writeBoolean(be.computerBehaviour.hasAttachedComputer());

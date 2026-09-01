@@ -94,6 +94,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public static final Component NAME = Component.translatable("block.simurail.physics_bogey");
 	public static final Component INVERTED_NAME = Component.translatable("item.simurail.inverted_physics_bogey");
+	public static final Component UNPOWERED_NAME = Component.translatable("block.simurail.unpowered_physics_bogey");
+	public static final Component INVERTED_UNPOWERED_NAME = Component.translatable("item.simurail.unpowered_inverted_physics_bogey");
 
 	protected boolean initialized = false;
 
@@ -159,7 +161,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	public PhysicsBogeyBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
-		options = new PhysicsBogeyOptions(isInverted());
+		options = new PhysicsBogeyOptions(isUnpowered(), isInverted());
 		localCenter = JOMLConversion.atCenterOf(pos);
 		axleFront = new PhysicsBogeyAxle(this, true);
 		axleBack = new PhysicsBogeyAxle(this, false);
@@ -181,7 +183,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	@Override
 	public Component getName() {
-		return customName != null ? customName : isInverted() ? INVERTED_NAME : NAME;
+		return customName != null ? customName : isUnpowered() ?
+				isInverted() ? INVERTED_UNPOWERED_NAME : UNPOWERED_NAME :
+					isInverted() ? INVERTED_NAME : NAME;
 	}
 
 	@Override

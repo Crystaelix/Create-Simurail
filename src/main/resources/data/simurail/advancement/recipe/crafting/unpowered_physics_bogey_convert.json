@@ -1,0 +1,21 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_ingredient": {
+			"conditions": {
+				"items": [{"items": "simurail:inverted_unpowered_physics_bogey"}]
+			},
+			"trigger": "minecraft:inventory_changed"
+		},
+		"has_recipe": {
+			"conditions": {
+				"recipe": "simurail:crafting/unpowered_physics_bogey_convert"
+			},
+			"trigger": "minecraft:recipe_unlocked"
+		}
+	},
+	"requirements": [["has_ingredient", "has_recipe"]],
+	"rewards": {
+		"recipes": ["simurail:crafting/unpowered_physics_bogey_convert"]
+	}
+}

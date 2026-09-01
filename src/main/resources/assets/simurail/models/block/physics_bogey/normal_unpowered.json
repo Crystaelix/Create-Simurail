@@ -1,0 +1,25 @@
+{
+	"parent": "block/block",
+	"render_type": "solid",
+	"textures": {
+		"particle": "simurail:block/physics_bogey/top",
+		"top": "simurail:block/physics_bogey/top",
+		"end": "simurail:block/physics_bogey/end_unpowered",
+		"side": "simurail:block/physics_bogey/side",
+		"bottom": "simurail:block/physics_bogey/bottom_unpowered"
+	},
+	"elements": [
+		{
+			"from": [0, 5, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 11], "texture": "#end"},
+				"east": {"uv": [0, 0, 16, 11], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 11], "texture": "#end"},
+				"west": {"uv": [0, 0, 16, 11], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
+			}
+		}
+	]
+}

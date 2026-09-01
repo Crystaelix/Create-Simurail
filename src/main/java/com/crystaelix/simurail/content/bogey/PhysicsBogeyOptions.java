@@ -29,7 +29,10 @@ public class PhysicsBogeyOptions {
 
 	public PhysicsBogeyOptions() {}
 
-	public PhysicsBogeyOptions(boolean inverted) {
+	public PhysicsBogeyOptions(boolean unpowered, boolean inverted) {
+		if(unpowered) {
+			stress = 0;
+		}
 		type = BogeyRenderedType.getFallback(inverted);
 	}
 

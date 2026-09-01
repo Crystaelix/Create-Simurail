@@ -24,7 +24,7 @@ public class SimurailBlockEntities {
 			blockEntity("physics_bogey", PhysicsBogeyBlockEntity::new).
 			visual(() -> PhysicsBogeyVisual::new, false).
 			renderer(() -> PhysicsBogeyRenderer::new).
-			validBlocks(SimurailBlocks.PHYSICS_BOGEY).
+			validBlocks(SimurailBlocks.PHYSICS_BOGEY, SimurailBlocks.UNPOWERED_PHYSICS_BOGEY).
 			register();
 	public static final BlockEntityEntry<AutomaticCouplerBlockEntity> COUPLER = REGISTRATE.
 			blockEntity("coupler", AutomaticCouplerBlockEntity::new).

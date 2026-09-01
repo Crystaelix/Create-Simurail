@@ -57,6 +57,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -76,6 +78,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 
 	final BlockPos pos;
 	final PhysicsBogeyOptions options;
+	final boolean unpowered;
 	final boolean inverted;
 
 	final List<BogeyCategory<?>> mainCategories;
@@ -122,6 +125,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 		super(menu, title);
 		pos = menu.pos;
 		options = menu.options;
+		unpowered = menu.unpowered;
 		inverted = menu.inverted;
 
 		mainCategories = BogeyMenuManager.getCategories(inverted);
@@ -463,8 +467,14 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 		graphics.disableScissor();
 	}
 
+	private ItemLike getBlock() {
+		return unpowered ?
+				inverted ? SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY : SimurailBlocks.UNPOWERED_PHYSICS_BOGEY :
+					inverted ? SimurailItems.INVERTED_PHYSICS_BOGEY : SimurailBlocks.PHYSICS_BOGEY;
+	}
+
 	private void renderBlock(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, TextureSheetSegment background) {
-		GuiGameElement.GuiRenderBuilder builder = GuiGameElement.of(inverted ? SimurailItems.INVERTED_PHYSICS_BOGEY : SimurailBlocks.PHYSICS_BOGEY);
+		GuiGameElement.GuiRenderBuilder builder = GuiGameElement.of(getBlock());
 		builder.at(guiLeft + background.getWidth() + 6, guiTop + background.getHeight() - 56, -200);
 		builder.scale(5);
 		builder.render(graphics);
@@ -517,17 +527,19 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 		double wheelAngle = distance / type.wheelRadius();
 		float wheelAngleDeg = (float)Math.toDegrees(wheelAngle) % 360;
 
-		CachedBuffers.block(SimurailBlocks.PHYSICS_BOGEY.getDefaultState().
+		CachedBuffers.block((unpowered ? SimurailBlocks.UNPOWERED_PHYSICS_BOGEY : SimurailBlocks.PHYSICS_BOGEY).getDefaultState().
 				setValue(BlockStateProperties.INVERTED, inverted).
 				setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)).
 		translate(-0.5F, -0.5F, -0.5F).
 		light(light).overlay(overlay).
 		renderInto(poseStack, bufferSource.getBuffer(RenderType.cutoutMipped()));
 
-		CachedBuffers.block(KineticBlockEntityRenderer.shaft(Direction.Axis.Z)).
-		translate(-0.5F, -0.5F, -0.5F).
-		light(light).overlay(overlay).
-		renderInto(poseStack, bufferSource.getBuffer(RenderType.cutoutMipped()));
+		if(!unpowered) {
+			CachedBuffers.block(KineticBlockEntityRenderer.shaft(Direction.Axis.Z)).
+			translate(-0.5F, -0.5F, -0.5F).
+			light(light).overlay(overlay).
+			renderInto(poseStack, bufferSource.getBuffer(RenderType.cutoutMipped()));
+		}
 
 		TrackTypeEntry renderEntry = BogeyMenuManager.getRenderTrackTypeEntry(type.type(), inverted);
 		BlockState trackState = renderEntry.trackState().get();

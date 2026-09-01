@@ -103,6 +103,7 @@
 	"gui.simurail.probe_reader.min": "最小距離",
 	"gui.simurail.probe_reader.max": "最大距離",
 
+	"gui.simurail.physics_roller.material": "Paving Material",
 	"gui.simurail.physics_roller.mode": "Roller Mode",
 	"gui.simurail.physics_roller.mode.tunnel_pave": "Clear and Pave",
 	"gui.simurail.physics_roller.mode.straight_fill": "Fill",

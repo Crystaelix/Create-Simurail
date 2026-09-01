@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +54,12 @@ public class PhysicsRollerBlock extends AttachedActorBlock implements IBE<Physic
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
 		return true;
+	}
+
+	@Override
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(level, pos, state, placer, stack);
+		withBlockEntityDo(level, pos, PhysicsRollerBlockEntity::searchForSharedValues);
 	}
 
 	@Override

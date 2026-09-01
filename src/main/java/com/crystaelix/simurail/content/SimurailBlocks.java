@@ -50,18 +50,18 @@ public class SimurailBlocks {
 			item(ProbeReaderBlockItem::new).
 			build().
 			register();
-	public static final BlockEntry<PhysicsRollerBlock> PHYSICS_ROLLER = REGISTRATE.
-			block("physics_roller", PhysicsRollerBlock::new).
-			initialProperties(SharedProperties::softMetal).
-			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_YELLOW).sound(SoundType.METAL)).
-			item(PhysicsRollerBlockItem::new).
-			build().
-			register();
 	public static final BlockEntry<RemoteControllerBlock> REMOTE_CONTROLLER = REGISTRATE.
 			block("remote_controller", RemoteControllerBlock::new).
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			item(RemoteControllerBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<PhysicsRollerBlock> PHYSICS_ROLLER = REGISTRATE.
+			block("physics_roller", PhysicsRollerBlock::new).
+			initialProperties(SharedProperties::softMetal).
+			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_YELLOW).sound(SoundType.METAL)).
+			item(PhysicsRollerBlockItem::new).
 			build().
 			register();
 

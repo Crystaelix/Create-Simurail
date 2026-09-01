@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllTags;
@@ -14,6 +15,7 @@ import com.simibubi.create.content.kinetics.base.BlockBreakingKineticBlockEntity
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -50,16 +52,29 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 	public static final Vec3 ACTIVE_AREA_OFFSET = new Vec3(0, -2, 0);
 	public static final double ACTIVE_AREA_REACH = 0.45;
 
+	public static final double MAX_ROLL = Math.toRadians(5);
+	public static final double MAX_PITCH = Math.toRadians(45);
+	public static final double MAX_MISALIGNMENT = Math.toRadians(22.5);
+
+	public static final float FILTER_SLOT_OFFSET = 3;
+	public static final float MODE_SLOT_OFFSET = -3;
+
+	public static final int SHARED_VALUE_MAX_RANGE = 64;
+
+	public FilteringBehaviour filtering;
 	public ScrollOptionBehaviour<PhysicsRollerMode> mode;
 
 	@Nullable
 	protected BlockPos lastVisitedPos;
+
+	protected boolean dontPropagate;
 
 	// wheel anim client side
 	protected float animatedSpeed;
@@ -70,8 +85,74 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(filtering = new FilteringBehaviour(this, new PhysicsRollerValueBox(FILTER_SLOT_OFFSET)));
 		behaviours.add(mode = new ScrollOptionBehaviour<>(PhysicsRollerMode.class,
-				Component.translatable("gui.simurail.physics_roller.mode"), this, new PhysicsRollerValueBox()));
+				Component.translatable("gui.simurail.physics_roller.mode"), this, new PhysicsRollerValueBox(MODE_SLOT_OFFSET)));
+
+		filtering.setLabel(Component.translatable("gui.simurail.physics_roller.material"));
+		filtering.withCallback(this::onFilterChanged).withPredicate(this::isValidMaterial);
+		mode.withCallback(this::onModeChanged);
+	}
+
+	protected void onModeChanged(int rollingMode) {
+		shareValuesToAdjacent();
+	}
+
+	protected void onFilterChanged(ItemStack filter) {
+		shareValuesToAdjacent();
+	}
+
+	// adopt current line values when appended
+	public void searchForSharedValues() {
+		BlockState state = getBlockState();
+		Direction lineAxis = state.getValue(PhysicsRollerBlock.FACING).getClockWise();
+		
+		for(int direction : Iterate.positiveAndNegative) {
+			BlockPos neighbourPos = worldPosition.relative(lineAxis, direction);
+			if(level.getBlockState(neighbourPos) != state ||
+					!(level.getBlockEntity(neighbourPos) instanceof PhysicsRollerBlockEntity roller)) {
+				continue;
+			}
+
+			acceptSharedValues(roller.mode.getValue(), roller.filtering.getFilter());
+			shareValuesToAdjacent();
+			return;
+		}
+	}
+
+	public void shareValuesToAdjacent() {
+		if(dontPropagate || level.isClientSide()) {
+			return;
+		}
+
+		BlockState state = getBlockState();
+		Direction lineAxis = state.getValue(PhysicsRollerBlock.FACING).getClockWise();
+
+		for(int direction : Iterate.positiveAndNegative) {
+			for(int distance = 1; distance < SHARED_VALUE_MAX_RANGE; ++distance) {
+				BlockPos neighbourPos = worldPosition.relative(lineAxis, direction * distance);
+				if(level.getBlockState(neighbourPos) != state ||
+						!(level.getBlockEntity(neighbourPos) instanceof PhysicsRollerBlockEntity roller)) {
+					break;
+				}
+
+				roller.acceptSharedValues(mode.getValue(), filtering.getFilter());
+			}
+		}
+	}
+
+	protected void acceptSharedValues(int rollingMode, ItemStack filter) {
+		dontPropagate = true;
+		filtering.setFilter(filter.copy());
+		mode.setValue(rollingMode);
+		dontPropagate = false;
+		notifyUpdate();
+	}
+
+	@Override
+	protected AABB createRenderBoundingBox() {
+		// wheel culling
+		return new AABB(worldPosition).inflate(1);
 	}
 
 	public float getAnimatedSpeed() {
@@ -91,6 +172,12 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 		Direction facing = getBlockState().getValue(PhysicsRollerBlock.FACING);
 		Pose3dc pose = subLevel.logicalPose();
+		if(!isPavingOrientationAllowed(pose, facing)) {
+			animatedSpeed = 0;
+			lastVisitedPos = null;
+			return;
+		}
+
 		Vec3 center = getBlockPos().getCenter();
 		Vec3 motion = Sable.HELPER.getVelocity(level, subLevel, center).scale(1 / 20D);
 		Vec3 localMotion = pose.transformNormalInverse(motion);
@@ -100,7 +187,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 			return;
 		}
 
-		if(!VecHelper.isVecPointingTowards(localMotion, facing)) {
+		if(!isPavingMotionAllowed(localMotion, facing)) {
 			lastVisitedPos = null;
 			return;
 		}
@@ -113,6 +200,21 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 		lastVisitedPos = visitedPos;
 		visitNewPosition(subLevel, visitedPos, motion);
+	}
+
+	protected boolean isPavingOrientationAllowed(Pose3dc pose, Direction facing) {
+		Direction lateral = facing.getClockWise();
+		Vector3d up = pose.orientation().transformInverse(new Vector3d(0, 1, 0));
+
+		double pitch = Math.asin(Mth.clamp(up.dot(facing.getStepX(), facing.getStepY(), facing.getStepZ()), -1, 1));
+		double roll = Math.atan2(up.dot(lateral.getStepX(), lateral.getStepY(), lateral.getStepZ()), up.y);
+
+		return Math.abs(pitch) <= MAX_PITCH && Math.abs(roll) <= MAX_ROLL;
+	}
+
+	protected boolean isPavingMotionAllowed(Vec3 localMotion, Direction facing) {
+		double alignment = localMotion.normalize().dot(Vec3.atLowerCornerOf(facing.getNormal()));
+		return Math.acos(Mth.clamp(alignment, -1, 1)) <= MAX_MISALIGNMENT;
 	}
 
 	protected float calculateAnimatedSpeed(Vec3 localMotion, Direction facing) {
@@ -135,11 +237,11 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 			damageEntities(subLevel, visitedPos, motion);
 		}
 
-		IItemHandler materials = getMaterialSource();
+		List<IItemHandler> materials = getMaterialSources();
 		BlockState stateToPaveWith = getStateToPaveWith(materials);
 
 		for(BlockPos toBreak : getPositionsToBreak(visitedPos, stateToPaveWith)) {
-			destroyBlock(toBreak);
+			destroyBlock(toBreak, materials);
 		}
 		triggerPaver(visitedPos, materials, stateToPaveWith);
 	}
@@ -213,20 +315,27 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		return !state.getCollisionShape(level, pos).isEmpty() && !AllTags.AllBlockTags.TRACKS.matches(state);
 	}
 
-	protected void destroyBlock(BlockPos pos) {
+	protected void destroyBlock(BlockPos pos, List<IItemHandler> materials) {
 		BlockState state = level.getBlockState(pos);
 		boolean noHarvest = state.is(BlockTags.NEEDS_IRON_TOOL) || state.is(BlockTags.NEEDS_STONE_TOOL) ||
 				state.is(BlockTags.NEEDS_DIAMOND_TOOL);
+
+		// only while filtered, preventing unfiltered roller paving with dropped blocks
+		boolean collect = !filtering.getFilter().isEmpty();
 
 		BlockHelper.destroyBlock(level, pos, 1, stack -> {
 			if(noHarvest || level.random.nextBoolean()) {
 				return;
 			}
-			Block.popResource(level, pos, stack);
+
+			ItemStack remainder = collect ? depositMaterial(materials, stack) : stack;
+			if(!remainder.isEmpty()) {
+				Block.popResource(level, pos, remainder);
+			}
 		});
 	}
 
-	protected void triggerPaver(BlockPos visitedPos, IItemHandler materials, BlockState stateToPaveWith) {
+	protected void triggerPaver(BlockPos visitedPos, List<IItemHandler> materials, BlockState stateToPaveWith) {
 		if(stateToPaveWith.isAir()) {
 			return;
 		}
@@ -263,7 +372,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		}
 	}
 
-	protected PaveResult tryFill(BlockPos targetPos, IItemHandler materials, BlockState toPlace) {
+	protected PaveResult tryFill(BlockPos targetPos, List<IItemHandler> materials, BlockState toPlace) {
 		if(!level.isLoaded(targetPos) || isOutOfBounds(targetPos)) {
 			return PaveResult.FAIL;
 		}
@@ -289,16 +398,49 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		return Sable.HELPER.isInPlotGrid(level, SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
 	}
 
-	@Nullable
-	public IItemHandler getMaterialSource() {
-		return level.getCapability(Capabilities.ItemHandler.BLOCK, worldPosition.above(), Direction.DOWN);
+	// every container sitting on this roller's line, closest ones first
+	public List<IItemHandler> getMaterialSources() {
+		BlockState state = getBlockState();
+		Direction lineAxis = state.getValue(PhysicsRollerBlock.FACING).getClockWise();
+
+		List<IItemHandler> sources = new ArrayList<>();
+		addMaterialSource(sources, worldPosition);
+
+		boolean[] endOfLine = new boolean[Iterate.positiveAndNegative.length];
+		int endsReached = 0;
+
+		for(int distance = 1; distance < SHARED_VALUE_MAX_RANGE && endsReached < endOfLine.length; ++distance) {
+			for(int i = 0; i < endOfLine.length; ++i) {
+				if(endOfLine[i]) {
+					continue;
+				}
+
+				BlockPos rollerPos = worldPosition.relative(lineAxis, Iterate.positiveAndNegative[i] * distance);
+				if(level.getBlockState(rollerPos) != state) {
+					endOfLine[i] = true;
+					++endsReached;
+					continue;
+				}
+
+				addMaterialSource(sources, rollerPos);
+			}
+		}
+
+		return sources;
 	}
 
-	public BlockState getStateToPaveWith(IItemHandler materials) {
-		if(materials != null) {
-			for(int slot = 0; slot < materials.getSlots(); ++slot) {
-				ItemStack stack = materials.getStackInSlot(slot);
-				if(isValidMaterial(stack)) {
+	protected void addMaterialSource(List<IItemHandler> sources, BlockPos rollerPos) {
+		IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, rollerPos.above(), Direction.DOWN);
+		if(source != null) {
+			sources.add(source);
+		}
+	}
+
+	public BlockState getStateToPaveWith(List<IItemHandler> materials) {
+		for(IItemHandler source : materials) {
+			for(int slot = 0; slot < source.getSlots(); ++slot) {
+				ItemStack stack = source.getStackInSlot(slot);
+				if(filtering.test(stack) && isValidMaterial(stack)) {
 					return RollerMovementBehaviour.getStateToPaveWith(stack);
 				}
 			}
@@ -307,13 +449,37 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		return Blocks.AIR.defaultBlockState();
 	}
 
-	protected boolean hasMaterial(IItemHandler materials, BlockState toPlace) {
-		return findMaterial(materials, toPlace) >= 0;
+	protected boolean hasMaterial(List<IItemHandler> materials, BlockState toPlace) {
+		for(IItemHandler source : materials) {
+			if(findMaterial(source, toPlace) >= 0) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	protected boolean consumeMaterial(IItemHandler materials, BlockState toPlace) {
-		int slot = findMaterial(materials, toPlace);
-		return slot >= 0 && !materials.extractItem(slot, 1, false).isEmpty();
+	protected boolean consumeMaterial(List<IItemHandler> materials, BlockState toPlace) {
+		for(IItemHandler source : materials) {
+			int slot = findMaterial(source, toPlace);
+			if(slot >= 0 && !source.extractItem(slot, 1, false).isEmpty()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// returns whatever did not fit anywhere on the line
+	protected ItemStack depositMaterial(List<IItemHandler> materials, ItemStack stack) {
+		for(IItemHandler source : materials) {
+			stack = ItemHandlerHelper.insertItemStacked(source, stack, false);
+			if(stack.isEmpty()) {
+				break;
+			}
+		}
+
+		return stack;
 	}
 
 	protected int findMaterial(IItemHandler materials, BlockState toPlace) {
@@ -359,16 +525,22 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 	private static class PhysicsRollerValueBox extends ValueBoxTransform.Sided {
 
+		protected final float offset;
+
+		public PhysicsRollerValueBox(float offset) {
+			this.offset = offset;
+		}
+
 		@Override
 		@Nullable
 		public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
 			Direction facing = state.getValue(PhysicsRollerBlock.FACING);
-			Vec3 offset = getModelOffset(toModelSide(getSide(), facing));
-			if(offset == null) {
+			Vec3 modelOffset = getModelOffset(toModelSide(getSide(), facing));
+			if(modelOffset == null) {
 				return null;
 			}
 
-			return VecHelper.rotateCentered(offset, AngleHelper.horizontalAngle(facing) + 180, Axis.Y);
+			return VecHelper.rotateCentered(modelOffset, AngleHelper.horizontalAngle(facing) + 180, Axis.Y);
 		}
 
 		@Override
@@ -391,8 +563,8 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				return false;
 			}
 
-			Vec3 offset = getLocalOffset(level, pos, state);
-			return offset != null && localHit.distanceTo(offset) < scale / 3;
+			Vec3 localOffset = getLocalOffset(level, pos, state);
+			return localOffset != null && localHit.distanceTo(localOffset) < scale / 3;
 		}
 
 		@Override
@@ -406,12 +578,13 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		}
 
 		@Nullable
-		protected static Vec3 getModelOffset(Direction modelSide) {
+		protected Vec3 getModelOffset(Direction modelSide) {
+			float slot = 8 + offset;
 			return switch(modelSide) {
-			case UP -> VecHelper.voxelSpace(8, 15.5F, 13);
-			case SOUTH -> VecHelper.voxelSpace(8, 13, 15.5F);
-			case WEST -> VecHelper.voxelSpace(0.5F, 8, 13);
-			case EAST -> VecHelper.voxelSpace(15.5F, 8, 13);
+			case UP -> VecHelper.voxelSpace(slot, 15.5F, 11);
+			case SOUTH -> VecHelper.voxelSpace(slot, 11, 15.5F);
+			case WEST -> VecHelper.voxelSpace(0.5F, slot, 11);
+			case EAST -> VecHelper.voxelSpace(15.5F, slot, 11);
 			default -> null;
 			};
 		}

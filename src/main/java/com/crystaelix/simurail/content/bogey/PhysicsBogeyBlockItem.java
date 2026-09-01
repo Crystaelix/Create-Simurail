@@ -100,6 +100,9 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 				}
 			}
 		}
+		else {
+			disableRotation = false;
+		}
 
 		boolean result = level.setBlock(pos, state, Block.UPDATE_ALL_IMMEDIATE);
 		if(context.getLevel().getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {

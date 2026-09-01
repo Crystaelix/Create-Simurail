@@ -99,6 +99,7 @@ public class PhysicsBogeyAxle {
 
 	protected final Vector3d lastOffset = new Vector3d();
 	protected final Vector3d targetOffset = new Vector3d();
+	protected final Vector3d currentOffset = new Vector3d();
 	protected final Vector3d staticAxleBogeyPos = new Vector3d();
 	protected float vertOffset;
 	protected double offsetTimer = 0;
@@ -154,12 +155,13 @@ public class PhysicsBogeyAxle {
 		targetOffset.x = logicalFront ? latOffset : -latOffset;
 		targetOffset.y = bogey.isInverted() ? 0.5 + vertOffset : -1.5 - vertOffset;
 		if(offsetTimer > 0) {
-			targetOffset.lerp(lastOffset, offsetTimer, axleFrame.position);
+			targetOffset.lerp(lastOffset, offsetTimer, currentOffset);
 		}
 		else {
-			axleFrame.position.set(targetOffset);
+			currentOffset.set(targetOffset);
 		}
-		staticAxleBogeyPos.set(targetOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
+		axleFrame.position.set(currentOffset);
+		staticAxleBogeyPos.set(currentOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
 		if(trackSegment == null) {
 			trackRecheckTime = 0.05;
 		}
@@ -167,7 +169,7 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void resetOffset() {
-		lastOffset.set(axleFrame.position);
+		lastOffset.set(currentOffset);
 		double latOffset = bogey.options.type.logicalAxleSpacing() * 0.5;
 		vertOffset = bogey.options.getAxleOffset();
 		targetOffset.x = logicalFront ? latOffset : -latOffset;
@@ -329,13 +331,13 @@ public class PhysicsBogeyAxle {
 		if(offsetTimer > 0) {
 			offsetTimer -= timeStep / SimurailConfig.server().physics.axleSpacingUpdateTime.get();
 			if(offsetTimer > 0) {
-				targetOffset.lerp(lastOffset, offsetTimer, axleFrame.position);
+				targetOffset.lerp(lastOffset, offsetTimer, currentOffset);
 			}
 			else {
-				offsetTimer = 0;
-				axleFrame.position.set(targetOffset);
+				currentOffset.set(targetOffset);
 			}
-			staticAxleBogeyPos.set(targetOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
+			axleFrame.position.set(currentOffset);
+			staticAxleBogeyPos.set(currentOffset).rotate(bogey.getJointOrientation()).add(bogey.localCenter);
 		}
 	}
 

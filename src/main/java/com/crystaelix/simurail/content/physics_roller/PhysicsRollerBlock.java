@@ -67,7 +67,7 @@ public class PhysicsRollerBlock extends AttachedActorBlock implements IBE<Physic
 		IPlacementHelper placementHelper = PlacementHelpers.get(PLACEMENT_HELPER_ID);
 		if(!player.isShiftKeyDown() && player.mayBuild() && placementHelper.matchesItem(stack)) {
 			placementHelper.getOffset(player, level, state, pos, hitResult).
-					placeInWorld(level, (BlockItem)stack.getItem(), player, hand, hitResult);
+			placeInWorld(level, (BlockItem)stack.getItem(), player, hand, hitResult);
 			return ItemInteractionResult.SUCCESS;
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

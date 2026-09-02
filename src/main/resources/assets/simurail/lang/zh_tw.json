@@ -105,11 +105,10 @@
 	"gui.simurail.probe_reader.min": "最小距離",
 	"gui.simurail.probe_reader.max": "最大距離",
 
-	"gui.simurail.physics_roller.material": "Paving Material",
-	"gui.simurail.physics_roller.mode": "Roller Mode",
-	"gui.simurail.physics_roller.mode.tunnel_pave": "Clear and Pave",
-	"gui.simurail.physics_roller.mode.straight_fill": "Fill",
-	"gui.simurail.physics_roller.mode.wide_fill": "Fill Wide",
+	"gui.simurail.physics_roller.mode": "壓路機模式",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "清理方塊並鋪路",
+	"gui.simurail.physics_roller.mode.straight_fill": "垂直填充下方",
+	"gui.simurail.physics_roller.mode.wide_fill": "斜坡式填充下方",
 
 	"gui.simurail.remote_controller.mode": "模式",
 	"gui.simurail.remote_controller.mode.braking": "煞車",

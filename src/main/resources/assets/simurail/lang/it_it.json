@@ -105,11 +105,10 @@
 	"gui.simurail.probe_reader.min": "Minimum Distance",
 	"gui.simurail.probe_reader.max": "Maximum Distance",
 
-	"gui.simurail.physics_roller.material": "Paving Material",
-	"gui.simurail.physics_roller.mode": "Roller Mode",
-	"gui.simurail.physics_roller.mode.tunnel_pave": "Clear and Pave",
-	"gui.simurail.physics_roller.mode.straight_fill": "Fill",
-	"gui.simurail.physics_roller.mode.wide_fill": "Fill Wide",
+	"gui.simurail.physics_roller.mode": "Modalità del rullo",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "Rompi blocchi e pavimenta",
+	"gui.simurail.physics_roller.mode.straight_fill": "Riempi sotto in linea retta",
+	"gui.simurail.physics_roller.mode.wide_fill": "Riempi sotto con pendenza",
 
 	"gui.simurail.remote_controller.mode": "Mode",
 	"gui.simurail.remote_controller.mode.braking": "Braking",

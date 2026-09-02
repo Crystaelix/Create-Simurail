@@ -60,14 +60,17 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 	public static final Vec3 ACTIVE_AREA_OFFSET = new Vec3(0, -2, 0);
 	public static final double ACTIVE_AREA_REACH = 0.45;
 
-	public static final double MAX_ROLL = Math.toRadians(5);
-	public static final double MAX_PITCH = Math.toRadians(45);
-	public static final double MAX_MISALIGNMENT = Math.toRadians(22.5);
+	public static final double MAX_ROLL = Math.PI / 36;
+	public static final double MAX_PITCH = Math.PI / 4;
+	public static final double MAX_MISALIGNMENT = Math.PI / 8;
 
 	public static final float FILTER_SLOT_OFFSET = 3;
 	public static final float MODE_SLOT_OFFSET = -3;
 
 	public static final int SHARED_VALUE_MAX_RANGE = 64;
+
+	public static final Component MODE = Component.translatable("gui.simurail.physics_roller.mode");
+	public static final Component MATERIAL = Component.translatable("create.contraptions.mechanical_roller.pave_material");
 
 	public FilteringBehaviour filtering;
 	public ScrollOptionBehaviour<PhysicsRollerMode> mode;
@@ -90,10 +93,9 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering = new FilteringBehaviour(this, new PhysicsRollerValueBox(FILTER_SLOT_OFFSET)));
-		behaviours.add(mode = new ScrollOptionBehaviour<>(PhysicsRollerMode.class,
-				Component.translatable("gui.simurail.physics_roller.mode"), this, new PhysicsRollerValueBox(MODE_SLOT_OFFSET)));
+		behaviours.add(mode = new ScrollOptionBehaviour<>(PhysicsRollerMode.class, MODE, this, new PhysicsRollerValueBox(MODE_SLOT_OFFSET)));
 
-		filtering.setLabel(Component.translatable("gui.simurail.physics_roller.material"));
+		filtering.setLabel(MATERIAL.copy());
 		filtering.withCallback(this::onFilterChanged).withPredicate(this::isValidMaterial);
 		mode.withCallback(this::onModeChanged);
 	}
@@ -449,14 +451,12 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				if(endOfLine[i]) {
 					continue;
 				}
-
 				BlockPos rollerPos = worldPosition.relative(lineAxis, Iterate.positiveAndNegative[i] * distance);
 				if(level.getBlockState(rollerPos) != state) {
 					endOfLine[i] = true;
 					++endsReached;
 					continue;
 				}
-
 				addMaterialSource(sources, rollerPos);
 			}
 		}
@@ -480,7 +480,6 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				}
 			}
 		}
-
 		return Blocks.AIR.defaultBlockState();
 	}
 
@@ -490,7 +489,6 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -501,7 +499,6 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -513,7 +510,6 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				break;
 			}
 		}
-
 		return stack;
 	}
 
@@ -528,7 +524,6 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 				return slot;
 			}
 		}
-
 		return -1;
 	}
 
@@ -589,7 +584,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 			}
 
 			stack.rotateYDegrees(AngleHelper.horizontalAngle(side) + 180).
-					rotateXDegrees(side == Direction.UP ? 90 : 0);
+			rotateXDegrees(side == Direction.UP ? 90 : 0);
 		}
 
 		@Override
@@ -628,12 +623,10 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 			if(side.getAxis().isVertical()) {
 				return side;
 			}
-
 			Direction modelSide = Direction.NORTH;
 			for(Direction current = facing; current != side; current = current.getClockWise()) {
 				modelSide = modelSide.getClockWise();
 			}
-
 			return modelSide;
 		}
 	}

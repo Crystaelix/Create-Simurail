@@ -105,11 +105,10 @@
 	"gui.simurail.probe_reader.min": "Минимальная дальность",
 	"gui.simurail.probe_reader.max": "Максимальная дальность",
 
-	"gui.simurail.physics_roller.material": "Paving Material",
-	"gui.simurail.physics_roller.mode": "Roller Mode",
-	"gui.simurail.physics_roller.mode.tunnel_pave": "Clear and Pave",
-	"gui.simurail.physics_roller.mode.straight_fill": "Fill",
-	"gui.simurail.physics_roller.mode.wide_fill": "Fill Wide",
+	"gui.simurail.physics_roller.mode": "Режим катка",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "Снос и укладка",
+	"gui.simurail.physics_roller.mode.straight_fill": "Заполнение снизу",
+	"gui.simurail.physics_roller.mode.wide_fill": "Наклонное заполнение снизу",
 
 	"gui.simurail.remote_controller.mode": "Режим",
 	"gui.simurail.remote_controller.mode.braking": "Торможение",

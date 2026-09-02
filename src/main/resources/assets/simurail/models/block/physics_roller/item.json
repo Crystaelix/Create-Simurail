@@ -1,8 +1,9 @@
 {
 	"parent": "block/block",
+	"render_type": "cutout",
 	"loader": "neoforge:obj",
-	"flip_v": true,
 	"model": "create:models/block/mechanical_roller/item.obj",
+	"flip_v": true,
 	"textures": {
 		"wheel": "create:block/roller_wheel",
 		"metal": "create:block/roller_metal",

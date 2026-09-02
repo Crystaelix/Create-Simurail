@@ -27,7 +27,7 @@ public class RemoteControllerScenes {
 
 		scene.title("remote_controller.intro", "header");
 		scene.configureBasePlate(0, 0, 9);
-		scene.scaleSceneView(0.8F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.layer(1), Direction.DOWN);

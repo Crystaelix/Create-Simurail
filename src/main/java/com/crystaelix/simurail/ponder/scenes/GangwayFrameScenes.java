@@ -36,7 +36,7 @@ public class GangwayFrameScenes {
 
 		scene.title("gangway_frame.intro", "header");
 		scene.configureBasePlate(0, 0, 9);
-		scene.scaleSceneView(0.8F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.layer(1), Direction.DOWN);
@@ -168,7 +168,7 @@ public class GangwayFrameScenes {
 
 		scene.title("gangway_frame.coupler", "header");
 		scene.configureBasePlate(0, 0, 9);
-		scene.scaleSceneView(0.8F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.layer(1), Direction.DOWN);

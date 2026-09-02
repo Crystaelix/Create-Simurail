@@ -29,7 +29,7 @@ public class ProbeReaderScenes {
 
 		scene.title("probe_reader.intro", "header");
 		scene.configureBasePlate(0, 0, 9);
-		scene.scaleSceneView(0.8F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.fromTo(0, 1, 4, 8, 1, 4), Direction.DOWN);

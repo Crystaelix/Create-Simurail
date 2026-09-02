@@ -106,13 +106,15 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 
 	@LuaFunction
 	public final double getMaxStress() {
-		return blockEntity.getOptions().getStress();
+		return blockEntity.isUnpowered() ? 0 : blockEntity.getOptions().getStress();
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void setMaxStress(double stress) {
-		blockEntity.getOptions().setStress((float)stress);
-		blockEntity.setChanged();
+		if(!blockEntity.isUnpowered()) {
+			blockEntity.getOptions().setStress((float)stress);
+			blockEntity.setChanged();
+		}
 	}
 
 	@LuaFunction
@@ -139,12 +141,22 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 
 	@LuaFunction
 	public final int getControlMode() {
-		return blockEntity.getOptions().controlMode.ordinal();
+		if(blockEntity.isUnpowered()) {
+			return blockEntity.getOptions().controlMode.unpoweredId();	
+		}
+		else {
+			return blockEntity.getOptions().controlMode.ordinal();
+		}
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void setControlMode(int mode) {
-		blockEntity.getOptions().controlMode = PhysicsBogeyControlMode.BY_ID.apply(mode);
+		if(blockEntity.isUnpowered()) {
+			blockEntity.getOptions().controlMode = PhysicsBogeyControlMode.BY_ID_UNPOWERED.apply(mode);
+		}
+		else {
+			blockEntity.getOptions().controlMode = PhysicsBogeyControlMode.BY_ID.apply(mode);
+		}
 		blockEntity.setChanged();
 	}
 
@@ -204,18 +216,20 @@ public class PhysicsBogeyPeripheral extends SyncedPeripheral<PhysicsBogeyBlockEn
 
 	@LuaFunction
 	public final double getStressMultiplier() {
-		return blockEntity.getStressMultiplier();
+		return blockEntity.isUnpowered() ? 0 : blockEntity.getStressMultiplier();
 	}
 
 	@LuaFunction
 	public final boolean hasStressMultiplierOverride() {
-		return blockEntity.getComputerOverrides().overrideStressMultiplier;
+		return blockEntity.isUnpowered() ? false : blockEntity.getComputerOverrides().overrideStressMultiplier;
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void setStressMultiplierOverride(double stressMultiplier) {
-		blockEntity.getComputerOverrides().setStressMultiplier((float)stressMultiplier);
-		blockEntity.setChanged();
+		if(!blockEntity.isUnpowered()) {
+			blockEntity.getComputerOverrides().setStressMultiplier((float)stressMultiplier);
+			blockEntity.setChanged();
+		}
 	}
 
 	@LuaFunction(mainThread = true)

@@ -58,6 +58,10 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 			Component.translatable("gui.simurail.physics_bogey.control.strength"),
 			Component.translatable("gui.simurail.physics_bogey.control.strength_inverted"),
 			Component.translatable("gui.simurail.physics_bogey.control.none"));
+	public static final List<Component> CONTROL_OPTIONS_UNPOWERED = List.of(
+			Component.translatable("gui.simurail.physics_bogey.control.braking"),
+			Component.translatable("gui.simurail.physics_bogey.control.braking_inverted"),
+			Component.translatable("gui.simurail.physics_bogey.control.none"));
 	public static final List<Component> CONNECTOR_OPTIONS = List.of(
 			Component.translatable("gui.simurail.physics_bogey.connector.visible"),
 			Component.translatable("gui.simurail.physics_bogey.connector.invisible"),
@@ -192,11 +196,11 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		axleInput.calling(i -> options.setAxleOffset(i * 0.0625F));
 
 		controlInput = new SelectionScrollInput(x + 31, y + 86, 109, 18);
-		controlInput.forOptions(CONTROL_OPTIONS);
+		controlInput.forOptions(unpowered ? CONTROL_OPTIONS_UNPOWERED : CONTROL_OPTIONS);
 		controlInput.titled(CONTROL_TITLE.plainCopy());
 		controlInput.writingTo(controlLabel);
-		controlInput.setState(options.controlMode.ordinal());
-		controlInput.calling(i -> options.controlMode = PhysicsBogeyControlMode.BY_ID.apply(i));
+		controlInput.setState(unpowered ? options.controlMode.unpoweredId() : options.controlMode.ordinal());
+		controlInput.calling(i -> options.controlMode = (unpowered ? PhysicsBogeyControlMode.BY_ID_UNPOWERED : PhysicsBogeyControlMode.BY_ID).apply(i));
 
 		stressInput = new ScrollInput(x + 31, y + 108, 109, 18);
 		stressInput.withRange(unpowered ? 0 : -128 * 2, unpowered ? 1 : 128 * 2 + 1);

@@ -18,6 +18,12 @@ public enum PhysicsBogeyControlMode {
 
 	public static final IntFunction<PhysicsBogeyControlMode> BY_ID = ByIdMap.continuous(PhysicsBogeyControlMode::ordinal, values(), OutOfBoundsStrategy.ZERO);
 	public static final StreamCodec<ByteBuf, PhysicsBogeyControlMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, PhysicsBogeyControlMode::ordinal);
+	public static final PhysicsBogeyControlMode[] UNPOWERED = {BRAKING, BRAKING_INVERTED, NONE};
+	public static final IntFunction<PhysicsBogeyControlMode> BY_ID_UNPOWERED = ByIdMap.continuous(PhysicsBogeyControlMode::unpoweredId, UNPOWERED, OutOfBoundsStrategy.ZERO);
+
+	public int unpoweredId() {
+		return Math.min(ordinal(), 2);
+	}
 
 	@Override
 	public String toString() {

@@ -16,13 +16,14 @@ public class PhysicsRollerBlockItem extends BlockItem {
 	}
 
 	@Override
-	public BlockPlaceContext updatePlacementContext(BlockPlaceContext context) {
+	public InteractionResult place(BlockPlaceContext context) {
 		BlockPos clickedPos = context.getClickedPos();
 		Level level = context.getLevel();
 		BlockState stateBelow = level.getBlockState(clickedPos.below());
 		if(!Block.isFaceFull(stateBelow.getCollisionShape(level, clickedPos.below()), Direction.UP)) {
-			return context;
+			return super.place(context);
 		}
-		return BlockPlaceContext.at(context, clickedPos.above(), context.getClickedFace());
+		Direction clickedFace = context.getClickedFace();
+		return super.place(BlockPlaceContext.at(context, clickedPos.relative(Direction.UP), clickedFace));
 	}
 }

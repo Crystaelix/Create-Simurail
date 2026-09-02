@@ -151,7 +151,7 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 
 	public static boolean inProjectionRange(Vector3dc segmentStart, Vector3dc segmentDelta, Vector3dc segmentVertical, Vector3dc localPosition, Vector3dc localVertical) {
 		// Reduce jump back to track when reaching end of track
-		double length = segmentDelta.lengthSquared();
+		double length = segmentDelta.length();
 		if(length < SimurailMath.EPSILON) {
 			return false;
 		}

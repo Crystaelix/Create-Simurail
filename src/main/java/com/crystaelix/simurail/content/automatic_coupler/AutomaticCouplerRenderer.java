@@ -88,15 +88,13 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 			BlockState air = Blocks.AIR.defaultBlockState();
 			VertexConsumer vb = bufferSource.getBuffer(RenderType.solid());
 
-			poseStack.pushPose();
-			poseStack.translate(0.5F, 0.5F, 0.5F);
-
 			PartialModel model = switch(be.couplerLengthMode) {
 			default -> SimurailPartialModels.COUPLER_BAR;
 			case 1 -> SimurailPartialModels.COUPLER_BAR_SHORT;
 			case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
 			};
 			CachedBuffers.partial(model, air).
+			center().
 			translate(couplerOffset).
 			rotate(couplerRot).
 			color(be.color).
@@ -104,14 +102,13 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 			renderInto(poseStack, vb);
 
 			CachedBuffers.partial(PartialModel.of(be.type.modelId()), air).
+			center().
 			translate(couplerOffset).
 			rotate(couplerRot).
 			translate(be.getLength(), 0, 0).
 			color(be.color).
 			light(light).overlay(overlay).
 			renderInto(poseStack, vb);
-
-			poseStack.popPose();
 		}
 
 		GangwayFrame partner = be.getGangwayPartner();

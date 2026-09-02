@@ -7,10 +7,11 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerVisual;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderer;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyVisual;
-import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockEntity;
-import com.crystaelix.simurail.content.physics_roller.PhysicsRollerRenderer;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameRenderer;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockEntity;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerRenderer;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerVisual;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -45,6 +46,7 @@ public class SimurailBlockEntities {
 			register();
 	public static final BlockEntityEntry<PhysicsRollerBlockEntity> PHYSICS_ROLLER = REGISTRATE.
 			blockEntity("physics_roller", PhysicsRollerBlockEntity::new).
+			visual(() -> PhysicsRollerVisual::new).
 			renderer(() -> PhysicsRollerRenderer::new).
 			validBlocks(SimurailBlocks.PHYSICS_ROLLER).
 			register();

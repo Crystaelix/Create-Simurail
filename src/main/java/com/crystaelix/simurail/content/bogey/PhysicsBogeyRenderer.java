@@ -13,6 +13,8 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.transform.PoseTransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ClientSubLevel;
@@ -44,25 +46,22 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 		be.getRenderPivotOffset(partialTick, pivotOffset);
 		be.getRenderPivotRot(partialTick, pivotRot);
 
-		poseStack.pushPose();
-		poseStack.translate(0.5F, 0.5F, 0.5F);
-
-		poseStack.pushPose();
-		poseStack.translate(pivotOffset.x, pivotOffset.y, pivotOffset.z);
-		poseStack.mulPose(pivotRot);
-		poseStack.translate(0, (be.isInverted() ? 1 : -1) * be.options.getAxleOffset(), 0);
-		poseStack.last().pose().rotate(SimurailMathf.ROT_ZNYPXP);
-		poseStack.last().normal().rotate(SimurailMathf.ROT_ZNYPXP);
+		PoseTransformStack transformStack = TransformStack.of(poseStack);
+		transformStack.pushPose();
+		transformStack.
+		center().
+		translate(pivotOffset).
+		rotate(pivotRot).
+		translate(0, (be.isInverted() ? 1 : -1) * be.options.getAxleOffset(), 0).
+		rotate(SimurailMathf.ROT_ZNYPXP);
 		BogeyRenderedType type = be.options.type;
-		type.style().render(type.size(), partialTick, poseStack, bufferSource, light, overlay, be.getWheelAngle(partialTick), be.getBogeyData(), false);
-		poseStack.popPose();
+		type.style().render(type.size(), partialTick, transformStack.unwrap(), bufferSource, light, overlay, be.getWheelAngle(partialTick), be.getBogeyData(), false);
+		transformStack.popPose();
 
 		BlockState air = Blocks.AIR.defaultBlockState();
 		VertexConsumer vb = bufferSource.getBuffer(RenderType.solid());
 
 		if(be.options.renderFrontConnector && be.connectionFront != null && level.getBlockEntity(be.connectionFront) instanceof PhysicsBogeyBlockEntity other) {
-			poseStack.pushPose();
-
 			pivotRot.transform(be.getConnectorAnchorOffset(partialTick, true, anchorOffset)).add(pivotOffset);
 			other.getRenderPivotOffset(partialTick, otherPivotOffset);
 			other.getRenderPivotRot(partialTick, otherPivotRot);
@@ -90,9 +89,9 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 			float yRot = (float)Math.atan2(diffX, diffZ);
 			float xRot = (float)Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ));
 
-			poseStack.translate(anchorOffset.x, anchorOffset.y, anchorOffset.z);
-
 			CachedBuffers.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air).
+			center().
+			translate(anchorOffset).
 			rotateY(Mth.PI + yRot).rotateX(xRot).
 			light(light).overlay(overlay).
 			renderInto(poseStack, vb);
@@ -101,23 +100,21 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 				float length = anchorOffset.distance(otherAnchorOffset) * 0.5F - 0.1875F + 0.0078125F;
 				float scale = (length * 4) / 8;
 
-				for(int j = 0; j < 8; j++) {
+				for(int i = 0; i < 8; i++) {
 					CachedBuffers.partial(AllPartialModels.TRAIN_COUPLING_CABLE, air).
+					center().
+					translate(anchorOffset).
 					rotateY(yRot).rotateX(-xRot).
 					translate(0, 0, 0.1875F).
 					scale(0.5F, 0.5F, scale).
-					translate(0, 0, 0.125F + j * 0.25F).
+					translate(0, 0, 0.125F + i * 0.25F).
 					light(light).overlay(overlay).
 					renderInto(poseStack, vb);
 				}
 			}
-
-			poseStack.popPose();
 		}
 
 		if(be.options.renderBackConnector && be.connectionBack != null && level.getBlockEntity(be.connectionBack) instanceof PhysicsBogeyBlockEntity other) {
-			poseStack.pushPose();
-
 			pivotRot.transform(be.getConnectorAnchorOffset(partialTick, false, anchorOffset)).add(pivotOffset);
 			other.getRenderPivotOffset(partialTick, otherPivotOffset);
 			other.getRenderPivotRot(partialTick, otherPivotRot);
@@ -148,6 +145,8 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 			poseStack.translate(anchorOffset.x, anchorOffset.y, anchorOffset.z);
 
 			CachedBuffers.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air).
+			center().
+			translate(anchorOffset).
 			rotateY(Mth.PI + yRot).rotateX(xRot).
 			light(light).overlay(overlay).
 			renderInto(poseStack, vb);
@@ -156,21 +155,19 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 				float length = anchorOffset.distance(otherAnchorOffset) * 0.5F - 0.1875F + 0.0078125F;
 				float scale = (length * 4) / 8;
 
-				for(int j = 0; j < 8; j++) {
+				for(int i = 0; i < 8; i++) {
 					CachedBuffers.partial(AllPartialModels.TRAIN_COUPLING_CABLE, air).
+					center().
+					translate(anchorOffset).
 					rotateY(yRot).rotateX(-xRot).
 					translate(0, 0, 0.1875F).
 					scale(0.5F, 0.5F, scale).
-					translate(0, 0, 0.125F + j * 0.25F).
+					translate(0, 0, 0.125F + i * 0.25F).
 					light(light).overlay(overlay).
 					renderInto(poseStack, vb);
 				}
 			}
-
-			poseStack.popPose();
 		}
-
-		poseStack.popPose();
 	}
 
 	@Override

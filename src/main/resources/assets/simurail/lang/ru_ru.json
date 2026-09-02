@@ -423,7 +423,7 @@
 	"simurail.ponder.remote_controller.intro.text_4": "Подайте редстоун-сигнал чтобы контролировать привязанную Физическую Тележку",
 
 	"simurail.ponder.physics_roller.intro.header": "Paving with Physics Rollers",
-	"simurail.ponder.physics_roller.intro.text_1": "On simulated contraptions, a Physics Roller can be used to clear and pave the terrain the structure travels over",
+	"simurail.ponder.physics_roller.intro.text_1": "On simulated contraptions, a Physics Roller can be used to clear and pave the static terrain the structure travels over",
 	"simurail.ponder.physics_roller.intro.text_2": "The Physics Roller can be mounted anywhere on the structure",
 	"simurail.ponder.physics_roller.intro.text_3": "A line of Rollers works for as long as it is given a redstone signal, and can be switched off without disassembling",
 	"simurail.ponder.physics_roller.intro.text_4": "It also has to sit roughly level, and only works while the contraption travels along the direction it faces",

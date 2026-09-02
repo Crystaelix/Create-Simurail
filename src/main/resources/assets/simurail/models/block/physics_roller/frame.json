@@ -1,8 +1,8 @@
 {
 	"parent": "block/block",
-	"render_type": "minecraft:cutout",
+	"render_type": "cutout",
 	"textures": {
-		"particle": "simurail:block/physics_roller_casing",
+		"particle": "create:block/industrial_iron_block",
 		"metal": "create:block/roller_metal"
 	},
 	"elements": [

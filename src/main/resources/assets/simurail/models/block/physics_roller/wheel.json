@@ -5,6 +5,7 @@
 	"model": "create:models/block/mechanical_roller/wheel.obj",
 	"flip_v": true,
 	"textures": {
+		"particle": "create:block/andesite_block",
 		"wheel": "create:block/roller_wheel"
 	}
 }

@@ -53,20 +53,10 @@ public class SimurailPonderScenes {
 		addStoryBoard("remote_controller/intro", RemoteControllerScenes::intro);
 
 		helper.forComponents(SimurailBlocks.PHYSICS_ROLLER).
-		addStoryBoard(PHYSICS_ROLLER_INTRO, PhysicsRollerScenes::intro).
-		addStoryBoard(PHYSICS_ROLLER_MATERIALS, PhysicsRollerScenes::materials,
-				entry -> entry.orderAfter(Simurail.MOD_ID, PHYSICS_ROLLER_INTRO)).
-		addStoryBoard(ROLLER_CLEAR_AND_PAVE, RollerScenes::clearAndPave,
-				entry -> entry.orderAfter(Simurail.MOD_ID, PHYSICS_ROLLER_MATERIALS)).
-		addStoryBoard(ROLLER_FILL, RollerScenes::fill,
-				entry -> entry.orderAfter("create", ROLLER_CLEAR_AND_PAVE.getPath()));
-
-		// append to create
-		registry.addStoryBoard(MECHANICAL_ROLLER, Simurail.id(PHYSICS_ROLLER_INTRO), PhysicsRollerScenes::intro).
-		orderAfter("create", ROLLER_FILL.getPath());
-
-		registry.addStoryBoard(MECHANICAL_ROLLER, Simurail.id(PHYSICS_ROLLER_MATERIALS), PhysicsRollerScenes::materials).
-		orderAfter(Simurail.MOD_ID, PHYSICS_ROLLER_INTRO);
+		addStoryBoard("physics_roller/intro", PhysicsRollerScenes::intro).
+		addStoryBoard("physics_roller/materials", PhysicsRollerScenes::materials).
+		addStoryBoard(ROLLER_CLEAR_AND_PAVE, RollerScenes::clearAndPave).
+		addStoryBoard(ROLLER_FILL, RollerScenes::fill);
 
 		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () ->
 				SimurailElectroEnergeticsPonderScenes.register(registry)

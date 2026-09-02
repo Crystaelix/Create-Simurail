@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import dev.engine_room.flywheel.lib.transform.PoseTransformStack;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
@@ -109,7 +110,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 	public void searchForSharedValues() {
 		BlockState state = getBlockState();
 		Direction lineAxis = state.getValue(PhysicsRollerBlock.FACING).getClockWise();
-		
+
 		for(int direction : Iterate.positiveAndNegative) {
 			BlockPos neighbourPos = worldPosition.relative(lineAxis, direction);
 			if(level.getBlockState(neighbourPos) != state ||
@@ -261,7 +262,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 			if(entity instanceof ItemEntity) {
 				continue;
 			}
-			
+
 			// ignore passengers
 			if(Sable.HELPER.getTrackingOrVehicleSubLevel(entity) == subLevel) {
 				continue;
@@ -580,7 +581,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 		@Override
 		public void rotate(LevelAccessor level, BlockPos pos, BlockState state, PoseStack ms) {
 			Direction side = getSide();
-			TransformStack stack = TransformStack.of(ms);
+			PoseTransformStack stack = TransformStack.of(ms);
 
 			// keep icon aligned with the block itself on the top face
 			if(side.getAxis().isVertical()) {

@@ -186,91 +186,6 @@ loom {
 	}
 }
 
-// mod dependencies
-// Leave mods out with -PwithoutMods=all, -PwithoutMods=electroenergetics,railways
-// ignorable true by default, whether the entry is affected by -PwithoutMods
-def core = [configurations: ["implementation"], required: true]
-def compat = [configurations: ["compileOnly", "runtimeOnly"]]
-def extra = [configurations: ["runtimeOnly"]]
-def perfs = [configurations: ["runtimeOnly"], required: true]
-def mods = [
-	// Dependencies
-	jei             : core + [notation: "mezz.jei:jei-1.21.1-neoforge:19.44.0.405", transitive: false],
-	registrate      : core + [notation: "com.tterrag.registrate:Registrate:MC1.21-1.3.0+67"],
-	flywheel        : core + [notation: "dev.engine-room.flywheel:flywheel-neoforge-1.21.1:1.0.6-41"],
-	ponder          : core + [notation: "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"],
-	create          : core + [notation: "com.simibubi.create:create-1.21.1:6.0.10-280:slim", transitive: false],
-	veil            : core + [notation: "foundry.veil:veil-neoforge-1.21.1:4.1.4", transitive: false],
-	sable_companion : core + [notation: "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0"],
-	sable           : core + [notation: "dev.ryanhcode.sable:sable-neoforge-1.21.1:2.0.5", transitive: false],
-	simulated       : core + [notation: "dev.simulated_team.simulated:simulated-neoforge-1.21.1:1.3.1", transitive: false],
-
-	// Compat
-	computercraft     : compat + [notation: "cc.tweaked:cc-tweaked-1.21.1-forge:1.120.2"],
-	electroenergetics : compat + [notation: "curse.maven:create-electro-energetics-1443327:8345582"],
-	create_bb         : compat + [notation: "curse.maven:create-blocks-bogies-1317252:8723463"],
-	railways          : compat + [notation: "curse.maven:steam-n-rails-neoforge-1414670:8522154"],
-	kotlinforforge    : compat + [notation: "thedarkcolour:kotlinforforge-neoforge:5.12.0"],
-	railx             : compat + [notation: "com.lhwdev.minecraft:railx:0.2.0-build.14:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
-
-	// Testing
-	aeronautics           : extra + [notation: "dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1", transitive: false],
-	offroad               : extra + [notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
-	copycats              : extra + [notation: "com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge", transitive: false],
-	ritchiesprojectilelib : extra + [notation: "com.rbasamoyai:ritchiesprojectilelib:2.1.2+mc.1.21.1-neoforge"],
-	createbigcannons      : extra + [notation: "com.rbasamoyai:createbigcannons:5.11.7+mc.1.21.1", transitive: false, dependsOn: ["ritchiesprojectilelib"]],
-	transmission_linkage  : extra + [notation: "curse.maven:create-aeronautics-transmission-linkage-1548056:8722967"],
-	drive_by_wire         : extra + [notation: "curse.maven:drive-by-wire-with-sable-1520378:8247104"],
-	create_deco           : extra + [notation: "curse.maven:create-deco-509285:7943181"],
-	aeronautics_toolgun   : extra + [notation: "curse.maven:create-aeronauticstoolgun-1521349:8701394"],
-	create_coasters       : extra + [notation: "curse.maven:create-coasters-simulated-1601871:8655742"],
-	ldlib2                : extra + [notation: "com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.37:all", transitive: false],
-	schematic_tool        : extra + [notation: "curse.maven:sable-schematic-tool-1526951:8606655", dependsOn: ["ldlib2"]],
-	synaxis               : extra + [notation: "curse.maven:synaxis-1526348:8606652", dependsOn: ["ldlib2", "schematic_tool"]],
-
-	// Performance
-	yeetusexperimentus : perfs + [notation: "curse.maven:yeetusexperimentus-635427:5444189"],
-	modernfix          : perfs + [notation: "curse.maven:modernfix-790626:8360807"],
-	ferritecore        : perfs + [notation: "curse.maven:ferritecore-429235:7524151"],
-]
-
-def withoutMods = (findProperty("withoutMods") ?: "").toString().split(",")*.trim() - ""
-
-// walk to remove dependants
-def keptMods = mods.findAll { it.value.required }.keySet().toList()
-def keptMoreMods = true
-while(keptMoreMods) {
-	keptMoreMods = false
-	keptMods.toList().each {
-		mods[it].dependsOn.each {
-			if(mods.containsKey(it) && !keptMods.contains(it)) {
-				keptMods.add(it)
-				keptMoreMods = true
-			}
-		}
-	}
-}
-
-def keptRequests = withoutMods.intersect(keptMods)
-if(!keptRequests.isEmpty()) {
-	logger.warn("mods: ${keptRequests.join(", ")} cannot be left out, keeping despite -PwithoutMods")
-}
-def disabledMods = (withoutMods.contains("all") ? mods.keySet().toList() : withoutMods.findAll { it in mods }) - keptMods
-
-def disabledMoreMods = true
-while(disabledMoreMods) {
-	disabledMoreMods = false
-	mods.each { id, mod ->
-		if(!disabledMods.contains(id) && !keptMods.contains(id) && mod.dependsOn.any { it in disabledMods }) {
-			disabledMods.add(id)
-			disabledMoreMods = true
-		}
-	}
-}
-
-def withoutMod = { it in disabledMods }
-def configurationsOf = { it.getOrDefault("configurations", ["implementation"]) }
-
 dependencies {
 	// Minecraft
 	minecraft "com.mojang:minecraft:1.21.1"
@@ -279,13 +194,68 @@ dependencies {
 		parchment "org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip"
 	}
 	neoForge "net.neoforged:neoforge:21.1.248"
+	
+	// Dependencies
+	implementation("mezz.jei:jei-1.21.1-neoforge:19.44.0.405") {transitive = false}
+	implementation "com.tterrag.registrate:Registrate:MC1.21-1.3.0+67"
+	implementation "dev.engine-room.flywheel:flywheel-neoforge-1.21.1:1.0.6-41"
+	implementation "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"
+	implementation("com.simibubi.create:create-1.21.1:6.0.10-280:slim") {transitive = false}
+	implementation("foundry.veil:veil-neoforge-1.21.1:4.1.4") {transitive = false}
+	implementation "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0"
+	implementation("dev.ryanhcode.sable:sable-neoforge-1.21.1:2.0.5") {transitive = false}
+	implementation("dev.simulated_team.simulated:simulated-neoforge-1.21.1:1.3.1") {transitive = false}
+	
+	// Performance
+	runtimeOnly "curse.maven:yeetusexperimentus-635427:5444189"
+	runtimeOnly "curse.maven:modernfix-790626:8360807"
+	runtimeOnly "curse.maven:ferritecore-429235:7524151"
 
-	// dynamicly load based on -PwithoutMods
+	// Leave mods out with -PwithoutMods=all, -PwithoutMods=electroenergetics,railways
+	def compat = ["compileOnly", "runtimeOnly"]
+	def extra = ["runtimeOnly"]
+	def mods = [
+		// Compat
+		computercraft     : [configurations: compat, notation: "cc.tweaked:cc-tweaked-1.21.1-forge:1.120.2"],
+		electroenergetics : [configurations: compat, notation: "curse.maven:create-electro-energetics-1443327:8345582"],
+		create_bb         : [configurations: compat, notation: "curse.maven:create-blocks-bogies-1317252:8723463"],
+		railways          : [configurations: compat, notation: "curse.maven:steam-n-rails-neoforge-1414670:8522154"],
+		kotlinforforge    : [configurations: compat, notation: "thedarkcolour:kotlinforforge-neoforge:5.12.0"],
+		railx             : [configurations: compat, notation: "com.lhwdev.minecraft:railx:0.2.0-build.14:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
+
+		// Testing
+		aeronautics           : [configurations: extra, notation: "dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1", transitive: false],
+		offroad               : [configurations: extra, notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
+		copycats              : [configurations: extra, notation: "com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge", transitive: false],
+		ritchiesprojectilelib : [configurations: extra, notation: "com.rbasamoyai:ritchiesprojectilelib:2.1.2+mc.1.21.1-neoforge"],
+		createbigcannons      : [configurations: extra, notation: "com.rbasamoyai:createbigcannons:5.11.7+mc.1.21.1", transitive: false, dependsOn: ["ritchiesprojectilelib"]],
+		transmission_linkage  : [configurations: extra, notation: "curse.maven:create-aeronautics-transmission-linkage-1548056:8722967"],
+		drive_by_wire         : [configurations: extra, notation: "curse.maven:drive-by-wire-with-sable-1520378:8247104"],
+		create_deco           : [configurations: extra, notation: "curse.maven:create-deco-509285:7943181"],
+		aeronautics_toolgun   : [configurations: extra, notation: "curse.maven:create-aeronauticstoolgun-1521349:8701394"],
+		create_coasters       : [configurations: extra, notation: "curse.maven:create-coasters-simulated-1601871:8655742"],
+		ldlib2                : [configurations: extra, notation: "com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.37:all", transitive: false],
+		schematic_tool        : [configurations: extra, notation: "curse.maven:sable-schematic-tool-1526951:8606655", dependsOn: ["ldlib2"]],
+		synaxis               : [configurations: extra, notation: "curse.maven:synaxis-1526348:8606652", dependsOn: ["ldlib2", "schematic_tool"]],
+	]
+
+	def withoutMods = (findProperty("withoutMods") ?: "").toString().split(",")*.trim() - ""
+	def disabledMods = (withoutMods.contains("all") ? mods.keySet().toList() : withoutMods.findAll { it in mods })
+	def disabledMoreMods = true
+	while(disabledMoreMods) {
+		disabledMoreMods = false
+		mods.each { id, mod ->
+			if(!disabledMods.contains(id) && mod.dependsOn.any { it in disabledMods }) {
+				disabledMods.add(id)
+				disabledMoreMods = true
+			}
+		}
+	}
+
 	mods.each { id, mod ->
-		def transitive = mod.getOrDefault("transitive", true)
-		configurationsOf(mod).each {
+		mod.configurations.each {
 			if(it != "runtimeOnly" || id !in disabledMods) {
-				add(it, mod.notation) { it.transitive = transitive }
+				add(it, mod.notation) { it.transitive = mod.getOrDefault("transitive", true) }
 			}
 		}
 	}

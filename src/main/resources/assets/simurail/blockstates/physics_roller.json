@@ -1,0 +1,34 @@
+{
+	"variants": {
+		"facing=north,waterlogged=false": {
+			"model": "simurail:block/physics_roller/block"
+		},
+		"facing=north,waterlogged=true": {
+			"model": "simurail:block/physics_roller/block"
+		},
+		"facing=east,waterlogged=false": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 90
+		},
+		"facing=east,waterlogged=true": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 90
+		},
+		"facing=south,waterlogged=false": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 180
+		},
+		"facing=south,waterlogged=true": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 180
+		},
+		"facing=west,waterlogged=false": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 270
+		},
+		"facing=west,waterlogged=true": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 270
+		}
+	}
+}

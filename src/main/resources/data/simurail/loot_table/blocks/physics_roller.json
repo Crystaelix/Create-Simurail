@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:block",
+	"pools": [{
+		"rolls": 1,
+		"entries": [{
+			"type": "minecraft:item",
+			"name": "simurail:physics_roller"
+		}],
+		"conditions": [{
+			"condition": "minecraft:survives_explosion"
+		}]
+	}],
+	"random_sequence": "simurail:blocks/physics_roller"
+}

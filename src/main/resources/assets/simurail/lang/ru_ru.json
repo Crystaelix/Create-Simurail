@@ -5,6 +5,7 @@
 	"block.simurail.gangway_frame": "Межвагонный переход",
 	"block.simurail.probe_reader": "Тележный считыватель",
 	"block.simurail.remote_controller": "Удалённый тележечный контроллер",
+	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
 	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
@@ -103,6 +104,11 @@
 	"gui.simurail.probe_reader.filter": "Фильтр по названию",
 	"gui.simurail.probe_reader.min": "Минимальная дальность",
 	"gui.simurail.probe_reader.max": "Максимальная дальность",
+
+	"gui.simurail.physics_roller.mode": "Режим катка",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "Снос и укладка",
+	"gui.simurail.physics_roller.mode.straight_fill": "Заполнение снизу",
+	"gui.simurail.physics_roller.mode.wide_fill": "Наклонное заполнение снизу",
 
 	"gui.simurail.remote_controller.mode": "Режим",
 	"gui.simurail.remote_controller.mode.braking": "Торможение",
@@ -413,5 +419,34 @@
 	"simurail.ponder.remote_controller.intro.text_1": "Чтобы установить Удалённый тележечный контроллер, выберите Физическую тележку, после разместите это где-то рядом",
 	"simurail.ponder.remote_controller.intro.text_2": "Удалённый тележечный контроллер удалённо отправляет редстоун-сигналы на Физическую Тележку, контролируя или переключая её параметры",
 	"simurail.ponder.remote_controller.intro.text_3": "ПКМ чтобы настроить режим управления",
-	"simurail.ponder.remote_controller.intro.text_4": "Подайте редстоун-сигнал чтобы контролировать привязанную Физическую Тележку"
+	"simurail.ponder.remote_controller.intro.text_4": "Подайте редстоун-сигнал чтобы контролировать привязанную Физическую Тележку",
+
+	"simurail.ponder.physics_roller.intro.header": "Paving with Physics Rollers",
+	"simurail.ponder.physics_roller.intro.text_1": "On simulated contraptions, a Physics Roller can be used to clear and pave the static terrain the structure travels over",
+	"simurail.ponder.physics_roller.intro.text_2": "The Physics Roller can be mounted anywhere on the structure",
+	"simurail.ponder.physics_roller.intro.text_3": "A line of Rollers works for as long as it is given a redstone signal, and can be switched off without disassembling",
+	"simurail.ponder.physics_roller.intro.text_4": "It also has to sit roughly level, and only works while the contraption travels along the direction it faces",
+	"simurail.ponder.physics_roller.intro.text_5": "Paving material is drawn from a container placed directly above",
+	"simurail.ponder.physics_roller.intro.text_6": "Scrolling the mode selector switches between the available roller modes",
+	"simurail.ponder.physics_roller.materials.header": "Managing the Materials of a Roller Line",
+	"simurail.ponder.physics_roller.materials.text_1": "The filter slot beside the mode selector picks which of the container's items may be used as pavement",
+	"simurail.ponder.physics_roller.materials.text_2": "Either setting applied to one Roller is shared with every other Roller of the same line",
+	"simurail.ponder.physics_roller.materials.text_3": "Rollers without a container of their own draw from the closest one along the line that still holds their material",
+	"simurail.ponder.physics_roller.materials.text_4": "While a filter is set, blocks broken by the line are collected into the closest container with space",
+	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well",
+
+	"simurail.ponder.mechanical_roller_fill.header": "Созданием рельефа местности с помощью механических катков",
+	"simurail.ponder.mechanical_roller_fill.text_1": "В разобранном состоянии у катка можно настроить режимы работы",
+	"simurail.ponder.mechanical_roller_fill.text_2": "Режимы заполнения помогут вам соединить промежутки между дорогой и рельефом",
+	"simurail.ponder.mechanical_roller_fill.text_3": "Режим «Заполнение снизу» строит простые колонны до поверхности",
+	"simurail.ponder.mechanical_roller_fill.text_4": "Режим «Наклонное заполнение снизу» строит слои, которые увеличиваются ближе к рельефу",
+	"simurail.ponder.mechanical_roller_fill.text_5": "В отличие от режима «Снос и укладка», ни один из режимов выше не будет разрушать блоки во время работы",
+	"simurail.ponder.mechanical_roller_pave.header": "Сносом и укладкой с помощью механических катков",
+	"simurail.ponder.mechanical_roller_pave.text_1": "Механические катки помогут убрать блоки с дорог или путей",
+	"simurail.ponder.mechanical_roller_pave.text_2": "В стандартном режиме, без выбранного материала, они просто будут разрушать блоки, как буры",
+	"simurail.ponder.mechanical_roller_pave.text_3": "В разобранном состоянии у катка можно настроить материал укладки",
+	"simurail.ponder.mechanical_roller_pave.text_4": "Материалы могут поставляться с помощью сундуков или бочек, прикреплённых к конструкции",
+	"simurail.ponder.mechanical_roller_pave.text_5": "Теперь он будет не только разрушать блоки на своём пути, но и заменять слой под собой",
+	"simurail.ponder.mechanical_roller_pave.text_6": "Учтите, что любой блок, разрушенный катком, имеет шанс не выпасть в виде предмета",
+	"simurail.ponder.mechanical_roller_pave.text_7": "Катки будут особенно полезны для поездов, но также могут работать на большинстве других видов движущихся штуковин"
 }

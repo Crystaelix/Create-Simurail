@@ -20,6 +20,8 @@ import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.transform.PoseTransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
@@ -64,17 +66,17 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 		blockEntity.getRenderPivotOffset(partialTick, pivotOffset);
 		blockEntity.getRenderPivotRot(partialTick, pivotRot);
 
-		poseStack.pushPose();
-		poseStack.translate(visualPos.getX(), visualPos.getY(), visualPos.getZ());
-		poseStack.translate(0.5F, 0.5F, 0.5F);
-		poseStack.translate(pivotOffset.x, pivotOffset.y, pivotOffset.z);
-		poseStack.mulPose(pivotRot);
-		poseStack.translate(0, (blockEntity.isInverted() ? 1 : -1) * blockEntity.options.getAxleOffset(), 0);
-		poseStack.last().pose().rotate(SimurailMathf.ROT_ZNYPXP);
-		poseStack.last().normal().rotate(SimurailMathf.ROT_ZNYPXP);
-		poseStack.translate(0, -1.5F - 0.0078125F, 0);
-		pivot.update(blockEntity.getBogeyData(), blockEntity.getWheelAngle(partialTick), poseStack);
-		poseStack.popPose();
+		transformStack.pushPose();
+		transformStack.
+		translate(visualPos).
+		center().
+		translate(pivotOffset).
+		rotate(pivotRot).
+		translate(0, (blockEntity.isInverted() ? 1 : -1) * blockEntity.options.getAxleOffset(), 0).
+		rotate(SimurailMathf.ROT_ZNYPXP).
+		translate(0, -1.5F - 0.0078125F, 0);
+		pivot.update(blockEntity.getBogeyData(), blockEntity.getWheelAngle(partialTick), transformStack.unwrap());
+		transformStack.popPose();
 
 		ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(blockEntity);
 
@@ -113,7 +115,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 			frontHead.setIdentityTransform().
 			translate(visualPos).
-			translate(0.5F, 0.5F, 0.5F).
+			center().
 			translate(anchorOffset).
 			rotateY(Mth.PI + yRot).rotateX(xRot).
 			setChanged();
@@ -132,7 +134,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 					frontCable[i].setIdentityTransform().
 					translate(visualPos).
-					translate(0.5F, 0.5F, 0.5F).
+					center().
 					translate(anchorOffset).
 					rotateY(yRot).rotateX(-xRot).
 					translate(0, 0, 0.1875F).
@@ -196,7 +198,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 			backHead.setIdentityTransform().
 			translate(visualPos).
-			translate(0.5F, 0.5F, 0.5F).
+			center().
 			translate(anchorOffset).
 			rotateY(Mth.PI + yRot).rotateX(xRot).
 			setChanged();
@@ -215,7 +217,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 					backCable[i].setIdentityTransform().
 					translate(visualPos).
-					translate(0.5F, 0.5F, 0.5F).
+					center().
 					translate(anchorOffset).
 					rotateY(yRot).rotateX(-xRot).
 					translate(0, 0, 0.1875F).
@@ -305,7 +307,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 		}
 	}
 
-	private final PoseStack poseStack = new PoseStack();
+	private final PoseTransformStack transformStack = TransformStack.of(new PoseStack());
 
 	private final Vector3f pivotOffset = new Vector3f();
 	private final Quaternionf pivotRot = new Quaternionf();

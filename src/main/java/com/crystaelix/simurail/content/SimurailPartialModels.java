@@ -12,7 +12,10 @@ public class SimurailPartialModels {
 	COUPLER_BAR_EXTRA_LONG = block("coupler/bar_extra_long"),
 
 	AUTOMATIC_COUPLER_KNUCKLE = block("coupler/automatic/knuckle"),
-	AUTOMATIC_COUPLER_SHIBATA = block("coupler/automatic/shibata");
+	AUTOMATIC_COUPLER_SHIBATA = block("coupler/automatic/shibata"),
+
+	PHYSICS_ROLLER_FRAME = block("physics_roller/frame"),
+	PHYSICS_ROLLER_WHEEL = block("physics_roller/wheel");
 
 	public static void register() {
 	}

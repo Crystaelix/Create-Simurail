@@ -31,7 +31,7 @@ public class ConnectorScenes {
 
 		scene.title("connector.intro", "header");
 		scene.configureBasePlate(0, 0, 15);
-		scene.scaleSceneView(0.6F);
+		scene.scaleSceneView(0.5F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.layer(1), Direction.DOWN);
@@ -120,7 +120,7 @@ public class ConnectorScenes {
 
 		scene.title("connector.coupler", "header");
 		scene.configureBasePlate(0, 0, 9);
-		scene.scaleSceneView(0.8F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.layer(1), Direction.DOWN);

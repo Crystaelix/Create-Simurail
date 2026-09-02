@@ -5,6 +5,7 @@
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",
 	"block.simurail.remote_controller": "Bogie Remote Controller",
+	"block.simurail.physics_roller": "Physics Roller",
 
 	"item.simurail.inverted_physics_bogey": "Carrello Fisico Invertito",
 	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
@@ -103,6 +104,11 @@
 	"gui.simurail.probe_reader.filter": "Name Filter",
 	"gui.simurail.probe_reader.min": "Minimum Distance",
 	"gui.simurail.probe_reader.max": "Maximum Distance",
+
+	"gui.simurail.physics_roller.mode": "Modalità del rullo",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "Rompi blocchi e pavimenta",
+	"gui.simurail.physics_roller.mode.straight_fill": "Riempi sotto in linea retta",
+	"gui.simurail.physics_roller.mode.wide_fill": "Riempi sotto con pendenza",
 
 	"gui.simurail.remote_controller.mode": "Mode",
 	"gui.simurail.remote_controller.mode.braking": "Braking",
@@ -413,5 +419,34 @@
 	"simurail.ponder.remote_controller.intro.text_1": "To place a Bogie Remote Controller, select the a Physics Bogie, then place it nearby",
 	"simurail.ponder.remote_controller.intro.text_2": "The Bogie Remote Controller remotely sends redstone signals to a Physics Bogie, controlling and toggling its behavior",
 	"simurail.ponder.remote_controller.intro.text_3": "Right click to configure the control mode",
-	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie"
+	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie",
+
+	"simurail.ponder.physics_roller.intro.header": "Paving with Physics Rollers",
+	"simurail.ponder.physics_roller.intro.text_1": "On simulated contraptions, a Physics Roller can be used to clear and pave the static terrain the structure travels over",
+	"simurail.ponder.physics_roller.intro.text_2": "The Physics Roller can be mounted anywhere on the structure",
+	"simurail.ponder.physics_roller.intro.text_3": "A line of Rollers works for as long as it is given a redstone signal, and can be switched off without disassembling",
+	"simurail.ponder.physics_roller.intro.text_4": "It also has to sit roughly level, and only works while the contraption travels along the direction it faces",
+	"simurail.ponder.physics_roller.intro.text_5": "Paving material is drawn from a container placed directly above",
+	"simurail.ponder.physics_roller.intro.text_6": "Scrolling the mode selector switches between the available roller modes",
+	"simurail.ponder.physics_roller.materials.header": "Managing the Materials of a Roller Line",
+	"simurail.ponder.physics_roller.materials.text_1": "The filter slot beside the mode selector picks which of the container's items may be used as pavement",
+	"simurail.ponder.physics_roller.materials.text_2": "Either setting applied to one Roller is shared with every other Roller of the same line",
+	"simurail.ponder.physics_roller.materials.text_3": "Rollers without a container of their own draw from the closest one along the line that still holds their material",
+	"simurail.ponder.physics_roller.materials.text_4": "While a filter is set, blocks broken by the line are collected into the closest container with space",
+	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well",
+
+	"simurail.ponder.mechanical_roller_fill.header": "Riempire il terreno con i rulli",
+	"simurail.ponder.mechanical_roller_fill.text_1": "Quando smontati, i rulli possono essere impostati su altre modalità",
+	"simurail.ponder.mechanical_roller_fill.text_2": "Le modalità di riempimento possono aiutare a riempire gli spazi vuoti tra pavimento e terreno",
+	"simurail.ponder.mechanical_roller_fill.text_3": "Con 'Riempi sotto in linea retta' piazzeranno semplici colonne fino alla superficie",
+	"simurail.ponder.mechanical_roller_fill.text_4": "Con 'Riempi sotto con pendenza' i livelli più bassi saranno progressivamente più larghi",
+	"simurail.ponder.mechanical_roller_fill.text_5": "A differenza di 'Rompi blocchi e pavimenta', nessuna di queste modalità permetteranno ai rulli di rompere blocchi già presenti",
+	"simurail.ponder.mechanical_roller_pave.header": "Rompere blocchi e pavimentare con i rulli",
+	"simurail.ponder.mechanical_roller_pave.text_1": "I rulli meccanici possono aiutare a ripulire il terreno attorno a rotaie e percorsi",
+	"simurail.ponder.mechanical_roller_pave.text_2": "Nella sua modalità normale e senza materiali impostati, il rullo si comporterà come una trivella",
+	"simurail.ponder.mechanical_roller_pave.text_3": "Quando smontati, è possibile impostare un materiale per la pavimentazione",
+	"simurail.ponder.mechanical_roller_pave.text_4": "I materiali possono essere forniti tramite bauli o barili fissati alla struttura",
+	"simurail.ponder.mechanical_roller_pave.text_5": "Oltre a rompere i blocchi, ora sostituirà anche il livello sotto di loro",
+	"simurail.ponder.mechanical_roller_pave.text_6": "Nota che qualsiasi blocco distrutto da un rullo ha una possibilità di essere perso",
+	"simurail.ponder.mechanical_roller_pave.text_7": "I rulli sono specialmente utili sui treni, ma possono anche essere usati sulla maggior parte dei macchinari semoventi"
 }

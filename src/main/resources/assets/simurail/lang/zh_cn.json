@@ -5,6 +5,7 @@
 	"block.simurail.gangway_frame": "风挡框",
 	"block.simurail.probe_reader": "转向架探针读取器",
 	"block.simurail.remote_controller": "转向架远端控制器",
+	"block.simurail.physics_roller": "物理压路机",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理转向架",
 	"item.simurail.inverted_unpowered_physics_bogey": "倒置无动力物理转向架",
@@ -103,6 +104,11 @@
 	"gui.simurail.probe_reader.filter": "名称过滤",
 	"gui.simurail.probe_reader.min": "最小距离",
 	"gui.simurail.probe_reader.max": "最大距离",
+
+	"gui.simurail.physics_roller.mode": "压路机模式",
+	"gui.simurail.physics_roller.mode.tunnel_pave": "清理方块并铺路",
+	"gui.simurail.physics_roller.mode.straight_fill": "竖直填充下方",
+	"gui.simurail.physics_roller.mode.wide_fill": "坡度填充下方",
 
 	"gui.simurail.remote_controller.mode": "模式",
 	"gui.simurail.remote_controller.mode.braking": "刹车",
@@ -413,5 +419,34 @@
 	"simurail.ponder.remote_controller.intro.text_1": "To place a Bogie Remote Controller, select the a Physics Bogie, then place it nearby",
 	"simurail.ponder.remote_controller.intro.text_2": "The Bogie Remote Controller remotely sends redstone signals to a Physics Bogie, controlling and toggling its behavior",
 	"simurail.ponder.remote_controller.intro.text_3": "Right click to configure the control mode",
-	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie"
+	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie",
+
+	"simurail.ponder.physics_roller.intro.header": "Paving with Physics Rollers",
+	"simurail.ponder.physics_roller.intro.text_1": "On simulated contraptions, a Physics Roller can be used to clear and pave the static terrain the structure travels over",
+	"simurail.ponder.physics_roller.intro.text_2": "The Physics Roller can be mounted anywhere on the structure",
+	"simurail.ponder.physics_roller.intro.text_3": "A line of Rollers works for as long as it is given a redstone signal, and can be switched off without disassembling",
+	"simurail.ponder.physics_roller.intro.text_4": "It also has to sit roughly level, and only works while the contraption travels along the direction it faces",
+	"simurail.ponder.physics_roller.intro.text_5": "Paving material is drawn from a container placed directly above",
+	"simurail.ponder.physics_roller.intro.text_6": "Scrolling the mode selector switches between the available roller modes",
+	"simurail.ponder.physics_roller.materials.header": "Managing the Materials of a Roller Line",
+	"simurail.ponder.physics_roller.materials.text_1": "The filter slot beside the mode selector picks which of the container's items may be used as pavement",
+	"simurail.ponder.physics_roller.materials.text_2": "Either setting applied to one Roller is shared with every other Roller of the same line",
+	"simurail.ponder.physics_roller.materials.text_3": "Rollers without a container of their own draw from the closest one along the line that still holds their material",
+	"simurail.ponder.physics_roller.materials.text_4": "While a filter is set, blocks broken by the line are collected into the closest container with space",
+	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well",
+
+	"simurail.ponder.mechanical_roller_fill.header": "使用动力压路机填充地形",
+	"simurail.ponder.mechanical_roller_fill.text_1": "当方块化时，动力压路机可以被设为其他模式",
+	"simurail.ponder.mechanical_roller_fill.text_2": "“填充”模式可以帮你填充路面和地形之间的缝隙",
+	"simurail.ponder.mechanical_roller_fill.text_3": "在“竖直填充”模式，它们会简单地把方块以柱形放置到路面下方",
+	"simurail.ponder.mechanical_roller_fill.text_4": "在“坡度填充”模式，层数越靠下，填充面积就越大",
+	"simurail.ponder.mechanical_roller_fill.text_5": "与“清理并铺路”相反，这些模式下，动力压路机不会破坏原有的方块",
+	"simurail.ponder.mechanical_roller_pave.header": "使用动力压路机清理和铺路",
+	"simurail.ponder.mechanical_roller_pave.text_1": "动力压路机可以帮助你清理轨道或道路周围的地形",
+	"simurail.ponder.mechanical_roller_pave.text_2": "在默认模式，如果没有设定材料，它只会像钻头一样清理方块",
+	"simurail.ponder.mechanical_roller_pave.text_3": "当方块化时，可以指定合适的铺路材料",
+	"simurail.ponder.mechanical_roller_pave.text_4": "材料可通过附着在结构上的箱子或木桶供应",
+	"simurail.ponder.mechanical_roller_pave.text_5": "除了破坏方块外，它现在将同时替换下面一层方块",
+	"simurail.ponder.mechanical_roller_pave.text_6": "请注意，任何被压路机摧毁的方块都有可能不产生掉落物",
+	"simurail.ponder.mechanical_roller_pave.text_7": "动力压路机在列车上尤其好用，但也可以在大多数的动态结构上使用"
 }

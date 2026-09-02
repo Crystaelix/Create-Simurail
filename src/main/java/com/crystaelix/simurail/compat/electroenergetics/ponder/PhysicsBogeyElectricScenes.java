@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.compat.electroenergetics.ponder;
 
 import com.crystaelix.simurail.ponder.instruction.PhysicsBogeyVisualSpeedInstruction;
+import com.crystaelix.simurail.ponder.instruction.SceneRotationInstruction;
 import com.george_vi.electroenergetics.CEEItems;
 import com.george_vi.electroenergetics.CEEWireTypes;
 import com.george_vi.electroenergetics.foundation.nodes.InWorldNode;
@@ -45,7 +46,7 @@ public class PhysicsBogeyElectricScenes {
 
 		scene.title("physics_bogey.electric", "header");
 		scene.configureBasePlate(0, 0, 15);
-		scene.scaleSceneView(0.75F);
+		scene.scaleSceneView(0.5F);
 		scene.showBasePlate();
 		scene.idle(10);
 
@@ -264,7 +265,7 @@ public class PhysicsBogeyElectricScenes {
 		scene.title("physics_bogey.third_rail", "header");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(0.75F);
-		scene.rotateCameraY(-90);
+		scene.addInstruction(new SceneRotationInstruction(-90));
 		scene.showBasePlate();
 		scene.idle(10);
 

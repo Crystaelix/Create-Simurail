@@ -102,7 +102,7 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 			if(bar != null) {
 				bar.setIdentityTransform().
 				translate(visualPos).
-				translate(0.5F, 0.5F, 0.5F).
+				center().
 				translate(couplerOffset).
 				rotate(couplerRot).
 				colorRgb(blockEntity.color).
@@ -112,7 +112,7 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 			if(head != null) {
 				head.setIdentityTransform().
 				translate(visualPos).
-				translate(0.5F, 0.5F, 0.5F).
+				center().
 				translate(couplerOffset).
 				rotate(couplerRot).
 				translate(blockEntity.getLength(), 0, 0).

@@ -196,17 +196,6 @@ loom {
 	}
 }
 
-// compat dependencies
-// -PwithoutMods=all, -PwithoutMods=electroenergetics,railways
-def compatMods = [
-	computercraft    : "cc.tweaked:cc-tweaked-1.21.1-forge:1.120.2",
-	electroenergetics: "curse.maven:create-electro-energetics-1443327:8345582",
-	create_bb        : "curse.maven:create-blocks-bogies-1317252:8723463",
-	railways         : "curse.maven:steam-n-rails-neoforge-1414670:8522154",
-]
-def withoutMods = (findProperty("withoutMods") ?: "").toString().split(",")*.trim() - ""
-def withoutMod = { id -> withoutMods.contains("all") || withoutMods.contains(id) }
-
 dependencies {
 	// Minecraft
 	minecraft "com.mojang:minecraft:1.21.1"
@@ -225,40 +214,62 @@ dependencies {
 	implementation("foundry.veil:veil-neoforge-1.21.1:4.1.4") {transitive = false}
 	implementation "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0"
 	implementation("dev.ryanhcode.sable:sable-neoforge-1.21.1:2.0.5") {transitive = false}
-	implementation("dev.simulated_team.simulated:simulated-neoforge-1.21.1:1.3.1") {transitive = false}
-	implementation "curse.maven:create-coasters-simulated-1601871:8655742"
-	implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.37:all") {transitive = false}
-	implementation "curse.maven:sable-schematic-tool-1526951:8606655"
-	implementation "curse.maven:synaxis-1526348:8606652"
-
-	// prevent compat from loading with -PwithoutMods=all.
-	compatMods.each { id, notation ->
-		compileOnly notation
-		if(!withoutMod(id)) {
-			runtimeOnly notation
-		}
-	}
-
-	// Testing
-	runtimeOnly("dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1") {transitive = false}
-	runtimeOnly("dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1") {transitive = false}
-	runtimeOnly "thedarkcolour:kotlinforforge-neoforge:5.12.0"
-	if(!withoutMod("railways")) { // railx is hard dependant on railways
-		runtimeOnly "com.lhwdev.minecraft:railx:0.2.0-build.14:mc1.21.1"
-	}
-	runtimeOnly("com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge") {transitive = false}
-	runtimeOnly "com.rbasamoyai:ritchiesprojectilelib:2.1.2+mc.1.21.1-neoforge"
-	runtimeOnly("com.rbasamoyai:createbigcannons:5.11.7+mc.1.21.1") {transitive = false}
-	runtimeOnly "curse.maven:create-aeronautics-transmission-linkage-1548056:8722967"
-	runtimeOnly "curse.maven:drive-by-wire-with-sable-1520378:8247104"
-	runtimeOnly "curse.maven:create-deco-509285:7943181"
-	runtimeOnly "curse.maven:create-aeronauticstoolgun-1521349:8701394"
-	runtimeOnly "com.github.misterblusky9:pocket:4c8c1dc9b5"
+	implementation("dev.simulated_team.simulated:simulated-neoforge-1.21.1:1.3.1") {transitive = false}\
 
 	// Performance
 	runtimeOnly "curse.maven:yeetusexperimentus-635427:5444189"
 	runtimeOnly "curse.maven:modernfix-790626:8360807"
 	runtimeOnly "curse.maven:ferritecore-429235:7524151"
+
+	// Leave mods out with -PwithoutMods=all, -PwithoutMods=electroenergetics,railways
+	def compat = ["compileOnly", "runtimeOnly"]
+	def extra = ["runtimeOnly"]
+	def mods = [
+		// Compat
+		computercraft     : [configurations: compat, notation: "cc.tweaked:cc-tweaked-1.21.1-forge:1.120.2"],
+		electroenergetics : [configurations: compat, notation: "curse.maven:create-electro-energetics-1443327:8345582"],
+		create_bb         : [configurations: compat, notation: "curse.maven:create-blocks-bogies-1317252:8723463"],
+		railways          : [configurations: compat, notation: "curse.maven:steam-n-rails-neoforge-1414670:8522154"],
+		kotlinforforge    : [configurations: compat, notation: "thedarkcolour:kotlinforforge-neoforge:5.12.0"],
+		railx             : [configurations: compat, notation: "com.lhwdev.minecraft:railx:0.2.0-build.14:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
+
+		// Testing
+		aeronautics           : [configurations: extra, notation: "dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1", transitive: false],
+		offroad               : [configurations: extra, notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
+		copycats              : [configurations: extra, notation: "com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge", transitive: false],
+		ritchiesprojectilelib : [configurations: extra, notation: "com.rbasamoyai:ritchiesprojectilelib:2.1.2+mc.1.21.1-neoforge"],
+		createbigcannons      : [configurations: extra, notation: "com.rbasamoyai:createbigcannons:5.11.7+mc.1.21.1", transitive: false, dependsOn: ["ritchiesprojectilelib"]],
+		transmission_linkage  : [configurations: extra, notation: "curse.maven:create-aeronautics-transmission-linkage-1548056:8722967"],
+		drive_by_wire         : [configurations: extra, notation: "curse.maven:drive-by-wire-with-sable-1520378:8247104"],
+		create_deco           : [configurations: extra, notation: "curse.maven:create-deco-509285:7943181"],
+		aeronautics_toolgun   : [configurations: extra, notation: "curse.maven:create-aeronauticstoolgun-1521349:8701394"],
+		create_coasters       : [configurations: extra, notation: "curse.maven:create-coasters-simulated-1601871:8655742"],
+		ldlib2                : [configurations: extra, notation: "com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.37:all", transitive: false],
+		schematic_tool        : [configurations: extra, notation: "curse.maven:sable-schematic-tool-1526951:8606655", dependsOn: ["ldlib2"]],
+		synaxis               : [configurations: extra, notation: "curse.maven:synaxis-1526348:8606652", dependsOn: ["ldlib2", "schematic_tool"]],
+		pocket                : [configurations: extra, notation: "com.github.misterblusky9:pocket:4c8c1dc9b5"],
+	]
+
+	def withoutMods = (findProperty("withoutMods") ?: "").toString().split(",")*.trim() - ""
+	def disabledMods = (withoutMods.contains("all") ? mods.keySet().toList() : withoutMods.findAll { it in mods })
+	def disabledMoreMods = true
+	while(disabledMoreMods) {
+		disabledMoreMods = false
+		mods.each { id, mod ->
+			if(!disabledMods.contains(id) && mod.dependsOn.any { it in disabledMods }) {
+				disabledMods.add(id)
+				disabledMoreMods = true
+			}
+		}
+	}
+
+	mods.each { id, mod ->
+		mod.configurations.each {
+			if(it != "runtimeOnly" || id !in disabledMods) {
+				add(it, mod.notation) { it.transitive = mod.getOrDefault("transitive", true) }
+			}
+		}
+	}
 }
 
 def replacements = [

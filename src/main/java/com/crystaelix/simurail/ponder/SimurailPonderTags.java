@@ -20,7 +20,8 @@ public class SimurailPonderTags {
 		add(SimurailItems.INVERTED_PHYSICS_BOGEY.get()).
 		add(SimurailBlocks.UNPOWERED_PHYSICS_BOGEY.get()).
 		add(SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY.get()).
-		add(SimurailBlocks.AUTOMATIC_COUPLER.get());
+		add(SimurailBlocks.AUTOMATIC_COUPLER.get()).
+		add(SimurailBlocks.PHYSICS_ROLLER.get());
 
 		helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES).
 		add(SimurailBlocks.PHYSICS_BOGEY.get()).
@@ -35,6 +36,7 @@ public class SimurailPonderTags {
 		add(SimurailBlocks.GANGWAY_FRAME.get()).
 		add(SimurailItems.CONNECTOR.get()).
 		add(SimurailBlocks.PROBE_READER.get()).
-		add(SimurailBlocks.REMOTE_CONTROLLER.get());
+		add(SimurailBlocks.REMOTE_CONTROLLER.get()).
+		add(SimurailBlocks.PHYSICS_ROLLER.get());
 	}
 }

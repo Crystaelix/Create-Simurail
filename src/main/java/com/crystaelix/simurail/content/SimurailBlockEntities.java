@@ -9,6 +9,9 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderer;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyVisual;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameRenderer;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockEntity;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerRenderer;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerVisual;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -40,6 +43,12 @@ public class SimurailBlockEntities {
 	public static final BlockEntityEntry<ProbeReaderBlockEntity> PROBE_READER = REGISTRATE.
 			blockEntity("probe_reader", ProbeReaderBlockEntity::new).
 			validBlocks(SimurailBlocks.PROBE_READER).
+			register();
+	public static final BlockEntityEntry<PhysicsRollerBlockEntity> PHYSICS_ROLLER = REGISTRATE.
+			blockEntity("physics_roller", PhysicsRollerBlockEntity::new).
+			visual(() -> PhysicsRollerVisual::new).
+			renderer(() -> PhysicsRollerRenderer::new).
+			validBlocks(SimurailBlocks.PHYSICS_ROLLER).
 			register();
 	public static final BlockEntityEntry<RemoteControllerBlockEntity> REMOTE_CONTROLLER = REGISTRATE.
 			blockEntity("remote_controller", RemoteControllerBlockEntity::new).

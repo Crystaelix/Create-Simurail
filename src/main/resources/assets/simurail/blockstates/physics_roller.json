@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "simurail:block/physics_roller/block"
+		},
+		"facing=east": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "simurail:block/physics_roller/block",
+			"y": 270
+		}
+	}
+}

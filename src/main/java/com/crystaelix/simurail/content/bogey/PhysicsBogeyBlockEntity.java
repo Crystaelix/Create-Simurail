@@ -17,6 +17,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.joml.Vector3f;
 
+import com.crystaelix.simurail.api.bogey.BogeyLinkable;
 import com.crystaelix.simurail.api.math.Basis3d;
 import com.crystaelix.simurail.api.math.Basis3dc;
 import com.crystaelix.simurail.api.math.MovingQuaternionfLerp;
@@ -33,8 +34,6 @@ import com.crystaelix.simurail.config.SimurailPhysicsConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
-import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
-import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Floats;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
@@ -138,11 +137,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	// Navigator components
 	protected float navigatorBrakeOverride = 0;
 
-	// Probe cache
-	protected Set<BlockPos> probeReaders = new HashSet<>();
+	// Link cache
+	protected Set<BlockPos> links = new HashSet<>();
 
 	// Controller cache
-	protected Set<BlockPos> remoteControllers = new HashSet<>();
 	protected Map<BlockPos, LongIntPair> remoteBrakeOverrides = new HashMap<>();
 	protected Map<BlockPos, LongIntPair> remoteLeftSteerOverrides = new HashMap<>();
 	protected Map<BlockPos, LongIntPair> remoteRightSteerOverrides = new HashMap<>();
@@ -375,14 +373,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public void beforeMove(BlockPos newPos) {
-		for(BlockPos readerPos : probeReaders) {
-			if(level.getBlockEntity(readerPos) instanceof ProbeReaderBlockEntity reader) {
-				reader.setTargetPos(newPos);
-			}
-		}
-		for(BlockPos controllerPos : remoteControllers) {
-			if(level.getBlockEntity(controllerPos) instanceof RemoteControllerBlockEntity controller) {
-				controller.setTargetPos(newPos);
+		for(BlockPos linkablePos : links) {
+			if(level.getBlockEntity(linkablePos) instanceof BogeyLinkable linkable) {
+				linkable.setTargetPos(newPos);
 			}
 		}
 	}
@@ -446,16 +439,12 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		return front ? connectionFrontToFront : connectionBackToFront;
 	}
 
-	public void addProbeReader(BlockPos readerPos) {
-		probeReaders.add(readerPos);
+	public void addLink(BlockPos linkPos) {
+		links.add(linkPos);
 	}
 
-	public void removeProbeReader(BlockPos readerPos) {
-		probeReaders.remove(readerPos);
-	}
-
-	public void addRemoteController(BlockPos controllerPos) {
-		remoteControllers.add(controllerPos);
+	public void removeLink(BlockPos linkPos) {
+		links.remove(linkPos);
 	}
 
 	public void setRemoteBrakeOverride(BlockPos controllerPos, int value) {
@@ -486,7 +475,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public void removeRemoteController(BlockPos controllerPos) {
-		remoteControllers.remove(controllerPos);
+		links.remove(controllerPos);
 		remoteBrakeOverrides.remove(controllerPos);
 		remoteLeftSteerOverrides.remove(controllerPos);
 		remoteRightSteerOverrides.remove(controllerPos);

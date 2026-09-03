@@ -3,6 +3,7 @@ package com.crystaelix.simurail.content.remote_controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.crystaelix.simurail.api.bogey.BogeyLinkable;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
@@ -34,7 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class RemoteControllerBlockEntity extends SmartBlockEntity implements MenuProvider {
+public class RemoteControllerBlockEntity extends SmartBlockEntity implements MenuProvider, BogeyLinkable {
 
 	public static final Component NAME = Component.translatable("block.simurail.remote_controller");
 
@@ -90,7 +91,7 @@ public class RemoteControllerBlockEntity extends SmartBlockEntity implements Men
 				bogey.removeRemoteController(pos);
 				return;
 			}
-			bogey.addRemoteController(pos);
+			bogey.addLink(pos);
 			switch(mode) {
 			case BRAKING -> bogey.setRemoteBrakeOverride(pos, power);
 			case BRAKING_INVERTED -> bogey.setRemoteBrakeOverride(pos, 15 - power);
@@ -139,6 +140,7 @@ public class RemoteControllerBlockEntity extends SmartBlockEntity implements Men
 		return targetPos;
 	}
 
+	@Override
 	public void setTargetPos(BlockPos targetPos) {
 		this.targetPos = targetPos;
 		if(targetPos != null) {

@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import com.crystaelix.simurail.api.bogey.BogeyLinkData;
+import com.crystaelix.simurail.api.bogey.BogeyLinkable;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
@@ -39,7 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProvider {
+public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProvider, BogeyLinkable {
 
 	public static final Component NAME = Component.translatable("block.simurail.probe_reader");
 
@@ -115,10 +116,10 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		double distSq = Sable.HELPER.distanceSquaredWithSubLevels(level, getBlockPos().getCenter(), getTargetPos().getCenter());
 		if(level.isLoaded(targetPos) && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
 			if(distSq > range * range) {
-				bogey.removeProbeReader(getBlockPos());
+				bogey.removeLink(getBlockPos());
 				return 0;
 			}
-			bogey.addProbeReader(getBlockPos());
+			bogey.addLink(getBlockPos());
 			PhysicsBogeyProbeData probeData = bogey.getAxle(targetFront).getProbeData();
 			switch(options.mode) {
 			case OCCUPIED_SIGNAL -> {
@@ -192,6 +193,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		return targetPos;
 	}
 
+	@Override
 	public void setTargetPos(BlockPos targetPos) {
 		this.targetPos = targetPos;
 		if(targetPos != null) {
@@ -239,7 +241,7 @@ public class ProbeReaderBlockEntity extends SmartBlockEntity implements MenuProv
 		super.invalidate();
 		computerBehaviour.removePeripheral();
 		if(!level.isClientSide() && targetPos != null && level.isLoaded(targetPos) && level.getBlockEntity(targetPos) instanceof PhysicsBogeyBlockEntity bogey) {
-			bogey.removeProbeReader(getBlockPos());
+			bogey.removeLink(getBlockPos());
 		}
 	}
 

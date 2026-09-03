@@ -46,7 +46,7 @@ public class PhysicsBogeyElectricScenes {
 
 		scene.title("physics_bogey.electric", "header");
 		scene.configureBasePlate(0, 0, 15);
-		scene.scaleSceneView(0.5F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 

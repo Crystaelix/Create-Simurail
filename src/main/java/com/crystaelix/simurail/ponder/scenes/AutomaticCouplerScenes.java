@@ -31,7 +31,7 @@ public class AutomaticCouplerScenes {
 
 		scene.title("automatic_coupler.intro", "header");
 		scene.configureBasePlate(0, 0, 15);
-		scene.scaleSceneView(0.5F);
+		scene.scaleSceneView(0.75F);
 		scene.showBasePlate();
 		scene.idle(10);
 		world.showSection(select.layer(1), Direction.DOWN);

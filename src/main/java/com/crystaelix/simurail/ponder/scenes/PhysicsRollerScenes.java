@@ -53,7 +53,7 @@ public class PhysicsRollerScenes {
 
 		scene.title("physics_roller.intro", "header");
 		scene.configureBasePlate(0, 0, 15);
-		scene.scaleSceneView(0.5F);
+		scene.scaleSceneView(0.75F);
 		scene.addInstruction(new SceneRotationInstruction(180));
 		scene.showBasePlate();
 		scene.idle(10);
@@ -137,7 +137,7 @@ public class PhysicsRollerScenes {
 
 		scene.title("physics_roller.materials", "header");
 		scene.configureBasePlate(0, 0, 15);
-		scene.scaleSceneView(0.5F);
+		scene.scaleSceneView(0.75F);
 		scene.addInstruction(new SceneRotationInstruction(180));
 		scene.showBasePlate();
 		scene.idle(10);

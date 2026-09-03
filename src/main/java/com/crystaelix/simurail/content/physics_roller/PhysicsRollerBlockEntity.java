@@ -58,7 +58,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 public class PhysicsRollerBlockEntity extends SmartBlockEntity {
 
 	public static final Vec3 ACTIVE_AREA_OFFSET = new Vec3(0, -2, 0);
-	public static final double ACTIVE_AREA_REACH = 0.45;
+	public static final double ACTIVE_AREA_REACH = 0.95;
 
 	public static final double MAX_ROLL = Math.PI / 36;
 	public static final double MAX_PITCH = Math.PI / 4;

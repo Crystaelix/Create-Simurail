@@ -1,0 +1,15 @@
+{
+	"neoforge:conditions": [{
+		"type": "neoforge:mod_loaded",
+		"modid": "offroad"
+	}],
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"count": 1,
+		"id": "simurail:brass_borehead_bearing"
+	},
+	"ingredients": [
+		{"item": "offroad:borehead_bearing"},
+		{"item": "create:attribute_filter"}
+	]
+}

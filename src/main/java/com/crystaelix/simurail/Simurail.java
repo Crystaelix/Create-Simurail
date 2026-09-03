@@ -4,6 +4,7 @@ import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
 import com.crystaelix.simurail.compat.create_bb.SimurailBlocksBogiesCompat;
 import com.crystaelix.simurail.compat.electroenergetics.SimurailElectroEnergeticsCompat;
+import com.crystaelix.simurail.compat.offroad.SimurailOffroadCompat;
 import com.crystaelix.simurail.compat.railways.SimurailRailwaysCompat;
 import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
@@ -20,6 +21,8 @@ import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.SimurailTracks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.KineticStats;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
@@ -44,7 +47,8 @@ public class Simurail {
 			lazy(() -> (SimulatedRegistrate)
 					new SimulatedRegistrate(id(MOD_ID), MOD_ID).
 					defaultCreativeTab((ResourceKey<CreativeModeTab>)null).
-					setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)));
+					setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE).
+							andThen(TooltipModifier.mapNull(KineticStats.create(item)))));
 
 	public Simurail(IEventBus modEventBus, ModContainer modContainer) {
 		modEventBus.register(this);
@@ -63,6 +67,7 @@ public class Simurail {
 		SimurailConfig.register(modContainer);
 
 		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () -> SimurailElectroEnergeticsCompat.onConstruct(modEventBus));
+		SimurailCompat.OFFROAD.ifLoaded(() -> () -> SimurailOffroadCompat.onConstruct());
 		SimurailComputerCraftProxy.register();
 	}
 
@@ -75,6 +80,7 @@ public class Simurail {
 		event.enqueueWork(() -> {
 			SimurailCompat.BLOCKSBOGIES.ifLoaded(() -> () -> SimurailBlocksBogiesCompat.onCommonSetupLate());
 			SimurailCompat.RAILWAYS.ifLoaded(() -> () -> SimurailRailwaysCompat.onCommonSetupLate());
+			SimurailCompat.OFFROAD.ifLoaded(() -> () -> SimurailOffroadCompat.onCommonSetupLate());
 		});
 	}
 

@@ -6,6 +6,7 @@
 		"simurail:gangway_frame",
 		"simurail:probe_reader",
 		"simurail:physics_roller",
-		"simurail:remote_controller"
+		"simurail:remote_controller",
+		{ "id": "simurail:brass_borehead_bearing", "required": false }
 	]
 }

@@ -222,10 +222,10 @@ dependencies {
 		railways          : [configurations: compat, notation: "curse.maven:steam-n-rails-neoforge-1414670:8522154"],
 		kotlinforforge    : [configurations: compat, notation: "thedarkcolour:kotlinforforge-neoforge:5.12.0"],
 		railx             : [configurations: compat, notation: "com.lhwdev.minecraft:railx:0.2.0-build.14:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
+		offroad           : [configurations: compat, notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
 
 		// Testing
 		aeronautics           : [configurations: extra, notation: "dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1", transitive: false],
-		offroad               : [configurations: extra, notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
 		copycats              : [configurations: extra, notation: "com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge", transitive: false],
 		ritchiesprojectilelib : [configurations: extra, notation: "com.rbasamoyai:ritchiesprojectilelib:2.1.2+mc.1.21.1-neoforge"],
 		createbigcannons      : [configurations: extra, notation: "com.rbasamoyai:createbigcannons:5.11.7+mc.1.21.1", transitive: false, dependsOn: ["ritchiesprojectilelib"]],

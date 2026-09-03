@@ -6,10 +6,13 @@
 	"block.simurail.probe_reader": "Тележный считыватель",
 	"block.simurail.remote_controller": "Удалённый тележечный контроллер",
 	"block.simurail.physics_roller": "Физический каток",
+	"block.simurail.brass_borehead_bearing": "Brass Borehead Bearing",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
 	"item.simurail.inverted_unpowered_physics_bogey": "Инверт. нетяговая физическая тележка",
 	"item.simurail.connector": "Рулевой провод",
+
+	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"block.simurail.gangway_frame.d": "Низ",
 	"block.simurail.gangway_frame.u": "Верх",

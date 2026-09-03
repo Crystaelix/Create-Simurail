@@ -6,10 +6,13 @@
 	"block.simurail.probe_reader": "Bogie Probe Reader",
 	"block.simurail.remote_controller": "Bogie Remote Controller",
 	"block.simurail.physics_roller": "Physics Roller",
+	"block.simurail.brass_borehead_bearing": "Brass Borehead Bearing",
 
 	"item.simurail.inverted_physics_bogey": "Carrello Fisico Invertito",
 	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
 	"item.simurail.connector": "Connettore dello Carrello",
+
+	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"block.simurail.gangway_frame.d": "Down",
 	"block.simurail.gangway_frame.u": "Up",

@@ -193,7 +193,7 @@ dependencies {
 		officialMojangMappings()
 		parchment "org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip"
 	}
-	neoForge "net.neoforged:neoforge:21.1.248"
+	neoForge "net.neoforged:neoforge:21.1.249"
 
 	// Dependencies
 	implementation("mezz.jei:jei-1.21.1-neoforge:19.44.0.405") {transitive = false}
@@ -208,7 +208,7 @@ dependencies {
 
 	// Performance
 	runtimeOnly "curse.maven:yeetusexperimentus-635427:5444189"
-	runtimeOnly "curse.maven:modernfix-790626:8360807"
+	runtimeOnly "curse.maven:modernfix-790626:8774737"
 	runtimeOnly "curse.maven:ferritecore-429235:7524151"
 
 	// Leave mods out with -PwithoutMods=all, -PwithoutMods=electroenergetics,railways

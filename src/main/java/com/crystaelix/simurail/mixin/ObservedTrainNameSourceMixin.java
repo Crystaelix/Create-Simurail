@@ -18,7 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 
 @Mixin(ObservedTrainNameSource.class)
-public abstract class ObservedTrainNameSourceMixin extends SingleLineDisplaySource {
+public abstract class ObservedTrainNameSourceMixin {
 
 	@Inject(method = "provideLine", at = @At(value = "RETURN", ordinal = 2), cancellable = true)
 	private void simurail$modifyProvideLine(DisplayLinkContext context, DisplayTargetStats stats, CallbackInfoReturnable<MutableComponent> ci, @Local TrackObserver observer) {

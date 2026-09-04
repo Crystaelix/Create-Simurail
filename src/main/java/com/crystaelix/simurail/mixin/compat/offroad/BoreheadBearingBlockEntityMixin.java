@@ -11,7 +11,7 @@ import dev.ryanhcode.offroad.content.blocks.borehead_bearing.BoreheadBearingBloc
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(BoreheadBearingBlockEntity.class)
-public class BoreheadBearingBlockEntityMixin {
+public abstract class BoreheadBearingBlockEntityMixin {
 
 	@WrapOperation(method = "updateMiningBlocks", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/base/BlockBreakingKineticBlockEntity;isBreakable(Lnet/minecraft/world/level/block/state/BlockState;F)Z"))
 	private boolean simurail$filterGatheredBlocks(BlockState state, float hardness, Operation<Boolean> original) {

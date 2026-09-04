@@ -15,7 +15,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.observer.TrackObserver;
-import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -23,7 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 
 @Mixin(TrackObserver.class)
-public abstract class TrackObserverMixin extends SingleBlockEntityEdgePoint implements TrackObserverExtension {
+public abstract class TrackObserverMixin implements TrackObserverExtension {
 
 	@Unique
 	private int bogeyActivated;

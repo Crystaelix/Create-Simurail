@@ -12,8 +12,6 @@
 	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
 	"item.simurail.connector": "Bogie Connector",
 
-	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
-
 	"block.simurail.gangway_frame.d": "Down",
 	"block.simurail.gangway_frame.u": "Up",
 	"block.simurail.gangway_frame.l": "Left",
@@ -38,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "Targeted position is too far from here",
 	"block.simurail.remote_controller.success": "Successfully bound",
 	"block.simurail.remote_controller.clear": "Selection cleared",
+
+	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"item.simurail.connector.set": "Targeted position selected",
 	"item.simurail.connector.same_block": "Same block position",

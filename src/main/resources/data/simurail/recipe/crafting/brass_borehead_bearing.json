@@ -3,13 +3,19 @@
 		"type": "neoforge:mod_loaded",
 		"modid": "offroad"
 	}],
-	"type": "minecraft:crafting_shapeless",
+	"type": "minecraft:crafting_shaped",
 	"result": {
 		"count": 1,
 		"id": "simurail:brass_borehead_bearing"
 	},
-	"ingredients": [
-		{"item": "offroad:borehead_bearing"},
-		{"item": "create:attribute_filter"}
-	]
+	"pattern": [
+		"I",
+		"S",
+		"P"
+	],
+	"key": {
+		"I": {"tag": "c:plates/brass"},
+		"P": {"item": "create:electron_tube"},
+		"S": {"item": "offroad:borehead_bearing"}
+	}
 }

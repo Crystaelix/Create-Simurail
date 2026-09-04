@@ -1,9 +1,0 @@
-{
-	"parent": "offroad:block/borehead_bearing/block",
-	"render_type": "minecraft:cutout_mipped",
-	"textures": {
-		"1": "simurail:block/brass_borehead_bearing/side",
-		"3": "simurail:block/brass_borehead_bearing/gearbox",
-		"4": "simurail:block/brass_borehead_bearing/bottom"
-	}
-}

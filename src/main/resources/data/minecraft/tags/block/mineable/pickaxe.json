@@ -7,6 +7,6 @@
 		"simurail:probe_reader",
 		"simurail:physics_roller",
 		"simurail:remote_controller",
-		{ "id": "simurail:brass_borehead_bearing", "required": false }
+		{"id": "simurail:brass_borehead_bearing", "required": false}
 	]
 }

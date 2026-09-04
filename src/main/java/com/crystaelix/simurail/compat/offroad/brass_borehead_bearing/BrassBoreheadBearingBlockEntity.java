@@ -21,6 +21,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class BrassBoreheadBearingBlockEntity extends BoreheadBearingBlockEntity {
 
+	public static final Component FILTER_LABEL = Component.translatable("block.simurail.brass_borehead_bearing.filter");
+
 	protected FilteringBehaviour filtering;
 
 	public BrassBoreheadBearingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -31,7 +33,7 @@ public class BrassBoreheadBearingBlockEntity extends BoreheadBearingBlockEntity 
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		filtering = new FilteringBehaviour(this, new FilterSlot());
-		filtering.setLabel(Component.translatable("block.simurail.brass_borehead_bearing.filter"));
+		filtering.setLabel(FILTER_LABEL.copy());
 		behaviours.add(filtering);
 	}
 
@@ -49,7 +51,7 @@ public class BrassBoreheadBearingBlockEntity extends BoreheadBearingBlockEntity 
 
 	private static class FilterSlot extends CenteredSideValueBoxTransform {
 
-		public FilterSlot() {
+		FilterSlot() {
 			super(BrassBoreheadBearingBlock::isFilterSide);
 		}
 
@@ -60,8 +62,7 @@ public class BrassBoreheadBearingBlockEntity extends BoreheadBearingBlockEntity 
 			if(getSide().getAxis() == facing.getAxis()) {
 				return offset;
 			}
-			// 12 px slab so shfits center by 2px
-			return offset.subtract(Vec3.atLowerCornerOf(facing.getNormal()).scale(2 / 16.0));
+			return offset.subtract(Vec3.atLowerCornerOf(facing.getNormal()).scale(0.125));
 		}
 
 		// adds roll so filter rendering gets aligned

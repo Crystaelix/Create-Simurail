@@ -22,9 +22,9 @@ public class BrassBoreheadBearingBlock extends BoreheadBearingBlock {
 	}
 
 	public static boolean isFilterSide(BlockState state, Direction direction) {
-		if(!(state.getBlock() instanceof DirectionalAxisKineticBlock block)) {
-			return false;
+		if(state.getBlock() instanceof DirectionalAxisKineticBlock block) {
+			return direction != state.getValue(BlockStateProperties.FACING) && direction.getAxis() != block.getRotationAxis(state);
 		}
-		return direction != state.getValue(BlockStateProperties.FACING) && direction.getAxis() != block.getRotationAxis(state);
+		return false;
 	}
 }

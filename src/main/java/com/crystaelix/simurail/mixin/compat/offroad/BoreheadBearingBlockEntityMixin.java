@@ -10,18 +10,14 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.ryanhcode.offroad.content.blocks.borehead_bearing.BoreheadBearingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Mixin(value = BoreheadBearingBlockEntity.class, remap = false)
+@Mixin(BoreheadBearingBlockEntity.class)
 public class BoreheadBearingBlockEntityMixin {
 
-	@WrapOperation(
-			method = "updateMiningBlocks",
-			at = @At(
-					value = "INVOKE",
-					target = "Lcom/simibubi/create/content/kinetics/base/BlockBreakingKineticBlockEntity;isBreakable(Lnet/minecraft/world/level/block/state/BlockState;F)Z"))
+	@WrapOperation(method = "updateMiningBlocks", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/base/BlockBreakingKineticBlockEntity;isBreakable(Lnet/minecraft/world/level/block/state/BlockState;F)Z"))
 	private boolean simurail$filterGatheredBlocks(BlockState state, float hardness, Operation<Boolean> original) {
 		if(!original.call(state, hardness)) {
 			return false;
 		}
-		return !((Object) this instanceof BrassBoreheadBearingBlockEntity be) || be.canMine(state);
+		return !((Object)this instanceof BrassBoreheadBearingBlockEntity be) || be.canMine(state);
 	}
 }

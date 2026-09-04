@@ -12,8 +12,6 @@
 	"item.simurail.inverted_unpowered_physics_bogey": "Инверт. нетяговая физическая тележка",
 	"item.simurail.connector": "Рулевой провод",
 
-	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
-
 	"block.simurail.gangway_frame.d": "Низ",
 	"block.simurail.gangway_frame.u": "Верх",
 	"block.simurail.gangway_frame.l": "Лево",
@@ -38,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "Целевая позиция слишком далеко...",
 	"block.simurail.remote_controller.success": "Успешно установлено",
 	"block.simurail.remote_controller.clear": "Выбор сброшен",
+
+	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"item.simurail.connector.set": "Выбрана целевая позиция",
 	"item.simurail.connector.same_block": "Данная позиция уже занята",

@@ -6,13 +6,11 @@
 	"block.simurail.probe_reader": "轉向架探針讀取器",
 	"block.simurail.remote_controller": "轉向架遠端控制器",
 	"block.simurail.physics_roller": "物理壓路機",
-	"block.simurail.brass_borehead_bearing": "Brass Borehead Bearing",
+	"block.simurail.brass_borehead_bearing": "黃銅鏜頭軸承",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理轉向架",
 	"item.simurail.inverted_unpowered_physics_bogey": "倒置無動力物理轉向架",
 	"item.simurail.connector": "轉向架連接器",
-
-	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"block.simurail.gangway_frame.d": "下",
 	"block.simurail.gangway_frame.u": "上",
@@ -38,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "目標位置離這裡太遠",
 	"block.simurail.remote_controller.success": "已綁定",
 	"block.simurail.remote_controller.clear": "已取消選擇",
+
+	"block.simurail.brass_borehead_bearing.filter": "忽略材料",
 
 	"item.simurail.connector.set": "已選定目標位置",
 	"item.simurail.connector.same_block": "方塊位置相同",

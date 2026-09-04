@@ -1,0 +1,52 @@
+{
+	"variants": {
+		"axis_along_first=false,facing=down": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"x": 270,
+			"y": 90
+		},
+		"axis_along_first=false,facing=east": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"y": 270
+		},
+		"axis_along_first=false,facing=north": {
+			"model": "simurail:block/brass_borehead_bearing/vertical",
+			"y": 180
+		},
+		"axis_along_first=false,facing=south": {
+			"model": "simurail:block/brass_borehead_bearing/vertical"
+		},
+		"axis_along_first=false,facing=up": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"x": 90,
+			"y": 90
+		},
+		"axis_along_first=false,facing=west": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"y": 90
+		},
+		"axis_along_first=true,facing=down": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"x": 270
+		},
+		"axis_along_first=true,facing=east": {
+			"model": "simurail:block/brass_borehead_bearing/vertical",
+			"y": 270
+		},
+		"axis_along_first=true,facing=north": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"y": 180
+		},
+		"axis_along_first=true,facing=south": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal"
+		},
+		"axis_along_first=true,facing=up": {
+			"model": "simurail:block/brass_borehead_bearing/horizontal",
+			"x": 90
+		},
+		"axis_along_first=true,facing=west": {
+			"model": "simurail:block/brass_borehead_bearing/vertical",
+			"y": 90
+		}
+	}
+}

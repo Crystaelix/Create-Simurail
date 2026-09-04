@@ -11,6 +11,7 @@ public enum SimurailCompat {
 	COMPUTERCRAFT("computercraft"),
 	ELECTROENERGETICS("electroenergetics"),
 	BLOCKSBOGIES("create_bb"),
+	OFFROAD("offroad"),
 	RAILWAYS(() -> isClassLoaded("com.railwayteam.railways.Railways"))
 	;
 

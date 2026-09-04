@@ -23,6 +23,7 @@
 
 		"compat.electroenergetics.AutomaticCouplerBlockMixin",
 		"compat.electroenergetics.PhysicsBogeyBlockMixin",
+		"compat.offroad.BoreheadBearingBlockEntityMixin",
 		"compat.railways.TrackBufferBlockMixin",
 		"compat.railx.BezierConnectionCompatMixin"
 	],

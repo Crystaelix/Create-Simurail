@@ -6,6 +6,7 @@
 	"block.simurail.probe_reader": "Bogie Probe Reader",
 	"block.simurail.remote_controller": "Bogie Remote Controller",
 	"block.simurail.physics_roller": "Physics Roller",
+	"block.simurail.brass_borehead_bearing": "Brass Borehead Bearing",
 
 	"item.simurail.inverted_physics_bogey": "Inverted Physics Bogie",
 	"item.simurail.inverted_unpowered_physics_bogey": "Inverted Unpowered Physics Bogie",
@@ -35,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "Targeted position is too far from here",
 	"block.simurail.remote_controller.success": "Successfully bound",
 	"block.simurail.remote_controller.clear": "Selection cleared",
+
+	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"item.simurail.connector.set": "Targeted position selected",
 	"item.simurail.connector.same_block": "Same block position",

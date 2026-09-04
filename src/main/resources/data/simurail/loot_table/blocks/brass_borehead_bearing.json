@@ -1,0 +1,18 @@
+{
+	"neoforge:conditions": [{
+		"type": "neoforge:mod_loaded",
+		"modid": "offroad"
+	}],
+	"type": "minecraft:block",
+	"pools": [{
+		"rolls": 1,
+		"entries": [{
+			"type": "minecraft:item",
+			"name": "simurail:brass_borehead_bearing"
+		}],
+		"conditions": [{
+			"condition": "minecraft:survives_explosion"
+		}]
+	}],
+	"random_sequence": "simurail:blocks/brass_borehead_bearing"
+}

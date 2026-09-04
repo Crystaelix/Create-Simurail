@@ -1,0 +1,10 @@
+{
+	"parent": "offroad:block/borehead_bearing/vertical",
+	"render_type": "cutout_mipped",
+	"textures": {
+		"particle": "simurail:block/brass_borehead_bearing/bottom",
+		"1": "simurail:block/brass_borehead_bearing/side",
+		"3": "simurail:block/brass_borehead_bearing/gearbox",
+		"4": "simurail:block/brass_borehead_bearing/bottom"
+	}
+}

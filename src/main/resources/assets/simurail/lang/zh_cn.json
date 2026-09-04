@@ -6,6 +6,7 @@
 	"block.simurail.probe_reader": "转向架探针读取器",
 	"block.simurail.remote_controller": "转向架远端控制器",
 	"block.simurail.physics_roller": "物理压路机",
+	"block.simurail.brass_borehead_bearing": "黄铜镗头轴承",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理转向架",
 	"item.simurail.inverted_unpowered_physics_bogey": "倒置无动力物理转向架",
@@ -35,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "目标位置离此处太远",
 	"block.simurail.remote_controller.success": "已绑定",
 	"block.simurail.remote_controller.clear": "已取消选择",
+
+	"block.simurail.brass_borehead_bearing.filter": "忽略材料",
 
 	"item.simurail.connector.set": "已选择目标位置",
 	"item.simurail.connector.same_block": "方块位置相同",

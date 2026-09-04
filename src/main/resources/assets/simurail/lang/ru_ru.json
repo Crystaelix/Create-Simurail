@@ -6,6 +6,7 @@
 	"block.simurail.probe_reader": "Тележный считыватель",
 	"block.simurail.remote_controller": "Удалённый тележечный контроллер",
 	"block.simurail.physics_roller": "Физический каток",
+	"block.simurail.brass_borehead_bearing": "Brass Borehead Bearing",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
 	"item.simurail.inverted_unpowered_physics_bogey": "Инверт. нетяговая физическая тележка",
@@ -35,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "Целевая позиция слишком далеко...",
 	"block.simurail.remote_controller.success": "Успешно установлено",
 	"block.simurail.remote_controller.clear": "Выбор сброшен",
+
+	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"item.simurail.connector.set": "Выбрана целевая позиция",
 	"item.simurail.connector.same_block": "Данная позиция уже занята",

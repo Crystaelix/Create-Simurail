@@ -6,6 +6,7 @@
 	"block.simurail.probe_reader": "Lecteur de sonde de bogie",
 	"block.simurail.remote_controller": "Télécommande de bogie",
 	"block.simurail.physics_roller": "Rouleau mécanique dynamique",
+	"block.simurail.brass_borehead_bearing": "Roulement de tête de forage en laiton",
 
 	"item.simurail.inverted_physics_bogey": "Bogie dynamique suspendu",
 	"item.simurail.inverted_unpowered_physics_bogey": "Bogie dynamique suspendu non motorisé",
@@ -35,6 +36,8 @@
 	"block.simurail.remote_controller.too_far": "La position ciblée est trop éloignée d'ici",
 	"block.simurail.remote_controller.success": "Liaison réussie",
 	"block.simurail.remote_controller.clear": "Sélection effacée",
+
+	"block.simurail.brass_borehead_bearing.filter": "Matériaux ignorés",
 
 	"item.simurail.connector.set": "Position ciblée sélectionnée",
 	"item.simurail.connector.same_block": "Même position de bloc",

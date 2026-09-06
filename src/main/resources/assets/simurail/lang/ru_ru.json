@@ -118,10 +118,10 @@
 	"gui.simurail.remote_controller.mode.braking_inverted": "Инвертированное торможение",
 	"gui.simurail.remote_controller.mode.steering_left": "Поворот влево на стрелке",
 	"gui.simurail.remote_controller.mode.steering_right": "Поворот вправо на стрелке",
+	"gui.simurail.remote_controller.mode.strength": "Тяга",
+	"gui.simurail.remote_controller.mode.strength_inverted": "Инвертированная тяга",
 	"gui.simurail.remote_controller.mode.vertical_movement": "Переключить вертикальное перемещение",
 	"gui.simurail.remote_controller.mode.enabled": "Переключить физическое поведение",
-	"gui.simurail.remote_controller.mode.strength": "Сила",
-	"gui.simurail.remote_controller.mode.strength_inverted": "Инвертированная сила",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Грохот колёс Физической тележки",
 	"subtitles.simurail.block.coupler.connect": "Сцепка соединена",

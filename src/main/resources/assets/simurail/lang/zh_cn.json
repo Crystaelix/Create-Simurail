@@ -118,10 +118,10 @@
 	"gui.simurail.remote_controller.mode.braking_inverted": "反向刹车",
 	"gui.simurail.remote_controller.mode.steering_left": "左侧转向",
 	"gui.simurail.remote_controller.mode.steering_right": "右侧转向",
+	"gui.simurail.remote_controller.mode.strength": "驱动强度",
+	"gui.simurail.remote_controller.mode.strength_inverted": "反向驱动强度",
 	"gui.simurail.remote_controller.mode.vertical_movement": "切换垂向移动模式",
 	"gui.simurail.remote_controller.mode.enabled": "切换物理运行状态",
-	"gui.simurail.remote_controller.mode.strength": "强度",
-	"gui.simurail.remote_controller.mode.strength_inverted": "反向强度",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "物理转向架：移动",
 	"subtitles.simurail.block.coupler.connect": "车钩：连接",

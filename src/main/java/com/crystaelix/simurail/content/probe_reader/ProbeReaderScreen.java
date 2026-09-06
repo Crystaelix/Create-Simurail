@@ -31,6 +31,15 @@ public class ProbeReaderScreen extends AbstractSimiScreen implements MenuAccess<
 	public static final Component MIN_TITLE = Component.translatable("gui.simurail.probe_reader.min");
 	public static final Component MAX_TITLE = Component.translatable("gui.simurail.probe_reader.max");
 
+	public static final List<ProbeReaderMode> MODE_ORDER = List.of(
+			ProbeReaderMode.OCCUPIED_SIGNAL,
+			ProbeReaderMode.ALIGNED_SIGNAL,
+			ProbeReaderMode.OPPOSITE_SIGNAL,
+			ProbeReaderMode.SIGNAL,
+			ProbeReaderMode.UNPOWERED_STATION,
+			ProbeReaderMode.POWERED_STATION,
+			ProbeReaderMode.STATION,
+			ProbeReaderMode.DISCONTINUITY);
 	public static final List<Component> MODE_OPTIONS = List.of(
 			Component.translatable("gui.simurail.probe_reader.mode.occupied_signal"),
 			Component.translatable("gui.simurail.probe_reader.mode.aligned_signal"),
@@ -100,8 +109,8 @@ public class ProbeReaderScreen extends AbstractSimiScreen implements MenuAccess<
 		modeInput.forOptions(MODE_OPTIONS);
 		modeInput.titled(MODE_TITLE.plainCopy());
 		modeInput.writingTo(modeLabel);
-		modeInput.setState(options.mode.ordinal());
-		modeInput.calling(i -> options.mode = ProbeReaderMode.BY_ID.apply(i));
+		modeInput.setState(MODE_ORDER.indexOf(options.mode));
+		modeInput.calling(i -> options.mode = MODE_ORDER.get(i));
 
 		filterBox = new EditBox(font, x + 50, y + 50, 99, 10, CommonComponents.EMPTY);
 		filterBox.setTextColor(-1);

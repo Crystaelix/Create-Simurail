@@ -52,12 +52,22 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 			Component.translatable("gui.simurail.physics_bogey.vertical.allow"));
 	public static final List<Component> VERTICAL_OPTIONS_INVERTED = List.of(
 			Component.translatable("gui.simurail.physics_bogey.vertical.disallow"));
+	public static final List<PhysicsBogeyControlMode> CONTROL_ORDER = List.of(
+			PhysicsBogeyControlMode.BRAKING,
+			PhysicsBogeyControlMode.BRAKING_INVERTED,
+			PhysicsBogeyControlMode.STRENGTH,
+			PhysicsBogeyControlMode.STRENGTH_INVERTED,
+			PhysicsBogeyControlMode.NONE);
 	public static final List<Component> CONTROL_OPTIONS = List.of(
 			Component.translatable("gui.simurail.physics_bogey.control.braking"),
 			Component.translatable("gui.simurail.physics_bogey.control.braking_inverted"),
 			Component.translatable("gui.simurail.physics_bogey.control.strength"),
 			Component.translatable("gui.simurail.physics_bogey.control.strength_inverted"),
 			Component.translatable("gui.simurail.physics_bogey.control.none"));
+	public static final List<PhysicsBogeyControlMode> CONTROL_ORDER_UNPOWERED = List.of(
+			PhysicsBogeyControlMode.BRAKING,
+			PhysicsBogeyControlMode.BRAKING_INVERTED,
+			PhysicsBogeyControlMode.NONE);
 	public static final List<Component> CONTROL_OPTIONS_UNPOWERED = List.of(
 			Component.translatable("gui.simurail.physics_bogey.control.braking"),
 			Component.translatable("gui.simurail.physics_bogey.control.braking_inverted"),
@@ -199,8 +209,8 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		controlInput.forOptions(unpowered ? CONTROL_OPTIONS_UNPOWERED : CONTROL_OPTIONS);
 		controlInput.titled(CONTROL_TITLE.plainCopy());
 		controlInput.writingTo(controlLabel);
-		controlInput.setState(unpowered ? options.controlMode.unpoweredId() : options.controlMode.ordinal());
-		controlInput.calling(i -> options.controlMode = (unpowered ? PhysicsBogeyControlMode.BY_ID_UNPOWERED : PhysicsBogeyControlMode.BY_ID).apply(i));
+		controlInput.setState((unpowered ? CONTROL_ORDER_UNPOWERED : CONTROL_ORDER).indexOf(options.controlMode));
+		controlInput.calling(i -> options.controlMode = (unpowered ? CONTROL_ORDER_UNPOWERED : CONTROL_ORDER).get(i));
 
 		stressInput = new ScrollInput(x + 31, y + 108, 109, 18);
 		stressInput.withRange(unpowered ? 0 : -128 * 2, unpowered ? 1 : 128 * 2 + 1);

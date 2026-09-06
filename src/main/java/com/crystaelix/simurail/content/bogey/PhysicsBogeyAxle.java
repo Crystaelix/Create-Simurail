@@ -602,6 +602,9 @@ public class PhysicsBogeyAxle {
 
 		TrackTypeEntry trackType = TrackTypeEntries.getEntry(trackSegment.material());
 
+		double yScale = subLevel.logicalPose().scale().y;
+		double zScale = subLevel.logicalPose().scale().x;
+
 		double yLimit = 0;
 		double zLimit = 0;
 
@@ -648,16 +651,16 @@ public class PhysicsBogeyAxle {
 		double bogeyLateralPlay = disableRotation ? 0 : 0.125;
 
 		if(checkVertical) {
-			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
-			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - bogeyVerticalPlay, yLimit + bogeyVerticalPlay);
+			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit * yScale, yLimit * yScale);
+			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -(yLimit + bogeyVerticalPlay) * yScale, (yLimit + bogeyVerticalPlay) * yScale);
 		}
 		else {
-			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Float.MAX_VALUE);
-			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit - bogeyVerticalPlay, Float.MAX_VALUE);
+			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit * yScale, Float.MAX_VALUE);
+			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -(yLimit + bogeyVerticalPlay) * yScale, Float.MAX_VALUE);
 		}
 
-		trackJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);
-		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit - bogeyLateralPlay, zLimit + bogeyLateralPlay);
+		trackJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit * zScale, zLimit * zScale);
+		bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -(zLimit + bogeyLateralPlay) * zScale, (zLimit + bogeyLateralPlay) * zScale);
 	}
 
 	protected void updateForces(ServerSubLevel subLevel, double timeStep) {

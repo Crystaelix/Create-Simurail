@@ -542,12 +542,15 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 						this.partnerJointPos.sub(this.jointPos, this.jointDir);
 						partner.jointPos.sub(partner.partnerJointPos, partner.jointDir);
 
-						double jointLength = this.getLength() + partner.getLength();
+						double selfScale = this.getFacing().getAxis() != Direction.Axis.Z ? selfPose.scale().x() : selfPose.scale().z();
+						double partnerScale = partner.getFacing().getAxis() != Direction.Axis.Z ? partnerPose.scale().x() : partnerPose.scale().z();
+
+						double jointLength = this.getLength() * selfScale + partner.getLength() * partnerScale;
 
 						SimurailMath.rot(this.jointDir, this.jointRot);
 						SimurailMath.rot(partner.jointDir, partner.jointRot);
 
-						if(jointPos.distanceSquared(partnerJointPos) > Mth.square(jointLength + 1)) {
+						if(jointPos.distanceSquared(partnerJointPos) * selfScale * selfScale > Mth.square(jointLength + 1)) {
 							removePartner();
 							removeJoint();
 							return;

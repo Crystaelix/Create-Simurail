@@ -25,11 +25,22 @@ public class RemoteControllerScreen extends AbstractSimiScreen implements MenuAc
 
 	public static final Component MODE_TITLE = Component.translatable("gui.simurail.remote_controller.mode");
 
+	public static final List<RemoteControllerMode> MODE_ORDER = List.of(
+			RemoteControllerMode.BRAKING,
+			RemoteControllerMode.BRAKING_INVERTED,
+			RemoteControllerMode.STEERING_LEFT,
+			RemoteControllerMode.STEERING_RIGHT,
+			RemoteControllerMode.STRENGTH,
+			RemoteControllerMode.STRENGTH_INVERTED,
+			RemoteControllerMode.VERTICAL_MOVEMENT,
+			RemoteControllerMode.ENABLED);
 	public static final List<Component> MODE_OPTIONS = List.of(
 			Component.translatable("gui.simurail.remote_controller.mode.braking"),
 			Component.translatable("gui.simurail.remote_controller.mode.braking_inverted"),
 			Component.translatable("gui.simurail.remote_controller.mode.steering_left"),
 			Component.translatable("gui.simurail.remote_controller.mode.steering_right"),
+			Component.translatable("gui.simurail.remote_controller.mode.strength"),
+			Component.translatable("gui.simurail.remote_controller.mode.strength_inverted"),
 			Component.translatable("gui.simurail.remote_controller.mode.vertical_movement"),
 			Component.translatable("gui.simurail.remote_controller.mode.enabled"));
 
@@ -75,8 +86,8 @@ public class RemoteControllerScreen extends AbstractSimiScreen implements MenuAc
 		modeInput.forOptions(MODE_OPTIONS);
 		modeInput.titled(MODE_TITLE.plainCopy());
 		modeInput.writingTo(modeLabel);
-		modeInput.setState(mode.ordinal());
-		modeInput.calling(i -> mode = RemoteControllerMode.BY_ID.apply(i));
+		modeInput.setState(MODE_ORDER.indexOf(mode));
+		modeInput.calling(i -> mode = MODE_ORDER.get(i));
 
 		confirmButton = new IconButton(x + 155, y + 55, AllIcons.I_CONFIRM);
 		confirmButton.setToolTip(CONFIRM_TOOLTIP);

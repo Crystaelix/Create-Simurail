@@ -15,7 +15,9 @@ public enum RemoteControllerMode {
 	STEERING_LEFT,
 	STEERING_RIGHT,
 	VERTICAL_MOVEMENT,
-	ENABLED;
+	ENABLED,
+	STRENGTH,
+	STRENGTH_INVERTED;
 
 	public static final IntFunction<RemoteControllerMode> BY_ID = ByIdMap.continuous(RemoteControllerMode::ordinal, values(), OutOfBoundsStrategy.ZERO);
 	public static final StreamCodec<ByteBuf, RemoteControllerMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, RemoteControllerMode::ordinal);

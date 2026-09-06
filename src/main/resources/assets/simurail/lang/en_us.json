@@ -119,6 +119,8 @@
 	"gui.simurail.remote_controller.mode.braking_inverted": "Inverted Braking",
 	"gui.simurail.remote_controller.mode.steering_left": "Left Steering",
 	"gui.simurail.remote_controller.mode.steering_right": "Right Steering",
+	"gui.simurail.remote_controller.mode.strength": "Strength",
+	"gui.simurail.remote_controller.mode.strength_inverted": "Inverted Strength",
 	"gui.simurail.remote_controller.mode.vertical_movement": "Toggle Vertical Movement",
 	"gui.simurail.remote_controller.mode.enabled": "Toggle Physics Behavior",
 

@@ -53,7 +53,6 @@ import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
 import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.physics.mass.MassData;
-import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
@@ -421,7 +420,7 @@ public class PhysicsBogeyAxle {
 		}
 
 		speed = 0;
-		RigidBodyHandle.of(subLevel.getLevel(), bogey.pivot).getLinearVelocity(globalAxleVel);
+		RigidBodyHandle.of(subLevel.getLevel(), bogey.pivot.physicsBody()).getLinearVelocity(globalAxleVel);
 
 		if(trackSegment != null) {
 			ServerSubLevel newTrackSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, trackSegment.start());
@@ -542,7 +541,7 @@ public class PhysicsBogeyAxle {
 		trackSubLevelPose.orientation().conjugate(trackJointRot).mul(globalTrackRot);
 
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
-		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+		SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(subLevel.getLevel());
 		if(offsetTimer > 0) {
 			removeJoint();
 		}
@@ -552,9 +551,9 @@ public class PhysicsBogeyAxle {
 			double linearDamping = config.axlePassiveLinearDamping.get();
 			double angularDamping = config.axlePassiveAngularDamping.get();
 			GenericConstraintConfiguration jointConfig = SimurailJoints.railJoint(
-					trackFrame.position, axleFrame.position,
+					trackFrame.position, bogey.pivot.position(axleFrame.position),
 					trackJointRot, SimurailMath.ROT_I);
-			trackJoint = physics.getPipeline().addConstraint(trackSubLevel, bogey.pivot, jointConfig);
+			trackJoint = physics.getPipeline().addConstraint(trackSubLevel, bogey.pivot.physicsBody(), jointConfig);
 			trackJoint.setContactsEnabled(false);
 			trackJoint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, linearDamping, false, 0);
 			trackJoint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, linearDamping, false, 0);
@@ -565,6 +564,7 @@ public class PhysicsBogeyAxle {
 		}
 		else {
 			trackJoint.setFrame1(trackFrame.position, trackJointRot);
+			trackJoint.setContactsEnabled(false);
 		}
 		if(bogeyJoint == null || !bogeyJoint.isValid()) {
 			bogeyJoint = null;
@@ -917,7 +917,7 @@ public class PhysicsBogeyAxle {
 	}
 
 	protected void createAxleBox(ServerSubLevel subLevel) {
-		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+		SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(subLevel.getLevel());
 		Quaterniond rot = SimurailMath.rot(new Vector3d(1, 1, 0), new Vector3d(-1, 1, 0), new Quaterniond());
 		if(axleBox == null || axleBox.isRemoved()) {
 			Pose3d axleBoxPose = new Pose3d();
@@ -927,8 +927,8 @@ public class PhysicsBogeyAxle {
 			physics.addObject(axleBox);
 		}
 		if(axleBoxJoint == null || !axleBoxJoint.isValid()) {
-			FixedConstraintConfiguration jointConfig = new FixedConstraintConfiguration(axleFrame.position, new Vector3d(0, -0.3125, 0), rot);
-			axleBoxJoint = physics.getPipeline().addConstraint(bogey.pivot, axleBox, jointConfig);
+			FixedConstraintConfiguration jointConfig = new FixedConstraintConfiguration(bogey.pivot.position(axleFrame.position), new Vector3d(0, -0.3125, 0), rot);
+			axleBoxJoint = physics.getPipeline().addConstraint(bogey.pivot.physicsBody(), axleBox, jointConfig);
 			axleBoxJoint.setContactsEnabled(false);
 		}
 	}
@@ -939,7 +939,7 @@ public class PhysicsBogeyAxle {
 			axleBoxJoint = null;
 		}
 		if(axleBox != null) {
-			SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+			SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(subLevel.getLevel());
 			physics.removeObject(axleBox);
 			axleBox = null;
 		}

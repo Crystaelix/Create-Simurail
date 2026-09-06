@@ -23,8 +23,10 @@ import com.crystaelix.simurail.api.math.Basis3dc;
 import com.crystaelix.simurail.api.math.MovingQuaternionfLerp;
 import com.crystaelix.simurail.api.math.MovingVector3fLerp;
 import com.crystaelix.simurail.api.math.SimurailMath;
-import com.crystaelix.simurail.api.physics.AttachableBoxPhysicsObject;
+import com.crystaelix.simurail.api.physics.AuxiliaryPhysicsBody;
+import com.crystaelix.simurail.api.physics.BoxAuxiliaryPhysicsBody;
 import com.crystaelix.simurail.api.physics.SimurailJoints;
+import com.crystaelix.simurail.api.physics.SubLevelAuxiliaryPhysicsBody;
 import com.crystaelix.simurail.api.util.PhysicsStaffUtil;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.compat.SimurailCompat;
@@ -32,6 +34,7 @@ import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
 import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.config.SimurailPhysicsConfig;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
+import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.google.common.collect.ImmutableList;
@@ -117,7 +120,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	// Physics components
 	protected final Vector3dc localCenter;
-	protected AttachableBoxPhysicsObject pivot;
+	protected AuxiliaryPhysicsBody pivot;
+	protected CompoundTag pivotTag;
 	protected final Pose3d pivotPose = new Pose3d();
 	protected Vector3d localPivotOffset;
 	protected final Vector3d lastLocalPivotOffset = new Vector3d();
@@ -133,6 +137,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected double lastSlipSpeed = 0;
 	protected boolean staffRestrained = false;
 	protected final LerpedFloat lerpedCurvature = LerpedFloat.linear();
+	protected final Vector3d lastScale = new Vector3d(1);
 
 	// Navigator components
 	protected float navigatorBrakeOverride = 0;
@@ -381,6 +386,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	}
 
 	public void afterMove() {
+		if(pivot != null) {
+			pivot.afterParentMove();
+		}
 		if(connectionFront != null && level.getBlockEntity(connectionFront) instanceof PhysicsBogeyBlockEntity otherBogey) {
 			connect(true, otherBogey, connectionFrontToFront);
 		}
@@ -509,6 +517,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		renderPivotRot.initialize(localPivotRot);
 		resetPivotPose();
 		if(!level.isClientSide() && Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
+			lastScale.set(subLevel.logicalPose().scale());
 			createPivot(subLevel);
 			axleFront.init(subLevel);
 			axleBack.init(subLevel);
@@ -524,21 +533,39 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			Pose3d containingPose = subLevel.logicalPose();
 			containingPose.transformPosition(pivotPose.position());
 			pivotPose.orientation().premul(containingPose.orientation());
+			Vector3d scale = containingPose.scale();
+			if(getFacing().getAxis() != Direction.Axis.Z) {
+				pivotPose.scale().set(scale);
+			}
+			else {
+				pivotPose.scale().set(scale.z, scale.y, scale.x);
+			}
 		}
 	}
 
 	protected void createPivot(ServerSubLevel subLevel) {
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
-		SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
-		if(pivot == null || pivot.isRemoved()) {
-			pivot = new AttachableBoxPhysicsObject(subLevel, pivotPose, new Vector3d(0.5, 0.125, 0.125), config.bogeyPivotMass.get());
-			physics.addObject(pivot);
+		if(pivot == null) {
+			if(config.bogeyPivotBox.get()) {
+				pivot = new BoxAuxiliaryPhysicsBody(subLevel.getLevel(), getBlockPos(), new Vector3d(0.5, 0.125, 0.125), config.bogeyPivotMass.get());
+			}
+			else {
+				pivot = new SubLevelAuxiliaryPhysicsBody(subLevel.getLevel(), getBlockPos(), SimurailBlocks.PHYSICS_BOGEY_PIVOT.getDefaultState());
+			}
+			if(pivotTag != null) {
+				pivot.read(pivotTag);
+				pivotTag = null;
+			}
 		}
+		if(pivot.isRemoved()) {
+			pivot.create(pivotPose);
+		}
+		SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(subLevel.getLevel());
 		if(pivotJoint == null || !pivotJoint.isValid()) {
 			GenericConstraintConfiguration jointConfig = SimurailJoints.pivotJoint(
-					localCenter, SimurailMath.VEC_0,
+					localCenter, pivot.position(SimurailMath.VEC_0),
 					getJointOrientation(), SimurailMath.ROT_XPYPZP);
-			pivotJoint = physics.getPipeline().addConstraint(subLevel, pivot, jointConfig);
+			pivotJoint = physics.getPipeline().addConstraint(subLevel, pivot.physicsBody(), jointConfig);
 			pivotJoint.setContactsEnabled(false);
 		}
 		if(motorJoint == null || !motorJoint.isValid()) {
@@ -562,9 +589,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			motorJoint = null;
 		}
 		if(pivot != null) {
-			SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
-			physics.removeObject(pivot);
-			pivot = null;
+			pivot.remove();
 		}
 	}
 
@@ -577,6 +602,21 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				computerOverrides.reset();
 			}
 			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
+				Vector3d currentScale = subLevel.logicalPose().scale();
+				if(!lastScale.equals(currentScale, SimurailMath.EPSILON)) {
+					lastScale.set(currentScale);
+					if(getFacing().getAxis() != Direction.Axis.Z) {
+						pivotPose.scale().set(currentScale);
+					}
+					else {
+						pivotPose.scale().set(currentScale.z, currentScale.y, currentScale.x);
+					}
+					if(!pivot.scaleEquals(pivotPose.scale())) {
+						removePivot(subLevel);
+						createPivot(subLevel);
+					}
+				}
+
 				staffRestrained = PhysicsStaffUtil.isRestrained(subLevel);
 
 				axleFront.updateVisualSpeed();
@@ -685,8 +725,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(pivot.isRemoved()) {
 			createPivot(subLevel);
 		}
-		pivot.updatePose();
-		pivotPose.set(pivot.getPose());
+		pivotPose.set(pivot.pose());
 		subLevel.logicalPose().transformPositionInverse(pivotPose.position(), localPivotOffset).sub(localCenter);
 		subLevel.logicalPose().orientation().conjugate(localPivotRot).mul(pivotPose.orientation());
 
@@ -729,6 +768,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		pivotJoint.setLimit(ConstraintJointAxis.ANGULAR_X, -angXLimit, angXLimit);
 		pivotJoint.setLimit(ConstraintJointAxis.ANGULAR_Y, -angYLimit, angYLimit);
 		pivotJoint.setLimit(ConstraintJointAxis.ANGULAR_Z, -angZLimit, angZLimit);
+		pivotJoint.setContactsEnabled(false);
 	}
 
 	protected void updateForces(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
@@ -741,7 +781,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			return;
 		}
 
-		RigidBodyHandle pivotHandle = RigidBodyHandle.of(subLevel.getLevel(), pivot);
+		RigidBodyHandle pivotHandle = RigidBodyHandle.of(subLevel.getLevel(), pivot.physicsBody());
 		Vector3dc localDir = getDirection();
 		Quaterniond rot = subLevel.logicalPose().orientation();
 		globalBasis.orthogonalized(localDir, SimurailMath.DIR_YP).transform(rot);
@@ -924,6 +964,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public Iterable<SubLevel> sable$getConnectionDependencies() {
 		ImmutableList.Builder<SubLevel> builder = ImmutableList.builderWithExpectedSize(2);
 		SubLevelContainer container = SubLevelContainer.getContainer(level);
+		if(pivot != null && pivot.physicsBody() instanceof SubLevel subLevel) {
+			builder.add(subLevel);
+		}
 		if(connectionFront != null && connectionFrontSubLevelID != null) {
 			SubLevel subLevel = container.getSubLevel(connectionFrontSubLevelID);
 			if(subLevel != null) {
@@ -1120,6 +1163,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			tag.putString("custom_name", Component.Serializer.toJson(customName, registries));
 		}
 
+		if(pivot != null) {
+			tag.put("pivot", pivot.write());
+		}
+
 		if(!clientPacket) {
 			tag.put("axle_front", axleFront.write());
 			tag.put("axle_back", axleBack.write());
@@ -1172,6 +1219,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		}
 		if(tag.contains("custom_name")) {
 			customName = Component.Serializer.fromJson(tag.getString("custom_name"), registries);
+		}
+
+		if(tag.contains("pivot")) {
+			pivotTag = tag.getCompound("pivot");
 		}
 
 		if(!clientPacket) {

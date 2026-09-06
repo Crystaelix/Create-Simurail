@@ -144,6 +144,16 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://jitpack.io/"
+			}
+		}
+		filter {
+			includeModule("com.github.misterblusky9", "pocket")
+		}
+	}
 }
 
 def mcVersion = "1.21.1"
@@ -237,6 +247,7 @@ dependencies {
 		ldlib2                : [configurations: extra, notation: "com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.37:all", transitive: false],
 		schematic_tool        : [configurations: extra, notation: "curse.maven:sable-schematic-tool-1526951:8606655", dependsOn: ["ldlib2"]],
 		synaxis               : [configurations: extra, notation: "curse.maven:synaxis-1526348:8606652", dependsOn: ["ldlib2", "schematic_tool"]],
+		//pocket                : [configurations: extra, notation: "com.github.misterblusky9:pocket:3b5d56f9bf"],
 	]
 
 	def withoutMods = (findProperty("withoutMods") ?: "").toString().split(",")*.trim() - ""

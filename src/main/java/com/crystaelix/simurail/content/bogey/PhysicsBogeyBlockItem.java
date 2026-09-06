@@ -136,6 +136,7 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 			Pose3d containingPose = containingSubLevel.logicalPose();
 			containingPose.transformPosition(pose.position());
 			pose.orientation().set(containingPose.orientation());
+			pose.scale().set(containingPose.scale());
 		}
 
 		SubLevel subLevel = container.allocateNewSubLevel(pose);

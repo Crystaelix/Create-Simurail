@@ -5,11 +5,12 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
+import com.crystaelix.simurail.content.bogey.PhysicsBogeyPivotBlock;
 import com.crystaelix.simurail.content.bogey.UnpoweredPhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.UnpoweredPhysicsBogeyBlockItem;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlock;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockItem;
-import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
@@ -38,6 +39,10 @@ public class SimurailBlocks {
 			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_CYAN).sound(SoundType.NETHERITE_BLOCK)).
 			item(UnpoweredPhysicsBogeyBlockItem::new).
 			build().
+			register();
+	public static final BlockEntry<PhysicsBogeyPivotBlock> PHYSICS_BOGEY_PIVOT = REGISTRATE.
+			block("physics_bogey_pivot", PhysicsBogeyPivotBlock::new).
+			properties(p -> p.noOcclusion().noTerrainParticles().noLootTable()).
 			register();
 	public static final BlockEntry<AutomaticCouplerBlock> AUTOMATIC_COUPLER = REGISTRATE.
 			block("automatic_coupler", AutomaticCouplerBlock::new).

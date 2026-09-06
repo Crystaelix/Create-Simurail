@@ -1,6 +1,5 @@
 package com.crystaelix.simurail.ponder;
 
-import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.electroenergetics.ponder.SimurailElectroEnergeticsPonderScenes;
 import com.crystaelix.simurail.content.SimurailBlocks;

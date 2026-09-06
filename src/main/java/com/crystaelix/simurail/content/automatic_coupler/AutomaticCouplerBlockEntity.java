@@ -128,7 +128,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 			setChanged();
 			sendData();
 			if(partnerPos != null && Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
-				SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+				SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(subLevel.getLevel());
 				physics.getPipeline().wakeUp(subLevel);
 			}
 		}
@@ -561,7 +561,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 						double stiffness = frequency * frequency;
 						double damping = frequency * dampingRate * 2;
 
-						SubLevelPhysicsSystem physics = SubLevelContainer.getContainer(subLevel.getLevel()).physicsSystem();
+						SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(level);
 						if(joint == null || !joint.isValid()) {
 							removeJoint();
 							double linearDamping = config.couplerPassiveLinearDamping.get();

@@ -1,6 +1,7 @@
 {
 	"block.simurail.physics_bogey": "Carrello Fisico",
 	"block.simurail.unpowered_physics_bogey": "Unpowered Physics Bogie",
+	"block.simurail.physics_bogey_pivot": "Physics Bogie Pivot",
 	"block.simurail.automatic_coupler": "Accopiatore Automatico",
 	"block.simurail.gangway_frame": "Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",

@@ -5,6 +5,7 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEn
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerRenderer;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerVisual;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
+import com.crystaelix.simurail.content.bogey.PhysicsBogeyPivotBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderer;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyVisual;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
@@ -28,6 +29,10 @@ public class SimurailBlockEntities {
 			visual(() -> PhysicsBogeyVisual::new, false).
 			renderer(() -> PhysicsBogeyRenderer::new).
 			validBlocks(SimurailBlocks.PHYSICS_BOGEY, SimurailBlocks.UNPOWERED_PHYSICS_BOGEY).
+			register();
+	public static final BlockEntityEntry<PhysicsBogeyPivotBlockEntity> PHYSICS_BOGEY_PIVOT = REGISTRATE.
+			blockEntity("physics_bogey_pivot", PhysicsBogeyPivotBlockEntity::new).
+			validBlocks(SimurailBlocks.PHYSICS_BOGEY_PIVOT).
 			register();
 	public static final BlockEntityEntry<AutomaticCouplerBlockEntity> COUPLER = REGISTRATE.
 			blockEntity("coupler", AutomaticCouplerBlockEntity::new).

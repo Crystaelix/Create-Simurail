@@ -66,6 +66,11 @@ public class TrackSegmentHelper {
 	}
 
 	public static ObjectDoublePair<StraightTrackSegment> findBlockTrackSegment(Level level, SubLevel subLevel, Vector3dc globalPos, Vector3dc globalDir, Vector3dc globalVert, boolean inverted, Set<TrackType> validTypes) {
+		Vector3d scale = subLevel.logicalPose().scale();
+		if(!Mth.equal(scale.x, scale.y) || !Mth.equal(scale.x, scale.z)) {
+			return null;
+		}
+
 		double score = Double.POSITIVE_INFINITY;
 		BlockPos trackPos = null;
 		ITrackBlock trackBlock = null;
@@ -87,6 +92,10 @@ public class TrackSegmentHelper {
 				continue;
 			}
 			Pose3dc checkPose = checkSubLevel == null ? SimurailMath.POSE_I : checkSubLevel.logicalPose();
+			Vector3dc checkScale = checkPose.scale();
+			if(!Mth.equal(checkScale.x(), checkScale.y()) || !Mth.equal(checkScale.y(), checkScale.z()) || !Mth.equal(checkScale.x(), scale.x)) {
+				continue;
+			}
 			checkPose.transformPositionInverse(globalPos, checkLocalPos);
 			checkPose.transformNormalInverse(globalDir, checkLocalDir);
 			checkPose.transformNormalInverse(globalVert, checkLocalVert);

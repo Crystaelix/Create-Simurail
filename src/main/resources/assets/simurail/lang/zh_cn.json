@@ -1,6 +1,7 @@
 {
 	"block.simurail.physics_bogey": "物理转向架",
 	"block.simurail.unpowered_physics_bogey": "无动力物理转向架",
+	"block.simurail.physics_bogey_pivot": "物理转向架枢",
 	"block.simurail.automatic_coupler": "自动车钩",
 	"block.simurail.gangway_frame": "风挡框",
 	"block.simurail.probe_reader": "转向架探针读取器",

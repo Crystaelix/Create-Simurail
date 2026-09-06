@@ -19,7 +19,6 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.createmod.ponder.api.scene.SelectionUtil;
 import net.createmod.ponder.api.scene.VectorUtil;
-import net.createmod.ponder.foundation.instruction.RotateSceneInstruction;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;

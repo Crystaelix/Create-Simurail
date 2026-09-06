@@ -3,6 +3,7 @@ package com.crystaelix.simurail.config;
 public class SimurailPhysicsConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
+	public final ConfigBool bogeyPivotBox = b(true, "pivotBox", Comments.bogeyPivotBox);
 	public final ConfigFloat bogeyPivotMass = f(1, 0, Float.MAX_VALUE, "pivotMass", Units.mass, Comments.bogeyPivotMass);
 
 	public final ConfigGroup bogeyVertical = group(2, "vertical", "Vertical Movement");
@@ -60,7 +61,8 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	}
 
 	static class Comments {
-		static String bogeyPivotMass = "The mass of the pivot of the Physics Bogie.";
+		static String bogeyPivotBox = "Use box objects for the pivot of the Physics Bogie. Set to false to use sublevels instead.";
+		static String bogeyPivotMass = "The mass of the pivot of the Physics Bogie when using box objects.";
 		static String bogeyVerticalSpringFrequency = "Vertical spring frequency between the Physics Bogie and its pivot when vertical offset is allowed.";
 		static String bogeyVerticalSpringDampingRate = "Vertical spring damping rate between the Physics Bogie and its pivot when vertical offset is allowed.";
 		static String bogeyVerticalSpringMaxForce = "Vertical spring maximum force between the Physics Bogie and its pivot when vertical offset is allowed.";

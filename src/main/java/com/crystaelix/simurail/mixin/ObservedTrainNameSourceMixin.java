@@ -10,7 +10,6 @@ import com.crystaelix.simurail.extension.TrackObserverExtension;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.ObservedTrainNameSource;
-import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.content.trains.observer.TrackObserver;
 

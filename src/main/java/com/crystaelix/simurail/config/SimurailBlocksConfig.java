@@ -7,6 +7,9 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 	public final ConfigFloat connectionBogeyRangeDifferent = f(12, 1, 256, "bogeyRangeDifferent", Units.length, Comments.connectionBogeyRangeDifferent);
 	public final ConfigFloat connectionCouplerRange = f(4, 1, 256, "couplerRange", Units.length, Comments.connectionCouplerRange);
 
+	public final ConfigGroup gangway = group(1, "gangway", "Gangways");
+	public final ConfigBool gangwayAllowManualDisconnection = b(true, "allowManualDisconnection", Comments.gangwayAllowManualDisconnection);
+
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
 	public final ConfigInt bogeyProbeInterval = i(2, 1, 40, "bogeyProbeInterval", Units.ticks, Comments.bogeyProbeInterval);
 
@@ -25,6 +28,8 @@ public class SimurailBlocksConfig extends SimurailBaseConfig {
 		static String connectionBogeyRangeSame = "The maximum distance of connections between Physics Bogies on the same sublevel.";
 		static String connectionBogeyRangeDifferent = "The maximum distance of connections between Physics Bogies on different sublevels.";
 		static String connectionCouplerRange = "The maximum distance of connections between a Train Coupler and a Physics Bogie.";
+
+		static String gangwayAllowManualDisconnection = "Allow players to disconnect gangways by clicking them with an empty hand.";
 
 		static String bogeyProbeInterval = "Interval to probe the track for track points for the Physics Bogie.";
 

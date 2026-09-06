@@ -3,6 +3,7 @@ package com.crystaelix.simurail.content.gangway_frame;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
+import com.crystaelix.simurail.config.SimurailConfig;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -182,7 +183,7 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 					if(be.getGangwayPartner() == null) {
 						be.tryConnectGangway();
 					}
-					else {
+					else if(SimurailConfig.server().blocks.gangwayAllowManualDisconnection.get()) {
 						be.tryDisconnectGangway();
 					}
 				});

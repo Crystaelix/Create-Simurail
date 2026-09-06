@@ -7,6 +7,7 @@ import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
+import com.crystaelix.simurail.config.SimurailConfig;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -221,7 +222,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 						if(be.getGangwayPartner() == null) {
 							be.tryConnectGangway();
 						}
-						else {
+						else if(SimurailConfig.server().blocks.gangwayAllowManualDisconnection.get()) {
 							be.tryDisconnectGangway();
 						}
 					});

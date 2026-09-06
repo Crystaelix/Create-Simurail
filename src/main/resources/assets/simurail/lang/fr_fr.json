@@ -120,8 +120,8 @@
 	"gui.simurail.remote_controller.mode.steering_right": "Aiguillage à droite",
 	"gui.simurail.remote_controller.mode.vertical_movement": "Activer/Désactiver le mouvement vertical",
 	"gui.simurail.remote_controller.mode.enabled": "Activer/Désactiver le comportement physique",
-	"gui.simurail.remote_controller.mode.strength": "Force",
-	"gui.simurail.remote_controller.mode.strength_inverted": "Force inversée",
+	"gui.simurail.remote_controller.mode.strength": "Puissance",
+	"gui.simurail.remote_controller.mode.strength_inverted": "Puissance inversée",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Grondement des roues du bogie",
 	"subtitles.simurail.block.coupler.connect": "Attelage connecté",

@@ -390,7 +390,7 @@
 	"simurail.ponder.gangway_frame.intro.header": "Relier des engins simulés avec des cadres de soufflet",
 	"simurail.ponder.gangway_frame.intro.text_1": "Les cadres de soufflet permettent de créer des passages",
 	"simurail.ponder.gangway_frame.intro.text_2": "Faites un clic droit à main nue pour le connecter",
-	"simurail.ponder.gangway_frame.intro.text_3": "Alimentez en redstone ou faites un clic droit à main nue pour le déconnecter",
+	"simurail.ponder.gangway_frame.intro.text_3": "Alimentez en redstone ou faites un clic droit à main nue en étant accroupi pour le déconnecter",
 	"simurail.ponder.gangway_frame.intro.text_4": "Les cadres de soufflet connectés s'étendent et se rétractent ensemble",
 	"simurail.ponder.gangway_frame.intro.text_5": "Faites un clic droit avec une clé pour changer la forme et la longueur au repos",
 	"simurail.ponder.gangway_frame.intro.text_6": "Les cadres de soufflet ne se connectent qu'aux formes correspondantes à la leur",

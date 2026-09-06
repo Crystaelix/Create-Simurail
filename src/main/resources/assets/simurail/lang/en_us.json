@@ -390,7 +390,7 @@
 	"simurail.ponder.gangway_frame.intro.header": "Connecting Structures with Gangway Frames",
 	"simurail.ponder.gangway_frame.intro.text_1": "Gangway Frames can be used to create walkways",
 	"simurail.ponder.gangway_frame.intro.text_2": "Right click a with an empty hand to connect",
-	"simurail.ponder.gangway_frame.intro.text_3": "Provide redstone power or right click a with an empty hand to disconnect",
+	"simurail.ponder.gangway_frame.intro.text_3": "Provide redstone power or right click with an empty hand while sneaking to disconnect",
 	"simurail.ponder.gangway_frame.intro.text_4": "Connected Gangway Frames extend and retract together",
 	"simurail.ponder.gangway_frame.intro.text_5": "Right click with a wrench to change shape and rest length",
 	"simurail.ponder.gangway_frame.intro.text_6": "Gangway Frames only connect to matching shapes",

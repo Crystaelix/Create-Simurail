@@ -390,7 +390,7 @@
     "simurail.ponder.gangway_frame.intro.header": "使用风挡框连接结构",
     "simurail.ponder.gangway_frame.intro.text_1": "风挡框可用于创建通道",
     "simurail.ponder.gangway_frame.intro.text_2": "空手右键点击以连接",
-    "simurail.ponder.gangway_frame.intro.text_3": "提供红石信号或空手右键点击以断开连接",
+    "simurail.ponder.gangway_frame.intro.text_3": "提供红石信号或潜行时空手右键点击以断开连接",
     "simurail.ponder.gangway_frame.intro.text_4": "已连接的风挡框会一同伸缩",
     "simurail.ponder.gangway_frame.intro.text_5": "使用扳手右键点击以更改形状和默认长度",
     "simurail.ponder.gangway_frame.intro.text_6": "风挡框仅能连接至匹配的形状",

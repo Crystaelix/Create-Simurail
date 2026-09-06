@@ -175,10 +175,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	@Override
 	public boolean isGangwayPowered() {
-		if(isPowered()) {
-			return true;
-		}
-		return GangwayFrame.getNeighbors(this, level, 15).stream().anyMatch(GangwayFrame::isPowered);
+		return isPowered() || GangwayFrame.getNeighbors(this, level, 15).stream().anyMatch(GangwayFrame::isPowered);
 	}
 
 	@Override

@@ -50,6 +50,7 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 
 	public float restLength = 0;
 	public int color = DyeColor.GRAY.getFireworkColor();
+	protected boolean manualDisconnectDisabled = false;
 
 	protected Pose3d endPose = new Pose3d();
 	protected boolean hasPartner = false;
@@ -93,10 +94,7 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 
 	@Override
 	public boolean isGangwayPowered() {
-		if(isPowered()) {
-			return true;
-		}
-		return GangwayFrame.getNeighbors(this, level, 15).stream().anyMatch(GangwayFrame::isPowered);
+		return isPowered() || GangwayFrame.getNeighbors(this, level, 15).stream().anyMatch(GangwayFrame::isPowered);
 	}
 
 	@Override

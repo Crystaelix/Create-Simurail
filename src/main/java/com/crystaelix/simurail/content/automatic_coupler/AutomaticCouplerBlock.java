@@ -221,7 +221,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 						if(be.getGangwayPartner() == null) {
 							be.tryConnectGangway();
 						}
-						else {
+						else if(player.isSecondaryUseActive()) {
 							be.tryDisconnectGangway();
 						}
 					});

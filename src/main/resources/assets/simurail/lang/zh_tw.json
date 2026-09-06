@@ -120,6 +120,8 @@
 	"gui.simurail.remote_controller.mode.steering_right": "右側轉向",
 	"gui.simurail.remote_controller.mode.vertical_movement": "切換垂向移動模式",
 	"gui.simurail.remote_controller.mode.enabled": "切換物理運行狀態",
+	"gui.simurail.remote_controller.mode.strength": "強度",
+	"gui.simurail.remote_controller.mode.strength_inverted": "反向強度",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "物理轉向架車輪隆隆作響",
 	"subtitles.simurail.block.coupler.connect": "連結器連接",

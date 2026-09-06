@@ -120,6 +120,8 @@
 	"gui.simurail.remote_controller.mode.steering_right": "Right Steering",
 	"gui.simurail.remote_controller.mode.vertical_movement": "Toggle Vertical Movement",
 	"gui.simurail.remote_controller.mode.enabled": "Toggle Physics Behavior",
+	"gui.simurail.remote_controller.mode.strength": "Strength",
+	"gui.simurail.remote_controller.mode.strength_inverted": "Inverted Strength",
 
 	"subtitles.simurail.block.physics_bogey.rumble": "Rumore di ruote di Carrello Fisico",
 	"subtitles.simurail.block.coupler.connect": "Accopiatore si Connette",

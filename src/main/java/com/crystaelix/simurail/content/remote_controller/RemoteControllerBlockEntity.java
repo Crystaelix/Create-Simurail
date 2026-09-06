@@ -95,6 +95,8 @@ public class RemoteControllerBlockEntity extends SmartBlockEntity implements Men
 			switch(mode) {
 			case BRAKING -> bogey.setRemoteBrakeOverride(pos, power);
 			case BRAKING_INVERTED -> bogey.setRemoteBrakeOverride(pos, 15 - power);
+			case STRENGTH -> bogey.setRemoteStrengthOverride(pos, power);
+			case STRENGTH_INVERTED -> bogey.setRemoteStrengthOverride(pos, 15 - power);
 			case STEERING_LEFT -> bogey.setRemoteLeftSteerOverride(pos, power);
 			case STEERING_RIGHT -> bogey.setRemoteRightSteerOverride(pos, power);
 			case null, default -> {}

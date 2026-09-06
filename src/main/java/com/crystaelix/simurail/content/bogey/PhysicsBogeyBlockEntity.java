@@ -142,6 +142,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	// Controller cache
 	protected Map<BlockPos, LongIntPair> remoteBrakeOverrides = new HashMap<>();
+	protected Map<BlockPos, LongIntPair> remoteStrengthOverrides = new HashMap<>();
 	protected Map<BlockPos, LongIntPair> remoteLeftSteerOverrides = new HashMap<>();
 	protected Map<BlockPos, LongIntPair> remoteRightSteerOverrides = new HashMap<>();
 
@@ -456,6 +457,15 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		}
 	}
 
+	public void setRemoteStrengthOverride(BlockPos controllerPos, int value) {
+		if(value >= 0) {
+			remoteStrengthOverrides.put(controllerPos, LongIntPair.of(level.getGameTime(), value));
+		}
+		else {
+			remoteStrengthOverrides.remove(controllerPos);
+		}
+	}
+
 	public void setRemoteLeftSteerOverride(BlockPos controllerPos, int value) {
 		if(value != 0) {
 			remoteLeftSteerOverrides.put(controllerPos, LongIntPair.of(level.getGameTime(), value));
@@ -477,6 +487,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public void removeRemoteController(BlockPos controllerPos) {
 		links.remove(controllerPos);
 		remoteBrakeOverrides.remove(controllerPos);
+		remoteStrengthOverrides.remove(controllerPos);
 		remoteLeftSteerOverrides.remove(controllerPos);
 		remoteRightSteerOverrides.remove(controllerPos);
 	}
@@ -943,11 +954,32 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(computerBehaviour.hasAttachedComputer() && computerOverrides.overrideStressMultiplier) {
 			return computerOverrides.getStressMultiplier();
 		}
+		float remoteStrength = getRemoteStrengthMultiplier();
+		if(remoteStrength >= 0) {
+			return remoteStrength;
+		}
 		return switch(options.controlMode) {
 		case STRENGTH -> getControlStrength();
 		case STRENGTH_INVERTED -> 1 - getControlStrength();
 		case null, default -> 1;
 		};
+	}
+
+	public float getRemoteStrengthMultiplier() {
+		int value = -1;
+		long currentTime = level.getGameTime();
+		Iterator<Map.Entry<BlockPos, LongIntPair>> i = remoteStrengthOverrides.entrySet().iterator();
+		while(i.hasNext()) {
+			Map.Entry<BlockPos, LongIntPair> entry = i.next();
+			LongIntPair pair = entry.getValue();
+			if(currentTime - pair.leftLong() > 2) {
+				i.remove();
+			}
+			else if(pair.rightInt() > value) {
+				value = pair.rightInt();
+			}
+		}
+		return Math.clamp(value / 15F, 0, 1);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 import org.lwjgl.opengl.GL11;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.bogey.menu.BogeyCategory;
 import com.crystaelix.simurail.api.bogey.menu.BogeyDataNumericOption;
 import com.crystaelix.simurail.api.bogey.menu.BogeyDataOption;
@@ -258,6 +258,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 
 		updateMenuItemWidgets();
 		updateSelectedEntryWidgets();
+		updateType();
 	}
 
 	private void updateMenuItemWidgets() {
@@ -310,7 +311,6 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 			BogeyEntry entry = selectedEntry.get();
 
 			selectedEntryLabel.text = entry.displayName();
-			axleSpacingLabel.text = Component.literal(String.valueOf(entry.type().logicalAxleSpacing()));
 
 			List<TrackTypeEntry> trackTypes = BogeyMenuManager.getTrackTypeEntries(entry.type());
 			trackTypeLabel.text = ComponentUtils.formatList(trackTypes, Component.literal("/"), trackTypes.size() > 1 ? TrackTypeEntry::shortName : TrackTypeEntry::displayName);
@@ -487,7 +487,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 			return;
 		}
 
-		BogeyRenderedType type = options.type;
+		BogeySubtype type = options.type;
 
 		if(data == null) {
 			data = type.data(inverted);
@@ -564,7 +564,8 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 			for(BogeyDataOptionValue<?> optionValue : optionValues) {
 				optionValue.write(extra);
 			}
-			options.type = new BogeyRenderedType(entry.type(), extra);
+			options.type = new BogeySubtype(entry.type(), extra);
+			axleSpacingLabel.text = Component.literal(String.valueOf(entry.type().logicalAxleSpacing(extra)));
 			data = null;
 		}
 	}

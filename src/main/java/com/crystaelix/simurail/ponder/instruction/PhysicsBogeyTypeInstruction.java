@@ -1,6 +1,6 @@
 package com.crystaelix.simurail.ponder.instruction;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.bogey.BogeyType;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.simibubi.create.content.trains.bogey.BogeySizes.BogeySize;
@@ -14,15 +14,15 @@ import net.minecraft.core.BlockPos;
 public class PhysicsBogeyTypeInstruction extends PonderInstruction {
 
 	protected final BlockPos pos;
-	protected final BogeyRenderedType type;
+	protected final BogeySubtype type;
 
-	public PhysicsBogeyTypeInstruction(BlockPos pos, BogeyRenderedType type) {
+	public PhysicsBogeyTypeInstruction(BlockPos pos, BogeySubtype type) {
 		this.pos = pos;
 		this.type = type;
 	}
 
 	public PhysicsBogeyTypeInstruction(BlockPos pos, BogeyStyle style, BogeySize size) {
-		this(pos, new BogeyRenderedType(new BogeyType(style, size)));
+		this(pos, new BogeySubtype(new BogeyType(style, size)));
 	}
 
 	@Override

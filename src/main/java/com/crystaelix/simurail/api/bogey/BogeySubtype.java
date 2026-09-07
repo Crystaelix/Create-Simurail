@@ -20,28 +20,28 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvent;
 
-public final class BogeyRenderedType {
+public final class BogeySubtype {
 
-	public static final StreamCodec<ByteBuf, BogeyRenderedType> STREAM_CODEC = StreamCodec.composite(
+	public static final StreamCodec<ByteBuf, BogeySubtype> STREAM_CODEC = StreamCodec.composite(
 			BogeyType.STREAM_CODEC, t -> t.type,
 			ByteBufCodecs.COMPOUND_TAG, t -> t.extra,
-			BogeyRenderedType::new);
+			BogeySubtype::new);
 
 	private final BogeyType type;
 	private final CompoundTag extra;
 
-	public BogeyRenderedType(BogeyType type, CompoundTag extra) {
+	public BogeySubtype(BogeyType type, CompoundTag extra) {
 		this.type = type;
 		this.extra = extra;
 	}
 
-	public BogeyRenderedType(BogeyType type) {
+	public BogeySubtype(BogeyType type) {
 		this.type = type;
 		this.extra = new CompoundTag();
 	}
 
 	public BogeyType type() {
-		return this.type;
+		return type;
 	}
 
 	public BogeyStyle style() {
@@ -57,15 +57,15 @@ public final class BogeyRenderedType {
 	}
 
 	public int logicalAxleSpacing() {
-		return type.logicalAxleSpacing();
+		return type.logicalAxleSpacing(extra);
 	}
 
 	public double visualAxleSpacing() {
-		return type.visualAxleSpacing();
+		return type.visualAxleSpacing(extra);
 	}
 
 	public int axleCount() {
-		return type.axleCount();
+		return type.axleCount(extra);
 	}
 
 	@Nullable
@@ -74,7 +74,7 @@ public final class BogeyRenderedType {
 	}
 
 	public double wheelRadius() {
-		return type.wheelRadius();
+		return type.wheelRadius(extra);
 	}
 
 	public double trackWidth() {
@@ -94,7 +94,7 @@ public final class BogeyRenderedType {
 	}
 
 	public boolean groundDrivable() {
-		return type.groundDrivable();
+		return type.groundDrivable(extra);
 	}
 
 	public SoundEvent soundEvent() {
@@ -121,10 +121,10 @@ public final class BogeyRenderedType {
 		return tag;
 	}
 
-	public static BogeyRenderedType read(CompoundTag tag) {
+	public static BogeySubtype read(CompoundTag tag) {
 		BogeyType type = BogeyType.read(tag);
 		CompoundTag extra = tag.getCompound("extra");
-		return new BogeyRenderedType(type, extra);
+		return new BogeySubtype(type, extra);
 	}
 
 	@Override
@@ -134,21 +134,21 @@ public final class BogeyRenderedType {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof BogeyRenderedType other) {
+		if(obj instanceof BogeySubtype other) {
 			return type == other.type && extra.equals(other.extra);
 		}
 		return false;
 	}
 
-	public static BogeyRenderedType getFallback() {
-		return new BogeyRenderedType(BogeyType.getFallback());
+	public static BogeySubtype getFallback() {
+		return new BogeySubtype(BogeyType.getFallback());
 	}
 
-	public static BogeyRenderedType getFallback(boolean inverted) {
-		return new BogeyRenderedType(BogeyType.getFallback(inverted));
+	public static BogeySubtype getFallback(boolean inverted) {
+		return new BogeySubtype(BogeyType.getFallback(inverted));
 	}
 
-	public static BogeyRenderedType getDefault(TrackType trackType, boolean inverted) {
-		return new BogeyRenderedType(BogeyType.getDefault(trackType, inverted));
+	public static BogeySubtype getDefault(TrackType trackType, boolean inverted) {
+		return new BogeySubtype(BogeyType.getDefault(trackType, inverted));
 	}
 }

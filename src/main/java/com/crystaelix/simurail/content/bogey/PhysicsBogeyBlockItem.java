@@ -6,7 +6,7 @@ import org.joml.Quaterniondc;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.bogey.BogeyType;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
@@ -113,7 +113,7 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 				bogey.options.setLinearType(1);
 			}
 			if(trackType != null) {
-				bogey.options.type = BogeyRenderedType.getDefault(trackType, state.getValue(PhysicsBogeyBlock.INVERTED));
+				bogey.options.type = BogeySubtype.getDefault(trackType, state.getValue(PhysicsBogeyBlock.INVERTED));
 			}
 			bogey.setChanged();
 		}
@@ -153,7 +153,7 @@ public class PhysicsBogeyBlockItem extends BlockItem {
 				if(level.getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {
 					bogey.options.setAngularType(0);
 					if(trackType != null) {
-						bogey.options.type = BogeyRenderedType.getDefault(trackType, state.getValue(PhysicsBogeyBlock.INVERTED));
+						bogey.options.type = BogeySubtype.getDefault(trackType, state.getValue(PhysicsBogeyBlock.INVERTED));
 					}
 					bogey.applyComponentsFromItemStack(stack);
 					bogey.setChanged();

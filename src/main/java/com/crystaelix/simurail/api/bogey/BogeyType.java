@@ -58,23 +58,23 @@ public final class BogeyType {
 		return block;
 	}
 
-	public int logicalAxleSpacing() {
+	public int logicalAxleSpacing(CompoundTag extra) {
 		if(BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.getInt(this);
+			return BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.get(this).applyAsInt(extra);
 		}
 		return (int)Math.round(block.getWheelPointSpacing());
 	}
 
-	public double visualAxleSpacing() {
+	public double visualAxleSpacing(CompoundTag extra) {
 		if(BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.getDouble(this);
+			return BogeyPropertyOverrides.VISUAL_AXLE_SPACING_OVERRIDE.get(this).applyAsDouble(extra);
 		}
 		return block.getWheelPointSpacing();
 	}
 
-	public int axleCount() {
+	public int axleCount(CompoundTag extra) {
 		if(BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.getInt(this);
+			return BogeyPropertyOverrides.AXLE_COUNT_OVERRIDE.get(this).applyAsInt(extra);
 		}
 		return 2;
 	}
@@ -87,9 +87,9 @@ public final class BogeyType {
 		return null;
 	}
 
-	public double wheelRadius() {
+	public double wheelRadius(CompoundTag extra) {
 		if(BogeyPropertyOverrides.WHEEL_RADIUS_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.WHEEL_RADIUS_OVERRIDE.getDouble(this);
+			return BogeyPropertyOverrides.WHEEL_RADIUS_OVERRIDE.get(this).applyAsDouble(extra);
 		}
 		return block.getWheelRadius();
 	}
@@ -135,9 +135,9 @@ public final class BogeyType {
 		return block.canBeUpsideDown();
 	}
 
-	public boolean groundDrivable() {
+	public boolean groundDrivable(CompoundTag extra) {
 		if(BogeyPropertyOverrides.GROUND_DRIVABLE_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.GROUND_DRIVABLE_OVERRIDE.getBoolean(this);
+			return BogeyPropertyOverrides.GROUND_DRIVABLE_OVERRIDE.get(this).test(extra);
 		}
 		return !invertible();
 	}

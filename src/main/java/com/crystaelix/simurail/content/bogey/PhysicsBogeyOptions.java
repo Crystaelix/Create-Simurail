@@ -1,6 +1,6 @@
 package com.crystaelix.simurail.content.bogey;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +11,7 @@ public class PhysicsBogeyOptions {
 	public static final StreamCodec<ByteBuf, PhysicsBogeyOptions> STREAM_CODEC = StreamCodec.of(
 			(b, v) -> v.encode(b), b -> new PhysicsBogeyOptions().decode(b));
 
-	public BogeyRenderedType type = BogeyRenderedType.getFallback();
+	public BogeySubtype type = BogeySubtype.getFallback();
 	public boolean enabled = true;
 	public boolean allowYawOffset = true;
 	public boolean allowPitchOffset = true;
@@ -33,7 +33,7 @@ public class PhysicsBogeyOptions {
 		if(unpowered) {
 			stress = 0;
 		}
-		type = BogeyRenderedType.getFallback(inverted);
+		type = BogeySubtype.getFallback(inverted);
 	}
 
 	public PhysicsBogeyOptions set(PhysicsBogeyOptions other) {
@@ -213,7 +213,7 @@ public class PhysicsBogeyOptions {
 	}
 
 	public PhysicsBogeyOptions read(CompoundTag tag) {
-		type = BogeyRenderedType.read(tag.getCompound("type"));
+		type = BogeySubtype.read(tag.getCompound("type"));
 		setFlags(tag.getShort("flags"));
 		controlMode = PhysicsBogeyControlMode.BY_ID.apply(tag.getByte("control_mode"));
 		axleOffset = Math.clamp(tag.getFloat("axle_offset"), -1, 1);
@@ -224,7 +224,7 @@ public class PhysicsBogeyOptions {
 	}
 
 	public void encode(ByteBuf buf) {
-		BogeyRenderedType.STREAM_CODEC.encode(buf, type);
+		BogeySubtype.STREAM_CODEC.encode(buf, type);
 		buf.writeShort(getFlags());
 		PhysicsBogeyControlMode.STREAM_CODEC.encode(buf, controlMode);
 		buf.writeFloat(axleOffset);
@@ -234,7 +234,7 @@ public class PhysicsBogeyOptions {
 	}
 
 	public PhysicsBogeyOptions decode(ByteBuf buf) {
-		type = BogeyRenderedType.STREAM_CODEC.decode(buf);
+		type = BogeySubtype.STREAM_CODEC.decode(buf);
 		setFlags(buf.readShort());
 		controlMode = PhysicsBogeyControlMode.STREAM_CODEC.decode(buf);
 		axleOffset = buf.readFloat();

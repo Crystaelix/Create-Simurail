@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.bogey.BogeyType;
 import com.crystaelix.simurail.api.track.TrackTypeEntries;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
@@ -64,10 +64,10 @@ public class BogeyMenuManager {
 	}
 
 	public static BogeyMenuSelection defaultEntry(boolean inverted) {
-		return findEntry(BogeyRenderedType.getFallback(inverted), inverted);
+		return findEntry(BogeySubtype.getFallback(inverted), inverted);
 	}
 
-	public static BogeyMenuSelection findEntry(BogeyRenderedType type, boolean inverted) {
+	public static BogeyMenuSelection findEntry(BogeySubtype type, boolean inverted) {
 		List<BogeyCategory<?>> path = new ArrayList<>();
 		MutableObject<BogeyEntry> entry = new MutableObject<>();
 		for(BogeyCategory<?> c : getCategories(inverted)) {

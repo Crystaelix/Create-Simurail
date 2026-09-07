@@ -4,37 +4,51 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
 
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 
 public final class BogeyPropertyOverrides {
 
-	static final Object2IntMap<BogeyType> LOGICAL_AXLE_SPACING_OVERRIDE = new Object2IntOpenHashMap<>();
-	static final Object2DoubleMap<BogeyType> VISUAL_AXLE_SPACING_OVERRIDE = new Object2DoubleOpenHashMap<>();
-	static final Object2IntMap<BogeyType> AXLE_COUNT_OVERRIDE = new Object2IntOpenHashMap<>();
+	static final Map<BogeyType, ToIntFunction<CompoundTag>> LOGICAL_AXLE_SPACING_OVERRIDE = new HashMap<>();
+	static final Map<BogeyType, ToDoubleFunction<CompoundTag>> VISUAL_AXLE_SPACING_OVERRIDE = new HashMap<>();
+	static final Map<BogeyType, ToIntFunction<CompoundTag>> AXLE_COUNT_OVERRIDE = new HashMap<>();
 	static final Map<BogeyType, Function<CompoundTag, double[]>> AXLE_POSITIONS_OVERRIDE = new HashMap<>();
-	static final Object2DoubleMap<BogeyType> WHEEL_RADIUS_OVERRIDE = new Object2DoubleOpenHashMap<>();
+	static final Map<BogeyType, ToDoubleFunction<CompoundTag>> WHEEL_RADIUS_OVERRIDE = new HashMap<>();
 	static final Object2DoubleMap<BogeyType> TRACK_WIDTH_OVERRIDE = new Object2DoubleOpenHashMap<>();
 	static final Object2DoubleMap<BogeyType> TRACK_HEIGHT_OVERRIDE = new Object2DoubleOpenHashMap<>();
 	static final Object2ObjectMap<BogeyType, Set<TrackType>> TRACK_TYPES_OVERRIDE = new Object2ObjectOpenHashMap<>();
-	static final Object2BooleanMap<BogeyType> GROUND_DRIVABLE_OVERRIDE = new Object2BooleanOpenHashMap<>();
+	static final Map<BogeyType, Predicate<CompoundTag>> GROUND_DRIVABLE_OVERRIDE = new HashMap<>();
+
+	public static void setLogicalAxleSpacingOverride(BogeyType type, ToIntFunction<CompoundTag> logicalAxleSpacing) {
+		LOGICAL_AXLE_SPACING_OVERRIDE.put(type, clampMin(logicalAxleSpacing, 1));
+	}
 
 	public static void setLogicalAxleSpacingOverride(BogeyType type, int logicalAxleSpacing) {
-		LOGICAL_AXLE_SPACING_OVERRIDE.put(type, Math.max(logicalAxleSpacing, 1));
+		int v = Math.max(logicalAxleSpacing, 1);
+		LOGICAL_AXLE_SPACING_OVERRIDE.put(type, $ -> v);
+	}
+
+	public static void setVisualAxleSpacingOverride(BogeyType type, ToDoubleFunction<CompoundTag> visualAxleSpacing) {
+		VISUAL_AXLE_SPACING_OVERRIDE.put(type, clampMin(visualAxleSpacing, 0));
 	}
 
 	public static void setVisualAxleSpacingOverride(BogeyType type, double visualAxleSpacing) {
-		VISUAL_AXLE_SPACING_OVERRIDE.put(type, visualAxleSpacing);
+		double v = Math.max(visualAxleSpacing, 0);
+		VISUAL_AXLE_SPACING_OVERRIDE.put(type, $ -> v);
+	}
+
+	public static void setAxleSpacingOverride(BogeyType type, ToDoubleFunction<CompoundTag> axleSpacing) {
+		setLogicalAxleSpacingOverride(type, roundToInt(axleSpacing));
+		setVisualAxleSpacingOverride(type, axleSpacing);
 	}
 
 	public static void setAxleSpacingOverride(BogeyType type, double axleSpacing) {
@@ -42,8 +56,13 @@ public final class BogeyPropertyOverrides {
 		setVisualAxleSpacingOverride(type, axleSpacing);
 	}
 
+	public static void setAxleCountOverride(BogeyType type, ToIntFunction<CompoundTag> axleCount) {
+		AXLE_COUNT_OVERRIDE.put(type, clampMin(axleCount, 0));
+	}
+
 	public static void setAxleCountOverride(BogeyType type, int axleCount) {
-		AXLE_COUNT_OVERRIDE.put(type, axleCount);
+		int v = Math.max(axleCount, 0);
+		AXLE_COUNT_OVERRIDE.put(type, $ -> v);
 	}
 
 	public static void setAxlePositionsOverride(BogeyType type, Function<CompoundTag, double[]> axlePositions) {
@@ -54,12 +73,17 @@ public final class BogeyPropertyOverrides {
 		AXLE_POSITIONS_OVERRIDE.put(type, $ -> axlePositions);
 	}
 
+	public static void setWheelRadiusOverride(BogeyType type, ToDoubleFunction<CompoundTag> wheelRadius) {
+		WHEEL_RADIUS_OVERRIDE.put(type, clampMin(wheelRadius, 0));
+	}
+
 	public static void setWheelRadiusOverride(BogeyType type, double wheelRadius) {
-		WHEEL_RADIUS_OVERRIDE.put(type, wheelRadius);
+		double v = Math.max(wheelRadius, 0);
+		WHEEL_RADIUS_OVERRIDE.put(type, $ -> v);
 	}
 
 	public static void setTrackWidthOverride(BogeyType type, double trackWidth) {
-		TRACK_WIDTH_OVERRIDE.put(type, trackWidth);
+		TRACK_WIDTH_OVERRIDE.put(type, Math.max(trackWidth, 0));
 	}
 
 	public static void setTrackHeightOverride(BogeyType type, double trackHeight) {
@@ -70,7 +94,23 @@ public final class BogeyPropertyOverrides {
 		TRACK_TYPES_OVERRIDE.put(type, trackTypes);
 	}
 
-	public static void setGroundDrivableOverride(BogeyType type, boolean groundDrivable) {
+	public static void setGroundDrivableOverride(BogeyType type, Predicate<CompoundTag> groundDrivable) {
 		GROUND_DRIVABLE_OVERRIDE.put(type, groundDrivable);
+	}
+
+	public static void setGroundDrivableOverride(BogeyType type, boolean groundDrivable) {
+		GROUND_DRIVABLE_OVERRIDE.put(type, $ -> groundDrivable);
+	}
+
+	private static <T> ToIntFunction<T> clampMin(ToIntFunction<T> function, int min) {
+		return t -> Math.max(function.applyAsInt(t), min);
+	}
+
+	private static <T> ToDoubleFunction<T> clampMin(ToDoubleFunction<T> function, double min) {
+		return t -> Math.max(function.applyAsDouble(t), min);
+	}
+
+	private static <T> ToIntFunction<T> roundToInt(ToDoubleFunction<T> function) {
+		return t -> (int)Math.round(function.applyAsDouble(t));
 	}
 }

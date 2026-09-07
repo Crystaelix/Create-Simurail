@@ -3,7 +3,7 @@ package com.crystaelix.simurail.content.bogey;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.math.Basis3f;
 import com.crystaelix.simurail.config.SimurailClientConfig;
 import com.crystaelix.simurail.config.SimurailConfig;
@@ -83,7 +83,7 @@ public class PhysicsBogeyEffects {
 	}
 
 	protected void spawnSparks(float slipSpeed, int sparks) {
-		BogeyRenderedType type = bogey.options.type;
+		BogeySubtype type = bogey.options.type;
 		double[] axlePositions = type.axlePositions();
 		int axleCount = axlePositions != null ? axlePositions.length : type.axleCount();
 		if(axleCount <= 0) {
@@ -129,7 +129,7 @@ public class PhysicsBogeyEffects {
 	}
 
 	protected void contactPoint(RandomSource random, float axlePos, boolean left, Vector3f dest) {
-		BogeyRenderedType type = bogey.options.type;
+		BogeySubtype type = bogey.options.type;
 		boolean inverted = bogey.isInverted();
 		float axleOffset = bogey.options.getAxleOffset();
 		float halfGauge = (float)type.trackWidth() * 0.5F;

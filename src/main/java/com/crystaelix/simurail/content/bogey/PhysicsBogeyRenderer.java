@@ -4,7 +4,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.math.SimurailMathf;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -54,7 +54,7 @@ public class PhysicsBogeyRenderer extends KineticBlockEntityRenderer<PhysicsBoge
 		rotate(pivotRot).
 		translate(0, (be.isInverted() ? 1 : -1) * be.options.getAxleOffset(), 0).
 		rotate(SimurailMathf.ROT_ZNYPXP);
-		BogeyRenderedType type = be.options.type;
+		BogeySubtype type = be.options.type;
 		type.style().render(type.size(), partialTick, transformStack.unwrap(), bufferSource, light, overlay, be.getWheelAngle(partialTick), be.getBogeyData(), false);
 		transformStack.popPose();
 

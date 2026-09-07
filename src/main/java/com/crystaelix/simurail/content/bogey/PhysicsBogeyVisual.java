@@ -6,7 +6,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-import com.crystaelix.simurail.api.bogey.BogeyRenderedType;
+import com.crystaelix.simurail.api.bogey.BogeySubtype;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.math.SimurailMathf;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -31,7 +31,7 @@ import net.minecraft.util.Mth;
 
 public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> implements SimpleDynamicVisual {
 
-	private BogeyRenderedType type;
+	private BogeySubtype type;
 
 	private BogeyVisual pivot;
 	private TransformedInstance frontHead;
@@ -48,7 +48,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 
 	@Override
 	public void beginFrame(DynamicVisual.Context context) {
-		BogeyRenderedType type = blockEntity.options.type;
+		BogeySubtype type = blockEntity.options.type;
 
 		if(!type.equals(this.type)) {
 			if(pivot != null) {

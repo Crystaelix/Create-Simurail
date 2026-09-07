@@ -77,20 +77,20 @@ public final class BogeySubtype {
 		return type.wheelRadius(extra);
 	}
 
+	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {
+		return type.connectorAnchorOffset(inverted, extra, dest);
+	}
+
+	public Set<TrackType> trackTypes() {
+		return type.trackTypes();
+	}
+
 	public double trackWidth() {
 		return type.trackWidth();
 	}
 
 	public double trackHeight() {
 		return type.trackHeight();
-	}
-
-	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {
-		return type.connectorAnchorOffset(inverted, dest);
-	}
-
-	public Set<TrackType> trackTypes() {
-		return type.trackTypes();
 	}
 
 	public boolean groundDrivable() {

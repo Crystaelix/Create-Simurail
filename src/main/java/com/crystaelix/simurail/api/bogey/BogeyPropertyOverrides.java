@@ -1,12 +1,14 @@
 package com.crystaelix.simurail.api.bogey;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
@@ -18,15 +20,16 @@ import net.minecraft.nbt.CompoundTag;
 
 public final class BogeyPropertyOverrides {
 
-	static final Map<BogeyType, ToIntFunction<CompoundTag>> LOGICAL_AXLE_SPACING_OVERRIDE = new HashMap<>();
-	static final Map<BogeyType, ToDoubleFunction<CompoundTag>> VISUAL_AXLE_SPACING_OVERRIDE = new HashMap<>();
-	static final Map<BogeyType, ToIntFunction<CompoundTag>> AXLE_COUNT_OVERRIDE = new HashMap<>();
-	static final Map<BogeyType, Function<CompoundTag, double[]>> AXLE_POSITIONS_OVERRIDE = new HashMap<>();
-	static final Map<BogeyType, ToDoubleFunction<CompoundTag>> WHEEL_RADIUS_OVERRIDE = new HashMap<>();
+	static final Object2ObjectMap<BogeyType, ToIntFunction<CompoundTag>> LOGICAL_AXLE_SPACING_OVERRIDE = new Object2ObjectOpenHashMap<>();
+	static final Object2ObjectMap<BogeyType, ToDoubleFunction<CompoundTag>> VISUAL_AXLE_SPACING_OVERRIDE = new Object2ObjectOpenHashMap<>();
+	static final Object2ObjectMap<BogeyType, ToIntFunction<CompoundTag>> AXLE_COUNT_OVERRIDE = new Object2ObjectOpenHashMap<>();
+	static final Object2ObjectMap<BogeyType, Function<CompoundTag, double[]>> AXLE_POSITIONS_OVERRIDE = new Object2ObjectOpenHashMap<>();
+	static final Object2ObjectMap<BogeyType, ToDoubleFunction<CompoundTag>> WHEEL_RADIUS_OVERRIDE = new Object2ObjectOpenHashMap<>();
+	static final Object2ObjectMap<BogeyType, ConnectorAnchorOffsetOverride> CONNECTOR_ANCHOR_OFFSET_OVERRIDE = new Object2ObjectOpenHashMap<>();
+	static final Object2ObjectMap<BogeyType, Set<TrackType>> TRACK_TYPES_OVERRIDE = new Object2ObjectOpenHashMap<>();
 	static final Object2DoubleMap<BogeyType> TRACK_WIDTH_OVERRIDE = new Object2DoubleOpenHashMap<>();
 	static final Object2DoubleMap<BogeyType> TRACK_HEIGHT_OVERRIDE = new Object2DoubleOpenHashMap<>();
-	static final Object2ObjectMap<BogeyType, Set<TrackType>> TRACK_TYPES_OVERRIDE = new Object2ObjectOpenHashMap<>();
-	static final Map<BogeyType, Predicate<CompoundTag>> GROUND_DRIVABLE_OVERRIDE = new HashMap<>();
+	static final Object2ObjectMap<BogeyType, Predicate<CompoundTag>> GROUND_DRIVABLE_OVERRIDE = new Object2ObjectOpenHashMap<>();
 
 	public static void setLogicalAxleSpacingOverride(BogeyType type, ToIntFunction<CompoundTag> logicalAxleSpacing) {
 		LOGICAL_AXLE_SPACING_OVERRIDE.put(type, clampMin(logicalAxleSpacing, 1));
@@ -82,16 +85,36 @@ public final class BogeyPropertyOverrides {
 		WHEEL_RADIUS_OVERRIDE.put(type, $ -> v);
 	}
 
+	public static void setConnectorAnchorOffsetOverride(BogeyType type, ConnectorAnchorOffsetOverride connectorAnchorOffset) {
+		CONNECTOR_ANCHOR_OFFSET_OVERRIDE.put(type, connectorAnchorOffset);
+	}
+
+	public static void setConnectorAnchorOffsetOverride(BogeyType type, BiFunction<CompoundTag, Vector3f, Vector3f> normalOffset, BiFunction<CompoundTag, Vector3f, Vector3f> invertedOffset) {
+		CONNECTOR_ANCHOR_OFFSET_OVERRIDE.put(type, (inverted, tag, dest) -> (inverted ? invertedOffset : normalOffset).apply(tag, dest));
+	}
+
+	public static void setConnectorAnchorOffsetOverride(BogeyType type, BiFunction<CompoundTag, Vector3f, Vector3f> connectorAnchorOffset) {
+		CONNECTOR_ANCHOR_OFFSET_OVERRIDE.put(type, ($, tag, dest) -> connectorAnchorOffset.apply(tag, dest));
+	}
+
+	public static void setConnectorAnchorOffsetOverride(BogeyType type, Vector3fc normalOffset, Vector3fc invertedOffset) {
+		CONNECTOR_ANCHOR_OFFSET_OVERRIDE.put(type, (inverted, $, dest) -> dest.set(inverted ? invertedOffset : normalOffset));
+	}
+
+	public static void setConnectorAnchorOffsetOverride(BogeyType type, Vector3fc connectorAnchorOffset) {
+		CONNECTOR_ANCHOR_OFFSET_OVERRIDE.put(type, ($1, $2, dest) -> dest.set(connectorAnchorOffset));
+	}
+
+	public static void setTrackTypesOverride(BogeyType type, Set<TrackType> trackTypes) {
+		TRACK_TYPES_OVERRIDE.put(type, trackTypes);
+	}
+
 	public static void setTrackWidthOverride(BogeyType type, double trackWidth) {
 		TRACK_WIDTH_OVERRIDE.put(type, Math.max(trackWidth, 0));
 	}
 
 	public static void setTrackHeightOverride(BogeyType type, double trackHeight) {
 		TRACK_HEIGHT_OVERRIDE.put(type, trackHeight);
-	}
-
-	public static void setTrackTypesOverride(BogeyType type, Set<TrackType> trackTypes) {
-		TRACK_TYPES_OVERRIDE.put(type, trackTypes);
 	}
 
 	public static void setGroundDrivableOverride(BogeyType type, Predicate<CompoundTag> groundDrivable) {

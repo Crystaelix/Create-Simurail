@@ -94,6 +94,21 @@ public final class BogeyType {
 		return block.getWheelRadius();
 	}
 
+	public Vector3f connectorAnchorOffset(boolean inverted, CompoundTag extra, Vector3f dest) {
+		if(BogeyPropertyOverrides.CONNECTOR_ANCHOR_OFFSET_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.CONNECTOR_ANCHOR_OFFSET_OVERRIDE.get(this).apply(inverted, extra, dest);
+		}
+		Vec3 offset = block.getConnectorAnchorOffset(inverted);
+		return dest.set(offset.z, offset.y - 0.5, offset.x);
+	}
+
+	public Set<TrackType> trackTypes() {
+		if(BogeyPropertyOverrides.TRACK_TYPES_OVERRIDE.containsKey(this)) {
+			return BogeyPropertyOverrides.TRACK_TYPES_OVERRIDE.get(this);
+		}
+		return block.getValidPathfindingTypes(style);
+	}
+
 	public TrackTypeEntry trackTypeEntry() {
 		TrackTypeEntry entry = null;
 		for(TrackType trackType : trackTypes()) {
@@ -117,18 +132,6 @@ public final class BogeyType {
 			return BogeyPropertyOverrides.TRACK_HEIGHT_OVERRIDE.getDouble(this);
 		}
 		return trackTypeEntry().height();
-	}
-
-	public Vector3f connectorAnchorOffset(boolean inverted, Vector3f dest) {
-		Vec3 offset = block.getConnectorAnchorOffset(inverted);
-		return dest.set(offset.z, offset.y - 0.5, offset.x);
-	}
-
-	public Set<TrackType> trackTypes() {
-		if(BogeyPropertyOverrides.TRACK_TYPES_OVERRIDE.containsKey(this)) {
-			return BogeyPropertyOverrides.TRACK_TYPES_OVERRIDE.get(this);
-		}
-		return block.getValidPathfindingTypes(style);
 	}
 
 	public boolean invertible() {

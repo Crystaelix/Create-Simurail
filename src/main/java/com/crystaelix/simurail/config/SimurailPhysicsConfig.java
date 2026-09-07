@@ -1,9 +1,11 @@
 package com.crystaelix.simurail.config;
 
+import com.crystaelix.simurail.compat.SimurailCompat;
+
 public class SimurailPhysicsConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
-	public final ConfigBool bogeyPivotBox = b(true, "pivotBox", Comments.bogeyPivotBox);
+	public final ConfigBool bogeyPivotBox = b(canUseBoxPivot(), "pivotBox", Comments.bogeyPivotBox);
 	public final ConfigFloat bogeyPivotMass = f(1, 0, Float.MAX_VALUE, "pivotMass", Units.mass, Comments.bogeyPivotMass);
 
 	public final ConfigGroup bogeyVertical = group(2, "vertical", "Vertical Movement");
@@ -54,10 +56,13 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	public final ConfigFloat couplerSpringFrequency = f(100, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.couplerSpringFrequency);
 	public final ConfigFloat couplerSpringDampingRate = f(2, 0, Float.MAX_VALUE, "springDampingRate", Comments.couplerSpringDampingRate);
 
-
 	@Override
 	public String getName() {
 		return "physics";
+	}
+
+	public boolean canUseBoxPivot() {
+		return !SimurailCompat.POCKET.isLoaded();
 	}
 
 	static class Comments {

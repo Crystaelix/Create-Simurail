@@ -12,7 +12,8 @@ public enum SimurailCompat {
 	ELECTROENERGETICS("electroenergetics"),
 	BLOCKSBOGIES("create_bb"),
 	OFFROAD("offroad"),
-	RAILWAYS(() -> isClassLoaded("com.railwayteam.railways.Railways"))
+	RAILWAYS(() -> isClassLoaded("com.railwayteam.railways.Railways")),
+	POCKET(() -> isClassLoaded("com.misterblusky9.pocket.PocketSized")),
 	;
 
 	public final BooleanSupplier isLoaded;

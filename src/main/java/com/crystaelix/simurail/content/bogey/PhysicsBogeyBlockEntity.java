@@ -1022,7 +1022,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				value = pair.rightInt();
 			}
 		}
-		return Math.clamp(value / 15F, 0, 1);
+		return Math.min(value / 15F, 1);
 	}
 
 	@Override

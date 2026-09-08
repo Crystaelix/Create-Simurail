@@ -369,7 +369,7 @@
 	"simurail.ponder.physics_bogey.electric.text_7": "Un pantographe capte le courant tant qu'il touche la caténaire",
 	"simurail.ponder.physics_bogey.electric.text_8": "Reliez le pantographe à un moteur électrique, dont l'axe entraîne les bogies dynamiques",
 	"simurail.ponder.physics_bogey.electric.text_9": "Reliez le moteur électrique à un bogie dynamique ; les bogies posés sur une voie ferrée sont mis à la terre par les rails, ce qui ferme le circuit",
-	"simurail.ponder.physics_bogey.electric.text_10": "Le moteur électrique fournit désormais de la force de rotation à partir de la seule électricité, sans aucun carburant",
+	"simurail.ponder.physics_bogey.electric.text_10": "Le moteur électrique fournit désormais de la force de rotation à partir de l'électricité",
 	"simurail.ponder.physics_bogey.electric.text_11": "Les bogies dynamiques dotés d'une puissance motrice plus élevée exercent davantage de stress cinétique sur le moteur électrique",
 	"simurail.ponder.physics_bogey.electric.text_12": "La capacité fournie par un moteur croît avec le carré de sa tension : un train plus puissant exige donc une tension de ligne plus élevée",
 	"simurail.ponder.physics_bogey.electric.text_13": "À 2500 V, un seul moteur peut faire tourner huit bogies dynamiques à puissance motrice maximale jusqu'à 200 RPM",

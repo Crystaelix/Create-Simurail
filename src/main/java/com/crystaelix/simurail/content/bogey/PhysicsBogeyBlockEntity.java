@@ -69,6 +69,7 @@ import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap.Builder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -147,9 +148,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	// Controller cache
 	protected Map<BlockPos, LongIntPair> remoteBrakeOverrides = new HashMap<>();
-	protected Map<BlockPos, LongIntPair> remoteStrengthOverrides = new HashMap<>();
 	protected Map<BlockPos, LongIntPair> remoteLeftSteerOverrides = new HashMap<>();
 	protected Map<BlockPos, LongIntPair> remoteRightSteerOverrides = new HashMap<>();
+	protected Map<BlockPos, LongIntPair> remoteStrengthOverrides = new HashMap<>();
 
 	// Client rendering components
 	protected final MovingQuaternionfLerp renderPivotRot = MovingQuaternionfLerp.of(2);
@@ -1136,10 +1137,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 	@Override
 	protected void applyImplicitComponents(DataComponentInput componentInput) {
-		Component customName = componentInput.get(DataComponents.CUSTOM_NAME);
-		if(customName != null) {
-			setCustomName(customName);
-		}
+		customName = componentInput.get(DataComponents.CUSTOM_NAME);
 	}
 
 	@Override
@@ -1294,6 +1292,15 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(group != null) {
 			group.invalidate();
 		}
+	}
+
+	@Override
+	public void removeComponentsFromTag(CompoundTag tag) {
+		tag.remove("custom_name");
+		tag.remove("axle_front");
+		tag.remove("axle_back");
+		tag.remove("pivot_offset");
+		tag.remove("pivot_rot");
 	}
 
 	// Mutable physics fields

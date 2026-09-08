@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -156,10 +157,9 @@ public class PhysicsBogeyBlock extends HorizontalKineticBlock implements IBE<Phy
 
 	@Override
 	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
-		if(state.getValue(INVERTED)) {
-			return new ItemStack(SimurailItems.INVERTED_PHYSICS_BOGEY.get());
-		}
-		return new ItemStack(this);
+		ItemStack stack = new ItemStack(state.getValue(INVERTED) ? SimurailItems.INVERTED_PHYSICS_BOGEY.get() : this);
+		withBlockEntityDo(level, pos, be -> stack.set(DataComponents.CUSTOM_NAME, be.getCustomName()));
+		return stack;
 	}
 
 	@Override

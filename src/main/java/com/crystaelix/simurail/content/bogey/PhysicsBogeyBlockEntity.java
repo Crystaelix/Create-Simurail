@@ -584,7 +584,6 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 					localCenter, pivotPose.position(),
 					getJointOrientation(), pivotPose.orientation());
 			motorJoint = physics.getPipeline().addConstraint(subLevel, null, jointConfig);
-			motorJoint.setContactsEnabled(false);
 		}
 	}
 

@@ -10,7 +10,8 @@ issueTrackerURL = "https://github.com/Crystaelix/Create-Simurail/issues"
 	description = "An experimental train mod."
 	logoFile = "simurail.logo.png"
 	authors = "TheLMiffy1111"
-	displayURL = "https://www.curseforge.com/minecraft/mc-mods/createsimurail"
+	credits = "neylz, codeuriii"
+	displayURL = "https://www.curseforge.com/minecraft/mc-mods/create-simurail"
 
 [[mixins]]
 	config = "simurail.mixins.json"

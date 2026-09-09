@@ -48,6 +48,7 @@ import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -104,6 +105,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 
 	private SafeSelectionScrollInput dataOptionValueSelectionInput;
 	private ScrollInput dataOptionValueNumericInput;
+	private EditBox dataOptionValueTextBox;
 	private SLabel dataOptionValueLabel;
 
 	private IconButton optionsButton;
@@ -233,6 +235,11 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 		dataOptionValueNumericInput = new ScrollInput(x + 186, y + 150, 102, 18);
 		dataOptionValueNumericInput.writingTo(dataOptionValueLabel);
 
+		dataOptionValueTextBox = new EditBox(font, x + 191, y + 155, 92, 10, CommonComponents.EMPTY);
+		dataOptionValueTextBox.setTextColor(-1);
+		dataOptionValueTextBox.setBordered(false);
+		dataOptionValueTextBox.setFocused(false);
+
 		optionsButton = new IconButton(x + 7, y + 179, AllIcons.I_CONFIG_OPEN);
 		optionsButton.setToolTip(OPTIONS_TOOLTIP);
 		optionsButton.withCallback(this::openOptionsScreen);
@@ -341,6 +348,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 	private void updateDataOptionWidgets() {
 		removeWidget(dataOptionValueSelectionInput);
 		removeWidget(dataOptionValueNumericInput);
+		removeWidget(dataOptionValueTextBox);
 		removeWidget(dataOptionValueLabel);
 
 		if(!optionValues.isEmpty()) {
@@ -372,7 +380,17 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 				addRenderableWidget(dataOptionValueLabel);
 			}
 			case BogeyDataTextOption text -> {
-				// TODO not used by anything yet
+				BogeyDataOptionValue<String> textValue = (BogeyDataOptionValue<String>)optionValue;
+				dataOptionValueTextBox.setFilter(text::isValid);
+				dataOptionValueTextBox.setValue(textValue.value());
+				dataOptionValueTextBox.setResponder(s -> {
+					textValue.value(s);
+					updateType();
+				});
+				dataOptionValueLabel.text = CommonComponents.EMPTY;
+				dataOptionValueLabel.withTooltip(List.of(text.displayName().plainCopy().withColor(0x5391E1)));
+				addRenderableWidget(dataOptionValueTextBox);
+				addRenderableWidget(dataOptionValueLabel);
 			}
 			}
 		}

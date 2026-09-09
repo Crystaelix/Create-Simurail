@@ -162,7 +162,7 @@ def modId = "simurail"
 def specVersion = "0"
 def vendor = "thelm"
 group = "com.crystaelix"
-def baseVersion = "0.0.0-a"
+def baseVersion = "0.1.0"
 
 version = hasProperty("commitHash") ? "${baseVersion}+mc${mcVersion}+${commitHash}" : "${baseVersion}+mc${mcVersion}"
 
@@ -329,7 +329,7 @@ publishMods {
 	file = remapJar.archiveFile
 	version = displayName = project.version
 	changelog = file("changelog.md").text
-	type = STABLE
+	type = BETA
 	modLoaders.add("neoforge")
 	additionalFiles.from(sourcesJar.archiveFile)
 

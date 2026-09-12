@@ -8,6 +8,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import com.crystaelix.simurail.api.math.SimurailMath;
+import com.crystaelix.simurail.api.physics.HorizontalPointing;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 
 import dev.ryanhcode.sable.Sable;
@@ -21,31 +22,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-public interface GangwayFrame {
+public interface GangwayFrame extends HorizontalPointing {
 
 	BlockPos getBlockPos();
-
-	Direction getFacing();
 
 	GangwayFrameShape getGangwayShape();
 
 	Vector3d getGangwayCenter(Vector3d dest);
-
-	default Vector3dc getDirection() {
-		return switch(getFacing()) {
-		case EAST -> SimurailMath.DIR_XP; case WEST -> SimurailMath.DIR_XN;
-		case SOUTH -> SimurailMath.DIR_ZP; case NORTH -> SimurailMath.DIR_ZN;
-		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
-		};
-	}
-
-	default Quaterniondc getOrientation() {
-		return switch(getFacing()) {
-		case EAST -> SimurailMath.ROT_XPYPZP; case WEST -> SimurailMath.ROT_XNYPZN;
-		case SOUTH -> SimurailMath.ROT_ZPYPXN; case NORTH -> SimurailMath.ROT_ZNYPXP;
-		case null, default -> throw new IllegalArgumentException("Unexpected value: " + getFacing());
-		};
-	}
 
 	boolean isPowered();
 

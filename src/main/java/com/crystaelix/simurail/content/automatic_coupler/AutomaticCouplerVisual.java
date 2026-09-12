@@ -75,19 +75,19 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 			couplerOffset.set(blockEntity.getDirection()).mul(-0.4375F);
 
 			boolean hasPartner;
-			blockEntity.getJointPosition(jointPos);
+			blockEntity.getCouplerJointPos(jointPos);
 			if(blockEntity.partnerPos != null && level.getBlockEntity(blockEntity.partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
 				hasPartner = true;
 				ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(blockEntity);
 				ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner);
 				Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
 				Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
-				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getJointPosition(targetPos)));
+				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getCouplerJointPos(targetPos)));
 				selfPose.orientation().transformInverse(partnerPose.orientation().transform(SimurailMathf.DIR_YP, targetVert));
 			}
 			else {
 				hasPartner = false;
-				blockEntity.getEndPosition(targetPos);
+				blockEntity.getCouplerEndPos(targetPos);
 			}
 			couplerDir.set(
 					targetPos.x - jointPos.x,
@@ -115,7 +115,7 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 				center().
 				translate(couplerOffset).
 				rotate(couplerRot).
-				translate(blockEntity.getLength(), 0, 0).
+				translate(blockEntity.getCouplerLength(), 0, 0).
 				colorRgb(blockEntity.color).
 				setChanged();
 			}

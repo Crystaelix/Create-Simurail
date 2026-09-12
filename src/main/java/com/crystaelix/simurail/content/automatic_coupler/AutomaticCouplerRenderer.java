@@ -63,17 +63,17 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 			couplerOffset.set(be.getDirection()).mul(-0.4375F);
 
 			boolean hasPartner;
-			be.getJointPosition(jointPos);
+			be.getCouplerJointPos(jointPos);
 			if(be.partnerPos != null && level.getBlockEntity(be.partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
 				hasPartner = true;
 				ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner);
 				Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
-				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getJointPosition(targetPos)));
+				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getCouplerJointPos(targetPos)));
 				selfPose.orientation().transformInverse(partnerPose.orientation().transform(SimurailMathf.DIR_YP, targetVert));
 			}
 			else {
 				hasPartner = false;
-				be.getEndPosition(targetPos);
+				be.getCouplerEndPos(targetPos);
 			}
 			couplerDir.set(
 					targetPos.x - jointPos.x,
@@ -105,7 +105,7 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 			center().
 			translate(couplerOffset).
 			rotate(couplerRot).
-			translate(be.getLength(), 0, 0).
+			translate(be.getCouplerLength(), 0, 0).
 			color(be.color).
 			light(light).overlay(overlay).
 			renderInto(poseStack, vb);

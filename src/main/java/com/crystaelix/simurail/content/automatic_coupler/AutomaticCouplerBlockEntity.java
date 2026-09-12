@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
-import org.joml.Vector3dc;
 
 import com.crystaelix.simurail.api.coupler.CouplerType;
 import com.crystaelix.simurail.api.coupler.CouplerTypeRegistry;
@@ -36,7 +35,6 @@ import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration
 import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
-import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
@@ -70,7 +68,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, ConnectorConnectable, GangwayFrame, ClipboardCloneable {
+public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, AutomaticCoupler, GangwayFrame, ClipboardCloneable {
 
 	public static final double SHORT_LENGTH = 0.5;
 	public static final double LONG_LENGTH = 1;
@@ -87,7 +85,6 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	protected BlockPos connectedPos;
 	protected boolean connectedFront;
 
-	protected final Vector3dc localCenter;
 	protected double lastJointLength = 0;
 	protected GenericConstraintHandle joint;
 
@@ -105,7 +102,6 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	public AutomaticCouplerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		localCenter = JOMLConversion.atCenterOf(pos);
 	}
 
 	@Override
@@ -179,31 +175,21 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public AABB getOutline(Direction direction) {
-		return AABB.ofSize(
-				getBlockPos().getCenter().add(direction.getStepX() * 0.40625, 0, direction.getStepZ() * 0.40625),
-				direction.getStepX() == 0 ? 0.5 : 0.1875, 0.375, direction.getStepZ() == 0 ? 0.5 : 0.1875);
-	}
-
-	public void setPartner(BlockPos partnerPos) {
-		if(level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
-			SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
-			SubLevel partnerSubLevel = Sable.HELPER.getContaining(partner);
-			if(this.partnerPos != null) {
-				removePartner();
+	public void setCouplerPartner(BlockPos couplerPartnerPos) {
+		if(level.getBlockEntity(couplerPartnerPos) instanceof AutomaticCoupler partner) {
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, partner.getBlockPos());
+			if(partnerPos != null) {
+				removeCouplerPartner();
 			}
-			this.partnerPos = partnerPos;
-			this.partnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
-			partner.partnerPos = getBlockPos();
-			partner.partnerSubLevelID = selfSubLevel == null ? null : selfSubLevel.getUniqueId();
+			partnerPos = couplerPartnerPos;
+			partnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
+			partner.setCouplerPartnerReverse(getBlockPos());
 			if(!level.isClientSide()) {
 				setChanged();
 				sendData();
-				partner.setChanged();
-				partner.sendData();
 
 				Vec3 globalSelfPos = Sable.HELPER.projectOutOfSubLevel(level, getBlockPos().getCenter());
-				Vec3 globalPartnerPos = Sable.HELPER.projectOutOfSubLevel(level, partnerPos.getCenter());
+				Vec3 globalPartnerPos = Sable.HELPER.projectOutOfSubLevel(level, couplerPartnerPos.getCenter());
 				double x = globalSelfPos.x / 2 + globalPartnerPos.x / 2;
 				double y = globalSelfPos.y / 2 + globalPartnerPos.y / 2;
 				double z = globalSelfPos.z / 2 + globalPartnerPos.z / 2;
@@ -213,17 +199,31 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		}
 	}
 
-	public void removePartner() {
-		if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
-			partner.partnerPos = null;
-			partner.partnerSubLevelID = null;
+	@Override
+	public void setCouplerPartnerReverse(BlockPos couplerPartnerPos) {
+		partnerPos = couplerPartnerPos;
+		if(couplerPartnerPos != null) {
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, couplerPartnerPos);
+			partnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
+		}
+		else {
+			partnerSubLevelID = null;
+			if(connectedPos != null && level.getBlockEntity(connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
+				bogey.disconnect(connectedFront);
+			}
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}		
+	}
+
+	@Override
+	public void removeCouplerPartner() {
+		if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+			partner.setCouplerPartnerReverse(null);
 			if(!level.isClientSide()) {
-				if(partner.connectedPos != null && level.getBlockEntity(partner.connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
-					bogey.disconnect(partner.connectedFront);
-				}
-				partner.removeJoint();
-				partner.setChanged();
-				partner.sendData();
+				partner.removeCouplerJoint();
 
 				Vec3 globalSelfPos = Sable.HELPER.projectOutOfSubLevel(level, getBlockPos().getCenter());
 				Vec3 globalPartnerPos = Sable.HELPER.projectOutOfSubLevel(level, partnerPos.getCenter());
@@ -240,7 +240,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 			if(connectedPos != null && level.getBlockEntity(connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
 				bogey.disconnect(connectedFront);
 			}
-			removeJoint();
+			removeCouplerJoint();
 			setChanged();
 			sendData();
 		}
@@ -377,11 +377,17 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	public void afterMove() {
 		if(partnerPos != null) {
-			setPartner(partnerPos);
+			setCouplerPartner(partnerPos);
 		}
 	}
 
-	public double getLength() {
+	@Override
+	public CouplerType getCouplerType() {
+		return type;
+	}
+
+	@Override
+	public double getCouplerLength() {
 		return switch(couplerLengthMode) {
 		default -> LONG_LENGTH;
 		case 1 -> SHORT_LENGTH;
@@ -389,12 +395,14 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		} - 0.0625;
 	}
 
-	public Vector3d getEndPosition(Vector3d dest) {
-		return dest.set(localCenter).fma(getLength() + 0.0625 - 0.5, getDirection());
+	@Override
+	public BlockPos getConnectedBogeyPos() {
+		return connectedPos;
 	}
 
-	public Vector3d getJointPosition(Vector3d dest) {
-		return dest.set(localCenter).fma(0.0625 - 0.5, getDirection());
+	@Override
+	public boolean getConnectedBogeyFront() {
+		return connectedFront;
 	}
 
 	// Sometimes physicsTick happens before tick?
@@ -471,9 +479,9 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 					disconnect(false);
 				}
 				else if(be instanceof PhysicsBogeyBlockEntity bogey) {
-					if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
-						if(partner.connectedPos != null && level.getBlockEntity(partner.connectedPos) instanceof PhysicsBogeyBlockEntity otherBogey) {
-							bogey.connect(connectedFront, otherBogey, partner.connectedFront);
+					if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+						if(partner.getConnectedBogeyPos() != null && level.getBlockEntity(partner.getConnectedBogeyPos()) instanceof PhysicsBogeyBlockEntity otherBogey) {
+							bogey.connect(connectedFront, otherBogey, partner.getConnectedBogeyFront());
 						}
 					}
 				}
@@ -481,8 +489,8 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 					disconnect(false);
 				}
 			}
-			if(partnerPos != null && !(level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity)) {
-				removePartner();
+			if(partnerPos != null && !(level.getBlockEntity(partnerPos) instanceof AutomaticCoupler)) {
+				removeCouplerPartner();
 			}
 			double maxDist = 6;
 			if(gangwayPartnerPos != null) {
@@ -507,54 +515,47 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	public void sable$physicsTick(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
 		init();
 
-		getEndPosition(endPos);
+		getCouplerEndPos(endPos);
 		subLevel.logicalPose().transformPosition(endPos, globalEndPos);
 
 		if(!isPowered() && partnerPos == null) {
-			removeJoint();
+			removeCouplerJoint();
 			findPartner(subLevel);
 		}
 		if(partnerPos != null) {
-			if(level.getBlockEntity(partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
-				ServerSubLevel partnerSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(partner);
+			if(level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+				ServerSubLevel partnerSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, partner.getBlockPos());
 				if(partnerSubLevel == subLevel ||
 						isPowered() || partner.isPowered() ||
-						!type.canConnectTo(partner.type)) {
-					removePartner();
-					removeJoint();
+						!type.canConnectTo(partner.getCouplerType())) {
+					removeCouplerPartner();
+					removeCouplerJoint();
 				}
 				else {
-					if(this.joint != null && partner.joint != null) {
-						partner.removeJoint();
+					if(this.joint != null && partner.hasCouplerJoint()) {
+						partner.removeCouplerJoint();
 					}
-					if(partner.joint == null) {
+					if(!partner.hasCouplerJoint()) {
 						SimurailPhysicsConfig config = SimurailConfig.server().physics;
 
 						Pose3dc selfPose = subLevel.logicalPose();
 						Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.logicalPose();
 
-						this.getJointPosition(this.jointPos);
-						partner.getJointPosition(partner.jointPos);
-
-						selfPose.transformPositionInverse(partnerPose.transformPosition(partner.jointPos, this.partnerJointPos));
-						partnerPose.transformPositionInverse(selfPose.transformPosition(this.jointPos, partner.partnerJointPos));
-
-						this.partnerJointPos.sub(this.jointPos, this.jointDir);
-						partner.jointPos.sub(partner.partnerJointPos, partner.jointDir);
+						this.updateCouplerJointPos(partner, partnerPose);
+						partner.updateCouplerJointPos(this, selfPose);
 
 						double selfScale = this.getFacing().getAxis() != Direction.Axis.Z ? selfPose.scale().x() : selfPose.scale().z();
 						double partnerScale = partner.getFacing().getAxis() != Direction.Axis.Z ? partnerPose.scale().x() : partnerPose.scale().z();
+						double jointLength = this.getCouplerLength() + partner.getCouplerLength() * partnerScale / selfScale;
 
-						double jointLength = this.getLength() + partner.getLength() * partnerScale / selfScale;
-
-						SimurailMath.rot(this.jointDir, this.jointRot);
-						SimurailMath.rot(partner.jointDir, partner.jointRot);
-
-						if(jointPos.distanceSquared(partnerJointPos) > Mth.square(jointLength + 1)) {
-							removePartner();
-							removeJoint();
+						if(localJointPos.distanceSquared(localPartnerJointPos) > Mth.square(jointLength + 1)) {
+							removeCouplerPartner();
+							removeCouplerJoint();
 							return;
 						}
+
+						this.getCouplerJointRot(jointRot);
+						partner.getCouplerJointRot(partnerJointRot);
 
 						double frequency = config.couplerSpringFrequency.get();
 						double dampingRate = config.couplerSpringDampingRate.get();
@@ -563,12 +564,12 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 						SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(level);
 						if(joint == null || !joint.isValid()) {
-							removeJoint();
+							removeCouplerJoint();
 							double linearDamping = config.couplerPassiveLinearDamping.get();
 							double angularDamping = config.couplerPassiveAngularDamping.get();
 							GenericConstraintConfiguration jointConfig = SimurailJoints.freeJoint(
-									this.jointPos, partner.jointPos,
-									this.jointRot, partner.jointRot);
+									localJointPos, partnerJointPos,
+									jointRot, partnerJointRot);
 							joint = physics.getPipeline().addConstraint(subLevel, partnerSubLevel, jointConfig);
 							joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5 / selfScale, jointLength + 0.5 / selfScale);
 							joint.setMotor(ConstraintJointAxis.LINEAR_X, jointLength, stiffness, damping, false, 0);
@@ -579,8 +580,8 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 							joint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, angularDamping, false, 0);
 						}
 						else {
-							joint.setFrame1(this.jointPos, this.jointRot);
-							joint.setFrame2(partner.jointPos, partner.jointRot);
+							joint.setFrame1(localJointPos, jointRot);
+							joint.setFrame2(partnerJointPos, partnerJointRot);
 							if(jointLength != lastJointLength) {
 								joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5 / selfScale, jointLength + 0.5 / selfScale);
 								joint.setMotor(ConstraintJointAxis.LINEAR_X, jointLength, stiffness, damping, false, 0);
@@ -592,13 +593,28 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 				}
 			}
 			else {
-				removePartner();
-				removeJoint();
+				removeCouplerPartner();
+				removeCouplerJoint();
 			}
 		}
 		else {
-			removeJoint();
+			removeCouplerJoint();
 		}
+	}
+
+	@Override
+	public void updateCouplerJointPos(AutomaticCoupler partner, Pose3dc partnerPose) {
+		SubLevel subLevel = Sable.HELPER.getContaining(this);
+		Pose3dc selfPose = subLevel == null ? SimurailMath.POSE_I : subLevel.logicalPose();
+		this.getCouplerJointPos(localJointPos);
+		partner.getCouplerJointPos(partnerJointPos);
+		selfPose.transformPositionInverse(partnerPose.transformPosition(partnerJointPos, localPartnerJointPos));
+		localPartnerJointPos.sub(localJointPos, jointDir);
+	}
+
+	@Override
+	public Quaterniond getCouplerJointRot(Quaterniond dest) {
+		return SimurailMath.rot(jointDir, dest);
 	}
 
 	protected void findPartner(ServerSubLevel subLevel) {
@@ -623,7 +639,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 								checkPartner.partnerPos == null &&
 								!checkPartner.isPowered() &&
 								type.canConnectTo(checkPartner.type)) {
-							double distSq = checkPartner.getEndPosition(checkEndPos).distanceSquared(checkSelfEndPos);
+							double distSq = checkPartner.getCouplerEndPos(checkEndPos).distanceSquared(checkSelfEndPos);
 							if(distSq < 0.02 && distSq < minDistSq) {
 								minDistSq = distSq;
 								pos = checkPos.immutable();
@@ -635,12 +651,18 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		}
 
 		if(pos != null) {
-			setPartner(pos);
+			setCouplerPartner(pos);
 			tryConnectGangway();
 		}
 	}
 
-	protected void removeJoint() {
+	@Override
+	public boolean hasCouplerJoint() {
+		return joint != null;
+	}
+
+	@Override
+	public void removeCouplerJoint() {
 		if(joint != null) {
 			joint.remove();
 			joint = null;
@@ -741,7 +763,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	public void invalidate() {
 		super.invalidate();
 		if(!level.isClientSide()) {
-			removeJoint();
+			removeCouplerJoint();
 		}
 	}
 
@@ -887,11 +909,13 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	protected final Vector3d endPos = new Vector3d();
 	protected final Vector3d globalEndPos = new Vector3d();
 
-	protected final Vector3d jointPos = new Vector3d();
+	protected final Vector3d localJointPos = new Vector3d();
 	protected final Vector3d partnerJointPos = new Vector3d();
-
+	protected final Vector3d localPartnerJointPos = new Vector3d();
 	protected final Vector3d jointDir = new Vector3d();
+
 	protected final Quaterniond jointRot = new Quaterniond();
+	protected final Quaterniond partnerJointRot = new Quaterniond();
 
 	protected final Vector3d gangwayCenterOffset = new Vector3d();
 }

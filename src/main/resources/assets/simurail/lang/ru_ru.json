@@ -7,7 +7,7 @@
 	"block.simurail.probe_reader": "Тележный считыватель",
 	"block.simurail.remote_controller": "Удалённый тележечный контроллер",
 	"block.simurail.physics_roller": "Физический каток",
-	"block.simurail.brass_borehead_bearing": "Brass Borehead Bearing",
+	"block.simurail.brass_borehead_bearing": "Латунный буровой подшипник",
 
 	"item.simurail.inverted_physics_bogey": "Инверт. физическая тележка",
 	"item.simurail.inverted_unpowered_physics_bogey": "Инверт. нетяговая физическая тележка",
@@ -38,7 +38,7 @@
 	"block.simurail.remote_controller.success": "Успешно установлено",
 	"block.simurail.remote_controller.clear": "Выбор сброшен",
 
-	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
+	"block.simurail.brass_borehead_bearing.filter": "Игнорируемые материалы",
 
 	"item.simurail.connector.set": "Выбрана целевая позиция",
 	"item.simurail.connector.same_block": "Данная позиция уже занята",
@@ -97,7 +97,7 @@
 	"gui.simurail.gangway_frame.rest_length": "Длина в сложенном состоянии",
 
 	"gui.simurail.probe_reader.mode": "Режим",
-	"gui.simurail.probe_reader.mode.occupied_signal": "Красный сигнал",
+	"gui.simurail.probe_reader.mode.occupied_signal": "Запрещающий сигнал",
 	"gui.simurail.probe_reader.mode.aligned_signal": "Сигнал спереди",
 	"gui.simurail.probe_reader.mode.opposite_signal": "Сигнал сзади",
 	"gui.simurail.probe_reader.mode.signal": "Любой сигнал",

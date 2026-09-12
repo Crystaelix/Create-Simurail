@@ -76,10 +76,10 @@ public class AutomaticCouplerVisual extends AbstractBlockEntityVisual<AutomaticC
 
 			boolean hasPartner;
 			blockEntity.getCouplerJointPos(jointPos);
-			if(blockEntity.partnerPos != null && level.getBlockEntity(blockEntity.partnerPos) instanceof AutomaticCouplerBlockEntity partner) {
+			if(blockEntity.partnerPos != null && level.getBlockEntity(blockEntity.partnerPos) instanceof AutomaticCoupler partner) {
 				hasPartner = true;
 				ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(blockEntity);
-				ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner);
+				ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner.getBlockPos());
 				Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
 				Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
 				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getCouplerJointPos(targetPos)));

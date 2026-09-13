@@ -1,4 +1,4 @@
-package com.crystaelix.simurail.content.automatic_coupler;
+package com.crystaelix.simurail.content.automatic_coupler.copycat;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,17 +16,17 @@ import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.config.SimurailPhysicsConfig;
-import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailCouplers;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
+import com.crystaelix.simurail.content.automatic_coupler.AutomaticCoupler;
+import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
-import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
-import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
@@ -67,11 +67,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, AutomaticCoupler, GangwayFrame, ClipboardCloneable {
-
-	public static final double SHORT_LENGTH = 0.5;
-	public static final double LONG_LENGTH = 1;
-	public static final double EXTRA_LONG_LENGTH = 2;
+//Copycat version of AutomaticCouplerBlockEntity
+public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity implements MenuProvider, BlockEntitySubLevelActor, AutomaticCoupler, GangwayFrame, ClipboardCloneable {
 
 	protected boolean initialized = false;
 
@@ -99,17 +96,13 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	protected VoxelShape collisionShape = Shapes.empty();
 
-	public AutomaticCouplerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	public CopycatAutomaticCouplerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-	}
-
-	@Override
 	public Component getDisplayName() {
-		return SimurailBlocks.AUTOMATIC_COUPLER.get().getName();
+		return getBlockState().getBlock().getName();
 	}
 
 	public void cycleLength() {
@@ -150,7 +143,8 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 	@Override
 	public GangwayFrameBlockShape getGangwayShape() {
-		return getBlockState().getValue(AutomaticCouplerBlock.GANGWAY_SHAPE);
+		BlockState state = getBlockState();
+		return ((CopycatAutomaticCouplerBlock)getBlockState().getBlock()).getGangwayShape(state, level, getBlockPos());
 	}
 
 	@Override
@@ -398,9 +392,9 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	@Override
 	public double getCouplerLength() {
 		return switch(couplerLengthMode) {
-		default -> LONG_LENGTH;
-		case 1 -> SHORT_LENGTH;
-		case 2 -> EXTRA_LONG_LENGTH;
+		default -> AutomaticCouplerBlockEntity.LONG_LENGTH;
+		case 1 -> AutomaticCouplerBlockEntity.SHORT_LENGTH;
+		case 2 -> AutomaticCouplerBlockEntity.EXTRA_LONG_LENGTH;
 		} - 0.0625;
 	}
 
@@ -467,11 +461,8 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		else {
 			shapeIndex = Math.clamp((int)Math.round(gangwayRestLength * 16) - 1, 0, 29);
 		}
-		collisionShape = switch(gangwayShape) {
-		case D -> AutomaticCouplerBlock.D_SHAPES[shapeIndex].get(getFacing());
-		case U -> AutomaticCouplerBlock.U_SHAPES[shapeIndex].get(getFacing());
-		case null, default -> getBlockState().getShape(level, getBlockPos());
-		};
+		BlockState state = getBlockState();
+		collisionShape = ((CopycatAutomaticCouplerBlock)state.getBlock()).getCollisionShape(state, level, selfPos, shapeIndex);
 		if(gangwayTimer > 0) {
 			gangwayTimer--;
 		}
@@ -754,8 +745,8 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	}
 
 	@Override
-	public AutomaticCouplerMenu createMenu(int windowId, Inventory inv, Player player) {
-		return new AutomaticCouplerMenu(windowId, this);
+	public CopycatAutomaticCouplerMenu createMenu(int windowId, Inventory inv, Player player) {
+		return new CopycatAutomaticCouplerMenu(windowId, this);
 	}
 
 	@Override

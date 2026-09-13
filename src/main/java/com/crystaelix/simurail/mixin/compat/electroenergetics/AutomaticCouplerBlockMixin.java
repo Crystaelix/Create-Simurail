@@ -10,6 +10,7 @@ import com.crystaelix.simurail.compat.electroenergetics.SimurailDeviceTypes;
 import com.crystaelix.simurail.compat.electroenergetics.SimurailNodeConfigurations;
 import com.crystaelix.simurail.compat.electroenergetics.device.AutomaticCouplerDevice;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlock;
 import com.george_vi.electroenergetics.CEEItems;
 import com.george_vi.electroenergetics.config.CEEConfigs;
 import com.george_vi.electroenergetics.devices.device.SimulatedDeviceType;
@@ -30,13 +31,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-@Mixin(AutomaticCouplerBlock.class)
-public abstract class AutomaticCouplerBlockMixin extends HorizontalDirectionalBlock implements ElectricalDeviceBlock<AutomaticCouplerDevice> {
+@Mixin({AutomaticCouplerBlock.class, CopycatAutomaticCouplerBlock.class})
+public abstract class AutomaticCouplerBlockMixin extends Block implements ElectricalDeviceBlock<AutomaticCouplerDevice> {
 
 	protected AutomaticCouplerBlockMixin(Properties properties) {
 		super(properties);
@@ -49,12 +50,12 @@ public abstract class AutomaticCouplerBlockMixin extends HorizontalDirectionalBl
 
 	@Override
 	public Map<Integer, Vec3> getNodePositions(Level level, BlockPos pos, BlockState state) {
-		return SimurailNodeConfigurations.AUTOMATIC_COUPLER.getNodes(state.getValue(FACING));
+		return SimurailNodeConfigurations.AUTOMATIC_COUPLER.getNodes(state.getValue(BlockStateProperties.HORIZONTAL_FACING));
 	}
 
 	@Override
 	public Vec3 getNodePosition(Level level, BlockPos pos, BlockState state, int id) {
-		return SimurailNodeConfigurations.AUTOMATIC_COUPLER.getNodePos(state.getValue(FACING), id);
+		return SimurailNodeConfigurations.AUTOMATIC_COUPLER.getNodePos(state.getValue(BlockStateProperties.HORIZONTAL_FACING), id);
 	}
 
 	@WrapMethod(method = "onPlace")

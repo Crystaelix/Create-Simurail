@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [{
+				"type": "minecraft:item",
+				"name": "simurail:copycat_panel_automatic_coupler"
+			}],
+			"conditions": [{
+				"condition": "minecraft:survives_explosion"
+			}]
+		},
+		{
+			"rolls": 1,
+			"entries": [{
+				"type": "minecraft:item",
+				"name": "simurail:gangway_frame",
+				"conditions": [{
+					"condition": "minecraft:block_state_property",
+					"block": "simurail:copycat_panel_automatic_coupler",
+					"properties": {"gangway": "true"}
+				}]
+			}]
+		}
+	],
+	"random_sequence": "simurail:blocks/copycat_panel_automatic_coupler"
+}

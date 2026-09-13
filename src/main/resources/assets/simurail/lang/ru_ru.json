@@ -3,6 +3,7 @@
 	"block.simurail.unpowered_physics_bogey": "Нетяговая физическая тележка",
 	"block.simurail.physics_bogey_pivot": "Physics Bogie Pivot",
 	"block.simurail.automatic_coupler": "Авто-сцепка",
+	"block.simurail.copycat_panel_automatic_coupler": "Copycat Panel Automatic Coupler",
 	"block.simurail.gangway_frame": "Межвагонный переход",
 	"block.simurail.probe_reader": "Тележный считыватель",
 	"block.simurail.remote_controller": "Удалённый тележечный контроллер",

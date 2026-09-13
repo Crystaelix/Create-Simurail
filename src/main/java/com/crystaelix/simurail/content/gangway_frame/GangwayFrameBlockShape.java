@@ -175,6 +175,7 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 		return rotate(outerEnd, facing, dest);
 	}
 
+	@Override
 	public Vector3d center(Direction facing, Vector3d dest) {
 		return rotate(center, facing, dest);
 	}

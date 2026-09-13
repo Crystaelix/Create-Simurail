@@ -178,7 +178,8 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 
 	@Override
 	protected boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
-		return useContext.getItemInHand().is(SimurailBlocks.GANGWAY_FRAME.asItem());
+		return state.getValue(GANGWAY_SHAPE) == GangwayFrameBlockShape.NONE &&
+				useContext.getItemInHand().is(SimurailBlocks.GANGWAY_FRAME.asItem());
 	}
 
 	@Override

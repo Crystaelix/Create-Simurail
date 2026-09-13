@@ -3,6 +3,9 @@ package com.crystaelix.simurail.content;
 import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlockItem;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerModel;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyPivotBlock;
@@ -15,6 +18,7 @@ import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockItem;
+import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -49,6 +53,14 @@ public class SimurailBlocks {
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().dynamicShape().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			item(AutomaticCouplerBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<CopycatPanelAutomaticCouplerBlock> COPYCAT_PANEL_AUTOMATIC_COUPLER = REGISTRATE.
+			block("copycat_panel_automatic_coupler", CopycatPanelAutomaticCouplerBlock::new).
+			transform(BuilderTransformers.copycat()).
+			properties(p -> p.dynamicShape()).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatPanelAutomaticCouplerModel::new)).
+			item(CopycatAutomaticCouplerBlockItem::new).
 			build().
 			register();
 	public static final BlockEntry<GangwayFrameBlock> GANGWAY_FRAME = REGISTRATE.

@@ -216,6 +216,7 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 					withCouplerBlockEntityDo(level, pos, CopycatAutomaticCouplerBlockEntity::cycleLength);
 					IWrenchable.playRotateSound(level, pos);
 				}
+				return ItemInteractionResult.SUCCESS;
 			}
 			else if(hitGangway(state, hitResult.getLocation().subtract(Vec3.atLowerCornerOf(pos)), level, pos, player)){
 				if(!level.isClientSide()) {
@@ -228,8 +229,8 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 						}
 					});
 				}
+				return ItemInteractionResult.SUCCESS;
 			}
-			return ItemInteractionResult.SUCCESS;
 		}
 		return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
 	}
@@ -334,6 +335,11 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 	}
 
 	@Override
+	public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, BlockState queryState, BlockPos queryPos) {
+		return super.getAppearance(state, level, pos, side, queryState, queryPos);
+	}
+
+	@Override
 	public boolean isIgnoredConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face, BlockPos fromPos, BlockPos toPos) {
 		if(fromPos == null || toPos == null) {
 			return true;
@@ -347,6 +353,30 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 		int coord = facing.getAxis().choose(diff.getX(), diff.getY(), diff.getZ());
 		return facing == toState.getValue(FACING).getOpposite() &&
 				(coord == 0 || coord != facing.getAxisDirection().getStep());
+	}
+
+	@Override
+	public boolean canConnectTexturesToward(BlockAndTintGetter level, BlockPos fromPos, BlockPos toPos, BlockState fromState) {
+		Direction facing = fromState.getValue(FACING);
+		BlockState toState = level.getBlockState(toPos);
+		if(toPos.equals(fromPos.relative(facing))) {
+			return false;
+		}
+		BlockPos diff = fromPos.subtract(toPos);
+		int coord = facing.getAxis().choose(diff.getX(), diff.getY(), diff.getZ());
+		if(!toState.is(this)) {
+			return coord != -facing.getAxisDirection().getStep();
+		}
+		if(isOccluded(fromState, toState, facing)) {
+			return true;
+		}
+		CopycatAutomaticCouplerShape toShape = toState.getValue(SHAPE);
+		CopycatAutomaticCouplerShape fromShape = fromState.getValue(SHAPE);
+		if(coord == 0 && toState.getValue(FACING) == fromState.getValue(FACING) &&
+				(toShape == CopycatAutomaticCouplerShape.FULL || fromShape == CopycatAutomaticCouplerShape.FULL || toShape == fromShape)) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

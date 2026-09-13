@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,26 +68,5 @@ public class CopycatPanelAutomaticCouplerBlock extends CopycatAutomaticCouplerBl
 	@Override
 	public BlockState prepareMaterial(Level level, BlockPos pos, BlockState state, Player player, InteractionHand hand, BlockHitResult hit, BlockState material) {
 		return super.prepareMaterial(level, pos, state, player, hand, hit, material);
-	}
-
-	@Override
-	public boolean canConnectTexturesToward(BlockAndTintGetter level, BlockPos fromPos, BlockPos toPos, BlockState state) {
-		Direction facing = state.getValue(FACING);
-		BlockState toState = level.getBlockState(toPos);
-		if(toPos.equals(fromPos.relative(facing))) {
-			return false;
-		}
-		BlockPos diff = fromPos.subtract(toPos);
-		int coord = facing.getAxis().choose(diff.getX(), diff.getY(), diff.getZ());
-		if(!toState.is(this)) {
-			return coord != -facing.getAxisDirection().getStep();
-		}
-		if(isOccluded(state, toState, facing)) {
-			return true;
-		}
-		if(coord == 0 && toState.getValue(FACING) == state.getValue(FACING) && toState.getValue(SHAPE) == state.getValue(SHAPE)) {
-			return true;
-		}
-		return false;
 	}
 }

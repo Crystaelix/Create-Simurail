@@ -21,17 +21,20 @@ public class SimurailMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		if(mixinClassName.contains("compat.copycats")) {
+			return isLoaded("copycats");
+		}
 		if(mixinClassName.contains("compat.electroenergetics")) {
 			return isLoaded("electroenergetics");
+		}
+		if(mixinClassName.contains("compat.offroad")) {
+			return isLoaded("offroad");
 		}
 		if(mixinClassName.contains("compat.railways")) {
 			if(mixinClassName.contains("TrackBufferBlockMixin")) {
 				return isLoaded("railways");
 			}
 			return isLoaded("railways");
-		}
-		if(mixinClassName.contains("compat.offroad")) {
-			return isLoaded("offroad");
 		}
 		if(mixinClassName.contains("compat.railx")) {
 			return isLoaded("railx");

@@ -3,7 +3,6 @@ package com.crystaelix.simurail.content.gangway_frame;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.joml.Quaterniondc;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 

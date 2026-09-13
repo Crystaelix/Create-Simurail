@@ -89,16 +89,18 @@ public abstract class SimurailCopycatModel extends CopycatModel {
 		x2 *= 0.0625; y2 *= 0.0625; z2 *= 0.0625;
 		mx *= 0.0625; my *= 0.0625; mz *= 0.0625;
 		AABB crop = switch(facing) {
-		case null, default -> new AABB(x1, y1, z1, x2, y2, z2);
+		case SOUTH -> new AABB(x1, y1, z1, x2, y2, z2);
 		case EAST -> new AABB(z1, y1, 1 - x1, z2, y2, 1 - x2);
 		case NORTH -> new AABB(1 - x1, y1, 1 - z1, 1 - x2, y2, 1 - z2);
 		case WEST -> new AABB(1 - z1, y1, x1, 1 - z2, y2, x2);
+		case null, default -> new AABB(x1, y1, z1, x2, y2, z2);
 		};
 		Vec3 move = switch(facing) {
-		case null, default -> new Vec3(mx, my, mz);
+		case SOUTH -> new Vec3(mx, my, mz);
 		case EAST -> new Vec3(mz, my, -mx);
 		case NORTH -> new Vec3(-mx, my, -mz);
 		case WEST -> new Vec3(-mz, my, mx);
+		case null, default -> new Vec3(mx, my, mz);
 		};
 		return new CropTransform(crop, move, removedDirections);
 	}

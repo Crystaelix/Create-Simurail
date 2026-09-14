@@ -16,6 +16,7 @@ import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 import com.crystaelix.simurail.config.SimurailConfig;
 import com.crystaelix.simurail.config.SimurailPhysicsConfig;
+import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailCouplers;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCoupler;
@@ -102,7 +103,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 
 	@Override
 	public Component getDisplayName() {
-		return getBlockState().getBlock().getName();
+		return SimurailBlocks.AUTOMATIC_COUPLER.get().getName();
 	}
 
 	public void cycleLength() {

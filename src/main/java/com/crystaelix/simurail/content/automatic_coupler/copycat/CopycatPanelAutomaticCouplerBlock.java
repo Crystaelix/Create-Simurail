@@ -3,6 +3,7 @@ package com.crystaelix.simurail.content.automatic_coupler.copycat;
 import java.util.stream.IntStream;
 
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
+import com.simibubi.create.content.decoration.copycat.CopycatSpecialCases;
 
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
@@ -71,11 +72,6 @@ public class CopycatPanelAutomaticCouplerBlock extends CopycatAutomaticCouplerBl
 
 	@Override
 	public boolean isAcceptedRegardless(BlockState material) {
-		return false;
-	}
-
-	@Override
-	public BlockState prepareMaterial(Level level, BlockPos pos, BlockState state, Player player, InteractionHand hand, BlockHitResult hit, BlockState material) {
-		return super.prepareMaterial(level, pos, state, player, hand, hit, material);
+		return CopycatSpecialCases.isBarsMaterial(material);
 	}
 }

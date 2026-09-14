@@ -5,8 +5,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.copycat.SimurailCopycatModel;
+import com.simibubi.create.content.decoration.copycat.CopycatSpecialCases;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -36,6 +39,20 @@ public class CopycatPanelAutomaticCouplerModel extends SimurailCopycatModel {
 				originalModel.getQuads(state, side, rand, data, renderType).stream(),
 				super.getQuads(state, side, rand, data, renderType).stream()).
 				toList();
+	}
+
+	@Override
+	protected List<BakedQuad> getCroppedQuads(BlockState state, Direction side, RandomSource rand, BlockState material, ModelData wrappedData, RenderType renderType) {
+		if(CopycatSpecialCases.isBarsMaterial(material)) {
+			BakedModel blockModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(
+					SimurailBlocks.COPYCAT_BARS_AUTOMATIC_COUPLER.getDefaultState().
+					setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(BlockStateProperties.HORIZONTAL_FACING)).
+					setValue(CopycatAutomaticCouplerBlock.SHAPE, state.getValue(CopycatAutomaticCouplerBlock.SHAPE)));
+			if(blockModel instanceof CopycatBarsAutomaticCouplerModel cm) {
+				return cm.getCroppedQuads(state, side, rand, material, wrappedData, renderType);
+			}
+		}
+		return super.getCroppedQuads(state, side, rand, material, wrappedData, renderType);
 	}
 
 	@Override

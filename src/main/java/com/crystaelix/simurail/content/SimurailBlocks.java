@@ -4,6 +4,8 @@ import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlockItem;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatBarsAutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatBarsAutomaticCouplerModel;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerModel;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
@@ -62,6 +64,10 @@ public class SimurailBlocks {
 			onRegister(CreateRegistrate.blockModel(() -> CopycatPanelAutomaticCouplerModel::new)).
 			item(CopycatAutomaticCouplerBlockItem::new).
 			build().
+			register();
+	public static final BlockEntry<CopycatBarsAutomaticCouplerBlock> COPYCAT_BARS_AUTOMATIC_COUPLER = REGISTRATE.
+			block("copycat_bars_automatic_coupler", CopycatBarsAutomaticCouplerBlock::new).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatBarsAutomaticCouplerModel::new)).
 			register();
 	public static final BlockEntry<GangwayFrameBlock> GANGWAY_FRAME = REGISTRATE.
 			block("gangway_frame", GangwayFrameBlock::new).

@@ -61,6 +61,15 @@ public class CopycatPanelAutomaticCouplerBlock extends CopycatAutomaticCouplerBl
 	}
 
 	@Override
+	protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+		return switch(state.getValue(SHAPE)) {
+		case TOP -> TOP_SHAPES.get(state.getValue(FACING));
+		case BOTTOM -> BOTTOM_SHAPES.get(state.getValue(FACING));
+		case null, default -> SHAPES.get(state.getValue(FACING));
+		};
+	}
+
+	@Override
 	public boolean isAcceptedRegardless(BlockState material) {
 		return false;
 	}

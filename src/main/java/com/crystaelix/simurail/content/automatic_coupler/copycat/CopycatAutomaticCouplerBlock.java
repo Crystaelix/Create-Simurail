@@ -370,10 +370,7 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 		if(isOccluded(fromState, toState, facing)) {
 			return true;
 		}
-		CopycatAutomaticCouplerShape toShape = toState.getValue(SHAPE);
-		CopycatAutomaticCouplerShape fromShape = fromState.getValue(SHAPE);
-		if(coord == 0 && toState.getValue(FACING) == fromState.getValue(FACING) &&
-				(toShape == CopycatAutomaticCouplerShape.FULL || fromShape == CopycatAutomaticCouplerShape.FULL || toShape == fromShape)) {
+		if(coord == 0 && toState.getValue(FACING) == fromState.getValue(FACING) && toState.getValue(SHAPE) == fromState.getValue(SHAPE)) {
 			return true;
 		}
 		return false;

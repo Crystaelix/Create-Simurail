@@ -26,6 +26,7 @@
 		"compat.electroenergetics.PhysicsBogeyBlockMixin",
 		"compat.offroad.BoreheadBearingBlockEntityMixin",
 		"compat.railways.TrackBufferBlockMixin",
+		"compat.railways_copycats.CopycatHeadstockBlockMixin",
 		"compat.railx.BezierConnectionCompatMixin"
 	],
 	"injectors": {

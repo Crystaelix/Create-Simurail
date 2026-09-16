@@ -1,0 +1,49 @@
+{
+	"variants": {
+		"facing=east,shape=full": {
+			"model": "simurail:block/copycat/bars_full",
+			"y": 90
+		},
+		"facing=east,shape=top": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 90
+		},
+		"facing=east,shape=bottom": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 90
+		},
+		"facing=north,shape=full": {
+			"model": "simurail:block/copycat/bars_full"
+		},
+		"facing=north,shape=top": {
+			"model": "simurail:block/copycat/bars_top"
+		},
+		"facing=north,shape=bottom": {
+			"model": "simurail:block/copycat/bars_bottom"
+		},
+		"facing=south,shape=full": {
+			"model": "simurail:block/copycat/bars_full",
+			"y": 180
+		},
+		"facing=south,shape=top": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 180
+		},
+		"facing=south,shape=bottom": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 180
+		},
+		"facing=west,shape=full": {
+			"model": "simurail:block/copycat/bars_full",
+			"y": 270
+		},
+		"facing=west,shape=top": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 270
+		},
+		"facing=west,shape=bottom": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 270
+		}
+	}
+}

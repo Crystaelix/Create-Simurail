@@ -3,6 +3,11 @@ package com.crystaelix.simurail.content;
 import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlockItem;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatBarsAutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatBarsAutomaticCouplerModel;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerModel;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyPivotBlock;
@@ -15,6 +20,7 @@ import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockItem;
+import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -50,6 +56,18 @@ public class SimurailBlocks {
 			properties(p -> p.noOcclusion().dynamicShape().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			item(AutomaticCouplerBlockItem::new).
 			build().
+			register();
+	public static final BlockEntry<CopycatPanelAutomaticCouplerBlock> COPYCAT_PANEL_AUTOMATIC_COUPLER = REGISTRATE.
+			block("copycat_panel_automatic_coupler", CopycatPanelAutomaticCouplerBlock::new).
+			transform(BuilderTransformers.copycat()).
+			properties(p -> p.dynamicShape()).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatPanelAutomaticCouplerModel::new)).
+			item(CopycatAutomaticCouplerBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<CopycatBarsAutomaticCouplerBlock> COPYCAT_BARS_AUTOMATIC_COUPLER = REGISTRATE.
+			block("copycat_bars_automatic_coupler", CopycatBarsAutomaticCouplerBlock::new).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatBarsAutomaticCouplerModel::new)).
 			register();
 	public static final BlockEntry<GangwayFrameBlock> GANGWAY_FRAME = REGISTRATE.
 			block("gangway_frame", GangwayFrameBlock::new).

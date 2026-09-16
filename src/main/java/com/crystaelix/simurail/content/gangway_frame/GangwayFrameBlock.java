@@ -3,6 +3,8 @@ package com.crystaelix.simurail.content.gangway_frame;
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlock;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerShape;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -68,10 +70,20 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Level level = context.getLevel();
 		BlockState oldState = level.getBlockState(context.getClickedPos());
-		if(oldState.is(SimurailBlocks.AUTOMATIC_COUPLER) && oldState.getValue(AutomaticCouplerBlock.GANGWAY_SHAPE) == GangwayFrameBlockShape.NONE) {
-			double hitY = context.getClickLocation().y - context.getClickedPos().getY();
-			GangwayFrameBlockShape shape = hitY > 0.5 ? GangwayFrameBlockShape.U : GangwayFrameBlockShape.D;
-			return oldState.setValue(AutomaticCouplerBlock.GANGWAY_SHAPE, shape);
+		if(oldState.is(SimurailBlocks.AUTOMATIC_COUPLER)) {
+			if(oldState.getValue(AutomaticCouplerBlock.GANGWAY_SHAPE) == GangwayFrameBlockShape.NONE) {
+				double hitY = context.getClickLocation().y - context.getClickedPos().getY();
+				GangwayFrameBlockShape shape = hitY > 0.5 ? GangwayFrameBlockShape.U : GangwayFrameBlockShape.D;
+				return oldState.setValue(AutomaticCouplerBlock.GANGWAY_SHAPE, shape);
+			}
+			return null;
+		}
+		if(oldState.getBlock() instanceof CopycatAutomaticCouplerBlock) {
+			if(!oldState.getValue(CopycatAutomaticCouplerBlock.GANGWAY) &&
+					oldState.getValue(CopycatAutomaticCouplerBlock.SHAPE) != CopycatAutomaticCouplerShape.FULL) {
+				return oldState.setValue(CopycatAutomaticCouplerBlock.GANGWAY, true);
+			}
+			return null;
 		}
 
 		Direction direction = context.getClickedFace();
@@ -166,7 +178,16 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 
 	@Override
 	protected boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
-		return GangwayFrameBlockShape.COUPLER.contains(state.getValue(SHAPE)) && useContext.getItemInHand().is(SimurailBlocks.AUTOMATIC_COUPLER.asItem());
+		if(GangwayFrameBlockShape.COUPLER.contains(state.getValue(SHAPE))) {
+			ItemStack stack = useContext.getItemInHand();
+			if(stack.is(SimurailBlocks.AUTOMATIC_COUPLER.asItem())) {
+				return true;
+			}
+			if(stack.is(SimurailBlocks.COPYCAT_PANEL_AUTOMATIC_COUPLER.asItem())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

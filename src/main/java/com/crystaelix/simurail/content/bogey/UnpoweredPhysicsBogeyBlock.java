@@ -26,5 +26,4 @@ public class UnpoweredPhysicsBogeyBlock extends PhysicsBogeyBlock {
 		}
 		return new ItemStack(this);
 	}
-
 }

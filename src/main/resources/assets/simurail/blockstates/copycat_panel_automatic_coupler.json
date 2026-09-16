@@ -1,0 +1,181 @@
+{
+	"multipart": [
+		{
+			"when": {"facing": "south", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/normal",
+				"y": 180
+			}
+		},
+		{
+			"when": {"facing": "north", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/normal",
+				"y": 0
+			}
+		},
+		{
+			"when": {"facing": "east", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/normal",
+				"y": 90
+			}
+		},
+		{
+			"when": {"facing": "west", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/normal",
+				"y": -90
+			}
+		},
+
+		{
+			"when": {"facing": "south", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/powered",
+				"y": 180
+			}
+		},
+		{
+			"when": {"facing": "north", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/powered",
+				"y": 0
+			}
+		},
+		{
+			"when": {"facing": "east", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/powered",
+				"y": 90
+			}
+		},
+		{
+			"when": {"facing": "west", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/coupler/automatic/powered",
+				"y": -90
+			}
+		},
+
+		{
+			"when": {"facing": "south", "shape": "top", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_normal",
+				"y": 0
+			}
+		},
+		{
+			"when": {"facing": "south", "shape": "bottom", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_normal",
+				"y": 0
+			}
+		},
+
+		{
+			"when": {"facing": "north", "shape": "top", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_normal",
+				"y": 180
+			}
+		},
+		{
+			"when": {"facing": "north", "shape": "bottom", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_normal",
+				"y": 180
+			}
+		},
+
+		{
+			"when": {"facing": "east", "shape": "top", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_normal",
+				"y": -90
+			}
+		},
+		{
+			"when": {"facing": "east", "shape": "bottom", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_normal",
+				"y": -90
+			}
+		},
+
+		{
+			"when": {"facing": "west", "shape": "top", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_normal",
+				"y": 90
+			}
+		},
+		{
+			"when": {"facing": "west", "shape": "bottom", "gangway": "true", "powered": "false"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_normal",
+				"y": 90
+			}
+		},
+
+		{
+			"when": {"facing": "south", "shape": "top", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_powered",
+				"y": 0
+			}
+		},
+		{
+			"when": {"facing": "south", "shape": "bottom", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_powered",
+				"y": 0
+			}
+		},
+
+		{
+			"when": {"facing": "north", "shape": "top", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_powered",
+				"y": 180
+			}
+		},
+		{
+			"when": {"facing": "north", "shape": "bottom", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_powered",
+				"y": 180
+			}
+		},
+
+		{
+			"when": {"facing": "east", "shape": "top", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_powered",
+				"y": -90
+			}
+		},
+		{
+			"when": {"facing": "east", "shape": "bottom", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_powered",
+				"y": -90
+			}
+		},
+
+		{
+			"when": {"facing": "west", "shape": "top", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/d_powered",
+				"y": 90
+			}
+		},
+		{
+			"when": {"facing": "west", "shape": "bottom", "gangway": "true", "powered": "true"},
+			"apply": {
+				"model": "simurail:block/gangway_frame/u_powered",
+				"y": 90
+			}
+		}
+	]
+}

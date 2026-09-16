@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"count": 1,
+		"id": "simurail:copycat_panel_automatic_coupler"
+	},
+	"ingredients": [
+		{"item": "create:copycat_panel"},
+		{"item": "simurail:automatic_coupler"}
+	]
+}

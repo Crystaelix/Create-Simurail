@@ -2,6 +2,7 @@ package com.crystaelix.simurail.content;
 
 import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerGangwayOptionsPacket;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerGangwayOptionsPacket;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyCurvePlacementPacket;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyOptionsPacket;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderDataPacket;
@@ -22,6 +23,7 @@ public class SimurailPackets {
 		INSTANCE.registerServerbound(PhysicsBogeyOptionsPacket.TYPE, PhysicsBogeyOptionsPacket.CODEC, PhysicsBogeyOptionsPacket::handle);
 		INSTANCE.registerServerbound(PhysicsBogeyCurvePlacementPacket.TYPE, PhysicsBogeyCurvePlacementPacket.CODEC, PhysicsBogeyCurvePlacementPacket::handle);
 		INSTANCE.registerServerbound(AutomaticCouplerGangwayOptionsPacket.TYPE, AutomaticCouplerGangwayOptionsPacket.CODEC, AutomaticCouplerGangwayOptionsPacket::handle);
+		INSTANCE.registerServerbound(CopycatAutomaticCouplerGangwayOptionsPacket.TYPE, CopycatAutomaticCouplerGangwayOptionsPacket.CODEC, CopycatAutomaticCouplerGangwayOptionsPacket::handle);
 		INSTANCE.registerServerbound(GangwayFrameOptionsPacket.TYPE, GangwayFrameOptionsPacket.CODEC, GangwayFrameOptionsPacket::handle);
 		INSTANCE.registerServerbound(ConnectorConnectPacket.TYPE, ConnectorConnectPacket.CODEC, ConnectorConnectPacket::handle);
 		INSTANCE.registerServerbound(ProbeReaderOptionsPacket.TYPE, ProbeReaderOptionsPacket.CODEC, ProbeReaderOptionsPacket::handle);

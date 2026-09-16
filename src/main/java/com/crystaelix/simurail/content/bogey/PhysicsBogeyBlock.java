@@ -46,7 +46,10 @@ public class PhysicsBogeyBlock extends HorizontalKineticBlock implements IBE<Phy
 
 	public PhysicsBogeyBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(INVERTED, false).setValue(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().
+				setValue(HORIZONTAL_FACING, Direction.EAST).
+				setValue(INVERTED, false).
+				setValue(WATERLOGGED, false));
 	}
 
 	@Override

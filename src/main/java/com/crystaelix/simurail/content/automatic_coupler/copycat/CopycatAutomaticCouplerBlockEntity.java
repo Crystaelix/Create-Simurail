@@ -1,0 +1,922 @@
+package com.crystaelix.simurail.content.automatic_coupler.copycat;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import org.joml.Quaterniond;
+import org.joml.Vector3d;
+
+import com.crystaelix.simurail.api.coupler.CouplerType;
+import com.crystaelix.simurail.api.coupler.CouplerTypeRegistry;
+import com.crystaelix.simurail.api.math.SimurailMath;
+import com.crystaelix.simurail.api.physics.SimurailJoints;
+import com.crystaelix.simurail.api.util.SchematicContextUtil;
+import com.crystaelix.simurail.api.util.SubLevelUtil;
+import com.crystaelix.simurail.config.SimurailConfig;
+import com.crystaelix.simurail.config.SimurailPhysicsConfig;
+import com.crystaelix.simurail.content.SimurailBlocks;
+import com.crystaelix.simurail.content.SimurailCouplers;
+import com.crystaelix.simurail.content.SimurailSoundEvents;
+import com.crystaelix.simurail.content.automatic_coupler.AutomaticCoupler;
+import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
+import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
+import com.crystaelix.simurail.content.connector.ConnectorConnectable;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
+import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
+
+import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
+import dev.ryanhcode.sable.api.physics.constraint.ConstraintJointAxis;
+import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration;
+import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
+import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
+import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.companion.math.Pose3d;
+import dev.ryanhcode.sable.companion.math.Pose3dc;
+import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import dev.ryanhcode.sable.sublevel.SubLevel;
+import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
+import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.data.Pair;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+//Copycat version of AutomaticCouplerBlockEntity
+public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity implements MenuProvider, BlockEntitySubLevelActor, AutomaticCoupler, GangwayFrame, ClipboardCloneable {
+
+	protected boolean initialized = false;
+
+	protected int couplerLengthMode = 0; // 0=LONG, 1=SHORT, 2=EXTRA_LONG
+	protected CouplerType type = SimurailCouplers.KNUCKLE;
+	protected int color = DyeColor.GRAY.getFireworkColor();
+
+	protected BlockPos partnerPos;
+	protected UUID partnerSubLevelID;
+	protected BlockPos connectedPos;
+	protected boolean connectedFront;
+
+	protected double lastJointLength = 0;
+	protected GenericConstraintHandle joint;
+
+	protected BlockPos gangwayPartnerPos;
+	protected UUID gangwayPartnerSubLevelID;
+
+	public float gangwayRestLength = 0;
+	public int gangwayColor = DyeColor.GRAY.getFireworkColor();
+
+	protected Pose3d gangwayEndPose = new Pose3d();
+	protected boolean hasGangwayPartner = false;
+	public int gangwayTimer;
+
+	protected VoxelShape collisionShape = Shapes.empty();
+
+	public CopycatAutomaticCouplerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+	}
+
+	@Override
+	public Component getDisplayName() {
+		return SimurailBlocks.AUTOMATIC_COUPLER.get().getName();
+	}
+
+	public void cycleLength() {
+		if(partnerPos == null) {
+			couplerLengthMode = (couplerLengthMode + 1) % 3;
+		}
+		else if(couplerLengthMode != 2) {
+			couplerLengthMode = (couplerLengthMode + 1) % 2;
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+			if(partnerPos != null && Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
+				SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(subLevel.getLevel());
+				physics.getPipeline().wakeUp(subLevel);
+			}
+		}
+	}
+
+	public void cycleType() {
+		type = CouplerTypeRegistry.next(type);
+		if(type == null) {
+			type = SimurailCouplers.KNUCKLE;
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+		if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+			partner.setCouplerType(type);
+		}
+	}
+
+	@Override
+	public Direction getFacing() {
+		return getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+	}
+
+	@Override
+	public GangwayFrameBlockShape getGangwayShape() {
+		BlockState state = getBlockState();
+		return ((CopycatAutomaticCouplerBlock)getBlockState().getBlock()).getGangwayShape(state, level, getBlockPos());
+	}
+
+	@Override
+	public Vector3d getGangwayCenter(Vector3d dest) {
+		BlockPos pos = getBlockPos();
+		return getGangwayShape().center(getFacing(), dest).add(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	@Override
+	public boolean isPowered() {
+		return getBlockState().getValue(BlockStateProperties.POWERED);
+	}
+
+	@Override
+	public boolean isGangwayPowered() {
+		return isPowered() || GangwayFrame.getNeighbors(this, level, 15).stream().anyMatch(GangwayFrame::isPowered);
+	}
+
+	@Override
+	public void setCouplerPartner(BlockPos couplerPartnerPos) {
+		if(level.getBlockEntity(couplerPartnerPos) instanceof AutomaticCoupler partner) {
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, partner.getBlockPos());
+			if(partnerPos != null) {
+				removeCouplerPartner();
+			}
+			partnerPos = couplerPartnerPos;
+			partnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
+			partner.setCouplerPartnerReverse(getBlockPos());
+			if(!level.isClientSide()) {
+				setChanged();
+				sendData();
+
+				Vec3 globalSelfPos = Sable.HELPER.projectOutOfSubLevel(level, getBlockPos().getCenter());
+				Vec3 globalPartnerPos = Sable.HELPER.projectOutOfSubLevel(level, couplerPartnerPos.getCenter());
+				double x = globalSelfPos.x / 2 + globalPartnerPos.x / 2;
+				double y = globalSelfPos.y / 2 + globalPartnerPos.y / 2;
+				double z = globalSelfPos.z / 2 + globalPartnerPos.z / 2;
+
+				level.playSound(null, x, y, z, SimurailSoundEvents.COUPLER_CONNECT.get(), SoundSource.BLOCKS, 1F, 1F);
+			}
+		}
+	}
+
+	@Override
+	public void setCouplerPartnerReverse(BlockPos couplerPartnerPos) {
+		partnerPos = couplerPartnerPos;
+		if(couplerPartnerPos != null) {
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, couplerPartnerPos);
+			partnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
+		}
+		else {
+			partnerSubLevelID = null;
+			if(connectedPos != null && level.getBlockEntity(connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
+				bogey.disconnect(connectedFront);
+			}
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}		
+	}
+
+	@Override
+	public void removeCouplerPartner() {
+		if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+			partner.setCouplerPartnerReverse(null);
+			if(!level.isClientSide()) {
+				partner.removeCouplerJoint();
+
+				Vec3 globalSelfPos = Sable.HELPER.projectOutOfSubLevel(level, getBlockPos().getCenter());
+				Vec3 globalPartnerPos = Sable.HELPER.projectOutOfSubLevel(level, partnerPos.getCenter());
+				double x = globalSelfPos.x / 2 + globalPartnerPos.x / 2;
+				double y = globalSelfPos.y / 2 + globalPartnerPos.y / 2;
+				double z = globalSelfPos.z / 2 + globalPartnerPos.z / 2;
+
+				level.playSound(null, x, y, z, SimurailSoundEvents.COUPLER_DISCONNECT.get(), SoundSource.BLOCKS, 1F, 1F);
+			}
+		}
+		partnerPos = null;
+		partnerSubLevelID = null;
+		if(!level.isClientSide()) {
+			if(connectedPos != null && level.getBlockEntity(connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
+				bogey.disconnect(connectedFront);
+			}
+			removeCouplerJoint();
+			setChanged();
+			sendData();
+		}
+	}
+
+	@Override
+	public boolean hasCouplerPartner() {
+		return partnerPos != null;
+	}
+
+	public BlockPos getPartner() {
+		return partnerPos;
+	}
+
+	public boolean isPrimary() {
+		return partnerPos != null && joint != null;
+	}
+
+	@Override
+	public boolean canConnectTo(Direction selfDir, ConnectorConnectable other, Direction otherDir) {
+		if(other instanceof PhysicsBogeyBlockEntity otherBogey) {
+			if(otherDir != getFacing() || Sable.HELPER.getContaining(this) != Sable.HELPER.getContaining(otherBogey)) {
+				return false;
+			}
+			Vec3i normal = getFacing().getNormal();
+			Vec3i delta = getBlockPos().subtract(other.getBlockPos());
+			if(normal.getX() * delta.getX() + normal.getZ() * delta.getZ() <= 0) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public double connectionRange(ConnectorConnectable other) {
+		if(other instanceof PhysicsBogeyBlockEntity) {
+			return SimurailConfig.server().blocks.connectionCouplerRange.get();
+		}
+		return 0;
+	}
+
+	@Override
+	public void connect(boolean front, ConnectorConnectable other, boolean otherFront) {
+		if(other instanceof PhysicsBogeyBlockEntity bogey) {
+			connectedPos = bogey.getBlockPos();
+			connectedFront = otherFront;
+		}
+	}
+
+	@Override
+	public void disconnect(boolean front) {
+		connectedPos = null;
+		setChanged();
+	}
+
+	@Override
+	public void setGangwayPartner(BlockPos gangwayPartnerPos) {
+		if(gangwayPartnerPos.equals(this.gangwayPartnerPos)) {
+			return;
+		}
+		if(level.getBlockEntity(gangwayPartnerPos) instanceof GangwayFrame partner &&
+				getGangwayShape().connectsTo() == partner.getGangwayShape()) {
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, gangwayPartnerPos);
+			if(this.gangwayPartnerPos != null) {
+				removeGangwayPartner();
+			}
+			this.gangwayPartnerPos = gangwayPartnerPos;
+			gangwayPartnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
+			partner.setGangwayPartnerReverse(getBlockPos());
+			if(!level.isClientSide()) {
+				setChanged();
+				sendData();
+				level.playSound(null, getBlockPos(), SimurailSoundEvents.GANGWAY_FRAME_CONNECT.get(), SoundSource.BLOCKS, 0.25F, 1F);
+				level.playSound(null, gangwayPartnerPos, SimurailSoundEvents.GANGWAY_FRAME_CONNECT.get(), SoundSource.BLOCKS, 0.25F, 1F);
+			}
+		}
+	}
+
+	@Override
+	public void setGangwayPartnerReverse(BlockPos gangwayPartnerPos) {
+		this.gangwayPartnerPos = gangwayPartnerPos;
+		if(gangwayPartnerPos != null) {
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, gangwayPartnerPos);
+			gangwayPartnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
+		}
+		else {
+			gangwayPartnerSubLevelID = null;
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+	}
+
+	@Override
+	public void removeGangwayPartner() {
+		if(gangwayPartnerPos == null) {
+			return;
+		}
+		if(gangwayPartnerPos != null && level.getBlockEntity(gangwayPartnerPos) instanceof GangwayFrame partner) {
+			partner.setGangwayPartnerReverse(null);
+			if(!level.isClientSide()) {
+				level.playSound(null, gangwayPartnerPos, SimurailSoundEvents.GANGWAY_FRAME_DISCONNECT.get(), SoundSource.BLOCKS, 0.25F, 1F);
+			}
+		}
+		gangwayPartnerPos = null;
+		gangwayPartnerSubLevelID = null;
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+			level.playSound(null, getBlockPos(), SimurailSoundEvents.GANGWAY_FRAME_DISCONNECT.get(), SoundSource.BLOCKS, 0.25F, 1F);
+		}
+	}
+
+	@Override
+	public GangwayFrame getGangwayPartner() {
+		if(gangwayPartnerPos != null && level.getBlockEntity(gangwayPartnerPos) instanceof GangwayFrame partner) {
+			return partner;
+		}
+		return null;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+	}
+
+	public void setGangwayColor(int color) {
+		gangwayColor = color;
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+	}
+
+	public void afterMove() {
+		if(partnerPos != null) {
+			setCouplerPartner(partnerPos);
+		}
+	}
+
+	@Override
+	public CouplerType getCouplerType() {
+		return type;
+	}
+
+	@Override
+	public void setCouplerType(CouplerType type) {
+		this.type = type;
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+	}
+
+	@Override
+	public double getCouplerLength() {
+		return switch(couplerLengthMode) {
+		default -> AutomaticCouplerBlockEntity.LONG_LENGTH;
+		case 1 -> AutomaticCouplerBlockEntity.SHORT_LENGTH;
+		case 2 -> AutomaticCouplerBlockEntity.EXTRA_LONG_LENGTH;
+		} - 0.0625;
+	}
+
+	@Override
+	public BlockPos getConnectedBogeyPos() {
+		return connectedPos;
+	}
+
+	@Override
+	public boolean getConnectedBogeyFront() {
+		return connectedFront;
+	}
+
+	// Sometimes physicsTick happens before tick?
+	public void init() {
+		if(initialized) {
+			return;
+		}
+		initialized = true;
+		hasGangwayPartner = getGangwayPartner() != null;
+		collisionShape = getBlockState().getShape(level, gangwayPartnerPos);
+	}
+
+	@Override
+	public void tick() {
+		init();
+		super.tick();
+		GangwayFrame gangwayPartner = getGangwayPartner();
+		GangwayFrameBlockShape gangwayShape = getGangwayShape();
+		Direction facing = getFacing();
+		int shapeIndex = 0;
+
+		if(gangwayPartner != null != hasGangwayPartner) {
+			hasGangwayPartner = gangwayPartner != null;
+			gangwayTimer = 10 - gangwayTimer;
+		}
+
+		BlockPos selfPos = getBlockPos();
+		SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
+		Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.logicalPose();
+		if(gangwayPartner != null) {
+			BlockPos partnerPos = gangwayPartner.getBlockPos();
+			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, partnerPos);
+			Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.logicalPose();
+
+			gangwayPartner.getGangwayCenter(gangwayEndPose.position());
+			partnerPose.transformPosition(gangwayEndPose.position());
+			selfPose.transformPositionInverse(gangwayEndPose.position());
+			gangwayEndPose.position().sub(selfPos.getX(), selfPos.getY(), selfPos.getZ());
+
+			selfPose.orientation().conjugate(gangwayEndPose.orientation());
+			gangwayEndPose.orientation().mul(partnerPose.orientation());
+			gangwayEndPose.orientation().mul(gangwayPartner.getOrientation()).rotateY(Math.PI);
+
+			gangwayShape.center(facing, gangwayCenterOffset);
+
+			double x = gangwayEndPose.position().x - gangwayCenterOffset.x;
+			double y = gangwayEndPose.position().y - gangwayCenterOffset.y;
+			double z = gangwayEndPose.position().z - gangwayCenterOffset.z;
+			double length = getDirection().dot(x, y, z) * 0.5625;
+
+			shapeIndex = Math.clamp((int)Math.round(length * 16) - 1, 0, 29);
+		}
+		else {
+			shapeIndex = Math.clamp((int)Math.round(gangwayRestLength * 16) - 1, 0, 29);
+		}
+		BlockState state = getBlockState();
+		collisionShape = ((CopycatAutomaticCouplerBlock)state.getBlock()).getCollisionShape(state, level, selfPos, shapeIndex);
+		if(gangwayTimer > 0) {
+			gangwayTimer--;
+		}
+	}
+
+	@Override
+	public void lazyTick() {
+		if(!level.isClientSide()) {
+			if(connectedPos != null) {
+				SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
+				SubLevel otherSubLevel = Sable.HELPER.getContaining(level, connectedPos);
+				BlockEntity be = level.getBlockEntity(connectedPos);
+				if(selfSubLevel != otherSubLevel) {
+					disconnect(false);
+				}
+				else if(be instanceof PhysicsBogeyBlockEntity bogey) {
+					if(partnerPos != null && level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+						if(partner.getConnectedBogeyPos() != null && level.getBlockEntity(partner.getConnectedBogeyPos()) instanceof PhysicsBogeyBlockEntity otherBogey) {
+							bogey.connect(connectedFront, otherBogey, partner.getConnectedBogeyFront());
+						}
+					}
+				}
+				else {
+					disconnect(false);
+				}
+			}
+			if(partnerPos != null && !(level.getBlockEntity(partnerPos) instanceof AutomaticCoupler)) {
+				removeCouplerPartner();
+			}
+			double maxDist = 6;
+			if(gangwayPartnerPos != null) {
+				if(level.getBlockEntity(gangwayPartnerPos) instanceof GangwayFrame partner) {
+					SubLevel selfSubLevel = Sable.HELPER.getContaining(this);
+					SubLevel otherSubLevel = Sable.HELPER.getContaining(level, gangwayPartnerPos);
+					if(selfSubLevel != otherSubLevel && Sable.HELPER.distanceSquaredWithSubLevels(level, getBlockPos().getCenter(), gangwayPartnerPos.getCenter()) > Mth.square(maxDist)) {
+						removeGangwayPartner();
+					}
+					else if(partner.getGangwayPartner() != this) {
+						removeGangwayPartner();
+					}
+				}
+				else {
+					removeGangwayPartner();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void sable$physicsTick(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+		init();
+
+		getCouplerEndPos(endPos);
+		subLevel.logicalPose().transformPosition(endPos, globalEndPos);
+
+		if(!isPowered() && partnerPos == null) {
+			removeCouplerJoint();
+			findPartner(subLevel);
+		}
+		if(partnerPos != null) {
+			if(level.getBlockEntity(partnerPos) instanceof AutomaticCoupler partner) {
+				ServerSubLevel partnerSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, partner.getBlockPos());
+				if(partnerSubLevel == subLevel ||
+						isPowered() || partner.isPowered() ||
+						!type.canConnectTo(partner.getCouplerType())) {
+					removeCouplerPartner();
+					removeCouplerJoint();
+				}
+				else {
+					if(this.joint != null && partner.hasCouplerJoint()) {
+						partner.removeCouplerJoint();
+					}
+					if(!partner.hasCouplerJoint()) {
+						SimurailPhysicsConfig config = SimurailConfig.server().physics;
+
+						Pose3dc selfPose = subLevel.logicalPose();
+						Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.logicalPose();
+
+						this.updateCouplerJointPos(partner, partnerPose);
+						partner.updateCouplerJointPos(this, selfPose);
+
+						double selfScale = this.getFacing().getAxis() != Direction.Axis.Z ? selfPose.scale().x() : selfPose.scale().z();
+						double partnerScale = partner.getFacing().getAxis() != Direction.Axis.Z ? partnerPose.scale().x() : partnerPose.scale().z();
+						double jointLength = this.getCouplerLength() + partner.getCouplerLength() * partnerScale / selfScale;
+
+						if(localJointPos.distanceSquared(localPartnerJointPos) > Mth.square(jointLength + 1)) {
+							removeCouplerPartner();
+							removeCouplerJoint();
+							return;
+						}
+
+						this.getCouplerJointRot(jointRot);
+						partner.getCouplerJointRot(partnerJointRot);
+
+						double frequency = config.couplerSpringFrequency.get();
+						double dampingRate = config.couplerSpringDampingRate.get();
+						double stiffness = frequency * frequency;
+						double damping = frequency * dampingRate * 2;
+
+						SubLevelPhysicsSystem physics = SubLevelPhysicsSystem.require(level);
+						if(joint == null || !joint.isValid()) {
+							removeCouplerJoint();
+							double linearDamping = config.couplerPassiveLinearDamping.get();
+							double angularDamping = config.couplerPassiveAngularDamping.get();
+							GenericConstraintConfiguration jointConfig = SimurailJoints.freeJoint(
+									localJointPos, partnerJointPos,
+									jointRot, partnerJointRot);
+							joint = physics.getPipeline().addConstraint(subLevel, partnerSubLevel, jointConfig);
+							joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5 / selfScale, jointLength + 0.5 / selfScale);
+							joint.setMotor(ConstraintJointAxis.LINEAR_X, jointLength, stiffness, damping, false, 0);
+							joint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, linearDamping, false, 0);
+							joint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, linearDamping, false, 0);
+							joint.setMotor(ConstraintJointAxis.ANGULAR_X, 0, 0, angularDamping, false, 0);
+							joint.setMotor(ConstraintJointAxis.ANGULAR_Y, 0, 0, angularDamping, false, 0);
+							joint.setMotor(ConstraintJointAxis.ANGULAR_Z, 0, 0, angularDamping, false, 0);
+						}
+						else {
+							joint.setFrame1(localJointPos, jointRot);
+							joint.setFrame2(partnerJointPos, partnerJointRot);
+							if(jointLength != lastJointLength) {
+								joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5 / selfScale, jointLength + 0.5 / selfScale);
+								joint.setMotor(ConstraintJointAxis.LINEAR_X, jointLength, stiffness, damping, false, 0);
+								physics.getPipeline().wakeUp(subLevel);
+							}
+						}
+						lastJointLength = jointLength;
+					}
+				}
+			}
+			else {
+				removeCouplerPartner();
+				removeCouplerJoint();
+			}
+		}
+		else {
+			removeCouplerJoint();
+		}
+	}
+
+	@Override
+	public void updateCouplerJointPos(AutomaticCoupler partner, Pose3dc partnerPose) {
+		SubLevel subLevel = Sable.HELPER.getContaining(this);
+		Pose3dc selfPose = subLevel == null ? SimurailMath.POSE_I : subLevel.logicalPose();
+		this.getCouplerJointPos(localJointPos);
+		partner.getCouplerJointPos(partnerJointPos);
+		selfPose.transformPositionInverse(partnerPose.transformPosition(partnerJointPos, localPartnerJointPos));
+		localPartnerJointPos.sub(localJointPos, jointDir);
+	}
+
+	@Override
+	public Quaterniond getCouplerJointRot(Quaterniond dest) {
+		return SimurailMath.rot(jointDir, dest);
+	}
+
+	protected void findPartner(ServerSubLevel subLevel) {
+		double minDistSq = Double.POSITIVE_INFINITY;
+		BlockPos pos = null;
+
+		MutableBlockPos checkPos = new MutableBlockPos();
+		Vector3d checkSelfEndPos = new Vector3d();
+		Vector3d checkEndPos = new Vector3d();
+
+		for(SubLevel checkSubLevel : SubLevelUtil.getIntersectingSubLevels(level, globalEndPos, 2)) {
+			if(subLevel == checkSubLevel) {
+				continue;
+			}
+			Pose3dc checkPose = checkSubLevel == null ? SimurailMath.POSE_I : checkSubLevel.logicalPose();
+			checkPose.transformPositionInverse(globalEndPos, checkSelfEndPos);
+			for(int x = Mth.floor(checkSelfEndPos.x) - 2; x < Mth.ceil(checkSelfEndPos.x) + 2; ++x) {
+				for(int y = Mth.floor(checkSelfEndPos.y) - 2; y < Mth.ceil(checkSelfEndPos.y) + 2; ++y) {
+					for(int z = Mth.floor(checkSelfEndPos.z) - 2; z < Mth.ceil(checkSelfEndPos.z) + 2; ++z) {
+						checkPos.set(x, y, z);
+						if(level.getBlockEntity(checkPos) instanceof AutomaticCoupler checkPartner &&
+								!checkPartner.hasCouplerPartner() &&
+								!checkPartner.isPowered() &&
+								type.canConnectTo(checkPartner.getCouplerType())) {
+							double distSq = checkPartner.getCouplerEndPos(checkEndPos).distanceSquared(checkSelfEndPos);
+							if(distSq < 0.02 && distSq < minDistSq) {
+								minDistSq = distSq;
+								pos = checkPos.immutable();
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if(pos != null) {
+			setCouplerPartner(pos);
+			tryConnectGangway();
+		}
+	}
+
+	@Override
+	public boolean hasCouplerJoint() {
+		return joint != null;
+	}
+
+	@Override
+	public void removeCouplerJoint() {
+		if(joint != null) {
+			joint.remove();
+			joint = null;
+			lastJointLength = 0;
+		}
+	}
+
+	public void tryConnectGangway() {
+		if(getGangwayShape() == GangwayFrameBlockShape.NONE || isGangwayPowered()) {
+			return;
+		}
+		GangwayFrame partner = GangwayFrame.findGangwayPartner(this, level);
+		if(partner == null) {
+			return;
+		}
+		setGangwayPartner(partner.getBlockPos());
+		Set<GangwayFrame> visited = new HashSet<>();
+		Couple<GangwayFrame> selfCouple = Couple.create(this, this);
+		Couple<GangwayFrame> partnerCouple = Couple.create(partner, partner);
+		for(int i = 0; i < 15; ++i) {
+			for(boolean cw : Iterate.trueAndFalse) {
+				if(selfCouple.get(cw) != null) {
+					GangwayFrame cSelf = selfCouple.get(cw);
+					GangwayFrame cPartner = partnerCouple.get(cw);
+					GangwayFrameShape selfShape = cSelf.getGangwayShape();
+					GangwayFrameShape partnerShape = cPartner.getGangwayShape();
+					Direction selfOffset = selfShape.adjacentOffset(cSelf.getFacing(), cw);
+					Direction partnerOffset = partnerShape.adjacentOffset(cPartner.getFacing(), !cw);
+					BlockPos selfPos = cSelf.getBlockPos().relative(selfOffset);
+					BlockPos partnerPos = cPartner.getBlockPos().relative(partnerOffset);
+					if(level.getBlockEntity(selfPos) instanceof GangwayFrame selfNeighbor &&
+							!visited.contains(selfNeighbor) &&
+							cSelf.getFacing() == selfNeighbor.getFacing()) {
+						GangwayFrameShape neighborShape = selfNeighbor.getGangwayShape();
+						int selfAdj = selfShape.adjacentTo(neighborShape, cw);
+						int neighborAdj = neighborShape.adjacentTo(selfShape, !cw);
+						if((selfAdj != 0 || neighborAdj != 0) &&
+								level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
+								cPartner.getFacing() == partnerNeighbor.getFacing() &&
+								neighborShape.connectsTo().equals(partnerNeighbor.getGangwayShape())) {
+							visited.add(selfNeighbor);
+							selfCouple.set(cw, selfNeighbor);
+							partnerCouple.set(cw, partnerNeighbor);
+							selfNeighbor.setGangwayPartner(partnerPos);
+							if(selfAdj < 0 || neighborAdj < 0) {
+								cw = !cw;
+							}
+							continue;
+						}
+					}
+					selfCouple.set(cw, null);
+					partnerCouple.set(cw, null);
+				}
+			}
+		}
+	}
+
+	public void tryDisconnectGangway() {
+		removeGangwayPartner();
+		if(getGangwayShape() == GangwayFrameBlockShape.NONE) {
+			return;
+		}
+		GangwayFrame.getNeighbors(this, level, 15).forEach(GangwayFrame::removeGangwayPartner);
+	}
+
+	@Override
+	public Iterable<SubLevel> sable$getConnectionDependencies() {
+		if(partnerSubLevelID != null) {
+			SubLevel subLevel = SubLevelContainer.getContainer(level).getSubLevel(partnerSubLevelID);
+			if(subLevel != null) {
+				return List.of(subLevel);
+			}
+		}
+		return List.of();
+	}
+
+	@Override
+	protected AABB createRenderBoundingBox() {
+		return super.createRenderBoundingBox().inflate(4);
+	}
+
+	@Override
+	public CopycatAutomaticCouplerMenu createMenu(int windowId, Inventory inv, Player player) {
+		return new CopycatAutomaticCouplerMenu(windowId, this);
+	}
+
+	@Override
+	public void setBlockState(BlockState blockState) {
+		GangwayFrameBlockShape oldShape = getGangwayShape();
+		super.setBlockState(blockState);
+		GangwayFrameBlockShape newShape = getGangwayShape();
+		if(newShape != oldShape) {
+			removeGangwayPartner();
+		}
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if(!level.isClientSide()) {
+			removeCouplerJoint();
+		}
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return "gangway_frame";
+	}
+
+	@Override
+	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.putBoolean("coupler", true);
+		tag.putInt("coupler_length_mode", couplerLengthMode);
+		tag.putString("coupler_type", type.id().toString());
+		tag.putInt("coupler_color", color);
+		if(getGangwayShape() != GangwayFrameBlockShape.NONE) {
+			tag.putBoolean("gangway", true);
+			tag.putDouble("gangway_rest_length", gangwayRestLength);
+			tag.putInt("gangway_color", gangwayColor);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		boolean hasGangway = getGangwayShape() != GangwayFrameBlockShape.NONE;
+		if(!tag.getBoolean("coupler") && (!hasGangway || !tag.getBoolean("gangway"))) {
+			return false;
+		}
+		if(simulate) {
+			return true;
+		}
+		if(tag.contains("coupler_length_mode")) {
+			couplerLengthMode = tag.getInt("coupler_length_mode");
+		}
+		if(tag.contains("coupler_type")) {
+			type = CouplerTypeRegistry.get(ResourceLocation.tryParse(tag.getString("coupler_type")));
+			if(type == null) {
+				type = SimurailCouplers.KNUCKLE;
+			}
+		}
+		if(tag.contains("coupler_color")) {
+			color = tag.getInt("coupler_color");
+		}
+		if(hasGangway) {
+			if(tag.contains("gangway_rest_length")) {
+				gangwayRestLength = tag.getFloat("gangway_rest_length");
+			}
+			if(tag.contains("gangway_color")) {
+				gangwayColor = tag.getInt("gangway_color");
+			}
+		}
+		if(!level.isClientSide()) {
+			setChanged();
+			sendData();
+		}
+		return true;
+	}
+
+	@Override
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
+		tag.putInt("coupler_length_mode", couplerLengthMode);
+		tag.putString("type", type.id().toString());
+		tag.putInt("color", color);
+
+		tag.putDouble("gangway_rest_length", gangwayRestLength);
+		tag.putInt("gangway_color", gangwayColor);
+
+		if(connectedPos != null) {
+			tag.put("connected", NbtUtils.writeBlockPos(connectedPos));
+			tag.putBoolean("connected_front", connectedFront);
+		}
+
+		Pair<BlockPos, UUID> partner = SchematicContextUtil.writeTransform(partnerPos, partnerSubLevelID);
+
+		if(partner.getFirst() != null) {
+			tag.put("partner", NbtUtils.writeBlockPos(partner.getFirst()));
+			if(partner.getSecond() != null) {
+				tag.putUUID("partner_id", partner.getSecond());
+			}
+		}
+
+		Pair<BlockPos, UUID> gangwayPartner = SchematicContextUtil.writeTransform(gangwayPartnerPos, gangwayPartnerSubLevelID);
+
+		if(gangwayPartner.getFirst() != null) {
+			tag.put("gangway_partner", NbtUtils.writeBlockPos(gangwayPartner.getFirst()));
+			if(gangwayPartner.getSecond() != null) {
+				tag.putUUID("gangway_partner_id", gangwayPartner.getSecond());
+			}
+		}
+	}
+
+	@Override
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
+		super.writeSafe(tag, registries);
+		tag.putInt("coupler_length_mode", couplerLengthMode);
+		tag.putString("type", type.id().toString());
+		tag.putInt("color", color);
+
+		tag.putDouble("gangway_rest_length", gangwayRestLength);
+		tag.putInt("gangway_color", gangwayColor);
+	}
+
+	@Override
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
+
+		couplerLengthMode = tag.getInt("coupler_length_mode");
+		if(tag.contains("type")) {
+			type = CouplerTypeRegistry.get(ResourceLocation.tryParse(tag.getString("type")));
+			if(type == null) {
+				type = SimurailCouplers.KNUCKLE;
+			}
+		}
+		if(tag.contains("color")) {
+			color = tag.getInt("color");
+		}
+
+		gangwayRestLength = tag.getFloat("gangway_rest_length");
+		if(tag.contains("gangway_color")) {
+			gangwayColor = tag.getInt("gangway_color");
+		}
+
+		connectedPos = NbtUtils.readBlockPos(tag, "connected").orElse(null);
+		connectedFront = tag.getBoolean("connected_front");
+
+		Pair<BlockPos, UUID> partner = SchematicContextUtil.readTransform(
+				NbtUtils.readBlockPos(tag, "partner").orElse(null),
+				tag.hasUUID("partner_id") ? tag.getUUID("partner_id") : null);
+
+		partnerPos = partner.getFirst();
+		partnerSubLevelID = partner.getSecond();
+
+		Pair<BlockPos, UUID> gangwayPartner = SchematicContextUtil.readTransform(
+				NbtUtils.readBlockPos(tag, "gangway_partner").orElse(null),
+				tag.hasUUID("gangway_partner_id") ? tag.getUUID("gangway_partner_id") : null);
+
+		gangwayPartnerPos = gangwayPartner.getFirst();
+		gangwayPartnerSubLevelID = gangwayPartner.getSecond();
+	}
+
+	// Mutable physics fields
+	protected final Vector3d endPos = new Vector3d();
+	protected final Vector3d globalEndPos = new Vector3d();
+
+	protected final Vector3d localJointPos = new Vector3d();
+	protected final Vector3d partnerJointPos = new Vector3d();
+	protected final Vector3d localPartnerJointPos = new Vector3d();
+	protected final Vector3d jointDir = new Vector3d();
+
+	protected final Quaterniond jointRot = new Quaterniond();
+	protected final Quaterniond partnerJointRot = new Quaterniond();
+
+	protected final Vector3d gangwayCenterOffset = new Vector3d();
+}

@@ -20,6 +20,7 @@ public enum SimurailGuiTextures implements ScreenElement, TextureSheetSegment {
 	PHYSICS_BOGEY_MENU_OPTION_TEXT_VALUE("physics_bogey_menu", 303, 76, 104, 20, 512, 256),
 
 	GANGWAY_FRAME("gangway_frame", 0, 0, 188, 101),
+	GANGWAY_FRAME_NO_SHAPE("gangway_frame_no_shape", 0, 0, 188, 79),
 
 	PROBE_READER("probe_reader", 0, 0, 188, 123),
 	

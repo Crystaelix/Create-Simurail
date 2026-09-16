@@ -36,6 +36,9 @@ jobs:
       - name: Setup Permissions
         run: chmod +x ./gradlew
 
+      - name: Check Dependencies
+        run: ./gradlew dependencies
+
       - name: Build
         run: |
           if [ "${{ inputs.publish }}" = "true" ]; then

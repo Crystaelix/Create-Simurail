@@ -4,6 +4,9 @@ import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerRenderer;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerVisual;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlockEntity;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerRenderer;
+import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerVisual;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyPivotBlockEntity;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderer;
@@ -39,6 +42,12 @@ public class SimurailBlockEntities {
 			visual(() -> AutomaticCouplerVisual::new).
 			renderer(() -> AutomaticCouplerRenderer::new).
 			validBlocks(SimurailBlocks.AUTOMATIC_COUPLER).
+			register();
+	public static final BlockEntityEntry<CopycatAutomaticCouplerBlockEntity> COPYCAT_COUPLER = REGISTRATE.
+			blockEntity("copycat_coupler", CopycatAutomaticCouplerBlockEntity::new).
+			visual(() -> CopycatAutomaticCouplerVisual::new).
+			renderer(() -> CopycatAutomaticCouplerRenderer::new).
+			validBlocks(SimurailBlocks.COPYCAT_PANEL_AUTOMATIC_COUPLER).
 			register();
 	public static final BlockEntityEntry<GangwayFrameBlockEntity> GANGWAY_FRAME = REGISTRATE.
 			blockEntity("gangway_frame", GangwayFrameBlockEntity::new).

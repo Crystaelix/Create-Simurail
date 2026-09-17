@@ -5,7 +5,7 @@ import com.crystaelix.simurail.compat.SimurailCompat;
 public class SimurailPhysicsConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
-	public final ConfigBool bogeyPivotBox = b(canUseBoxPivot(), "pivotBox", Comments.bogeyPivotBox);
+	public final ConfigBool bogeyPivotCompatibilityMode = b(defaultPivotCompatibilityMode(), "pivotCompatibilityMode", Comments.bogeyPivotCompatibilityMode);
 	public final ConfigFloat bogeyPivotMass = f(1, 0, Float.MAX_VALUE, "pivotMass", Units.mass, Comments.bogeyPivotMass);
 
 	public final ConfigGroup bogeyVertical = group(2, "vertical", "Vertical Movement");
@@ -61,12 +61,12 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 		return "physics";
 	}
 
-	public boolean canUseBoxPivot() {
-		return !SimurailCompat.POCKET.isLoaded();
+	public boolean defaultPivotCompatibilityMode() {
+		return SimurailCompat.POCKET.isLoaded();
 	}
 
 	static class Comments {
-		static String bogeyPivotBox = "Use box objects for the pivot of the Physics Bogie. Set to false to use sublevels instead.";
+		static String bogeyPivotCompatibilityMode = "Use sublevels instead of box objects for the pivot of the Physics Bogie.";
 		static String bogeyPivotMass = "The mass of the pivot of the Physics Bogie when using box objects.";
 		static String bogeyVerticalSpringFrequency = "Vertical spring frequency between the Physics Bogie and its pivot when vertical offset is allowed.";
 		static String bogeyVerticalSpringDampingRate = "Vertical spring damping rate between the Physics Bogie and its pivot when vertical offset is allowed.";

@@ -557,7 +557,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected void createPivot(ServerSubLevel subLevel) {
 		SimurailPhysicsConfig config = SimurailConfig.server().physics;
 		if(pivot == null) {
-			if(config.bogeyPivotBox.get()) {
+			if(!config.bogeyPivotCompatibilityMode.get()) {
 				pivot = new BoxAuxiliaryPhysicsBody(subLevel.getLevel(), getBlockPos(), new Vector3d(0.5, 0.125, 0.125), config.bogeyPivotMass.get());
 			}
 			else {

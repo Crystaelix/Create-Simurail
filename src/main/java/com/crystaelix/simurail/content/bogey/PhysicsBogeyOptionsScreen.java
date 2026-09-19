@@ -24,6 +24,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	public static final SimurailGuiTextures BACKGROUND = SimurailGuiTextures.PHYSICS_BOGEY_OPTIONS;
 
 	public static final Component PHYSICS_TITLE = Component.translatable("gui.simurail.physics_bogey.physics");
+	public static final Component PRESET_TITLE = Component.translatable("gui.simurail.physics_bogey.preset");
 	public static final Component ROTATION_TITLE = Component.translatable("gui.simurail.physics_bogey.rotation");
 	public static final Component OFFSET_TITLE = Component.translatable("gui.simurail.physics_bogey.offset");
 	public static final Component VERTICAL_TITLE = Component.translatable("gui.simurail.physics_bogey.vertical");
@@ -37,6 +38,11 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	public static final List<Component> PHYSICS_OPTIONS = List.of(
 			Component.translatable("gui.simurail.physics_bogey.physics.enabled"),
 			Component.translatable("gui.simurail.physics_bogey.physics.disabled"));
+	public static final List<Component> PRESET_OPTIONS = List.of(
+			Component.translatable("gui.simurail.physics_bogey.preset.custom"),
+			Component.translatable("gui.simurail.physics_bogey.preset.single"),
+			Component.translatable("gui.simurail.physics_bogey.preset.double"),
+			Component.translatable("gui.simurail.physics_bogey.preset.sliding"));
 	public static final List<Component> ROTATION_OPTIONS = List.of(
 			Component.translatable("gui.simurail.physics_bogey.rotation.disallow"),
 			Component.translatable("gui.simurail.physics_bogey.rotation.allow"),
@@ -88,6 +94,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	final boolean inverted;
 
 	private SLabel physicsLabel;
+	private SLabel presetLabel;
 	private SLabel rotationLabel;
 	private SLabel offsetLabel;
 	private SLabel verticalLabel;
@@ -99,6 +106,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	private SLabel connectorLabel;
 
 	private SelectionScrollInput physicsInput;
+	private SelectionScrollInput presetInput;
 	private SelectionScrollInput rotationInput;
 	private SelectionScrollInput offsetInput;
 	private SelectionScrollInput verticalInput;
@@ -131,6 +139,10 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		physicsLabel = new SLabel(x + 31, y + 20, 109, 18);
 		physicsLabel.withMargin(5);
 		physicsLabel.withShadow();
+
+		presetLabel = new SLabel(x + 171, y + 20, 109, 18);
+		presetLabel.withMargin(5);
+		presetLabel.withShadow();
 
 		rotationLabel = new SLabel(x + 31, y + 42, 109, 18);
 		rotationLabel.withMargin(5);
@@ -175,19 +187,36 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		physicsInput.setState(options.enabled ? 0 : 1);
 		physicsInput.calling(i -> options.enabled = i != 1);
 
+		presetInput = new SelectionScrollInput(x + 171, y + 20, 109, 18);
+		presetInput.forOptions(PRESET_OPTIONS);
+		presetInput.titled(PRESET_TITLE.plainCopy());
+		presetInput.writingTo(presetLabel);
+		presetInput.setState(options.getOffsetPreset());
+		presetInput.calling(i -> {
+			options.setOffsetPreset(i);
+			rotationInput.setState(options.getAngularType());
+			offsetInput.setState(options.getLinearType());
+		});
+
 		rotationInput = new SelectionScrollInput(x + 31, y + 42, 109, 18);
 		rotationInput.forOptions(ROTATION_OPTIONS);
 		rotationInput.titled(ROTATION_TITLE.plainCopy());
 		rotationInput.writingTo(rotationLabel);
 		rotationInput.setState(options.getAngularType());
-		rotationInput.calling(options::setAngularType);
+		rotationInput.calling(i -> {
+			options.setAngularType(i);
+			presetInput.setState(options.getOffsetPreset());
+		});
 
 		offsetInput = new SelectionScrollInput(x + 171, y + 42, 109, 18);
 		offsetInput.forOptions(OFFSET_OPTIONS);
 		offsetInput.titled(OFFSET_TITLE.plainCopy());
 		offsetInput.writingTo(offsetLabel);
 		offsetInput.setState(options.getLinearType());
-		offsetInput.calling(options::setLinearType);
+		offsetInput.calling(i -> {
+			options.setLinearType(i);
+			presetInput.setState(options.getOffsetPreset());
+		});
 
 		verticalInput = new SelectionScrollInput(x + 31, y + 64, 109, 18);
 		verticalInput.forOptions(menu.inverted ? VERTICAL_OPTIONS_INVERTED : VERTICAL_OPTIONS);
@@ -256,6 +285,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 
 		if(!menu.hasComputer) {
 			addRenderableWidget(physicsInput);
+			addRenderableWidget(presetInput);
 			addRenderableWidget(rotationInput);
 			addRenderableWidget(offsetInput);
 			if(!inverted) {
@@ -278,6 +308,9 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		else {
 			physicsLabel.withTooltip(List.of(
 					PHYSICS_TITLE.plainCopy().withColor(0x5391E1),
+					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
+			presetLabel.withTooltip(List.of(
+					PRESET_TITLE.plainCopy().withColor(0x5391E1),
 					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
 			rotationLabel.withTooltip(List.of(
 					ROTATION_TITLE.plainCopy().withColor(0x5391E1),
@@ -318,6 +351,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		addRenderableWidget(connectorInput);
 
 		addRenderableWidget(physicsLabel);
+		addRenderableWidget(presetLabel);
 		addRenderableWidget(rotationLabel);
 		addRenderableWidget(offsetLabel);
 		addRenderableWidget(verticalLabel);

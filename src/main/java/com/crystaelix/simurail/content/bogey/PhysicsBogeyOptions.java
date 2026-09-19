@@ -148,6 +148,39 @@ public class PhysicsBogeyOptions {
 		}
 		return this;
 	}
+	
+	public int getOffsetPreset() {
+		int angularType = getAngularType();
+		int linearType = getLinearType();
+		if(angularType == 0 && linearType == 0) {
+			return 1;
+		}
+		if(angularType == 1 && linearType == 0) {
+			return 2;
+		}
+		if(angularType == 1 && linearType == 1) {
+			return 3;
+		}
+		return 0;
+	}
+
+	public PhysicsBogeyOptions setOffsetPreset(int presetIndex) {
+		switch(presetIndex) {
+		case 1 -> {
+			setAngularType(0);
+			setLinearType(0);
+		}
+		case 2 -> {
+			setAngularType(1);
+			setLinearType(0);
+		}
+		case 3 -> {
+			setAngularType(1);
+			setLinearType(1);
+		}
+		}
+		return this;
+	}
 
 	public int getConnectorType() {
 		return renderFrontConnector ? renderBackConnector ? 0 : 2 : allowLateralOffset ? 3 : 1;

@@ -51,6 +51,11 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 	}
 
 	@Override
+	public int getViewDistance() {
+		return 256;
+	}
+
+	@Override
 	protected void renderSafe(AutomaticCouplerBlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
 		super.renderSafe(be, partialTick, poseStack, bufferSource, light, overlay);
 		Level level = be.getLevel();

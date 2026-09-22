@@ -12,10 +12,14 @@ public class SimurailCouplers {
 			Simurail.id("block/coupler/automatic/knuckle")),
 	SHIBATA = new CouplerType(
 			Simurail.id("shibata"),
-			Simurail.id("block/coupler/automatic/shibata"));
+			Simurail.id("block/coupler/automatic/shibata")),
+	SCHARFENBERG = new CouplerType(
+			Simurail.id("scharfenberg"),
+			Simurail.id("block/coupler/automatic/scharfenberg"));
 
 	public static void register() {
 		CouplerTypeRegistry.register(KNUCKLE);
 		CouplerTypeRegistry.register(SHIBATA);
+		CouplerTypeRegistry.register(SCHARFENBERG);
 	}
 }

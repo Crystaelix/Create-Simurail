@@ -5,64 +5,68 @@ import com.crystaelix.simurail.compat.SimurailCompat;
 public class SimurailPhysicsConfig extends SimurailBaseConfig {
 
 	public final ConfigGroup bogey = group(1, "bogey", "Physics Bogies");
-	public final ConfigBool bogeyPivotCompatibilityMode = b(defaultPivotCompatibilityMode(), "pivotCompatibilityMode", Comments.bogeyPivotCompatibilityMode);
-	public final ConfigFloat bogeyPivotMass = f(1, 0, Float.MAX_VALUE, "pivotMass", Units.mass, Comments.bogeyPivotMass);
+	public final ConfigBool bogeyPivotCompatibilityMode = b(requiresPivotCompatibilityMode(), "pivotCompatibilityMode", Comments.bogeyPivotCompatibilityMode);
+	public final ConfigFloat bogeyPivotMass = f(1, 0, Short.MAX_VALUE, "pivotMass", Units.mass, Comments.bogeyPivotMass);
 
 	public final ConfigGroup bogeyVertical = group(2, "vertical", "Vertical Movement");
-	public final ConfigFloat bogeyVerticalSpringFrequency = f(10, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyVerticalSpringFrequency);
-	public final ConfigFloat bogeyVerticalSpringDampingRate = f(1.25F, 0, Float.MAX_VALUE, "springDampingRate", Comments.bogeyVerticalSpringDampingRate);
-	public final ConfigFloat bogeyVerticalSpringMaxForce = f(10000, 0, Float.MAX_VALUE, "springMaxForce", Units.force, Comments.bogeyVerticalSpringMaxForce);
+	public final ConfigFloat bogeyVerticalSpringFrequency = f(10, 0, Short.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyVerticalSpringFrequency);
+	public final ConfigFloat bogeyVerticalSpringDampingRate = f(1.25F, 0, Short.MAX_VALUE, "springDampingRate", Comments.bogeyVerticalSpringDampingRate);
+	public final ConfigFloat bogeyVerticalSpringMaxForce = f(10000, 0, Short.MAX_VALUE, "springMaxForce", Units.force, Comments.bogeyVerticalSpringMaxForce);
 
 	public final ConfigGroup bogeyLateral = group(2, "lateral", "Lateral Movement");
-	public final ConfigFloat bogeyLateralSpringFrequency = f(10, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyLateralSpringFrequency);
-	public final ConfigFloat bogeyLateralSpringDampingRate = f(1.25F, 0, Float.MAX_VALUE, "springDampingRate", Comments.bogeyLateralSpringDampingRate);
-	public final ConfigFloat bogeyLateralSpringMaxForce = f(10000, 0, Float.MAX_VALUE, "springMaxForce", Units.force, Comments.bogeyLateralSpringMaxForce);
+	public final ConfigFloat bogeyLateralSpringFrequency = f(10, 0, Short.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyLateralSpringFrequency);
+	public final ConfigFloat bogeyLateralSpringDampingRate = f(1.25F, 0, Short.MAX_VALUE, "springDampingRate", Comments.bogeyLateralSpringDampingRate);
+	public final ConfigFloat bogeyLateralSpringMaxForce = f(10000, 0, Short.MAX_VALUE, "springMaxForce", Units.force, Comments.bogeyLateralSpringMaxForce);
 
 	public final ConfigGroup bogeyRoll = group(2, "roll", "Roll Movement");
-	public final ConfigFloat bogeyRollSpringFrequency = f(15, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyRollSpringFrequency);
-	public final ConfigFloat bogeyRollSpringDampingRate = f(1.25F, 0, Float.MAX_VALUE, "springDampingRate", Comments.bogeyRollSpringDampingRate);
-	public final ConfigFloat bogeyRollSpringMomentMultiplier = f(2, 0, Float.MAX_VALUE, "springMomentMultiplier", Comments.bogeyRollSpringMomentMultiplier);
-	public final ConfigFloat bogeyRollSpringMaxTorque = f(10000, 0, Float.MAX_VALUE, "springMaxTorque", Units.torque, Comments.bogeyRollSpringMaxTorque);
+	public final ConfigFloat bogeyRollSpringFrequency = f(15, 0, Short.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.bogeyRollSpringFrequency);
+	public final ConfigFloat bogeyRollSpringDampingRate = f(1.25F, 0, Short.MAX_VALUE, "springDampingRate", Comments.bogeyRollSpringDampingRate);
+	public final ConfigFloat bogeyRollSpringMomentMultiplier = f(2, 0, Short.MAX_VALUE, "springMomentMultiplier", Comments.bogeyRollSpringMomentMultiplier);
+	public final ConfigFloat bogeyRollSpringMaxTorque = f(10000, 0, Short.MAX_VALUE, "springMaxTorque", Units.torque, Comments.bogeyRollSpringMaxTorque);
 
 	public final ConfigGroup axle = group(1, "axle", "Physics Bogie Axles");
 	public final ConfigFloat axleSpacingUpdateTime = f(2, 0, 10, "spacingUpdateTime", Units.time, Comments.axleSpacingUpdateTime);
-	public final ConfigFloat axlePassiveLinearDamping = f(100, 0, Float.MAX_VALUE, "passiveLinearDamping", Units.damping, Comments.axlePassiveLinearDamping);
-	public final ConfigFloat axlePassiveAngularDamping = f(1, 0, Float.MAX_VALUE, "passiveAngularDamping", Units.angularDamping, Comments.axlePassiveAngularDamping);
-	public final ConfigFloat axleTargetSpeedFactor = f(0.25F, 0, Float.MAX_VALUE, "targetSpeedFactor", Units.velocity, Comments.axleTargetSpeedFactor);
-	public final ConfigFloat axleDriveForceFactor = f(0.5F, 0, Float.MAX_VALUE, "driveForceFactor", Units.damping, Comments.axleDriveForceFactor);
-	public final ConfigFloat axleBrakeStrengthFactor = f(20, 0, Float.MAX_VALUE, "brakeStrengthFactor", Units.acceleration, Comments.axleBrakeStrengthFactor);
+	public final ConfigFloat axlePassiveLinearDamping = f(100, 0, Short.MAX_VALUE, "passiveLinearDamping", Units.damping, Comments.axlePassiveLinearDamping);
+	public final ConfigFloat axlePassiveAngularDamping = f(1, 0, Short.MAX_VALUE, "passiveAngularDamping", Units.angularDamping, Comments.axlePassiveAngularDamping);
+	public final ConfigFloat axleTargetSpeedFactor = f(0.25F, 0, Short.MAX_VALUE, "targetSpeedFactor", Units.velocity, Comments.axleTargetSpeedFactor);
+	public final ConfigFloat axleDriveForceFactor = f(0.5F, 0, Short.MAX_VALUE, "driveForceFactor", Units.damping, Comments.axleDriveForceFactor);
+	public final ConfigFloat axleBrakeStrengthFactor = f(20, 0, Short.MAX_VALUE, "brakeStrengthFactor", Units.acceleration, Comments.axleBrakeStrengthFactor);
 	public final ConfigFloat axleDerailFrictionFactor = f(0.5F, 0, 1, "derailFrictionFactor", Comments.axleDerailFrictionFactor);
 	public final ConfigFloat axleTrackCheckTime = f(0.1F, 0, 5, "trackCheckTime", Units.time, Comments.axleTrackCheckTime);
 	public final ConfigFloat axleTrackRecheckTime = f(3, 0, 60, "trackRecheckTime", Units.time, Comments.axleTrackRecheckTime);
 
 	public final ConfigGroup axleSlip = group(2, "slip", "Slip");
 	public final ConfigBool axleSlipEnabled = b(true, "enabled", Comments.axleWheelSlip);
-	public final ConfigFloat axleSlipAcceleration = f(15, 0, Float.MAX_VALUE, "acceleration", Units.acceleration, Comments.axleSlipAcceleration);
-	public final ConfigFloat axleSlipDecay = f(20, 0, Float.MAX_VALUE, "decay", Units.acceleration, Comments.axleSlipDecay);
-	public final ConfigFloat axleSlipBindTime = f(0.75F, 0, Float.MAX_VALUE, "bindTime", Units.time, Comments.axleSlipBindTime);
-	public final ConfigFloat axleSlipBurstFactor = f(0.5F, 0, Float.MAX_VALUE, "burstFactor", Comments.axleSlipBurstFactor);
-	public final ConfigFloat axleSlipMaxSpeed = f(4, 0, Float.MAX_VALUE, "maxSpeed", Units.velocity, Comments.axleSlipMaxSpeed);
+	public final ConfigFloat axleSlipAcceleration = f(15, 0, Short.MAX_VALUE, "acceleration", Units.acceleration, Comments.axleSlipAcceleration);
+	public final ConfigFloat axleSlipDecay = f(20, 0, Short.MAX_VALUE, "decay", Units.acceleration, Comments.axleSlipDecay);
+	public final ConfigFloat axleSlipBindTime = f(0.75F, 0, Short.MAX_VALUE, "bindTime", Units.time, Comments.axleSlipBindTime);
+	public final ConfigFloat axleSlipBurstFactor = f(0.5F, 0, Short.MAX_VALUE, "burstFactor", Comments.axleSlipBurstFactor);
+	public final ConfigFloat axleSlipMaxSpeed = f(4, 0, Short.MAX_VALUE, "maxSpeed", Units.velocity, Comments.axleSlipMaxSpeed);
 
 	public final ConfigGroup track = group(1, "track", "Tracks");
 
 	public final ConfigGroup standard = group(2, "standard", "Standard");
-	public final ConfigFloat standardLateralMaxSpeedFactor = f(30, 0, Float.MAX_VALUE, "lateralMaxSpeedFactor", Units.acceleration, Comments.standardLateralMaxSpeedFactor);
-	public final ConfigFloat standardVerticalMaxSpeedFactor = f(50, 0, Float.MAX_VALUE, "verticalMaxSpeedFactor", Units.acceleration, Comments.standardVerticalMaxSpeedFactor);
-	public final ConfigFloat standardAdhesionFactor = f(12, 0, Float.MAX_VALUE, "adhesionFactor", Units.acceleration, Comments.standardAdhesionFactor);
+	public final ConfigFloat standardLateralMaxSpeedFactor = f(30, 0, Short.MAX_VALUE, "lateralMaxSpeedFactor", Units.acceleration, Comments.standardLateralMaxSpeedFactor);
+	public final ConfigFloat standardVerticalMaxSpeedFactor = f(50, 0, Short.MAX_VALUE, "verticalMaxSpeedFactor", Units.acceleration, Comments.standardVerticalMaxSpeedFactor);
+	public final ConfigFloat standardAdhesionFactor = f(12, 0, Short.MAX_VALUE, "adhesionFactor", Units.acceleration, Comments.standardAdhesionFactor);
 
 	public final ConfigGroup coupler = group(1, "coupler", "Train Couplers");
-	public final ConfigFloat couplerPassiveLinearDamping = f(10, 0, Float.MAX_VALUE, "passiveLinearDamping", Units.damping, Comments.couplerPassiveLinearDamping);
-	public final ConfigFloat couplerPassiveAngularDamping = f(1, 0, Float.MAX_VALUE, "passiveAngularDamping", Units.angularDamping, Comments.couplerPassiveAngularDamping);
-	public final ConfigFloat couplerSpringFrequency = f(100, 0, Float.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.couplerSpringFrequency);
-	public final ConfigFloat couplerSpringDampingRate = f(2, 0, Float.MAX_VALUE, "springDampingRate", Comments.couplerSpringDampingRate);
+	public final ConfigFloat couplerPassiveLinearDamping = f(10, 0, Short.MAX_VALUE, "passiveLinearDamping", Units.damping, Comments.couplerPassiveLinearDamping);
+	public final ConfigFloat couplerPassiveAngularDamping = f(1, 0, Short.MAX_VALUE, "passiveAngularDamping", Units.angularDamping, Comments.couplerPassiveAngularDamping);
+	public final ConfigFloat couplerSpringFrequency = f(100, 0, Short.MAX_VALUE, "springFrequency", Units.angularVelocity, Comments.couplerSpringFrequency);
+	public final ConfigFloat couplerSpringDampingRate = f(2, 0, Short.MAX_VALUE, "springDampingRate", Comments.couplerSpringDampingRate);
 
 	@Override
 	public String getName() {
 		return "physics";
 	}
 
-	public boolean defaultPivotCompatibilityMode() {
+	public boolean requiresPivotCompatibilityMode() {
 		return SimurailCompat.POCKET.isLoaded();
+	}
+
+	public boolean isPivotCompatibilityMode() {
+		return requiresPivotCompatibilityMode() || bogeyPivotCompatibilityMode.get();
 	}
 
 	static class Comments {

@@ -30,3 +30,9 @@ issueTrackerURL = "https://github.com/Crystaelix/Create-Simurail/issues"
 	modId = "simulated"
 	versionRange = "[1,)"
 	type = "required"
+
+[[dependencies.simurail]]
+	modId = "pocket"
+	type = "optional"
+	reason = "Versions of Create Pocket Sized before 0.19.2 do not work properly with Create Simurail."
+	versionRange = "[0.19.2,)"

@@ -602,6 +602,7 @@ public class PhysicsBogeyAxle {
 
 		TrackTypeEntry trackType = TrackTypeEntries.getEntry(trackSegment.material());
 
+		Vector3dc scale = subLevel.logicalPose().scale();
 		double yLimit = 0;
 		double zLimit = 0;
 
@@ -611,6 +612,7 @@ public class PhysicsBogeyAxle {
 			yLimit = Math.max(Math.min(yDist - 0.5 * timeStep, yDist - yDist * yFixedTimer / yTime), 0);
 			yFixedTimer += timeStep;
 			yFixed = yLimit < 0.5 * timeStep || yFixedTimer > yTime;
+			yLimit *= scale.y();
 		}
 
 		if(!zFixed) {
@@ -618,6 +620,7 @@ public class PhysicsBogeyAxle {
 			zLimit = Math.max(Math.min(zDist - 0.5 * timeStep, zDist - zDist * zFixedTimer * 0.1), 0);
 			zFixedTimer += timeStep;
 			zFixed = zLimit < 0.5 * timeStep || zFixedTimer > 10;
+			zLimit *= scale.z();
 		}
 
 		double t = trackSegment.projectT(trackAxleFrame.position);
@@ -629,7 +632,7 @@ public class PhysicsBogeyAxle {
 			double lateralMaxSpeedFactor = trackType.lateralMaxSpeedFactor().getAsDouble();
 			double maxSpeedSq = lateralMaxSpeedFactor / kLateral;
 			if(speedSq > maxSpeedSq) {
-				zLimit = Float.MAX_VALUE;
+				zLimit = Short.MAX_VALUE;
 			}
 		}
 
@@ -638,22 +641,22 @@ public class PhysicsBogeyAxle {
 				double verticalMaxSpeedFactor = trackType.verticalMaxSpeedFactor().getAsDouble();
 				double maxSpeedSq = verticalMaxSpeedFactor / Math.abs(kVertical);
 				if(speedSq > maxSpeedSq) {
-					yLimit = Float.MAX_VALUE;
+					yLimit = Short.MAX_VALUE;
 				}
 			}
 		}
 
 		boolean disableRotation = !bogey.options.allowYawOffset && !bogey.options.allowPitchOffset;
-		double bogeyVerticalPlay = disableRotation ? 0 : 0.0625;
-		double bogeyLateralPlay = disableRotation ? 0 : 0.125;
+		double bogeyVerticalPlay = disableRotation ? 0 : 0.0625 * scale.y();
+		double bogeyLateralPlay = disableRotation ? 0 : 0.125 * scale.z();
 
 		if(checkVertical) {
 			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
 			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -(yLimit + bogeyVerticalPlay), yLimit + bogeyVerticalPlay);
 		}
 		else {
-			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Float.MAX_VALUE);
-			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -(yLimit + bogeyVerticalPlay), Float.MAX_VALUE);
+			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Short.MAX_VALUE);
+			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -(yLimit + bogeyVerticalPlay), Short.MAX_VALUE);
 		}
 
 		trackJoint.setLimit(ConstraintJointAxis.LINEAR_Z, -zLimit, zLimit);

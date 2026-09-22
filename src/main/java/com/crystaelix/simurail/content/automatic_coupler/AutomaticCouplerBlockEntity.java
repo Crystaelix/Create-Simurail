@@ -555,9 +555,9 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 
 						double selfScale = this.getFacing().getAxis() != Direction.Axis.Z ? selfPose.scale().x() : selfPose.scale().z();
 						double partnerScale = partner.getFacing().getAxis() != Direction.Axis.Z ? partnerPose.scale().x() : partnerPose.scale().z();
-						double jointLength = this.getCouplerLength() + partner.getCouplerLength() * partnerScale / selfScale;
+						double jointLength = this.getCouplerLength() * selfScale + partner.getCouplerLength() * partnerScale;
 
-						if(localJointPos.distanceSquared(localPartnerJointPos) > Mth.square(jointLength + 1)) {
+						if(localJointPos.distanceSquared(localPartnerJointPos) * selfScale * selfScale > Mth.square(jointLength  + 1)) {
 							removeCouplerPartner();
 							removeCouplerJoint();
 							return;
@@ -580,7 +580,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 									localJointPos, partnerJointPos,
 									jointRot, partnerJointRot);
 							joint = physics.getPipeline().addConstraint(subLevel, partnerSubLevel, jointConfig);
-							joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5 / selfScale, jointLength + 0.5 / selfScale);
+							joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5, jointLength + 0.5);
 							joint.setMotor(ConstraintJointAxis.LINEAR_X, jointLength, stiffness, damping, false, 0);
 							joint.setMotor(ConstraintJointAxis.LINEAR_Y, 0, 0, linearDamping, false, 0);
 							joint.setMotor(ConstraintJointAxis.LINEAR_Z, 0, 0, linearDamping, false, 0);
@@ -592,7 +592,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 							joint.setFrame1(localJointPos, jointRot);
 							joint.setFrame2(partnerJointPos, partnerJointRot);
 							if(jointLength != lastJointLength) {
-								joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5 / selfScale, jointLength + 0.5 / selfScale);
+								joint.setLimit(ConstraintJointAxis.LINEAR_X, jointLength - 0.5, jointLength + 0.5);
 								joint.setMotor(ConstraintJointAxis.LINEAR_X, jointLength, stiffness, damping, false, 0);
 								physics.getPipeline().wakeUp(subLevel);
 							}

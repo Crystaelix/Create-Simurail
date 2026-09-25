@@ -61,6 +61,8 @@ import dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyH
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
@@ -1036,36 +1038,64 @@ public class PhysicsBogeyAxle {
 
 	protected ITrackSelector steer(TravellingPoint point) {
 		return (graph, pair) -> {
-			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
-			double closest = -Double.MAX_VALUE;
-			Map.Entry<TrackNode, TrackEdge> best = null;
+			List<Map.Entry<TrackNode, TrackEdge>> targets = pair.getSecond();
+			List<Map.Entry<TrackNode, TrackEdge>> rightTargets = new ArrayList<>();
+			List<Map.Entry<TrackNode, TrackEdge>> leftTargets = new ArrayList<>();
+			Map.Entry<TrackNode, TrackEdge> straightTarget = null;
+			Object2DoubleMap<TrackNode> turnValues = new Object2DoubleArrayMap<>(targets.size());
 
-			boolean forward = pair.getFirst();
-			Vector3d trackDir = JOMLConversion.toJOML(point.edge.getDirection(!forward));
-			double steerValue = bogey.getGroupSteerValue();
-			Vector3d trackLat = trackAxleFrame.lateral;
+			Vector3dc trackLat = trackAxleFrame.lateral;
+			Vector3d turnCurvature = new Vector3d();
+			double minTurn = Double.MAX_VALUE;
+			double maxTurn = -Double.MAX_VALUE;
 
-			Vector3d steerTarget = new Vector3d();
-			steerTarget.fma(forward ? 1 : -1, trackDir);
-			steerTarget.fma(steerValue, trackLat);
-
-			Vector3d checkDir = new Vector3d();
-
-			for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {
+			for(Map.Entry<TrackNode, TrackEdge> entry : targets) {
+				double turn = 0;
 				TrackEdge edge = entry.getValue();
-				Vec3 p1 = edge.getPosition(null, 0);
-				Vec3 p2 = edge.getPosition(null, 1);
-				checkDir.set(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z).normalize();
-				double dot = steerTarget.dot(checkDir);
-				if(dot > closest) {
-					closest = dot;
-					best = entry;
+				if(edge.isTurn()) {
+					turn = SimurailMath.cachedControlPoints(edge.getTurn()).curvature(0, turnCurvature).dot(trackLat);
+					(turn > 0 ? rightTargets : leftTargets).add(entry);
+				}
+				else {
+					straightTarget = entry;
+				}
+				turnValues.put(entry.getKey(), turn);
+				minTurn = Math.min(minTurn, turn);
+				maxTurn = Math.max(maxTurn, turn);
+			}
+
+			double steerValue = bogey.getGroupSteerValue();
+			Map.Entry<TrackNode, TrackEdge> bestTarget = null;
+
+			if(straightTarget != null && (steerValue == 0 ||
+					steerValue > 0 && rightTargets.isEmpty() ||
+					steerValue < 0 && leftTargets.isEmpty())) {
+				bestTarget = straightTarget;
+			}
+			else if(!rightTargets.isEmpty() && (steerValue >= 0 || leftTargets.isEmpty())) {
+				double targetTurn = Mth.lerp(steerValue, Math.max(minTurn, 0), maxTurn);
+				double bestTurn = Double.MAX_VALUE;
+				for(Map.Entry<TrackNode, TrackEdge> entry : rightTargets) {
+					double diff = Math.abs(targetTurn - turnValues.getDouble(entry.getKey()));
+					if(diff < bestTurn) {
+						bestTurn = diff;
+						bestTarget = entry;
+					}
 				}
 			}
-			if(best == null) {
-				return validTargets.get(0);
+			else {
+				double targetTurn = Mth.lerp(steerValue, Math.max(minTurn, 0), maxTurn);
+				double bestTurn = Double.MAX_VALUE;
+				for(Map.Entry<TrackNode, TrackEdge> entry : leftTargets) {
+					double diff = Math.abs(targetTurn - turnValues.getDouble(entry.getKey()));
+					if(diff < bestTurn) {
+						bestTurn = diff;
+						bestTarget = entry;
+					}
+				}
 			}
-			return best;
+
+			return bestTarget;
 		};
 	}
 

@@ -1,0 +1,10 @@
+{
+	"parent": "block/block",
+	"render_type": "solid",
+	"loader": "neoforge:obj",
+	"model": "simurail:models/block/coupler/automatic/sa3.obj",
+	"flip_v": true,
+	"textures": {
+		"head": "simurail:block/coupler/automatic/sa3"
+	}
+}

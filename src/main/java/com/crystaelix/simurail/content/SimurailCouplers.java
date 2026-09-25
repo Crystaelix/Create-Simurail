@@ -15,11 +15,15 @@ public class SimurailCouplers {
 			Simurail.id("block/coupler/automatic/shibata")),
 	SCHARFENBERG = new CouplerType(
 			Simurail.id("scharfenberg"),
-			Simurail.id("block/coupler/automatic/scharfenberg"));
+			Simurail.id("block/coupler/automatic/scharfenberg")),
+	SA3 = new CouplerType(
+			Simurail.id("sa3"),
+			Simurail.id("block/coupler/automatic/sa3"));
 
 	public static void register() {
 		CouplerTypeRegistry.register(KNUCKLE);
 		CouplerTypeRegistry.register(SHIBATA);
 		CouplerTypeRegistry.register(SCHARFENBERG);
+		CouplerTypeRegistry.register(SA3);
 	}
 }

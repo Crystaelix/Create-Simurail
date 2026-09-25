@@ -14,6 +14,7 @@ public class SimurailPartialModels {
 	AUTOMATIC_COUPLER_KNUCKLE = block("coupler/automatic/knuckle"),
 	AUTOMATIC_COUPLER_SHIBATA = block("coupler/automatic/shibata"),
 	AUTOMATIC_COUPLER_SCHARFENBERG = block("coupler/automatic/scharfenberg"),
+	AUTOMATIC_COUPLER_SA3 = block("coupler/automatic/sa3"),
 
 	PHYSICS_ROLLER_FRAME = block("physics_roller/frame"),
 	PHYSICS_ROLLER_WHEEL = block("physics_roller/wheel");

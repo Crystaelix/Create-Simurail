@@ -17,6 +17,7 @@ import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.content.SimurailMenus;
 import com.crystaelix.simurail.content.SimurailPackets;
 import com.crystaelix.simurail.content.SimurailParticles;
+import com.crystaelix.simurail.content.SimurailSignalNames;
 import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.SimurailTracks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -76,6 +77,7 @@ public class Simurail {
 		SimurailBogeys.register();
 		SimurailTracks.register();
 		SimurailCouplers.register();
+		SimurailSignalNames.register();
 
 		event.enqueueWork(() -> {
 			SimurailCompat.BLOCKSBOGIES.ifLoaded(() -> () -> SimurailBlocksBogiesCompat.onCommonSetupLate());

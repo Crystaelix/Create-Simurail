@@ -423,7 +423,7 @@
 	"simurail.ponder.probe_reader.intro.text_3": "這需要先設定實體轉向架的探針距離",
 	"simurail.ponder.probe_reader.intro.text_4": "右鍵以設定軌道點模式、名稱過濾器和距離設定",
 	"simurail.ponder.probe_reader.intro.text_5": "訊號模式用於檢查列車號誌機的各種狀態",
-	"simurail.ponder.probe_reader.intro.text_6": "可以使用告示牌為號誌機命名，以便名稱過濾器識別",
+	"simurail.ponder.probe_reader.intro.text_6": "可以使用告示牌或剪贴板為號誌機命名，以便名稱過濾器識別",
 	"simurail.ponder.probe_reader.intro.text_7": "車站模式用於檢查火車站點的各種狀態",
 	"simurail.ponder.probe_reader.intro.text_8": "軌道中斷點模式用於檢查軌道的盡頭",
 

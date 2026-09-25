@@ -1,13 +1,11 @@
 package com.crystaelix.simurail.content.bogey;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.joml.Quaterniond;
@@ -21,6 +19,7 @@ import com.crystaelix.simurail.api.math.Frame3dc;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.physics.AttachableBoxPhysicsObject;
 import com.crystaelix.simurail.api.physics.SimurailJoints;
+import com.crystaelix.simurail.api.signal.SignalNameRegistry;
 import com.crystaelix.simurail.api.track.TrackTypeEntries;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
 import com.crystaelix.simurail.config.SimurailConfig;
@@ -68,16 +67,10 @@ import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.StandingSignBlock;
-import net.minecraft.world.level.block.WallHangingSignBlock;
-import net.minecraft.world.level.block.WallSignBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -300,24 +293,8 @@ public class PhysicsBogeyAxle {
 				flatMap(pos -> Direction.stream().flatMap(dir -> {
 					BlockPos relative = pos.relative(dir);
 					BlockState state = level.getBlockState(relative);
-					if(dir == Direction.UP) {
-						if(state.getBlock() instanceof StandingSignBlock) {
-							return level.getBlockEntity(relative, BlockEntityType.SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
-						}
-					}
-					else if(dir == Direction.DOWN) {
-						return level.getBlockEntity(relative, BlockEntityType.HANGING_SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
-					}
-					else if(state.getBlock() instanceof WallSignBlock && dir == state.getValue(HorizontalDirectionalBlock.FACING)) {
-						return level.getBlockEntity(relative, BlockEntityType.SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
-					}
-					else if(state.getBlock() instanceof WallHangingSignBlock && dir.getAxis() != state.getValue(HorizontalDirectionalBlock.FACING).getAxis()) {
-						return level.getBlockEntity(relative, BlockEntityType.HANGING_SIGN).stream().flatMap(sign -> Stream.of(sign.getFrontText(), sign.getBackText()));
-					}
-					return Stream.of();
+					return SignalNameRegistry.getExtractors().stream().flatMap(e -> e.getSignalNames(state, level, relative, dir));
 				})).
-				flatMap(text -> Arrays.stream(text.getMessages(false))).
-				map(Component::getString).
 				filter(s -> !s.isBlank()).
 				toList();
 	}

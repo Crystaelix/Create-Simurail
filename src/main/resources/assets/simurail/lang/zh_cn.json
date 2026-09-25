@@ -423,7 +423,7 @@
 	"simurail.ponder.probe_reader.intro.text_3": "这需要先设置物理转向架的探针距离",
 	"simurail.ponder.probe_reader.intro.text_4": "右击以配置轨道点模式、名称过滤器和距离设置",
 	"simurail.ponder.probe_reader.intro.text_5": "信号模式用于检查列车信号机的各种状态",
-	"simurail.ponder.probe_reader.intro.text_6": "可以使用告示牌为信号机命名，以便名称过滤器识别",
+	"simurail.ponder.probe_reader.intro.text_6": "可以使用告示牌或剪贴板为信号机命名，以便名称过滤器识别",
 	"simurail.ponder.probe_reader.intro.text_7": "车站模式用于检查列车站点的各种状态",
 	"simurail.ponder.probe_reader.intro.text_8": "轨道中断点模式用于检查轨道的尽头",
 

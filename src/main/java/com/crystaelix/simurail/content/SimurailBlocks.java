@@ -20,6 +20,8 @@ import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockItem;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockItem;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchBlock;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchBlockItem;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -87,6 +89,13 @@ public class SimurailBlocks {
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			item(RemoteControllerBlockItem::new).
+			build().
+			register();
+	public static final BlockEntry<TrackSwitchBlock> TRACK_SWITCH = REGISTRATE.
+			block("track_switch", TrackSwitchBlock::new).
+			initialProperties(SharedProperties::softMetal).
+			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_CYAN).sound(SoundType.NETHERITE_BLOCK)).
+			item(TrackSwitchBlockItem::new).
 			build().
 			register();
 	public static final BlockEntry<PhysicsRollerBlock> PHYSICS_ROLLER = REGISTRATE.

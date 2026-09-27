@@ -8,6 +8,7 @@
 		"simurail:probe_reader",
 		"simurail:physics_roller",
 		"simurail:remote_controller",
+		"simurail:track_switch",
 		{"id": "simurail:brass_borehead_bearing", "required": false}
 	]
 }

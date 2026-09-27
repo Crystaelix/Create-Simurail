@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/track_overlay/station",
+	"textures": {
+		"1": "simurail:block/track_switch/overlay/right_turn"
+	}
+}

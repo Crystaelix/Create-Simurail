@@ -5,6 +5,7 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyCurvePlacementPacket;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderOutline;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerOutline;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchHintOutline;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSelection;
@@ -52,6 +53,7 @@ public class SimurailClientEvents {
 		}
 		ProbeReaderOutline.clientTick();
 		RemoteControllerOutline.clientTick();
+		TrackSwitchHintOutline.clientTick();
 	}
 
 	@SubscribeEvent

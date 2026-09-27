@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"facing=south": {
+			"model": "simurail:block/track_switch/block",
+			"y": 0
+		},
+		"facing=north": {
+			"model": "simurail:block/track_switch/block",
+			"y": 180
+		},
+		"facing=east": {
+			"model": "simurail:block/track_switch/block",
+			"y": -90
+		},
+		"facing=west": {
+			"model": "simurail:block/track_switch/block",
+			"y": 90
+		}
+	}
+}

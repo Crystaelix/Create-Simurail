@@ -36,4 +36,6 @@ public interface Basis3fc {
 	Basis3f transformInverse(Quaterniondc quat, Basis3f dest);
 
 	Matrix3f matrix(Matrix3f dest);
+
+	boolean equals(Basis3fc other, float delta);
 }

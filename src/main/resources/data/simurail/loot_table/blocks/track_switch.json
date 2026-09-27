@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:block",
+	"pools": [{
+		"rolls": 1,
+		"entries": [{
+			"type": "minecraft:item",
+			"name": "simurail:track_switch"
+		}],
+		"conditions": [{
+			"condition": "minecraft:survives_explosion"
+		}]
+	}],
+	"random_sequence": "simurail:blocks/track_switch"
+}

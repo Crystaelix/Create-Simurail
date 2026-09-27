@@ -18,6 +18,9 @@ import com.crystaelix.simurail.content.physics_roller.PhysicsRollerRenderer;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerVisual;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchBlockEntity;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchRenderer;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchVisual;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -58,15 +61,21 @@ public class SimurailBlockEntities {
 			blockEntity("probe_reader", ProbeReaderBlockEntity::new).
 			validBlocks(SimurailBlocks.PROBE_READER).
 			register();
+	public static final BlockEntityEntry<RemoteControllerBlockEntity> REMOTE_CONTROLLER = REGISTRATE.
+			blockEntity("remote_controller", RemoteControllerBlockEntity::new).
+			validBlocks(SimurailBlocks.REMOTE_CONTROLLER).
+			register();
+	public static final BlockEntityEntry<TrackSwitchBlockEntity> TRACK_SWITCH = REGISTRATE.
+			blockEntity("track_switch", TrackSwitchBlockEntity::new).
+			visual(() -> TrackSwitchVisual::new).
+			renderer(() -> TrackSwitchRenderer::new).
+			validBlocks(SimurailBlocks.TRACK_SWITCH).
+			register();
 	public static final BlockEntityEntry<PhysicsRollerBlockEntity> PHYSICS_ROLLER = REGISTRATE.
 			blockEntity("physics_roller", PhysicsRollerBlockEntity::new).
 			visual(() -> PhysicsRollerVisual::new).
 			renderer(() -> PhysicsRollerRenderer::new).
 			validBlocks(SimurailBlocks.PHYSICS_ROLLER).
-			register();
-	public static final BlockEntityEntry<RemoteControllerBlockEntity> REMOTE_CONTROLLER = REGISTRATE.
-			blockEntity("remote_controller", RemoteControllerBlockEntity::new).
-			validBlocks(SimurailBlocks.REMOTE_CONTROLLER).
 			register();
 
 	public static void register() {
@@ -76,5 +85,6 @@ public class SimurailBlockEntities {
 		PhysicsBogeyBlockEntity.registerCapabilities(event);
 		ProbeReaderBlockEntity.registerCapabilities(event);
 		RemoteControllerBlockEntity.registerCapabilities(event);
+		TrackSwitchBlockEntity.registerCapabilities(event);
 	}
 }

@@ -32,7 +32,6 @@ public class PhysicsRollerVisual extends AbstractBlockEntityVisual<PhysicsRoller
 		frame = instancerProvider().
 				instancer(InstanceTypes.TRANSFORMED, Models.partial(SimurailPartialModels.PHYSICS_ROLLER_FRAME)).
 				createInstance();
-		relight(wheel, frame);
 	}
 
 	@Override

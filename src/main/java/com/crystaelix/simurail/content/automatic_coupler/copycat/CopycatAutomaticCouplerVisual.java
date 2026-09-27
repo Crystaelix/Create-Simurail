@@ -25,7 +25,6 @@ import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ClientSubLevel;
-import net.minecraft.core.BlockPos;
 
 public class CopycatAutomaticCouplerVisual extends AbstractBlockEntityVisual<CopycatAutomaticCouplerBlockEntity> implements SimpleDynamicVisual {
 
@@ -37,90 +36,88 @@ public class CopycatAutomaticCouplerVisual extends AbstractBlockEntityVisual<Cop
 
 	public CopycatAutomaticCouplerVisual(VisualizationContext context, CopycatAutomaticCouplerBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
+
+		lengthMode = blockEntity.couplerLengthMode;
+		PartialModel barModel = switch(lengthMode) {
+		default -> SimurailPartialModels.COUPLER_BAR;
+		case 1 -> SimurailPartialModels.COUPLER_BAR_SHORT;
+		case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
+		};
+		bar = instancerProvider().
+				instancer(InstanceTypes.TRANSFORMED, Models.partial(barModel)).
+				createInstance();
+
+		type = blockEntity.type;
+		head = instancerProvider().
+				instancer(InstanceTypes.TRANSFORMED, Models.partial(PartialModel.of(type.modelId()))).
+				createInstance();
 	}
 
 	@Override
 	public void beginFrame(DynamicVisual.Context context) {
-		if(bar == null || blockEntity.couplerLengthMode != lengthMode) {
-			if(bar != null) {
-				bar.delete();
-				bar = null;
-			}
+		if(blockEntity.couplerLengthMode != lengthMode) {
 			lengthMode = blockEntity.couplerLengthMode;
 			PartialModel barModel = switch(lengthMode) {
 			default -> SimurailPartialModels.COUPLER_BAR;
 			case 1 -> SimurailPartialModels.COUPLER_BAR_SHORT;
 			case 2 -> SimurailPartialModels.COUPLER_BAR_EXTRA_LONG;
 			};
-			bar = instancerProvider().
-					instancer(InstanceTypes.TRANSFORMED, Models.partial(barModel)).
-					createInstance();
-			relight(bar);
+			instancerProvider().
+			instancer(InstanceTypes.TRANSFORMED, Models.partial(barModel)).
+			stealInstance(bar);
 		}
-		if(head == null || blockEntity.type != type) {
-			if(head != null) {
-				head.delete();
-				head = null;
-			}
+		if(blockEntity.type != type) {
 			type = blockEntity.type;
-			head = instancerProvider().
-					instancer(InstanceTypes.TRANSFORMED, Models.partial(PartialModel.of(type.modelId()))).
-					createInstance();
-			relight(head);
+			instancerProvider().
+			instancer(InstanceTypes.TRANSFORMED, Models.partial(PartialModel.of(type.modelId()))).
+			stealInstance(head);
 		}
 
 		float partialTick = context.partialTick();
-		BlockPos visualPos = getVisualPosition();
 
-		if(bar != null || head != null) {
-			couplerOffset.set(blockEntity.getDirection()).mul(-0.4375F);
+		couplerOffset.set(blockEntity.getDirection()).mul(-0.4375F);
 
-			boolean hasPartner;
-			blockEntity.getCouplerJointPos(jointPos);
-			if(blockEntity.partnerPos != null && level.getBlockEntity(blockEntity.partnerPos) instanceof AutomaticCoupler partner) {
-				hasPartner = true;
-				ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(blockEntity);
-				ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner.getBlockPos());
-				Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
-				Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
-				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getCouplerJointPos(targetPos)));
-				selfPose.orientation().transformInverse(partnerPose.orientation().transform(SimurailMathf.DIR_YP, targetVert));
-			}
-			else {
-				hasPartner = false;
-				blockEntity.getCouplerEndPos(targetPos);
-			}
-			couplerDir.set(
-					targetPos.x - jointPos.x,
-					targetPos.y - jointPos.y,
-					targetPos.z - jointPos.z).normalize();
-			SimurailMathf.rot(couplerDir, SimurailMathf.DIR_YP, couplerRot);
-			if(hasPartner) {
-				SimurailMathf.rot(couplerDir, targetVert, targetRot);
-				couplerRot.nlerp(targetRot, 0.5F);
-			}
-
-			if(bar != null) {
-				bar.setIdentityTransform().
-				translate(visualPos).
-				center().
-				translate(couplerOffset).
-				rotate(couplerRot).
-				colorRgb(blockEntity.color).
-				setChanged();
-			}
-
-			if(head != null) {
-				head.setIdentityTransform().
-				translate(visualPos).
-				center().
-				translate(couplerOffset).
-				rotate(couplerRot).
-				translate(blockEntity.getCouplerLength(), 0, 0).
-				colorRgb(blockEntity.color).
-				setChanged();
-			}
+		boolean hasPartner;
+		blockEntity.getCouplerJointPos(jointPos);
+		if(blockEntity.partnerPos != null && level.getBlockEntity(blockEntity.partnerPos) instanceof AutomaticCoupler partner) {
+			hasPartner = true;
+			ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(blockEntity);
+			ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner.getBlockPos());
+			Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
+			Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
+			selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getCouplerJointPos(targetPos)));
+			selfPose.orientation().transformInverse(partnerPose.orientation().transform(SimurailMathf.DIR_YP, targetVert));
 		}
+		else {
+			hasPartner = false;
+			blockEntity.getCouplerEndPos(targetPos);
+		}
+		couplerDir.set(
+				targetPos.x - jointPos.x,
+				targetPos.y - jointPos.y,
+				targetPos.z - jointPos.z).normalize();
+		SimurailMathf.rot(couplerDir, SimurailMathf.DIR_YP, couplerRot);
+		if(hasPartner) {
+			SimurailMathf.rot(couplerDir, targetVert, targetRot);
+			couplerRot.nlerp(targetRot, 0.5F);
+		}
+
+		bar.setIdentityTransform().
+		translate(visualPos).
+		center().
+		translate(couplerOffset).
+		rotate(couplerRot).
+		colorRgb(blockEntity.color).
+		setChanged();
+
+		head.setIdentityTransform().
+		translate(visualPos).
+		center().
+		translate(couplerOffset).
+		rotate(couplerRot).
+		translate(blockEntity.getCouplerLength(), 0, 0).
+		colorRgb(blockEntity.color).
+		setChanged();
 	}
 
 	@Override
@@ -130,12 +127,8 @@ public class CopycatAutomaticCouplerVisual extends AbstractBlockEntityVisual<Cop
 
 	@Override
 	protected void _delete() {
-		if(bar != null) {
-			bar.delete();
-		}
-		if(head != null) {
-			head.delete();
-		}
+		bar.delete();
+		head.delete();
 	}
 
 	@Override

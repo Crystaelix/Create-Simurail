@@ -17,7 +17,19 @@ public class SimurailPartialModels {
 	AUTOMATIC_COUPLER_SA3 = block("coupler/automatic/sa3"),
 
 	PHYSICS_ROLLER_FRAME = block("physics_roller/frame"),
-	PHYSICS_ROLLER_WHEEL = block("physics_roller/wheel");
+	PHYSICS_ROLLER_WHEEL = block("physics_roller/wheel"),
+
+	TRACK_SWITCH_SIGN = block("track_switch/sign"),
+	TRACK_SWITCH_NONE = block("track_switch/overlay/none"),
+	TRACK_SWITCH_LEFT_STRAIGHT = block("track_switch/overlay/left_straight"),
+	TRACK_SWITCH_LEFT_TURN = block("track_switch/overlay/left_turn"),
+	TRACK_SWITCH_RIGHT_STRAIGHT = block("track_switch/overlay/right_straight"),
+	TRACK_SWITCH_RIGHT_TURN = block("track_switch/overlay/right_turn"),
+	TRACK_SWITCH_WYE_LEFT = block("track_switch/overlay/wye_left"),
+	TRACK_SWITCH_WYE_RIGHT = block("track_switch/overlay/wye_right"),
+	TRACK_SWITCH_3WAY_STRAIGHT = block("track_switch/overlay/3way_straight"),
+	TRACK_SWITCH_3WAY_LEFT = block("track_switch/overlay/3way_left"),
+	TRACK_SWITCH_3WAY_RIGHT = block("track_switch/overlay/3way_right");
 
 	public static void register() {
 	}

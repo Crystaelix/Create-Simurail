@@ -203,4 +203,9 @@ public class Basis3f implements Basis3fc {
 	public Matrix3f matrix(Matrix3f dest) {
 		return dest.set(direction, vertical, lateral);
 	}
+
+	@Override
+	public boolean equals(Basis3fc other, float delta) {
+		return direction.equals(other.direction(), delta) && vertical.equals(other.vertical(), delta) && lateral.equals(other.lateral(), delta);
+	}
 }

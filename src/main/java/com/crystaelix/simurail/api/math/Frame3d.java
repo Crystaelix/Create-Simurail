@@ -6,6 +6,8 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import dev.ryanhcode.sable.companion.math.Pose3dc;
+import dev.ryanhcode.sable.util.SableNBTUtils;
+import net.minecraft.nbt.CompoundTag;
 
 public class Frame3d implements Frame3dc {
 
@@ -201,5 +203,28 @@ public class Frame3d implements Frame3dc {
 		synchronized(tempMatrix) {
 			return dest.setFromUnnormalized(matrix(tempMatrix));
 		}
+	}
+
+	@Override
+	public boolean equals(Frame3dc other, double delta) {
+		return direction.equals(other.direction(), delta) && vertical.equals(other.vertical(), delta) && lateral.equals(other.lateral(), delta) && position.equals(other.position(), delta);
+	}
+
+	@Override
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		tag.put("d", SableNBTUtils.writeVector3d(direction));
+		tag.put("v", SableNBTUtils.writeVector3d(vertical));
+		tag.put("l", SableNBTUtils.writeVector3d(lateral));
+		tag.put("p", SableNBTUtils.writeVector3d(position));
+		return tag;
+	}
+
+	public Frame3d read(CompoundTag tag) {
+		direction.set(SableNBTUtils.readVector3d(tag.getCompound("d")));
+		vertical.set(SableNBTUtils.readVector3d(tag.getCompound("v")));
+		lateral.set(SableNBTUtils.readVector3d(tag.getCompound("l")));
+		position.set(SableNBTUtils.readVector3d(tag.getCompound("p")));
+		return this;
 	}
 }

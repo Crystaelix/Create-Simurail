@@ -1,5 +1,4 @@
 {
-	"parent": "block/block",
 	"render_type": "solid",
 	"textures": {
 		"particle": "create:block/industrial_iron_block",

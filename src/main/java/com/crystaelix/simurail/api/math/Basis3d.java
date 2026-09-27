@@ -6,6 +6,8 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import dev.ryanhcode.sable.companion.math.Pose3dc;
+import dev.ryanhcode.sable.util.SableNBTUtils;
+import net.minecraft.nbt.CompoundTag;
 
 public class Basis3d implements Basis3dc {
 
@@ -176,5 +178,26 @@ public class Basis3d implements Basis3dc {
 	@Override
 	public Matrix3d matrix(Matrix3d dest) {
 		return dest.set(direction, vertical, lateral);
+	}
+
+	@Override
+	public boolean equals(Basis3dc other, double delta) {
+		return direction.equals(other.direction(), delta) && vertical.equals(other.vertical(), delta) && lateral.equals(other.lateral(), delta);
+	}
+
+	@Override
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
+		tag.put("d", SableNBTUtils.writeVector3d(direction));
+		tag.put("v", SableNBTUtils.writeVector3d(vertical));
+		tag.put("l", SableNBTUtils.writeVector3d(lateral));
+		return tag;
+	}
+
+	public Basis3d read(CompoundTag tag) {
+		direction.set(SableNBTUtils.readVector3d(tag.getCompound("d")));
+		vertical.set(SableNBTUtils.readVector3d(tag.getCompound("v")));
+		lateral.set(SableNBTUtils.readVector3d(tag.getCompound("l")));
+		return this;
 	}
 }

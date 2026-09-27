@@ -5,6 +5,7 @@ import org.joml.Quaterniondc;
 import org.joml.Vector3dc;
 
 import dev.ryanhcode.sable.companion.math.Pose3dc;
+import net.minecraft.nbt.CompoundTag;
 
 public interface Basis3dc {
 
@@ -31,4 +32,8 @@ public interface Basis3dc {
 	Basis3d transformInverse(Quaterniondc quat, Basis3d dest);
 
 	Matrix3d matrix(Matrix3d dest);
+
+	boolean equals(Basis3dc other, double delta);
+	
+	CompoundTag write();
 }

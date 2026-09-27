@@ -8,6 +8,7 @@
 	"block.simurail.probe_reader": "Lecteur de sonde de bogie",
 	"block.simurail.remote_controller": "Télécommande de bogie",
 	"block.simurail.physics_roller": "Rouleau mécanique dynamique",
+	"block.simurail.track_switch": "Interrupteur de voie",
 	"block.simurail.brass_borehead_bearing": "Roulement de tête de forage en laiton",
 
 	"item.simurail.inverted_physics_bogey": "Bogie dynamique suspendu",

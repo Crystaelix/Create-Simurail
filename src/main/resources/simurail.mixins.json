@@ -15,9 +15,11 @@
 		"GlobalRailwayManagerMixin",
 		"ObservedTrainNameSourceMixin",
 		"SignalEdgeGroupMixin",
+		"SignalPropagatorMixin",
 		"TrackBlockMixin",
 		"TrackBlockEntityMixin",
 		"TrackObserverMixin",
+		"TravellingPointMixin",
 
 		"SubLevelEntityCollisionMixin",
 
@@ -28,6 +30,9 @@
 		"compat.railways.TrackBufferBlockMixin",
 		"compat.railways_copycats.CopycatHeadstockBlockMixin",
 		"compat.railx.BezierConnectionCompatMixin"
+	],
+	"client": [
+		"TrackTargetingClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

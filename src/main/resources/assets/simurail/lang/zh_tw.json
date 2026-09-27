@@ -8,6 +8,7 @@
 	"block.simurail.probe_reader": "轉向架探針讀取器",
 	"block.simurail.remote_controller": "轉向架遠端控制器",
 	"block.simurail.physics_roller": "物理壓路機",
+	"block.simurail.track_switch": "轉轍器",
 	"block.simurail.brass_borehead_bearing": "黃銅鏜頭軸承",
 
 	"item.simurail.inverted_physics_bogey": "倒置物理轉向架",

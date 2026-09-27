@@ -1,4 +1,5 @@
 {
+	"render_type": "solid",
 	"textures": {
 		"head": "simurail:block/coupler/automatic/knuckle"
 	},

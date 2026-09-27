@@ -1,8 +1,6 @@
 {
-	"parent": "block/block",
 	"render_type": "cutout",
 	"textures": {
-		"particle": "create:block/industrial_iron_block",
 		"metal": "create:block/roller_metal"
 	},
 	"elements": [

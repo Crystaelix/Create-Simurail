@@ -5,6 +5,7 @@ import org.joml.Quaterniond;
 import org.joml.Vector3dc;
 
 import dev.ryanhcode.sable.companion.math.Pose3dc;
+import net.minecraft.nbt.CompoundTag;
 
 public interface Frame3dc {
 
@@ -29,4 +30,8 @@ public interface Frame3dc {
 	Matrix3d matrix(Matrix3d dest);
 
 	Quaterniond orientation(Quaterniond dest);
+
+	boolean equals(Frame3dc other, double delta);
+
+	CompoundTag write();
 }

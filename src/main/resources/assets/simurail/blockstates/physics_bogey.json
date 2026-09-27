@@ -2,19 +2,19 @@
 	"variants": {
 		"facing=south,inverted=false": {
 			"model": "simurail:block/physics_bogey/normal",
-			"y": 180
+			"y": 0
 		},
 		"facing=north,inverted=false": {
 			"model": "simurail:block/physics_bogey/normal",
-			"y": 0
+			"y": 180
 		},
 		"facing=east,inverted=false": {
 			"model": "simurail:block/physics_bogey/normal",
-			"y": 90
+			"y": -90
 		},
 		"facing=west,inverted=false": {
 			"model": "simurail:block/physics_bogey/normal",
-			"y": -90
+			"y": 90
 		},
 
 		"facing=south,inverted=true": {

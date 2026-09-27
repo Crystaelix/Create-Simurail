@@ -1016,8 +1016,8 @@ public class PhysicsBogeyAxle {
 	protected ITrackSelector steer(TravellingPoint point) {
 		return (graph, pair) -> {
 			List<Map.Entry<TrackNode, TrackEdge>> targets = pair.getSecond();
-			List<Map.Entry<TrackNode, TrackEdge>> rightTargets = new ArrayList<>();
 			List<Map.Entry<TrackNode, TrackEdge>> leftTargets = new ArrayList<>();
+			List<Map.Entry<TrackNode, TrackEdge>> rightTargets = new ArrayList<>();
 			Map.Entry<TrackNode, TrackEdge> straightTarget = null;
 			Object2DoubleMap<TrackNode> turnValues = new Object2DoubleArrayMap<>(targets.size());
 
@@ -1031,7 +1031,7 @@ public class PhysicsBogeyAxle {
 				TrackEdge edge = entry.getValue();
 				if(edge.isTurn()) {
 					turn = SimurailMath.cachedControlPoints(edge.getTurn()).curvature(0, turnCurvature).dot(trackLat);
-					(turn > 0 ? rightTargets : leftTargets).add(entry);
+					(turn < 0 ? leftTargets : rightTargets).add(entry);
 				}
 				else {
 					straightTarget = entry;
@@ -1045,14 +1045,14 @@ public class PhysicsBogeyAxle {
 			Map.Entry<TrackNode, TrackEdge> bestTarget = null;
 
 			if(straightTarget != null && (steerValue == 0 ||
-					steerValue > 0 && rightTargets.isEmpty() ||
-					steerValue < 0 && leftTargets.isEmpty())) {
+					steerValue < 0 && leftTargets.isEmpty() ||
+					steerValue > 0 && rightTargets.isEmpty())) {
 				bestTarget = straightTarget;
 			}
-			else if(!rightTargets.isEmpty() && (steerValue >= 0 || leftTargets.isEmpty())) {
+			else if(!leftTargets.isEmpty() && (steerValue <= 0 || rightTargets.isEmpty())) {
 				double targetTurn = Mth.lerp(steerValue, Math.max(minTurn, 0), maxTurn);
 				double bestTurn = Double.MAX_VALUE;
-				for(Map.Entry<TrackNode, TrackEdge> entry : rightTargets) {
+				for(Map.Entry<TrackNode, TrackEdge> entry : leftTargets) {
 					double diff = Math.abs(targetTurn - turnValues.getDouble(entry.getKey()));
 					if(diff < bestTurn) {
 						bestTurn = diff;
@@ -1063,7 +1063,7 @@ public class PhysicsBogeyAxle {
 			else {
 				double targetTurn = Mth.lerp(steerValue, Math.max(minTurn, 0), maxTurn);
 				double bestTurn = Double.MAX_VALUE;
-				for(Map.Entry<TrackNode, TrackEdge> entry : leftTargets) {
+				for(Map.Entry<TrackNode, TrackEdge> entry : rightTargets) {
 					double diff = Math.abs(targetTurn - turnValues.getDouble(entry.getKey()));
 					if(diff < bestTurn) {
 						bestTurn = diff;

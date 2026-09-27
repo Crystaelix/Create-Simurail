@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"count": 1,
+		"id": "simurail:track_switch"
+	},
+	"pattern": [
+		"L",
+		"I",
+		"C"
+	],
+	"key": {
+		"C": {"item": "create:railway_casing"},
+		"I": {"item": "create:industrial_iron_block"},
+		"L": {"item": "minecraft:lever"}
+	}
+}

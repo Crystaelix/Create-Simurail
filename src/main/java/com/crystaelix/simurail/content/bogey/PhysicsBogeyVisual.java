@@ -26,7 +26,6 @@ import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ClientSubLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 
 public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> implements SimpleDynamicVisual {
@@ -44,6 +43,20 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 		if(blockEntity.isUnpowered()) {
 			rotatingModel.delete();
 		}
+
+		frontHead = instancerProvider().
+				instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_HEAD)).
+				createInstance();
+		backHead = instancerProvider().
+				instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_HEAD)).
+				createInstance();
+
+		instancerProvider().
+		instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_CABLE)).
+		createInstances(frontCable);
+		instancerProvider().
+		instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_CABLE)).
+		createInstances(backCable);
 	}
 
 	@Override
@@ -61,7 +74,6 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 		}
 
 		float partialTick = context.partialTick();
-		BlockPos visualPos = getVisualPosition();
 
 		blockEntity.getRenderPivotOffset(partialTick, pivotOffset);
 		blockEntity.getRenderPivotRot(partialTick, pivotRot);
@@ -106,13 +118,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 			float yRot = (float)Math.atan2(diffX, diffZ);
 			float xRot = (float)Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ));
 
-			if(frontHead == null) {
-				frontHead = instancerProvider().
-						instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_HEAD)).
-						createInstance();
-				relight(frontHead);
-			}
-
+			frontHead.setVisible(true);
 			frontHead.setIdentityTransform().
 			translate(visualPos).
 			center().
@@ -125,13 +131,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 				float scale = (length * 4) / 8;
 
 				for(int i = 0; i < 8; ++i) {
-					if(frontCable[i] == null) {
-						frontCable[i] = instancerProvider().
-								instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_CABLE)).
-								createInstance();
-						relight(frontCable[i]);
-					}
-
+					frontCable[i].setVisible(true);
 					frontCable[i].setIdentityTransform().
 					translate(visualPos).
 					center().
@@ -144,22 +144,13 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 				}
 			}
 			else for(int i = 0; i < 8; ++i) {
-				if(frontCable[i] != null) {
-					frontCable[i].delete();
-					frontCable[i] = null;
-				}
+				frontCable[i].setVisible(false);
 			}
 		}
 		else {
-			if(frontHead != null) {
-				frontHead.delete();
-				frontHead = null;
-			}
+			frontHead.setVisible(false);
 			for(int i = 0; i < 8; ++i) {
-				if(frontCable[i] != null) {
-					frontCable[i].delete();
-					frontCable[i] = null;
-				}
+				frontCable[i].setVisible(false);
 			}
 		}
 
@@ -189,13 +180,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 			float yRot = (float)Math.atan2(diffX, diffZ);
 			float xRot = (float)Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ));
 
-			if(backHead == null) {
-				backHead = instancerProvider().
-						instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_HEAD)).
-						createInstance();
-				relight(backHead);
-			}
-
+			backHead.setVisible(true);
 			backHead.setIdentityTransform().
 			translate(visualPos).
 			center().
@@ -208,13 +193,7 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 				float scale = (length * 4) / 8;
 
 				for(int i = 0; i < 8; ++i) {
-					if(backCable[i] == null) {
-						backCable[i] = instancerProvider().
-								instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_COUPLING_CABLE)).
-								createInstance();
-						relight(frontCable[i]);
-					}
-
+					backCable[i].setVisible(true);
 					backCable[i].setIdentityTransform().
 					translate(visualPos).
 					center().
@@ -227,22 +206,13 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 				}
 			}
 			else for(int i = 0; i < 8; ++i) {
-				if(backCable[i] != null) {
-					backCable[i].delete();
-					backCable[i] = null;
-				}
+				backCable[i].setVisible(false);
 			}
 		}
 		else {
-			if(backHead != null) {
-				backHead.delete();
-				backHead = null;
-			}
+			backHead.setVisible(false);
 			for(int i = 0; i < 8; ++i) {
-				if(backCable[i] != null) {
-					backCable[i].delete();
-					backCable[i] = null;
-				}
+				backCable[i].setVisible(false);
 			}
 		}
 	}
@@ -275,19 +245,11 @@ public class PhysicsBogeyVisual extends ShaftVisual<PhysicsBogeyBlockEntity> imp
 		if(pivot != null) {
 			pivot.delete();
 		}
-		if(frontHead != null) {
-			frontHead.delete();
-		}
-		if(backHead != null) {
-			backHead.delete();
-		}
+		frontHead.delete();
+		backHead.delete();
 		for(int i = 0; i < 8; ++i) {
-			if(frontCable[i] != null) {
-				frontCable[i].delete();
-			}
-			if(backCable[i] != null) {
-				backCable[i].delete();
-			}
+			frontCable[i].delete();
+			backCable[i].delete();
 		}
 	}
 

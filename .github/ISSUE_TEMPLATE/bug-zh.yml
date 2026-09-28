@@ -1,0 +1,37 @@
+name: 錯誤回報
+description: "回報 Simurail 的錯誤"
+labels: [ "bug" ]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Simurail 版本
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 問題描述
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 復現步驟
+      description: "請描述復現問題所需的步驟及模組(版本)"
+    validations:
+      required: true
+
+  - type: input
+    id: log
+    attributes:
+      label: 遊戲日誌
+      description: |
+        我們需要遊戲日誌以獲取關於該錯誤的更多信息，尤其是當涉及遊戲崩潰時。
+        該檔案位於 Minecraft 資料夾內的 "logs" 資料夾中，檔案名稱為 "latest.log"。 
+        請將該文件上傳至 https://mclo.gs/ 並在此處附上連結。 
+        請**不要**直接在此處貼上文件*內容*，因為這會使問題描述變得難以閱讀。
+    validations:
+      required: false

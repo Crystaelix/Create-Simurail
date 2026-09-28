@@ -26,7 +26,7 @@ body:
     id: solution
     attributes:
       label: Suggested solution
-      description: "Describe the solution you would suggest to the above problem."
+      description: "Describe the solution you would suggest to the above problem"
     validations:
       required: true
   
@@ -34,6 +34,6 @@ body:
     id: context
     attributes:
       label: Additional context
-      description: "If there is any additional context needed, such as screenshots or related mods, include here"
+      description: "If there is any additional context, such as screenshots or related mods, include here"
     validations:
       required: false

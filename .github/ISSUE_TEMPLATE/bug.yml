@@ -20,7 +20,7 @@ body:
     id: steps
     attributes:
       label: Steps to reproduce
-      description: "Describe the steps and mod (versions) required to reproduce the issue."
+      description: "Describe the steps and mod (versions) required to reproduce the issue"
     validations:
       required: true
 

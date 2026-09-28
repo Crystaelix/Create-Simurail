@@ -1,0 +1,39 @@
+name: 改進建議
+description: "建議 Simurail 的改進"
+labels: [ "enhancement" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        如果您的想法需要討論或較為複雜，請在提交新 issue 之前[加入我們的 Discord](https://discord.crystaelix.com/)。
+
+  - type: input
+    id: version
+    attributes:
+      label: Simurail 版本
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 問題描述
+      description: "請說明提出此建議的原因，以及試圖解決什麼問題"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 建議解決方案
+      description: "請描述您針對上述問題建議的解決方案"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: context
+    attributes:
+      label: 補充背景資訊
+      description: "如果有任何補充背景資訊，例如截圖或相關模組，請在此處提供"
+    validations:
+      required: false

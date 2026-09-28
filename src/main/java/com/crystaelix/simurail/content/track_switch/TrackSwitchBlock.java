@@ -4,6 +4,7 @@ import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,18 +15,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
 
-public class TrackSwitchBlock extends HorizontalDirectionalBlock implements IBE<TrackSwitchBlockEntity>, IWrenchable {
+public class TrackSwitchBlock extends HorizontalDirectionalBlock implements IBE<TrackSwitchBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
 	public static final MapCodec<TrackSwitchBlock> CODEC = simpleCodec(TrackSwitchBlock::new);
 
@@ -33,6 +36,7 @@ public class TrackSwitchBlock extends HorizontalDirectionalBlock implements IBE<
 
 	public TrackSwitchBlock(Properties properties) {
 		super(properties);
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -43,13 +47,24 @@ public class TrackSwitchBlock extends HorizontalDirectionalBlock implements IBE<
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(FACING);
+		builder.add(FACING, WATERLOGGED);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).
-				setValue(FACING, context.getHorizontalDirection());
+		BlockState state = defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+		return withWater(state, context);
+	}
+
+	@Override
+	protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+		updateWater(level, state, pos);
+		return state;
+	}
+
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return fluidState(state);
 	}
 
 	@Override
@@ -81,6 +96,23 @@ public class TrackSwitchBlock extends HorizontalDirectionalBlock implements IBE<
 	@Override
 	public boolean shouldCheckWeakPower(BlockState state, SignalGetter level, BlockPos pos, Direction side) {
 		return false;
+	}
+
+	@Override
+	protected boolean hasAnalogOutputSignal(BlockState state) {
+		return true;
+	}
+
+	@Override
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+		if(level.getBlockEntity(pos) instanceof TrackSwitchBlockEntity be) {
+			return switch(be.state) {
+			case STRAIGHT -> 0;
+			case LEFT -> 1;
+			case RIGHT -> 2;
+			};
+		}
+		return 0;
 	}
 
 	@Override

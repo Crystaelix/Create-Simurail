@@ -103,6 +103,7 @@ public class AutomaticCouplerScenes {
 		scene.addInstruction(new AutomaticCouplerLengthInstruction(grid.at(8, 2, 7)));
 		scene.idle(30);
 		scene.addInstruction(new AutomaticCouplerLengthInstruction(grid.at(8, 2, 7)));
+		scene.addInstruction(new AutomaticCouplerLengthInstruction(grid.at(8, 2, 7)));
 		scene.idle(10);
 
 		overlay.showText(60).

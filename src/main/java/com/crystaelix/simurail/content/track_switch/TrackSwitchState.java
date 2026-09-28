@@ -10,5 +10,5 @@ public enum TrackSwitchState {
 	LEFT,
 	RIGHT;
 	
-	public static final IntFunction<TrackSwitchState> BY_ID = ByIdMap.continuous(TrackSwitchState::ordinal, values(), OutOfBoundsStrategy.WRAP);
+	public static final IntFunction<TrackSwitchState> BY_ID = ByIdMap.continuous(TrackSwitchState::ordinal, values(), OutOfBoundsStrategy.ZERO);
 }

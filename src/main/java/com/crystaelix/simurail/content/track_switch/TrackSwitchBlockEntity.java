@@ -4,17 +4,24 @@ import java.util.List;
 import java.util.Objects;
 
 import org.joml.Quaterniond;
+import org.joml.Quaterniondc;
 
+import com.crystaelix.simurail.compat.SimurailCompat;
+import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
+import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailEdgePoints;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import dev.ryanhcode.sable.util.SableNBTUtils;
 import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.ponder.api.level.PonderLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -29,7 +36,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class TrackSwitchBlockEntity extends SmartBlockEntity implements TransformableBlockEntity {
 
-	public TrackTargetingBehaviour<TrackSwitch> edgePoint;
+	protected TrackTargetingBehaviour<TrackSwitch> edgePoint;
+	protected AbstractComputerBehaviour computerBehaviour;
 
 	protected boolean straightSignal = false;
 	protected boolean leftSignal = false;
@@ -49,14 +57,24 @@ public class TrackSwitchBlockEntity extends SmartBlockEntity implements Transfor
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		SimurailCompat.COMPUTERCRAFT.ifLoaded(() -> () -> {
+			event.registerBlockEntity(
+					PeripheralCapability.get(),
+					SimurailBlockEntities.TRACK_SWITCH.get(),
+					(be, context) -> be.computerBehaviour.getPeripheralCapability());
+		});
 	}
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, SimurailEdgePoints.TRACK_SWITCH));
+		behaviours.add(computerBehaviour = SimurailComputerCraftProxy.behaviour(this));
 	}
 
 	public TrackSwitch getTrackSwitch() {
+		if(level instanceof PonderLevel) {
+			return null;
+		}
 		if(edgePoint.getEdgePoint() == null) {
 			edgePoint.createEdgePoint();
 		}
@@ -156,7 +174,30 @@ public class TrackSwitchBlockEntity extends SmartBlockEntity implements Transfor
 		rightSignal = newRightSignal;
 	}
 
-	protected void cycleState(boolean shiftDown) {
+	public boolean hasStraightExit() {
+		return straightExit != null;
+	}
+
+	public boolean hasLeftExit() {
+		return leftExit != null;
+	}
+
+	public boolean hasRightExit() {
+		return rightExit != null;
+	}
+
+	public TrackSwitchState getState() {
+		return state;
+	}
+
+	public void trySetState(TrackSwitchState state) {
+		TrackSwitch sw = getTrackSwitch();
+		if(sw != null) {
+			sw.trySetState(state);
+		}
+	}
+
+	public void cycleState(boolean shiftDown) {
 		TrackSwitch sw = getTrackSwitch();
 		if(sw != null) {
 			sw.cycleState(shiftDown);
@@ -165,6 +206,20 @@ public class TrackSwitchBlockEntity extends SmartBlockEntity implements Transfor
 
 	public boolean hasSignal(Direction direction) {
 		return level.hasSignal(getBlockPos().relative(direction), direction);
+	}
+
+	public void setPonderTrackRot(Quaterniondc trackRot) {
+		this.trackRot.set(trackRot);
+	}
+
+	public void setPonderState(TrackSwitchState state) {
+		this.state = state;
+	}
+
+	public void setPonderExits(TrackNodeLocation straight, TrackNodeLocation left, TrackNodeLocation right) {
+		straightExit = straight;
+		leftExit = left;
+		rightExit = right;
 	}
 
 	@Override

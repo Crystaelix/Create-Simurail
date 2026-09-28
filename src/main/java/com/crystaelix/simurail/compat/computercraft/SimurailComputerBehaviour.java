@@ -5,9 +5,11 @@ import java.util.function.Supplier;
 import com.crystaelix.simurail.compat.computercraft.peripheral.PhysicsBogeyPeripheral;
 import com.crystaelix.simurail.compat.computercraft.peripheral.ProbeReaderPeripheral;
 import com.crystaelix.simurail.compat.computercraft.peripheral.RemoteControllerPeripheral;
+import com.crystaelix.simurail.compat.computercraft.peripheral.TrackSwitchPeripheral;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlockEntity;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockEntity;
+import com.crystaelix.simurail.content.track_switch.TrackSwitchBlockEntity;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.events.ComputerEvent;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SyncedPeripheral;
@@ -33,6 +35,7 @@ public class SimurailComputerBehaviour extends AbstractComputerBehaviour {
 		case PhysicsBogeyBlockEntity pbbe -> () -> new PhysicsBogeyPeripheral(pbbe);
 		case ProbeReaderBlockEntity prbe -> () -> new ProbeReaderPeripheral(prbe);
 		case RemoteControllerBlockEntity rcbe -> () -> new RemoteControllerPeripheral(rcbe);
+		case TrackSwitchBlockEntity tsbe -> () -> new TrackSwitchPeripheral(tsbe);
 		case null, default -> throw new IllegalArgumentException("No peripheral available for " + BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(be.getType()));
 		};
 	}

@@ -40,6 +40,10 @@
 	"block.simurail.remote_controller.success": "已綁定",
 	"block.simurail.remote_controller.clear": "已取消選擇",
 
+	"block.simurail.track_switch.straight": "直行",
+	"block.simurail.track_switch.left": "左轉",
+	"block.simurail.track_switch.right": "右轉",
+
 	"block.simurail.brass_borehead_bearing.filter": "忽略材料",
 
 	"item.simurail.connector.set": "已選定目標位置",
@@ -139,6 +143,8 @@
 
 	"force_group.simurail.traction": "牽引力",
 	"force_group.simurail.brake": "制動力",
+
+	"simurail.display_source.track_switch": "轉轍器狀態",
 
 	"simulated_section.simurail.simurail": "模擬鐵道",
 
@@ -391,7 +397,7 @@
 
 	"simurail.ponder.automatic_coupler.intro.header": "使用自動連結器連接結構",
 	"simurail.ponder.automatic_coupler.intro.text_1": "自動連結器在靠近時會自動互相連接",
-	"simurail.ponder.automatic_coupler.intro.text_2": "提供紅石訊號以斷開連接",
+	"simurail.ponder.automatic_coupler.intro.text_2": "提供紅石訊號或潛行時空手右鍵以斷開連接",
 	"simurail.ponder.automatic_coupler.intro.text_3": "空手右鍵以更改長度",
 	"simurail.ponder.automatic_coupler.intro.text_4": "使用扳手右鍵以變更類型",
 	"simurail.ponder.automatic_coupler.intro.text_5": "不同類型的自動連結器之間無法相互連接",
@@ -433,6 +439,13 @@
 	"simurail.ponder.remote_controller.intro.text_2": "轉向架遠端控制器可以遠端向物理轉向架發送紅石訊號，以控制和切換其行為",
 	"simurail.ponder.remote_controller.intro.text_3": "右鍵以設定控制模式",
 	"simurail.ponder.remote_controller.intro.text_4": "輸入紅石訊號以控制連結的物理轉向架",
+
+	"simurail.ponder.track_switch.intro.header": "使用轉轍器控制列車方向",
+	"simurail.ponder.track_switch.intro.text_1": "放置轉轍器時，先選擇一個列車軌道道岔，然後將其放置在附近",
+	"simurail.ponder.track_switch.intro.text_2": "轉轍器會自動控制通過道岔的列車的方向",
+	"simurail.ponder.track_switch.intro.text_3": "右鍵將轉轍器向右切換",
+	"simurail.ponder.track_switch.intro.text_4": "潛行時右鍵將轉轍器向左切換",
+	"simurail.ponder.track_switch.intro.text_5": "轉轍器也可輸入紅石訊號切換方向",
 
 	"simurail.ponder.physics_roller.intro.header": "使用物理壓路機鋪路",
 	"simurail.ponder.physics_roller.intro.text_1": "在物理結構上，物理壓路機可用於清理並鋪設結構行進時的靜態地形",

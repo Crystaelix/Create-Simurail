@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.content;
 
-import java.util.function.Supplier;
-
 import com.crystaelix.simurail.Simurail;
 
 import net.minecraft.core.registries.Registries;
@@ -14,7 +12,7 @@ public class SimurailSoundEvents {
 
 	public static final DeferredRegister<SoundEvent> REGISTRAR = DeferredRegister.create(Registries.SOUND_EVENT, Simurail.MOD_ID);
 
-	public static final Supplier<SoundEvent>
+	public static final DeferredHolder<SoundEvent, SoundEvent>
 	PHYSICS_BOGEY_RUMBLE = sound("block.physics_bogey.rumble"),
 	COUPLER_CONNECT = sound("block.coupler.connect"),
 	COUPLER_DISCONNECT = sound("block.coupler.disconnect"),

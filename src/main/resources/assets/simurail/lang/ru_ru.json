@@ -40,6 +40,10 @@
 	"block.simurail.remote_controller.success": "Успешно установлено",
 	"block.simurail.remote_controller.clear": "Выбор сброшен",
 
+	"block.simurail.track_switch.straight": "Пря́мо",
+	"block.simurail.track_switch.left": "Лево",
+	"block.simurail.track_switch.right": "Право",
+
 	"block.simurail.brass_borehead_bearing.filter": "Игнорируемые материалы",
 
 	"item.simurail.connector.set": "Выбрана целевая позиция",
@@ -139,6 +143,8 @@
 
 	"force_group.simurail.traction": "Тяга",
 	"force_group.simurail.brake": "Торможение",
+
+	"simurail.display_source.track_switch": "Track Switch State",
 
 	"simulated_section.simurail.simurail": "Simurail",
 
@@ -433,6 +439,13 @@
 	"simurail.ponder.remote_controller.intro.text_2": "Удалённый тележечный контроллер удалённо отправляет редстоун-сигналы на Физическую Тележку, контролируя или переключая её параметры",
 	"simurail.ponder.remote_controller.intro.text_3": "ПКМ чтобы настроить режим управления",
 	"simurail.ponder.remote_controller.intro.text_4": "Подайте редстоун-сигнал чтобы контролировать привязанную Физическую Тележку",
+
+	"simurail.ponder.track_switch.intro.header": "Directing Trains with Track Switches",
+	"simurail.ponder.track_switch.intro.text_1": "To place a Track Switch, select a Train Track junction, then place it nearby",
+	"simurail.ponder.track_switch.intro.text_2": "The Track Switch automatically directs trains passing over it",
+	"simurail.ponder.track_switch.intro.text_3": "Right click to cycle the Track Switch to the right",
+	"simurail.ponder.track_switch.intro.text_4": "Right click while sneaking to cycle the Track Switch to the left",
+	"simurail.ponder.track_switch.intro.text_5": "The Track Switch can also be controlled using redstone signals",
 
 	"simurail.ponder.physics_roller.intro.header": "Укладка с помощью Физического катка",
 	"simurail.ponder.physics_roller.intro.text_1": "На Simulated Конструкциях Физический каток может быть использован для очистки и укладки статичного рельефа, по которому проходит структура",

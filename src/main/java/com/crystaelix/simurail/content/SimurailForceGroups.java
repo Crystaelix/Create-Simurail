@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.content;
 
-import java.util.function.Supplier;
-
 import com.crystaelix.simurail.Simurail;
 
 import dev.ryanhcode.sable.api.physics.force.ForceGroup;
@@ -15,7 +13,7 @@ public class SimurailForceGroups {
 
 	public static final DeferredRegister<ForceGroup> REGISTRAR = DeferredRegister.create(ForceGroups.REGISTRY_KEY, Simurail.MOD_ID);
 
-	public static final Supplier<ForceGroup>
+	public static final DeferredHolder<ForceGroup, ForceGroup>
 	TRACTION = group("traction", 0xE0B359, true),
 	BRAKE = group("brake", 0x5757DB, true);
 

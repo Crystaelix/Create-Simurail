@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.content;
 
-import java.util.function.Supplier;
-
 import com.crystaelix.simurail.Simurail;
 
 import net.minecraft.core.particles.ParticleType;
@@ -15,7 +13,8 @@ public class SimurailParticles {
 
 	public static final DeferredRegister<ParticleType<?>> REGISTRAR = DeferredRegister.create(Registries.PARTICLE_TYPE, Simurail.MOD_ID);
 
-	public static final Supplier<SimpleParticleType> PHYSICS_BOGEY_WHEEL_SPARK = particle("physics_bogey_wheel_spark");
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType>
+	PHYSICS_BOGEY_WHEEL_SPARK = particle("physics_bogey_wheel_spark");
 
 	public static void register(IEventBus modEventBus) {
 		REGISTRAR.register(modEventBus);

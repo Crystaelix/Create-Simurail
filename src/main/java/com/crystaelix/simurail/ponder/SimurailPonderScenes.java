@@ -11,6 +11,7 @@ import com.crystaelix.simurail.ponder.scenes.PhysicsBogeyScenes;
 import com.crystaelix.simurail.ponder.scenes.PhysicsRollerScenes;
 import com.crystaelix.simurail.ponder.scenes.ProbeReaderScenes;
 import com.crystaelix.simurail.ponder.scenes.RemoteControllerScenes;
+import com.crystaelix.simurail.ponder.scenes.TrackSwitchScenes;
 import com.simibubi.create.infrastructure.ponder.scenes.RollerScenes;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -50,6 +51,9 @@ public class SimurailPonderScenes {
 
 		helper.forComponents(SimurailBlocks.REMOTE_CONTROLLER).
 		addStoryBoard("remote_controller/intro", RemoteControllerScenes::intro);
+		
+		helper.forComponents(SimurailBlocks.TRACK_SWITCH).
+		addStoryBoard("track_switch/intro", TrackSwitchScenes::intro);
 
 		helper.forComponents(SimurailBlocks.PHYSICS_ROLLER).
 		addStoryBoard("physics_roller/intro", PhysicsRollerScenes::intro).
@@ -57,8 +61,6 @@ public class SimurailPonderScenes {
 		addStoryBoard(ROLLER_CLEAR_AND_PAVE, RollerScenes::clearAndPave).
 		addStoryBoard(ROLLER_FILL, RollerScenes::fill);
 
-		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () ->
-				SimurailElectroEnergeticsPonderScenes.register(registry)
-		);
+		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () -> SimurailElectroEnergeticsPonderScenes.register(registry));
 	}
 }

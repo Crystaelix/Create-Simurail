@@ -40,6 +40,10 @@
 	"block.simurail.remote_controller.success": "已绑定",
 	"block.simurail.remote_controller.clear": "已取消选择",
 
+	"block.simurail.track_switch.straight": "直行",
+	"block.simurail.track_switch.left": "左转",
+	"block.simurail.track_switch.right": "右转",
+
 	"block.simurail.brass_borehead_bearing.filter": "忽略材料",
 
 	"item.simurail.connector.set": "已选择目标位置",
@@ -139,6 +143,8 @@
 
 	"force_group.simurail.traction": "牵引力",
 	"force_group.simurail.brake": "制动力",
+
+	"simurail.display_source.track_switch": "转辙器状态",
 
 	"simulated_section.simurail.simurail": "模拟铁道",
 
@@ -391,7 +397,7 @@
 
 	"simurail.ponder.automatic_coupler.intro.header": "使用自动车钩连接结构",
 	"simurail.ponder.automatic_coupler.intro.text_1": "自动车钩在靠近时会自动相互连接",
-	"simurail.ponder.automatic_coupler.intro.text_2": "提供红石信号以断开连接",
+	"simurail.ponder.automatic_coupler.intro.text_2": "提供红石信号或潜行时空手右击以断开连接",
 	"simurail.ponder.automatic_coupler.intro.text_3": "空手右击以更改长度",
 	"simurail.ponder.automatic_coupler.intro.text_4": "使用扳手右击以更改类型",
 	"simurail.ponder.automatic_coupler.intro.text_5": "不同类型的自动车钩之间无法相互连接",
@@ -433,6 +439,13 @@
 	"simurail.ponder.remote_controller.intro.text_2": "转向架远端控制器可以向物理转向架远程发送红石信号，以控制和切换其行为",
 	"simurail.ponder.remote_controller.intro.text_3": "右击以配置控制模式",
 	"simurail.ponder.remote_controller.intro.text_4": "输入红石信号以控制链接的物理转向架",
+
+	"simurail.ponder.track_switch.intro.header": "使用转辙器控制列车方向",
+	"simurail.ponder.track_switch.intro.text_1": "放置转辙器时，先选择一个列车轨道道岔，然后将其放置在附近",
+	"simurail.ponder.track_switch.intro.text_2": "转辙器会自动控制通过道岔的列车的方向",
+	"simurail.ponder.track_switch.intro.text_3": "右击以将转辙器向右切换",
+	"simurail.ponder.track_switch.intro.text_4": "潜行时右击以将转辙器向左切换",
+	"simurail.ponder.track_switch.intro.text_5": "转辙器也可输入红石信号切换方向",
 
 	"simurail.ponder.physics_roller.intro.header": "使用物理压路机铺路",
 	"simurail.ponder.physics_roller.intro.text_1": "在物理结构上，物理压路机可用于清理并铺设结构行进时的静态地形",

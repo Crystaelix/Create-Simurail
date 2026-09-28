@@ -22,6 +22,7 @@ import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlock;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerBlockItem;
 import com.crystaelix.simurail.content.track_switch.TrackSwitchBlock;
 import com.crystaelix.simurail.content.track_switch.TrackSwitchBlockItem;
+import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -95,6 +96,7 @@ public class SimurailBlocks {
 			block("track_switch", TrackSwitchBlock::new).
 			initialProperties(SharedProperties::softMetal).
 			properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_CYAN).sound(SoundType.NETHERITE_BLOCK)).
+			transform(DisplaySource.displaySource(SimurailDisplaySources.TRACK_SWITCH)).
 			item(TrackSwitchBlockItem::new).
 			build().
 			register();

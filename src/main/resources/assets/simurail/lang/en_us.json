@@ -40,6 +40,10 @@
 	"block.simurail.remote_controller.success": "Successfully bound",
 	"block.simurail.remote_controller.clear": "Selection cleared",
 
+	"block.simurail.track_switch.straight": "Straight",
+	"block.simurail.track_switch.left": "Left",
+	"block.simurail.track_switch.right": "Right",
+
 	"block.simurail.brass_borehead_bearing.filter": "Ignored Materials",
 
 	"item.simurail.connector.set": "Targeted position selected",
@@ -139,6 +143,8 @@
 
 	"force_group.simurail.traction": "Traction",
 	"force_group.simurail.brake": "Brake",
+
+	"simurail.display_source.track_switch": "Track Switch State",
 
 	"simulated_section.simurail.simurail": "Simurail",
 
@@ -391,7 +397,7 @@
 
 	"simurail.ponder.automatic_coupler.intro.header": "Connecting Structures with Automatic Couplers",
 	"simurail.ponder.automatic_coupler.intro.text_1": "Automatic Couplers automatically connect to each other when close together",
-	"simurail.ponder.automatic_coupler.intro.text_2": "Provide redstone power to disconnect",
+	"simurail.ponder.automatic_coupler.intro.text_2": "Provide redstone power or right click with an empty hand while sneaking to disconnect",
 	"simurail.ponder.automatic_coupler.intro.text_3": "Right click with an empty hand to change the length",
 	"simurail.ponder.automatic_coupler.intro.text_4": "Right click with a Wrench to change the type",
 	"simurail.ponder.automatic_coupler.intro.text_5": "Automatic Couplers of different types cannot connect",
@@ -433,6 +439,13 @@
 	"simurail.ponder.remote_controller.intro.text_2": "The Bogie Remote Controller remotely sends redstone signals to a Physics Bogie, controlling and toggling its behavior",
 	"simurail.ponder.remote_controller.intro.text_3": "Right click to configure the control mode",
 	"simurail.ponder.remote_controller.intro.text_4": "Supply a redstone signal to control the linked Physics Bogie",
+
+	"simurail.ponder.track_switch.intro.header": "Directing Trains with Track Switches",
+	"simurail.ponder.track_switch.intro.text_1": "To place a Track Switch, select a Train Track junction, then place it nearby",
+	"simurail.ponder.track_switch.intro.text_2": "The Track Switch automatically directs trains passing over it",
+	"simurail.ponder.track_switch.intro.text_3": "Right click to cycle the Track Switch to the right",
+	"simurail.ponder.track_switch.intro.text_4": "Right click while sneaking to cycle the Track Switch to the left",
+	"simurail.ponder.track_switch.intro.text_5": "The Track Switch can also be controlled using redstone signals",
 
 	"simurail.ponder.physics_roller.intro.header": "Paving with Physics Rollers",
 	"simurail.ponder.physics_roller.intro.text_1": "On simulated contraptions, a Physics Roller can be used to clear and pave the static terrain the structure travels over",

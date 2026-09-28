@@ -7,6 +7,7 @@ import org.joml.Vector3d;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
@@ -77,7 +78,7 @@ public class TrackSwitchHintOutline {
 
 	private static void showTargetOutlines() {
 		Minecraft mc = Minecraft.getInstance();
-		if(mc.hitResult instanceof BlockHitResult hitResult) {
+		if(GogglesItem.isWearingGoggles(mc.player) && mc.hitResult instanceof BlockHitResult hitResult) {
 			Level level = mc.level;
 			if(hitResult.getType() != HitResult.Type.MISS && level.getBlockEntity(hitResult.getBlockPos()) instanceof TrackSwitchBlockEntity be) {
 				TrackSwitch sw = be.getTrackSwitch();
@@ -87,26 +88,26 @@ public class TrackSwitchHintOutline {
 				Vec3 nodeLoc = sw.edgeLocation.getSecond().getLocation();
 				be.trackRot.transform(SimurailMath.DIR_YP, trackVert);
 				be.trackRot.transform(SimurailMath.DIR_ZP, trackLat);
-				if(be.straightExit != null) {
+				if(be.hasStraightExit()) {
 					boolean active = be.state == TrackSwitchState.STRAIGHT;
 					Vec3 from = JOMLConversion.toMojang(
 							JOMLConversion.toJOML(nodeLoc, fromPos).fma(0.375, trackVert));
 					Vec3 to = be.straightExit.getLocation().add(0, 0.375, 0);
-					Outliner.getInstance().showLine("simurail.track_switch.straight", from, to).colored(active ? 0x00CB96 : 0xFF3296).lineWidth(0.0625F);
+					Outliner.getInstance().showLine("simurail.track_switch.straight", from, to).colored(active ? 0x8CBA51 : 0xFF5D6C).lineWidth(0.0625F);
 				}
-				if(be.leftExit != null) {
+				if(be.hasLeftExit()) {
 					boolean active = be.state == TrackSwitchState.LEFT;
 					Vec3 from = JOMLConversion.toMojang(
 							JOMLConversion.toJOML(nodeLoc, fromPos).fma(0.375, trackVert).fma(-0.25, trackLat));
 					Vec3 to = be.leftExit.getLocation().add(0, 0.375, 0);
-					Outliner.getInstance().showLine("simurail.track_switch.left", from, to).colored(active ? 0x00CB96 : 0xFF3296).lineWidth(0.0625F);
+					Outliner.getInstance().showLine("simurail.track_switch.left", from, to).colored(active ? 0x8CBA51 : 0xFF5D6C).lineWidth(0.0625F);
 				}
-				if(be.rightExit != null) {
+				if(be.hasRightExit()) {
 					boolean active = be.state == TrackSwitchState.RIGHT;
 					Vec3 from = JOMLConversion.toMojang(
 							JOMLConversion.toJOML(nodeLoc, fromPos).fma(0.375, trackVert).fma(0.25, trackLat));
 					Vec3 to = be.rightExit.getLocation().add(0, 0.375, 0);
-					Outliner.getInstance().showLine("simurail.track_switch.right", from, to).colored(active ? 0x00CB96 : 0xFF3296).lineWidth(0.0625F);
+					Outliner.getInstance().showLine("simurail.track_switch.right", from, to).colored(active ? 0x8CBA51 : 0xFF5D6C).lineWidth(0.0625F);
 				}
 			}
 		}

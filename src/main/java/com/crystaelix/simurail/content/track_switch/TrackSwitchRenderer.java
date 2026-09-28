@@ -65,24 +65,24 @@ public class TrackSwitchRenderer extends SmartBlockEntityRenderer<TrackSwitchBlo
 	}
 
 	protected static PartialModel getOverlayModel(TrackSwitchBlockEntity be) {
-		if(be.straightExit != null && be.leftExit != null && be.rightExit != null) {
+		if(be.hasStraightExit() && be.hasLeftExit() && be.hasRightExit()) {
 			return switch(be.state) {
 			case LEFT -> SimurailPartialModels.TRACK_SWITCH_3WAY_LEFT;
 			case RIGHT -> SimurailPartialModels.TRACK_SWITCH_3WAY_RIGHT;
 			case null, default -> SimurailPartialModels.TRACK_SWITCH_3WAY_STRAIGHT;
 			};
 		}
-		else if(be.straightExit != null && be.leftExit != null) {
+		else if(be.hasStraightExit() && be.hasLeftExit()) {
 			return be.state == TrackSwitchState.LEFT ?
 					SimurailPartialModels.TRACK_SWITCH_LEFT_TURN :
 						SimurailPartialModels.TRACK_SWITCH_LEFT_STRAIGHT;
 		}
-		else if(be.straightExit != null && be.rightExit != null) {
+		else if(be.hasStraightExit() && be.hasRightExit()) {
 			return be.state == TrackSwitchState.RIGHT ?
 					SimurailPartialModels.TRACK_SWITCH_RIGHT_TURN :
 						SimurailPartialModels.TRACK_SWITCH_RIGHT_STRAIGHT;
 		}
-		else if(be.leftExit != null && be.rightExit != null) {
+		else if(be.hasLeftExit() && be.hasRightExit()) {
 			return be.state == TrackSwitchState.LEFT ?
 					SimurailPartialModels.TRACK_SWITCH_WYE_LEFT :
 						SimurailPartialModels.TRACK_SWITCH_WYE_RIGHT;

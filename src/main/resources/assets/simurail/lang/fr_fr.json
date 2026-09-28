@@ -40,6 +40,10 @@
 	"block.simurail.remote_controller.success": "Liaison réussie",
 	"block.simurail.remote_controller.clear": "Sélection effacée",
 
+	"block.simurail.track_switch.straight": "Direct",
+	"block.simurail.track_switch.left": "Gauche",
+	"block.simurail.track_switch.right": "Droite",
+
 	"block.simurail.brass_borehead_bearing.filter": "Matériaux ignorés",
 
 	"item.simurail.connector.set": "Position ciblée sélectionnée",
@@ -139,6 +143,8 @@
 
 	"force_group.simurail.traction": "Traction",
 	"force_group.simurail.brake": "Frein",
+
+	"simurail.display_source.track_switch": "Track Switch State",
 
 	"simulated_section.simurail.simurail": "Simurail",
 
@@ -391,7 +397,7 @@
 
 	"simurail.ponder.automatic_coupler.intro.header": "Atteler des engins simulés avec des attelages automatiques",
 	"simurail.ponder.automatic_coupler.intro.text_1": "Les attelages automatiques se connectent entre eux automatiquement lorsqu'ils sont proches",
-	"simurail.ponder.automatic_coupler.intro.text_2": "Alimentez l'un d'entre eux en redstone pour les déconnecter",
+	"simurail.ponder.automatic_coupler.intro.text_2": "Alimentez en redstone ou faites un clic droit à main nue en étant accroupi pour le déconnecter",
 	"simurail.ponder.automatic_coupler.intro.text_3": "Faites un clic droit à main nue pour changer la longueur",
 	"simurail.ponder.automatic_coupler.intro.text_4": "Faites un clic droit avec une clé pour changer le type",
 	"simurail.ponder.automatic_coupler.intro.text_5": "Des attelages automatiques de types différents ne peuvent pas se connecter entre eux",
@@ -433,6 +439,13 @@
 	"simurail.ponder.remote_controller.intro.text_2": "La télécommande de bogie envoie à distance des signaux de redstone à un bogie dynamique, contrôlant son comportement",
 	"simurail.ponder.remote_controller.intro.text_3": "Faites un clic droit pour configurer le mode de commande",
 	"simurail.ponder.remote_controller.intro.text_4": "Fournissez un signal de redstone pour commander le bogie dynamique lié",
+
+	"simurail.ponder.track_switch.intro.header": "Directing Trains with Track Switches",
+	"simurail.ponder.track_switch.intro.text_1": "To place a Track Switch, select a Train Track junction, then place it nearby",
+	"simurail.ponder.track_switch.intro.text_2": "The Track Switch automatically directs trains passing over it",
+	"simurail.ponder.track_switch.intro.text_3": "Right click to cycle the Track Switch to the right",
+	"simurail.ponder.track_switch.intro.text_4": "Right click while sneaking to cycle the Track Switch to the left",
+	"simurail.ponder.track_switch.intro.text_5": "The Track Switch can also be controlled using redstone signals",
 
 	"simurail.ponder.physics_roller.intro.header": "Paver avec des rouleaux dynamiques",
 	"simurail.ponder.physics_roller.intro.text_1": "Sur les engins simulés, un rouleau mécanique dynamique permet de dégager et de paver le terrain statique que l'engin parcourt",

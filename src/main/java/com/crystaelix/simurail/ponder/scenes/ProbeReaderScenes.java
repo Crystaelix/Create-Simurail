@@ -53,8 +53,9 @@ public class ProbeReaderScenes {
 		scene.idle(40);
 
 		world.showSection(select.position(7, 3, 4), Direction.DOWN);
-		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, "outline", new AABB(7.125, 3, 4.125, 7.875, 3.1875, 4.875), 20);
-		scene.idle(30);
+		scene.idle(10);
+		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "outline", new AABB(7.125, 3, 4.125, 7.875, 3.1875, 4.875), 15);
+		scene.idle(20);
 
 		overlay.showText(60).
 		pointAt(vector.centerOf(7, 3, 4)).

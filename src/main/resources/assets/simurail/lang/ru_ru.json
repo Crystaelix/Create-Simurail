@@ -40,7 +40,7 @@
 	"block.simurail.remote_controller.success": "Успешно установлено",
 	"block.simurail.remote_controller.clear": "Выбор сброшен",
 
-	"block.simurail.track_switch.straight": "Пря́мо",
+	"block.simurail.track_switch.straight": "Прямо",
 	"block.simurail.track_switch.left": "Лево",
 	"block.simurail.track_switch.right": "Право",
 
@@ -60,11 +60,11 @@
 	"gui.simurail.physics_bogey.physics": "Физическое поведение",
 	"gui.simurail.physics_bogey.physics.enabled": "Включено",
 	"gui.simurail.physics_bogey.physics.disabled": "Выключено",
-	"gui.simurail.physics_bogey.preset": "Frame Movement Preset",
-	"gui.simurail.physics_bogey.preset.custom": "Custom",
-	"gui.simurail.physics_bogey.preset.single": "Single / Driving",
-	"gui.simurail.physics_bogey.preset.double": "Double",
-	"gui.simurail.physics_bogey.preset.sliding": "Sliding",
+	"gui.simurail.physics_bogey.preset": "Пресет Движения Рамы",
+	"gui.simurail.physics_bogey.preset.custom": "Свой",
+	"gui.simurail.physics_bogey.preset.single": "Одиночный / Вождение",
+	"gui.simurail.physics_bogey.preset.double": "Двойной",
+	"gui.simurail.physics_bogey.preset.sliding": "Скользящий",
 	"gui.simurail.physics_bogey.rotation": "Вращение рамы",
 	"gui.simurail.physics_bogey.rotation.disallow": "Запрещено",
 	"gui.simurail.physics_bogey.rotation.allow": "Разрещено",
@@ -144,7 +144,7 @@
 	"force_group.simurail.traction": "Тяга",
 	"force_group.simurail.brake": "Торможение",
 
-	"simurail.display_source.track_switch": "Track Switch State",
+	"simurail.display_source.track_switch": "Состояние Стрелочного Перевода",
 
 	"simulated_section.simurail.simurail": "Simurail",
 
@@ -440,12 +440,12 @@
 	"simurail.ponder.remote_controller.intro.text_3": "ПКМ чтобы настроить режим управления",
 	"simurail.ponder.remote_controller.intro.text_4": "Подайте редстоун-сигнал чтобы контролировать привязанную Физическую Тележку",
 
-	"simurail.ponder.track_switch.intro.header": "Directing Trains with Track Switches",
-	"simurail.ponder.track_switch.intro.text_1": "To place a Track Switch, select a Train Track junction, then place it nearby",
-	"simurail.ponder.track_switch.intro.text_2": "The Track Switch automatically directs trains passing over it",
-	"simurail.ponder.track_switch.intro.text_3": "Right click to cycle the Track Switch to the right",
-	"simurail.ponder.track_switch.intro.text_4": "Right click while sneaking to cycle the Track Switch to the left",
-	"simurail.ponder.track_switch.intro.text_5": "The Track Switch can also be controlled using redstone signals",
+	"simurail.ponder.track_switch.intro.header": "Направление Поездов с помощью Стрелочного перевода",
+	"simurail.ponder.track_switch.intro.text_1": "Чтобы установить Стрелочный перевод, выберите стрелку на Железнодорожном пути, затем установите это где-то рядом.",
+	"simurail.ponder.track_switch.intro.text_2": "Стрелочный перевод автоматически направляет поезда проследующие через него",
+	"simurail.ponder.track_switch.intro.text_3": "ПКМ чтобы перевести Стрелочный перевод вправо",
+	"simurail.ponder.track_switch.intro.text_4": "ПКМ в приседе чтобы перевести Стрелочный перевод влево",
+	"simurail.ponder.track_switch.intro.text_5": "Стрелочный перевод также может управляться с помощью редстоун-сигналов",
 
 	"simurail.ponder.physics_roller.intro.header": "Укладка с помощью Физического катка",
 	"simurail.ponder.physics_roller.intro.text_1": "На Simulated Конструкциях Физический каток может быть использован для очистки и укладки статичного рельефа, по которому проходит структура",

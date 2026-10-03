@@ -29,6 +29,7 @@ repositories {
 			}
 		}
 		filter {
+			includeGroup "net.mezzdev.config"
 			includeGroup "mezz.jei"
 			includeGroup "foundry.veil"
 		}
@@ -207,13 +208,15 @@ dependencies {
 
 	// Dependencies
 	implementation("mezz.jei:jei-1.21.1-neoforge:19.44.0.405") {transitive = false}
+	//implementation("net.mezzdev.config:mezz_config-1.21.1-neoforge:0.6.7") {transitive = false}
+	//implementation("mezz.jei:jei-1.21.1-neoforge:19.57.0.450") {transitive = false}
 	implementation "com.tterrag.registrate:Registrate:MC1.21-1.3.0+67"
 	implementation "dev.engine-room.flywheel:flywheel-neoforge-1.21.1:1.0.6-41"
 	implementation "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"
 	implementation("com.simibubi.create:create-1.21.1:6.0.10-280:slim") {transitive = false}
 	implementation("foundry.veil:veil-neoforge-1.21.1:4.1.4") {transitive = false}
 	implementation "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0"
-	implementation("dev.ryanhcode.sable:sable-neoforge-1.21.1:2.0.5") {transitive = false}
+	implementation("dev.ryanhcode.sable:sable-neoforge-1.21.1:2.0.6") {transitive = false}
 	implementation("dev.simulated_team.simulated:simulated-neoforge-1.21.1:1.3.1") {transitive = false}
 
 	// Performance
@@ -227,11 +230,11 @@ dependencies {
 	def mods = [
 		// Compat
 		computercraft     : [configurations: compat, notation: "cc.tweaked:cc-tweaked-1.21.1-forge:1.120.2"],
-		electroenergetics : [configurations: compat, notation: "curse.maven:create-electro-energetics-1443327:8345582"],
+		electroenergetics : [configurations: compat, notation: "curse.maven:create-electro-energetics-1443327:8974177"],
 		create_bb         : [configurations: compat, notation: "curse.maven:create-blocks-bogies-1317252:8723463"],
 		railways          : [configurations: compat, notation: "curse.maven:steam-n-rails-neoforge-1414670:8522154"],
 		kotlinforforge    : [configurations: compat, notation: "thedarkcolour:kotlinforforge-neoforge:5.12.0"],
-		railx             : [configurations: compat, notation: "com.lhwdev.minecraft:railx:0.2.0-build.14:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
+		railx             : [configurations: compat, notation: "com.lhwdev.minecraft:railx:0.2.0-build.15:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
 		offroad           : [configurations: compat, notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
 		copycats          : [configurations: compat, notation: "com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge", transitive: false],
 
@@ -239,15 +242,14 @@ dependencies {
 		aeronautics           : [configurations: extra, notation: "dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1", transitive: false],
 		ritchiesprojectilelib : [configurations: extra, notation: "com.rbasamoyai:ritchiesprojectilelib:2.1.2+mc.1.21.1-neoforge"],
 		createbigcannons      : [configurations: extra, notation: "com.rbasamoyai:createbigcannons:5.11.7+mc.1.21.1", transitive: false, dependsOn: ["ritchiesprojectilelib"]],
-		transmission_linkage  : [configurations: extra, notation: "curse.maven:create-aeronautics-transmission-linkage-1548056:8722967"],
-		drive_by_wire         : [configurations: extra, notation: "curse.maven:drive-by-wire-with-sable-1520378:8247104"],
-		create_deco           : [configurations: extra, notation: "curse.maven:create-deco-509285:7943181"],
+		transmission_linkage  : [configurations: extra, notation: "curse.maven:create-aeronautics-transmission-linkage-1548056:8790451"],
+		drive_by_wire         : [configurations: extra, notation: "curse.maven:drive-by-sable-1576519:8996636"],
 		aeronautics_toolgun   : [configurations: extra, notation: "curse.maven:create-aeronauticstoolgun-1521349:8701394"],
 		create_coasters       : [configurations: extra, notation: "curse.maven:create-coasters-simulated-1601871:8655742"],
 		ldlib2                : [configurations: extra, notation: "com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.37:all", transitive: false],
 		schematic_tool        : [configurations: extra, notation: "curse.maven:sable-schematic-tool-1526951:8606655", dependsOn: ["ldlib2"]],
 		synaxis               : [configurations: extra, notation: "curse.maven:synaxis-1526348:8606652", dependsOn: ["ldlib2", "schematic_tool"]],
-		//pocket                : [configurations: extra, notation: "com.github.misterblusky9:pocket:v0.19.2", transitive: false],
+		//pocket                : [configurations: extra, notation: "curse.maven:create-pocket-sized-1672138:9001968"],
 	]
 
 	def withoutMods = (findProperty("withoutMods") ?: "").toString().split(",")*.trim() - ""
@@ -335,7 +337,7 @@ publishMods {
 
 	curseforge {
 		accessToken = providers.gradleProperty("curseforge.token")
-		projectId = ""
+		projectId = "1583981"
 		minecraftVersions.add(mcVersion)
 		client = true
 		server = true
@@ -344,7 +346,7 @@ publishMods {
 
 	modrinth {
 		accessToken = providers.gradleProperty("modrinth.token")
-		projectId = ""
+		projectId = "Y1cfijof"
 		minecraftVersions.add(mcVersion)
 		environment = CLIENT_AND_SERVER
 		requires "create-aeronautics"

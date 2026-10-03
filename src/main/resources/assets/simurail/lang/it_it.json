@@ -459,20 +459,5 @@
 	"simurail.ponder.physics_roller.materials.text_2": "Either setting applied to one Roller is shared with every other Roller of the same line",
 	"simurail.ponder.physics_roller.materials.text_3": "Rollers without a container of their own draw from the closest one along the line that still holds their material",
 	"simurail.ponder.physics_roller.materials.text_4": "While a filter is set, blocks broken by the line are collected into the closest container with space",
-	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well",
-
-	"simurail.ponder.mechanical_roller_fill.header": "Riempire il terreno con i rulli",
-	"simurail.ponder.mechanical_roller_fill.text_1": "Quando smontati, i rulli possono essere impostati su altre modalità",
-	"simurail.ponder.mechanical_roller_fill.text_2": "Le modalità di riempimento possono aiutare a riempire gli spazi vuoti tra pavimento e terreno",
-	"simurail.ponder.mechanical_roller_fill.text_3": "Con 'Riempi sotto in linea retta' piazzeranno semplici colonne fino alla superficie",
-	"simurail.ponder.mechanical_roller_fill.text_4": "Con 'Riempi sotto con pendenza' i livelli più bassi saranno progressivamente più larghi",
-	"simurail.ponder.mechanical_roller_fill.text_5": "A differenza di 'Rompi blocchi e pavimenta', nessuna di queste modalità permetteranno ai rulli di rompere blocchi già presenti",
-	"simurail.ponder.mechanical_roller_pave.header": "Rompere blocchi e pavimentare con i rulli",
-	"simurail.ponder.mechanical_roller_pave.text_1": "I rulli meccanici possono aiutare a ripulire il terreno attorno a rotaie e percorsi",
-	"simurail.ponder.mechanical_roller_pave.text_2": "Nella sua modalità normale e senza materiali impostati, il rullo si comporterà come una trivella",
-	"simurail.ponder.mechanical_roller_pave.text_3": "Quando smontati, è possibile impostare un materiale per la pavimentazione",
-	"simurail.ponder.mechanical_roller_pave.text_4": "I materiali possono essere forniti tramite bauli o barili fissati alla struttura",
-	"simurail.ponder.mechanical_roller_pave.text_5": "Oltre a rompere i blocchi, ora sostituirà anche il livello sotto di loro",
-	"simurail.ponder.mechanical_roller_pave.text_6": "Nota che qualsiasi blocco distrutto da un rullo ha una possibilità di essere perso",
-	"simurail.ponder.mechanical_roller_pave.text_7": "I rulli sono specialmente utili sui treni, ma possono anche essere usati sulla maggior parte dei macchinari semoventi"
+	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well"
 }

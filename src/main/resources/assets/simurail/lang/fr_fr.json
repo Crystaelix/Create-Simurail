@@ -459,20 +459,5 @@
 	"simurail.ponder.physics_roller.materials.text_2": "Chacun de ces réglages appliqué à un rouleau est partagé avec tous les autres rouleaux de la même rangée",
 	"simurail.ponder.physics_roller.materials.text_3": "Les rouleaux sans conteneur au-dessus d'eux puisent dans le plus proche de la rangée qui contient encore le matériau recherché",
 	"simurail.ponder.physics_roller.materials.text_4": "Lorsqu'un filtre est défini, les blocs cassés par la rangée sont récupérés dans le conteneur le plus proche disposant de place",
-	"simurail.ponder.physics_roller.materials.text_5": "N'importe quel stockage de votre choix convient : un coffre à objets renforcé approvisionné et vidé par des tapis roulants permet de desservir l'entièreté d'une longue rangée",
-
-	"create.ponder.mechanical_roller_pave.header": "Détruire et paver avec le rouleau",
-	"create.ponder.mechanical_roller_pave.text_1": "Les rouleaux mécaniques aident à nettoyer le terrain autour des rails ou chemins",
-	"create.ponder.mechanical_roller_pave.text_2": "Dans son mode par défaut, sans un matériau définit, il détruira simplement les blocs comme une perceuse",
-	"create.ponder.mechanical_roller_pave.text_3": "Quand désassemblé, un matériau de pavage adapté peut être spécifié",
-	"create.ponder.mechanical_roller_pave.text_4": "Les matériaux peuvent être fournis avec des coffres ou tonneaux attachés à la structure",
-	"create.ponder.mechanical_roller_pave.text_5": "En plus de casser les blocs, il remplacera maintenant le niveau en dessous de lui",
-	"create.ponder.mechanical_roller_pave.text_6": "Notez que n'importe quel bloc détruit par un rouleau a une chance de ne pas lâcher de butin",
-	"create.ponder.mechanical_roller_pave.text_7": "Les rouleaux sont particulièrement utiles sur les trains, mais peuvent aussi être utilisés sur la plupart des autres types de machines se déplaçant",
-	"create.ponder.mechanical_roller_fill.header": "Remplir le terrain avec le rouleau",
-	"create.ponder.mechanical_roller_fill.text_1": "Quand désassemblés, les rouleaux peuvent être mis dans d'autres modes",
-	"create.ponder.mechanical_roller_fill.text_2": "Le mode 'remplir' peut aider à remplir des trous entre le pavement et le terrain",
-	"create.ponder.mechanical_roller_fill.text_3": "Sur 'remplissage en ligne droite', ils placeront de simples colonnes jusqu'à la surface",
-	"create.ponder.mechanical_roller_fill.text_4": "Sur 'remplissage en pente', les couches placées plus bas augmenteront en taille",
-	"create.ponder.mechanical_roller_fill.text_5": "À l'opposé de 'détruire & paver', les rouleaux ne casseront aucun bloc existant dans ces modes"
+	"simurail.ponder.physics_roller.materials.text_5": "N'importe quel stockage de votre choix convient : un coffre à objets renforcé approvisionné et vidé par des tapis roulants permet de desservir l'entièreté d'une longue rangée"
 }

@@ -458,21 +458,5 @@
 	"simurail.ponder.physics_roller.materials.text_1": "Слот фильтра рядом с переключателем режимов выбирает какие предметы из хранилища могут быть использованы для укладки",
 	"simurail.ponder.physics_roller.materials.text_2": "Любая настройка, применённая к одному катку, распространяется на все остальные катки в той же линии",
 	"simurail.ponder.physics_roller.materials.text_3": "Катки без собственного хранилища извлекают предметы из ближайшего катка в линии, в котором этот материал ещё есть",
-	"simurail.ponder.physics_roller.materials.text_4": "Пока фильтр установлен, сломанные блоки собираются в ближайшее хранилище в котором есть свободное место",
-	"simurail.ponder.physics_roller.materials.text_5": "Подойдут любые хранилища. Хранилище предметов, пополняемое и опустошаемое лентами будут работать так же хорошо",
-
-	"simurail.ponder.mechanical_roller_fill.header": "Созданием рельефа местности с помощью механических катков",
-	"simurail.ponder.mechanical_roller_fill.text_1": "В разобранном состоянии у катка можно настроить режимы работы",
-	"simurail.ponder.mechanical_roller_fill.text_2": "Режимы заполнения помогут вам соединить промежутки между дорогой и рельефом",
-	"simurail.ponder.mechanical_roller_fill.text_3": "Режим «Заполнение снизу» строит простые колонны до поверхности",
-	"simurail.ponder.mechanical_roller_fill.text_4": "Режим «Наклонное заполнение снизу» строит слои, которые увеличиваются ближе к рельефу",
-	"simurail.ponder.mechanical_roller_fill.text_5": "В отличие от режима «Снос и укладка», ни один из режимов выше не будет разрушать блоки во время работы",
-	"simurail.ponder.mechanical_roller_pave.header": "Сносом и укладкой с помощью механических катков",
-	"simurail.ponder.mechanical_roller_pave.text_1": "Механические катки помогут убрать блоки с дорог или путей",
-	"simurail.ponder.mechanical_roller_pave.text_2": "В стандартном режиме, без выбранного материала, они просто будут разрушать блоки, как буры",
-	"simurail.ponder.mechanical_roller_pave.text_3": "В разобранном состоянии у катка можно настроить материал укладки",
-	"simurail.ponder.mechanical_roller_pave.text_4": "Материалы могут поставляться с помощью сундуков или бочек, прикреплённых к конструкции",
-	"simurail.ponder.mechanical_roller_pave.text_5": "Теперь он будет не только разрушать блоки на своём пути, но и заменять слой под собой",
-	"simurail.ponder.mechanical_roller_pave.text_6": "Учтите, что любой блок, разрушенный катком, имеет шанс не выпасть в виде предмета",
-	"simurail.ponder.mechanical_roller_pave.text_7": "Катки будут особенно полезны для поездов, но также могут работать на большинстве других видов движущихся штуковин"
+	"simurail.ponder.physics_roller.materials.text_4": "Пока фильтр установлен, сломанные блоки собираются в ближайшее хранилище в котором есть свободное место"
 }

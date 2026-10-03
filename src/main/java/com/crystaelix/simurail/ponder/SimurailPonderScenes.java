@@ -2,8 +2,10 @@ package com.crystaelix.simurail.ponder;
 
 import com.crystaelix.simurail.compat.SimurailCompat;
 import com.crystaelix.simurail.compat.electroenergetics.ponder.SimurailElectroEnergeticsPonderScenes;
+import com.crystaelix.simurail.compat.offroad.ponder.SimurailOffroadPonderScenes;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailItems;
+import com.crystaelix.simurail.extension.PonderSceneRegistrationHelperExtension;
 import com.crystaelix.simurail.ponder.scenes.AutomaticCouplerScenes;
 import com.crystaelix.simurail.ponder.scenes.ConnectorScenes;
 import com.crystaelix.simurail.ponder.scenes.GangwayFrameScenes;
@@ -12,25 +14,21 @@ import com.crystaelix.simurail.ponder.scenes.PhysicsRollerScenes;
 import com.crystaelix.simurail.ponder.scenes.ProbeReaderScenes;
 import com.crystaelix.simurail.ponder.scenes.RemoteControllerScenes;
 import com.crystaelix.simurail.ponder.scenes.TrackSwitchScenes;
+import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.ponder.scenes.RollerScenes;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
-import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
 
 public class SimurailPonderScenes {
 
-	// create's
-	private static final ResourceLocation MECHANICAL_ROLLER = ResourceLocation.fromNamespaceAndPath("create", "mechanical_roller");
-	private static final ResourceLocation ROLLER_CLEAR_AND_PAVE = ResourceLocation.fromNamespaceAndPath("create", "mechanical_roller/clear_and_pave");
-	private static final ResourceLocation ROLLER_FILL = ResourceLocation.fromNamespaceAndPath("create", "mechanical_roller/fill");
+	// Create
+	private static final ResourceLocation ROLLER_CLEAR_AND_PAVE = Create.asResource("mechanical_roller/clear_and_pave");
+	private static final ResourceLocation ROLLER_FILL = Create.asResource("mechanical_roller/fill");
 
-	private static final String PHYSICS_ROLLER_INTRO = "physics_roller/intro";
-	private static final String PHYSICS_ROLLER_MATERIALS = "physics_roller/materials";
-
-	public static void register(PonderSceneRegistrationHelper<ResourceLocation> registry) {
-		PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registry.withKeyFunction(RegistryEntry::getId);
+	public static void register(PonderSceneRegistrationHelperExtension<ItemLike> helper) {
+		PonderSceneRegistrationHelper<ItemLike> createHelper = helper.withNamespace("create");
 
 		helper.forComponents(SimurailBlocks.PHYSICS_BOGEY, SimurailItems.INVERTED_PHYSICS_BOGEY, SimurailBlocks.UNPOWERED_PHYSICS_BOGEY, SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY).
 		addStoryBoard("physics_bogey/intro", PhysicsBogeyScenes::intro);
@@ -51,16 +49,19 @@ public class SimurailPonderScenes {
 
 		helper.forComponents(SimurailBlocks.REMOTE_CONTROLLER).
 		addStoryBoard("remote_controller/intro", RemoteControllerScenes::intro);
-		
+
 		helper.forComponents(SimurailBlocks.TRACK_SWITCH).
 		addStoryBoard("track_switch/intro", TrackSwitchScenes::intro);
 
 		helper.forComponents(SimurailBlocks.PHYSICS_ROLLER).
 		addStoryBoard("physics_roller/intro", PhysicsRollerScenes::intro).
-		addStoryBoard("physics_roller/materials", PhysicsRollerScenes::materials).
+		addStoryBoard("physics_roller/materials", PhysicsRollerScenes::materials);
+
+		createHelper.forComponents(SimurailBlocks.PHYSICS_ROLLER).
 		addStoryBoard(ROLLER_CLEAR_AND_PAVE, RollerScenes::clearAndPave).
 		addStoryBoard(ROLLER_FILL, RollerScenes::fill);
 
-		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () -> SimurailElectroEnergeticsPonderScenes.register(registry));
+		SimurailCompat.OFFROAD.ifLoaded(() -> () -> SimurailOffroadPonderScenes.register(helper));
+		SimurailCompat.ELECTROENERGETICS.ifLoaded(() -> () -> SimurailElectroEnergeticsPonderScenes.register(helper));
 	}
 }

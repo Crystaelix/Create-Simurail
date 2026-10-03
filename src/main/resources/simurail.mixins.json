@@ -32,6 +32,8 @@
 		"compat.railx.BezierConnectionCompatMixin"
 	],
 	"client": [
+		"DefaultPonderSceneRegistrationHelperMixin",
+		"GenericPonderSceneRegistrationHelperMixin",
 		"TrackTargetingClientMixin"
 	],
 	"injectors": {

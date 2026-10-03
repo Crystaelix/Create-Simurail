@@ -37,6 +37,10 @@ public class SimurailPonderTags {
 		add(SimurailItems.CONNECTOR.get()).
 		add(SimurailBlocks.PROBE_READER.get()).
 		add(SimurailBlocks.REMOTE_CONTROLLER.get()).
+		add(SimurailBlocks.TRACK_SWITCH.get()).
 		add(SimurailBlocks.PHYSICS_ROLLER.get());
+		
+		helper.addToTag(AllCreatePonderTags.DISPLAY_SOURCES).
+		add(SimurailBlocks.TRACK_SWITCH.get());
 	}
 }

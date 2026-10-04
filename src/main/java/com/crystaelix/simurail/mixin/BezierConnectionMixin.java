@@ -31,7 +31,7 @@ public abstract class BezierConnectionMixin implements BezierConnectionExtension
 	public CubicBezier3dc simurail$controlPoints() {
 		CubicBezier3dc points = controlPoints;
 		if(points == null) {
-			points = SimurailMath.controlPoints(BezierConnection.class.cast(this));
+			points = SimurailMath.controlPoints((BezierConnection)(Object)this);
 			controlPoints = points;
 		}
 		return points;

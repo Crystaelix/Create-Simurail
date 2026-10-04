@@ -17,7 +17,7 @@ public class SimurailOffroadPonderScenes {
 	private static final ResourceLocation BOREHEAD_BEARING_EFFICIENCY = Offroad.path("mechanical_roller/efficiency");
 
 	public static void register(PonderSceneRegistrationHelperExtension<ItemLike> helper) {
-		PonderSceneRegistrationHelper<ItemLike> offroadHelper = helper.withNamespace("offroad");
+		PonderSceneRegistrationHelper<ItemLike> offroadHelper = helper.simurail$withNamespace("offroad");
 
 		offroadHelper.forComponents(SimurailOffroadBlocks.BRASS_BOREHEAD_BEARING).
 		addStoryBoard(BOREHEAD_BEARING_INTRO, BoreheadBearingScenes::boreheadIntro).

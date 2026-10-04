@@ -17,7 +17,7 @@ public abstract class DefaultPonderSceneRegistrationHelperMixin implements Ponde
 	protected PonderSceneRegistry sceneRegistry;
 
 	@Override
-	public PonderSceneRegistrationHelper<ResourceLocation> withNamespace(String namespace) {
+	public PonderSceneRegistrationHelper<ResourceLocation> simurail$withNamespace(String namespace) {
 		return new DefaultPonderSceneRegistrationHelper(namespace, sceneRegistry);
 	}
 }

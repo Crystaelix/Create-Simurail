@@ -20,7 +20,7 @@ public abstract class GenericPonderSceneRegistrationHelperMixin<T> implements Po
 	private Function<T, ResourceLocation> keyGen;
 
 	@Override
-	public PonderSceneRegistrationHelper<T> withNamespace(String namespace) {
-		return new GenericPonderSceneRegistrationHelper<>(PonderSceneRegistrationHelperExtension.cast(helperDelegate).withNamespace(namespace), keyGen);
+	public PonderSceneRegistrationHelper<T> simurail$withNamespace(String namespace) {
+		return new GenericPonderSceneRegistrationHelper<>(PonderSceneRegistrationHelperExtension.cast(helperDelegate).simurail$withNamespace(namespace), keyGen);
 	}
 }

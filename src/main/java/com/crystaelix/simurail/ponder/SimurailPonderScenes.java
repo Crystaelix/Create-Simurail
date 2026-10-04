@@ -28,7 +28,7 @@ public class SimurailPonderScenes {
 	private static final ResourceLocation ROLLER_FILL = Create.asResource("mechanical_roller/fill");
 
 	public static void register(PonderSceneRegistrationHelperExtension<ItemLike> helper) {
-		PonderSceneRegistrationHelper<ItemLike> createHelper = helper.withNamespace("create");
+		PonderSceneRegistrationHelper<ItemLike> createHelper = helper.simurail$withNamespace("create");
 
 		helper.forComponents(SimurailBlocks.PHYSICS_BOGEY, SimurailItems.INVERTED_PHYSICS_BOGEY, SimurailBlocks.UNPOWERED_PHYSICS_BOGEY, SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY).
 		addStoryBoard("physics_bogey/intro", PhysicsBogeyScenes::intro);

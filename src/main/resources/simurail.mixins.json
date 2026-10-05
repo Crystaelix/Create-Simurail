@@ -12,6 +12,7 @@
 		"PhysicsStaffServerHandlerAccessor",
 
 		"BezierConnectionMixin",
+		"CTrainsMixin",
 		"GlobalRailwayManagerMixin",
 		"ObservedTrainNameSourceMixin",
 		"SignalEdgeGroupMixin",

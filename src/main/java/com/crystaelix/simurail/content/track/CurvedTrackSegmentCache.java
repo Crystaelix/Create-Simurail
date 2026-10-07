@@ -6,17 +6,21 @@ import java.util.Set;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
+import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
 import com.crystaelix.simurail.api.math.CubicBezier3dc;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
+import com.simibubi.create.content.trains.graph.TrackEdge;
+import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackNode;
+import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
-import dev.ryanhcode.sable.companion.math.BoundingBox3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
@@ -24,6 +28,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
@@ -42,7 +47,34 @@ public class CurvedTrackSegmentCache {
 	public static void removeCache(ResourceKey<Level> dimension) {
 		if(CACHES.containsKey(dimension)) {
 			CACHES.remove(dimension).clear();
+			System.gc();
 		}
+	}
+
+	public static void removeCaches() {
+		for(CurvedTrackSegmentCache cache : CACHES.values()) {
+			cache.clear();
+		}
+		CACHES.clear();
+		System.gc();
+	}
+
+	public static void addGraph(TrackGraph graph) {
+		Set<TrackNodeLocation> visited = new ObjectOpenHashSet<>();
+		for(TrackNodeLocation nodeLoc : graph.getNodes()) {
+			visited.add(nodeLoc);
+			TrackNode node = graph.locateNode(nodeLoc);
+			for(Map.Entry<TrackNode, TrackEdge> entry : graph.getConnectionsFrom(node).entrySet()) {
+				if(visited.contains(entry.getKey().getLocation())) {
+					continue;
+				}
+				TrackEdge edge = entry.getValue();
+				if(edge.isTurn()) {
+					getOrCreateCache(nodeLoc.dimension).addCurve(edge.getTurn());
+				}
+			}
+		}
+		visited.clear();
 	}
 
 	public static ObjectDoublePair<CurvedTrackSegment> findSegmentGlobal(Level level, SubLevel subLevel, Vector3dc globalPos, Vector3dc globalDir, Vector3dc globalNormal, boolean upsideDown, Set<TrackType> validTypes) {
@@ -66,29 +98,32 @@ public class CurvedTrackSegmentCache {
 			curve = curve.secondary();
 		}
 		removeCurve(curve);
-		BoundingBox3d bounds = new BoundingBox3d(curve.getBounds());
-		int segmentCount = curve.getSegmentCount();
-		CubicBezier3dc controlPoints = SimurailMath.cachedControlPoints(curve);
-		for(int i = 0; i <= segmentCount; ++i) {
-			double t = (double)i / segmentCount;
-			bounds.expandTo(
-					controlPoints.position(t, 0),
-					controlPoints.position(t, 1),
-					controlPoints.position(t, 2));
-		}
-		bounds.expand(0.5);
-		int minChunkX = Mth.floor(bounds.minX / CHUNK_FACTOR);
-		int minChunkY = Mth.floor(bounds.minY / CHUNK_FACTOR);
-		int minChunkZ = Mth.floor(bounds.minZ / CHUNK_FACTOR);
-		int maxChunkX = Mth.ceil(bounds.maxX / CHUNK_FACTOR);
-		int maxChunkY = Mth.ceil(bounds.maxY / CHUNK_FACTOR);
-		int maxChunkZ = Mth.ceil(bounds.maxZ / CHUNK_FACTOR);
-		for(int x = minChunkX; x < maxChunkX; ++x) {
-			for(int y = minChunkY; y < maxChunkY; ++y) {
-				for(int z = minChunkZ; z < maxChunkZ; ++z) {
-					Vec3i chunk = new Vec3i(x, y, z);
-					curveToChunk.put(curve, chunk);
-					chunkToCurve.put(chunk, curve);
+		BezierConnectionExtension curveExt = (BezierConnectionExtension)curve;
+		CubicBezier3dc controlPoints = curveExt.simurail$controlPoints();
+		double length = curveExt.simurail$quadratureLength();
+		int segments = Mth.ceil(length / CHUNK_FACTOR);
+		Vector3d pos0 = new Vector3d();
+		Vector3d pos1 = new Vector3d();
+		Vector3d minPos = new Vector3d();
+		Vector3d maxPos = new Vector3d();
+		for(int i = 0; i < segments; ++i) {
+			controlPoints.position((double)i / segments, pos0);
+			controlPoints.position((double)(i + 1) / segments, pos1);
+			pos0.min(pos1, minPos).sub(0.5, 0.5, 0.5);
+			pos0.max(pos1, maxPos).add(0.5, 0.5, 0.5);
+			int minChunkX = Mth.floor(minPos.x / CHUNK_FACTOR);
+			int minChunkY = Mth.floor(minPos.y / CHUNK_FACTOR);
+			int minChunkZ = Mth.floor(minPos.z / CHUNK_FACTOR);
+			int maxChunkX = Mth.ceil(maxPos.x / CHUNK_FACTOR);
+			int maxChunkY = Mth.ceil(maxPos.y / CHUNK_FACTOR);
+			int maxChunkZ = Mth.ceil(maxPos.z / CHUNK_FACTOR);
+			for(int x = minChunkX; x < maxChunkX; ++x) {
+				for(int y = minChunkY; y < maxChunkY; ++y) {
+					for(int z = minChunkZ; z < maxChunkZ; ++z) {
+						Vec3i chunk = new Vec3i(x, y, z);
+						curveToChunk.put(curve, chunk);
+						chunkToCurve.put(chunk, curve);
+					}
 				}
 			}
 		}
@@ -96,6 +131,9 @@ public class CurvedTrackSegmentCache {
 	}
 
 	public boolean removeCurve(BezierConnection curve) {
+		if(!curve.isPrimary()) {
+			curve = curve.secondary();
+		}
 		if(!curveToChunk.containsKey(curve)) {
 			return false;
 		}
@@ -110,7 +148,7 @@ public class CurvedTrackSegmentCache {
 		if(!Mth.equal(scale.x, scale.y) || !Mth.equal(scale.x, scale.z)) {
 			return null;
 		}
-		
+
 		double score = Double.POSITIVE_INFINITY;
 		CurvedTrackSegment segment = null;
 
@@ -170,9 +208,11 @@ public class CurvedTrackSegmentCache {
 			return null;
 		}
 		BezierConnection curve = segment.curve();
-		if(!(level.getBlockState(curve.bePositions.getFirst()).getBlock() instanceof ITrackBlock) ||
-				!(level.getBlockState(curve.bePositions.getSecond()).getBlock() instanceof ITrackBlock)) {
-			// Broken curve, notify
+		BlockPos curvePos1 = curve.bePositions.getFirst();
+		BlockPos curvePos2 = curve.bePositions.getSecond();
+		if(level.isLoaded(curvePos1) && !(level.getBlockState(curvePos1).getBlock() instanceof ITrackBlock) ||
+				level.isLoaded(curvePos2) && !(level.getBlockState(curvePos2).getBlock() instanceof ITrackBlock)) {
+			// Broken curve, remove
 			removeCurve(curve);
 			return null;
 		}
@@ -182,6 +222,5 @@ public class CurvedTrackSegmentCache {
 	private void clear() {
 		chunkToCurve.clear();
 		curveToChunk.clear();
-		System.gc();
 	}
 }

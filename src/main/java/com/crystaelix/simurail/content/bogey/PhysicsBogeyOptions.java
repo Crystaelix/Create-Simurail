@@ -20,6 +20,7 @@ public class PhysicsBogeyOptions {
 	public boolean allowVerticalMovement = false;
 	public boolean renderFrontConnector = true;
 	public boolean renderBackConnector = true;
+	public boolean forceLoad = false;
 	public PhysicsBogeyControlMode controlMode = PhysicsBogeyControlMode.BRAKING;
 
 	private float axleOffset = 0;
@@ -46,6 +47,7 @@ public class PhysicsBogeyOptions {
 		allowVerticalMovement = other.allowVerticalMovement;
 		renderFrontConnector = other.renderFrontConnector;
 		renderBackConnector = other.renderBackConnector;
+		forceLoad = other.forceLoad;
 		controlMode = other.controlMode;
 		axleOffset = other.axleOffset;
 		stress = other.stress;
@@ -218,6 +220,7 @@ public class PhysicsBogeyOptions {
 		if(allowVerticalMovement) flags |= 32;
 		if(renderFrontConnector)  flags |= 64;
 		if(renderBackConnector)   flags |= 128;
+		if(forceLoad)             flags |= 256;
 		return flags;
 	}
 
@@ -230,6 +233,7 @@ public class PhysicsBogeyOptions {
 		allowVerticalMovement = (flags & 32)  != 0;
 		renderFrontConnector  = (flags & 64)  != 0;
 		renderBackConnector   = (flags & 128) != 0;
+		forceLoad             = (flags & 256) != 0;
 		return this;
 	}
 

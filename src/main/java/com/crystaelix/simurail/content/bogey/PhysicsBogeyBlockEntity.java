@@ -17,6 +17,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.joml.Vector3f;
 
+import com.crystaelix.simurail.Simurail;
 import com.crystaelix.simurail.api.bogey.BogeyLinkable;
 import com.crystaelix.simurail.api.math.Basis3d;
 import com.crystaelix.simurail.api.math.Basis3dc;
@@ -52,7 +53,9 @@ import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration
 import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.physics.mass.MassData;
+import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.api.sublevel.ticket.SubLevelLoadingTicketType;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
@@ -99,6 +102,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	public static final Component UNPOWERED_NAME = Component.translatable("block.simurail.unpowered_physics_bogey");
 	public static final Component INVERTED_UNPOWERED_NAME = Component.translatable("item.simurail.unpowered_inverted_physics_bogey");
 
+	public static final SubLevelLoadingTicketType<BlockPos> BOGEY_FORCE_LOAD = SubLevelLoadingTicketType.create(Simurail.id("bogey"), BlockPos.CODEC);
+
 	protected boolean initialized = false;
 
 	protected Component customName = null;
@@ -138,6 +143,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected boolean staffRestrained = false;
 	protected final LerpedFloat lerpedCurvature = LerpedFloat.linear();
 	protected final Vector3d lastScale = new Vector3d(1);
+
+	protected boolean forceLoaded = false;
 
 	// Navigator components
 	protected float navigatorBrakeOverride = 0;
@@ -532,6 +539,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			createPivot(subLevel);
 			axleFront.init(subLevel);
 			axleBack.init(subLevel);
+			updateForceLoad(subLevel);
 		}
 		initialized = true;
 	}
@@ -646,6 +654,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 
 				axleFront.updateOffsetChange();
 				axleBack.updateOffsetChange();
+
+				if(forceLoaded != options.forceLoad) {
+					updateForceLoad(subLevel);
+				}
 			}
 			else {
 				localPivotOffset.zero();
@@ -686,6 +698,17 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				effects.tick();
 			}
 		}
+	}
+
+	protected void updateForceLoad(ServerSubLevel subLevel) {
+		ServerSubLevelContainer container = SubLevelContainer.getContainer(subLevel.getLevel());
+		if(options.forceLoad) {
+			container.addForceLoadTicket(subLevel, BOGEY_FORCE_LOAD, getBlockPos());
+		}
+		else {
+			container.removeForceLoadTicket(subLevel, BOGEY_FORCE_LOAD, getBlockPos());
+		}
+		forceLoaded = options.forceLoad;
 	}
 
 	@Override
@@ -1137,6 +1160,17 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	@Override
 	protected void applyImplicitComponents(DataComponentInput componentInput) {
 		customName = componentInput.get(DataComponents.CUSTOM_NAME);
+	}
+
+	@Override
+	public void remove() {
+		super.remove();
+		if(!level.isClientSide()) {
+			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
+				ServerSubLevelContainer container = SubLevelContainer.getContainer(subLevel.getLevel());
+				container.removeForceLoadTicket(subLevel, BOGEY_FORCE_LOAD, getBlockPos());
+			}
+		}
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	public static final Component STRESS_TITLE = Component.translatable("gui.simurail.physics_bogey.stress");
 	public static final Component TILT_TITLE = Component.translatable("gui.simurail.physics_bogey.tilt");
 	public static final Component PROBE_TITLE = Component.translatable("gui.simurail.physics_bogey.probe");
+	public static final Component FORCELOAD_TITLE = Component.translatable("gui.simurail.physics_bogey.forceload");
 	public static final Component CONNECTOR_TITLE = Component.translatable("gui.simurail.physics_bogey.connector");
 
 	public static final List<Component> PHYSICS_OPTIONS = List.of(
@@ -78,6 +79,9 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 			Component.translatable("gui.simurail.physics_bogey.control.braking"),
 			Component.translatable("gui.simurail.physics_bogey.control.braking_inverted"),
 			Component.translatable("gui.simurail.physics_bogey.control.none"));
+	public static final List<Component> FORCELOAD_OPTIONS = List.of(
+			Component.translatable("gui.simurail.physics_bogey.forceload.disabled"),
+			Component.translatable("gui.simurail.physics_bogey.forceload.enabled"));
 	public static final List<Component> CONNECTOR_OPTIONS = List.of(
 			Component.translatable("gui.simurail.physics_bogey.connector.visible"),
 			Component.translatable("gui.simurail.physics_bogey.connector.invisible"),
@@ -103,6 +107,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	private SLabel stressLabel;
 	private SLabel tiltLabel;
 	private SLabel probeLabel;
+	private SLabel forceLoadLabel;
 	private SLabel connectorLabel;
 
 	private SelectionScrollInput physicsInput;
@@ -115,6 +120,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 	private ScrollInput stressInput;
 	private ScrollInput tiltInput;
 	private ScrollInput probeInput;
+	private SelectionScrollInput forceLoadInput;
 	private SelectionScrollInput connectorInput;
 
 	private IconButton bogeyButton;
@@ -175,6 +181,10 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		probeLabel = new SLabel(x + 31, y + 130, 109, 18);
 		probeLabel.withMargin(5);
 		probeLabel.withShadow();
+
+		forceLoadLabel = new SLabel(x + 171, y + 130, 109, 18);
+		forceLoadLabel.withMargin(5);
+		forceLoadLabel.withShadow();
 
 		connectorLabel = new SLabel(x + 31, y + 152, 109, 18);
 		connectorLabel.withMargin(5);
@@ -268,6 +278,13 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		probeInput.setState(Math.round(options.getProbeDistance() * 2));
 		probeInput.calling(i -> options.setProbeDistance(i * 0.5F));
 
+		forceLoadInput = new SelectionScrollInput(x + 171, y + 130, 109, 18);
+		forceLoadInput.forOptions(FORCELOAD_OPTIONS);
+		forceLoadInput.titled(FORCELOAD_TITLE.plainCopy());
+		forceLoadInput.writingTo(forceLoadLabel);
+		forceLoadInput.setState(options.forceLoad ? 1 : 0);
+		forceLoadInput.calling(i -> options.forceLoad = i == 1);
+
 		connectorInput = new SelectionScrollInput(x + 31, y + 152, 109, 18);
 		connectorInput.forOptions(CONNECTOR_OPTIONS);
 		connectorInput.titled(CONNECTOR_TITLE.plainCopy());
@@ -348,6 +365,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 					COMPUTER_TOOLTIP.plainCopy().withColor(0x96B7E0)));
 		}
 
+		addRenderableWidget(forceLoadInput);
 		addRenderableWidget(connectorInput);
 
 		addRenderableWidget(physicsLabel);
@@ -360,6 +378,7 @@ public class PhysicsBogeyOptionsScreen extends PhysicsBogeyBaseScreen {
 		addRenderableWidget(stressLabel);
 		addRenderableWidget(tiltLabel);
 		addRenderableWidget(probeLabel);
+		addRenderableWidget(forceLoadLabel);
 		addRenderableWidget(connectorLabel);
 
 		addRenderableWidget(bogeyButton);

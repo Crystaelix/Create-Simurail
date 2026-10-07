@@ -9,8 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
-import com.crystaelix.simurail.content.track.CurvedTrackSegmentCache;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -29,19 +27,6 @@ public abstract class TrackBlockEntityMixin extends SmartBlockEntity {
 	@Shadow
 	Map<BlockPos, BezierConnection> connections;
 
-	@Inject(method = "initialize", at = @At("TAIL"))
-	public void simurail$onInitialize(CallbackInfo ci) {
-		if(!level.isClientSide()) {
-			CurvedTrackSegmentCache cache = CurvedTrackSegmentCache.getOrCreateCache(level.dimension());
-			for(BezierConnection connection : connections.values()) {
-				if(connection.isPrimary()) {
-					cache.addCurve(connection);
-				}
-			}
-		}
-	}
-
-
 	@Inject(method = "addConnection", at = @At("RETURN"))
 	public void simurail$onAddConnection(BezierConnection connection, CallbackInfo ci) {
 		if(level == null) {
@@ -49,18 +34,5 @@ public abstract class TrackBlockEntityMixin extends SmartBlockEntity {
 		}
 		BezierConnection stored = connections.getOrDefault(connection.getKey(), connection);
 		((BezierConnectionExtension)stored).simurail$invalidateCurve();
-		if(level.isClientSide()) {
-			return;
-		}
-		CurvedTrackSegmentCache cache = CurvedTrackSegmentCache.getOrCreateCache(level.dimension());
-		cache.addCurve(stored);
-	}
-
-	@Inject(method = "removeConnection", at = @At("RETURN"))
-	public void simurail$onRemoveConnection(CallbackInfo ci, @Local BezierConnection removed) {
-		if(!level.isClientSide()) {
-			CurvedTrackSegmentCache cache = CurvedTrackSegmentCache.getOrCreateCache(level.dimension());
-			cache.removeCurve(removed);
-		}
 	}
 }

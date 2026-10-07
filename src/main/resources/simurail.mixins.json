@@ -19,6 +19,7 @@
 		"SignalPropagatorMixin",
 		"TrackBlockMixin",
 		"TrackBlockEntityMixin",
+		"TrackGraphMixin",
 		"TrackObserverMixin",
 		"TravellingPointMixin",
 

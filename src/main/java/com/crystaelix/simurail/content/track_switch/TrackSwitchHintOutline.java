@@ -48,12 +48,12 @@ public class TrackSwitchHintOutline {
 		int rangeSqr = range * range;
 
 		for(TrackGraph graph : CreateClient.RAILWAYS.trackNetworks.values()) {
-			for(TrackNodeLocation tnl : graph.getNodes()) {
-				if(!level.dimension().equals(tnl.dimension) || tnl.getLocation().distanceToSqr(player.position()) > rangeSqr) {
+			for(TrackNodeLocation nodeLoc : graph.getNodes()) {
+				if(!level.dimension().equals(nodeLoc.dimension) || nodeLoc.getLocation().distanceToSqr(player.position()) > rangeSqr) {
 					continue;
 				}
 
-				TrackNode node = graph.locateNode(tnl);
+				TrackNode node = graph.locateNode(nodeLoc);
 				Map<TrackNode, TrackEdge> connections = graph.getConnectionsFrom(node);
 				if(connections.size() > 2) {
 					for(TrackEdge edge : connections.values()) {
@@ -66,7 +66,7 @@ public class TrackSwitchHintOutline {
 						if(exitCount > 1) {
 							Vec3 offset = edge.getDirection(false).normalize().scale(0.5).add(0, 0.5, 0);
 							Outliner.getInstance().showAABB(edge, AABB.ofSize(
-									tnl.getLocation().add(offset),
+									nodeLoc.getLocation().add(offset),
 									1, 1, 1)).
 							colored(graph.color).lineWidth(0.0625F);
 						}

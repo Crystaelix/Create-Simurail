@@ -7,21 +7,18 @@ import com.crystaelix.simurail.content.track.CurvedTrackSegmentCache;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 @EventBusSubscriber
 public class SimurailCommonEvents {
 
 	@SubscribeEvent
-	public static void onLevelUnload(LevelEvent.Unload event) {
-		if(event.getLevel() instanceof Level level) {
-			CurvedTrackSegmentCache.removeCache(level.dimension());
-		}
+	public static void onServerStopped(ServerStoppedEvent event) {
+		CurvedTrackSegmentCache.removeCaches();
 	}
 
 	@SubscribeEvent

@@ -8,7 +8,6 @@ import com.copycatsplus.copycats.foundation.copycat.ICopycatBlock;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.railwayteam.railways.content.buffer.headstock.CopycatHeadstockBlock;
-import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.content.decoration.copycat.WaterloggedCopycatBlock;
 
 import net.minecraft.core.BlockPos;
@@ -46,16 +45,10 @@ public abstract class CopycatHeadstockBlockMixin extends WaterloggedCopycatBlock
 		return toggleCT(state, level, pos, player, hitResult);
 	}
 
+	@Unique(silent = true)
 	@Override
-	@Unique
 	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-	}
-
-	@Override
-	@Unique
-	public CopycatBlockEntity getBlockEntity(BlockGetter level, BlockPos pos) {
-		return super.getBlockEntity(level, pos);
 	}
 
 	@WrapMethod(method = "isIgnoredConnectivitySide")
@@ -91,13 +84,13 @@ public abstract class CopycatHeadstockBlockMixin extends WaterloggedCopycatBlock
 		return ICopycatBlock.hidesNeighborFace(level, pos, state, neighborState, dir);
 	}
 
-	@Unique
+	@Unique(silent = true)
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirror) {
 		return super.mirror(state, mirror);
 	}
 
-	@Unique
+	@Unique(silent = true)
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
 		return super.rotate(state, rot);

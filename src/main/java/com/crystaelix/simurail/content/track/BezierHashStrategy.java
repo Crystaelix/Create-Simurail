@@ -11,7 +11,7 @@ public enum BezierHashStrategy implements Hash.Strategy<BezierConnection> {
 
 	@Override
 	public int hashCode(BezierConnection o) {
-		return o == null ? 0 : Objects.hash(o.bePositions, o.starts, o.axes, o.normals, o.smoothing);
+		return o == null ? 0 : Objects.hash(o.bePositions, o.starts);
 	}
 
 	@Override
@@ -22,10 +22,6 @@ public enum BezierHashStrategy implements Hash.Strategy<BezierConnection> {
 		if(a == null || b == null) {
 			return false;
 		}
-		return a.bePositions.equals(b.bePositions) &&
-				a.starts.equals(b.starts) &&
-				a.axes.equals(b.axes) &&
-				a.normals.equals(b.normals) &&
-				Objects.equals(a.smoothing, b.smoothing);
+		return a.bePositions.equals(b.bePositions) && a.starts.equals(b.starts);
 	}
 }

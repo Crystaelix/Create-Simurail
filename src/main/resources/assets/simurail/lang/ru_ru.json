@@ -461,5 +461,9 @@
 	"simurail.ponder.physics_roller.materials.text_1": "Слот фильтра рядом с переключателем режимов выбирает какие предметы из хранилища могут быть использованы для укладки",
 	"simurail.ponder.physics_roller.materials.text_2": "Любая настройка, применённая к одному катку, распространяется на все остальные катки в той же линии",
 	"simurail.ponder.physics_roller.materials.text_3": "Катки без собственного хранилища извлекают предметы из ближайшего катка в линии, в котором этот материал ещё есть",
-	"simurail.ponder.physics_roller.materials.text_4": "Пока фильтр установлен, сломанные блоки собираются в ближайшее хранилище в котором есть свободное место"
+	"simurail.ponder.physics_roller.materials.text_4": "Пока фильтр установлен, сломанные блоки собираются в ближайшее хранилище в котором есть свободное место",
+	"simurail.ponder.physics_roller.connector.header": "Connecting Physics Rollers to Physics Bogies",
+	"simurail.ponder.physics_roller.connector.text_1": "The Bogie Connector can connect Physics Rollers to Physics Bogies on the same Simulated Contraption",
+	"simurail.ponder.physics_roller.connector.text_2": "The connection applied to one Roller is shared with every other Roller of the same line",
+	"simurail.ponder.physics_roller.connector.text_3": "A connected Physics Roller will better follow the track the Physics Bogie is on"
 }

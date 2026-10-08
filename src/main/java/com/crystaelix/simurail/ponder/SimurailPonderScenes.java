@@ -45,7 +45,8 @@ public class SimurailPonderScenes {
 
 		helper.forComponents(SimurailItems.CONNECTOR).
 		addStoryBoard("connector/intro", ConnectorScenes::intro).
-		addStoryBoard("connector/coupler", ConnectorScenes::coupler);
+		addStoryBoard("connector/coupler", ConnectorScenes::coupler).
+		addStoryBoard("physics_roller/intro", PhysicsRollerScenes::connector);
 
 		helper.forComponents(SimurailBlocks.PROBE_READER).
 		addStoryBoard("probe_reader/intro", ProbeReaderScenes::intro);
@@ -58,7 +59,8 @@ public class SimurailPonderScenes {
 
 		helper.forComponents(SimurailBlocks.PHYSICS_ROLLER).
 		addStoryBoard("physics_roller/intro", PhysicsRollerScenes::intro).
-		addStoryBoard("physics_roller/materials", PhysicsRollerScenes::materials);
+		addStoryBoard("physics_roller/materials", PhysicsRollerScenes::materials).
+		addStoryBoard("physics_roller/intro", PhysicsRollerScenes::connector);
 
 		createHelper.forComponents(SimurailBlocks.PHYSICS_ROLLER).
 		addStoryBoard(ROLLER_CLEAR_AND_PAVE, RollerScenes::clearAndPave).

@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.ponder.scenes;
 
 import com.crystaelix.simurail.content.SimurailBlocks;
+import com.crystaelix.simurail.content.SimurailItems;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockEntity;
 import com.crystaelix.simurail.ponder.instruction.PhysicsBogeyVisualSpeedInstruction;
 import com.crystaelix.simurail.ponder.instruction.SceneRotationInstruction;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.RedstoneSide;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class PhysicsRollerScenes {
@@ -238,6 +240,62 @@ public class PhysicsRollerScenes {
 		scene.idle(120);
 
 		runBelts(world, select, 0);
+	}
+
+	public static void connector(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		CreateSceneBuilder.WorldInstructions world = scene.world();
+		OverlayInstructions overlay = scene.overlay();
+		SelectionUtil select = util.select();
+		PositionUtil grid = util.grid();
+		VectorUtil vector = util.vector();
+
+		scene.title("physics_roller.connector", "header");
+		scene.configureBasePlate(0, 0, 15);
+		scene.scaleSceneView(0.75F);
+		scene.addInstruction(new SceneRotationInstruction(180));
+		scene.showBasePlate();
+		scene.idle(10);
+
+		world.showSection(trackSelection(select), Direction.DOWN);
+		scene.idle(10);
+
+		world.showSection(contraptionSelection(select), Direction.DOWN);
+		scene.idle(15);
+
+		AABB bb;
+		bb = new AABB(grid.at(5, 2, 8));
+		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.0", bb, 110);
+		overlay.showText(80).
+		pointAt(vector.topOf(5, 2, 8)).
+		attachKeyFrame().
+		placeNearTarget().
+		text("1_connecting");
+		overlay.showControls(vector.topOf(5, 2, 8), Pointing.DOWN, 80).
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
+		scene.idle(90);
+
+		bb = new AABB(grid.at(2, 2, 7));
+		overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, "simurail.ponder.1", bb, 20);
+		overlay.showControls(vector.topOf(2, 2, 7), Pointing.DOWN, 20).
+		rightClick().withItem(SimurailItems.CONNECTOR.asStack());
+		scene.idle(30);
+
+		overlay.showOutline(PonderPalette.OUTPUT, "line", lineSelection(select), 80);
+		overlay.showText(70).
+		pointAt(vector.centerOf(5, 2, 7)).
+		attachKeyFrame().
+		placeNearTarget().
+		colored(PonderPalette.OUTPUT).
+		text("2_shared_settings");
+		scene.idle(80);
+		
+		overlay.showText(70).
+		pointAt(vector.centerOf(5, 2, 7)).
+		attachKeyFrame().
+		placeNearTarget().
+		text("3_track_following");
+		scene.idle(80);
 	}
 
 	// carries the line east & paving behind

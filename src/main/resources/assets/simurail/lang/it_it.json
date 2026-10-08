@@ -462,5 +462,9 @@
 	"simurail.ponder.physics_roller.materials.text_2": "Either setting applied to one Roller is shared with every other Roller of the same line",
 	"simurail.ponder.physics_roller.materials.text_3": "Rollers without a container of their own draw from the closest one along the line that still holds their material",
 	"simurail.ponder.physics_roller.materials.text_4": "While a filter is set, blocks broken by the line are collected into the closest container with space",
-	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well"
+	"simurail.ponder.physics_roller.materials.text_5": "Storages of your choice will do, a Vault kept stocked and emptied by belts serves a long line just as well",
+	"simurail.ponder.physics_roller.connector.header": "Connecting Physics Rollers to Physics Bogies",
+	"simurail.ponder.physics_roller.connector.text_1": "The Bogie Connector can connect Physics Rollers to Physics Bogies on the same Simulated Contraption",
+	"simurail.ponder.physics_roller.connector.text_2": "The connection applied to one Roller is shared with every other Roller of the same line",
+	"simurail.ponder.physics_roller.connector.text_3": "A connected Physics Roller will better follow the track the Physics Bogie is on"
 }

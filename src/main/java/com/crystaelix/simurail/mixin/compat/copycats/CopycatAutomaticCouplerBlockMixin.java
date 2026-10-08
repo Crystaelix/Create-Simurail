@@ -8,7 +8,6 @@ import com.copycatsplus.copycats.foundation.copycat.ICopycatBlock;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlock;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.content.decoration.copycat.WaterloggedCopycatBlock;
 
 import net.minecraft.core.BlockPos;

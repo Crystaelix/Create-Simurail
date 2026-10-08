@@ -462,5 +462,9 @@
 	"simurail.ponder.physics_roller.materials.text_2": "应用于单个压路机的任何设置都会共享给同一排的其他所有压路机",
 	"simurail.ponder.physics_roller.materials.text_3": "没有自带容器的压路机会沿着队列从最近的、且仍有对应材料的容器中提取",
 	"simurail.ponder.physics_roller.materials.text_4": "设置过滤器后，该队列破坏的方块会被收集到最近的有剩余空间的容器中",
-	"simurail.ponder.physics_roller.materials.text_5": "使用任何存储设备皆可，例如通过传送带不断补充和清空的物品保险库可以服务较长的队列"
+	"simurail.ponder.physics_roller.materials.text_5": "使用任何存储设备皆可，例如通过传送带不断补充和清空的物品保险库可以服务较长的队列",
+	"simurail.ponder.physics_roller.connector.header": "将物理压路机连接到物理转向架",
+	"simurail.ponder.physics_roller.connector.text_1": "转向架连接器可以将同一物理结构上的物理压路机连接到物理转向架",
+	"simurail.ponder.physics_roller.connector.text_2": "应用于单一压路机的连接会共用给同一排的其他所有压路机",
+	"simurail.ponder.physics_roller.connector.text_3": "连接的物理压路机可以更好的跟随物理转向架所在的轨道"
 }

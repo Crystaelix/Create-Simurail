@@ -462,5 +462,9 @@
 	"simurail.ponder.physics_roller.materials.text_2": "Chacun de ces réglages appliqué à un rouleau est partagé avec tous les autres rouleaux de la même rangée",
 	"simurail.ponder.physics_roller.materials.text_3": "Les rouleaux sans conteneur au-dessus d'eux puisent dans le plus proche de la rangée qui contient encore le matériau recherché",
 	"simurail.ponder.physics_roller.materials.text_4": "Lorsqu'un filtre est défini, les blocs cassés par la rangée sont récupérés dans le conteneur le plus proche disposant de place",
-	"simurail.ponder.physics_roller.materials.text_5": "N'importe quel stockage de votre choix convient : un coffre à objets renforcé approvisionné et vidé par des tapis roulants permet de desservir l'entièreté d'une longue rangée"
+	"simurail.ponder.physics_roller.materials.text_5": "N'importe quel stockage de votre choix convient : un coffre à objets renforcé approvisionné et vidé par des tapis roulants permet de desservir l'entièreté d'une longue rangée",
+	"simurail.ponder.physics_roller.connector.header": "Connecting Physics Rollers to Physics Bogies",
+	"simurail.ponder.physics_roller.connector.text_1": "The Bogie Connector can connect Physics Rollers to Physics Bogies on the same Simulated Contraption",
+	"simurail.ponder.physics_roller.connector.text_2": "The connection applied to one Roller is shared with every other Roller of the same line",
+	"simurail.ponder.physics_roller.connector.text_3": "A connected Physics Roller will better follow the track the Physics Bogie is on"
 }

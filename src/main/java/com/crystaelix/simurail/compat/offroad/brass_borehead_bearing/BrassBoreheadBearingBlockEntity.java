@@ -2,6 +2,7 @@ package com.crystaelix.simurail.compat.offroad.brass_borehead_bearing;
 
 import java.util.List;
 
+import com.crystaelix.simurail.content.SimurailBlockTags;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
@@ -38,6 +39,9 @@ public class BrassBoreheadBearingBlockEntity extends BoreheadBearingBlockEntity 
 	}
 
 	public boolean canMine(BlockState state) {
+		if(state.is(SimurailBlockTags.BORE_NON_BREAKABLE)) {
+			return false;
+		}
 		if(filtering == null || filtering.getFilter().isEmpty()) {
 			return true;
 		}

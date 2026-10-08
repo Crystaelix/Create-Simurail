@@ -31,10 +31,13 @@ public class SimurailPonderScenes {
 		PonderSceneRegistrationHelper<ItemLike> createHelper = helper.simurail$withNamespace("create");
 
 		helper.forComponents(SimurailBlocks.PHYSICS_BOGEY, SimurailItems.INVERTED_PHYSICS_BOGEY, SimurailBlocks.UNPOWERED_PHYSICS_BOGEY, SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY).
-		addStoryBoard("physics_bogey/intro", PhysicsBogeyScenes::intro);
+		addStoryBoard("physics_bogey/intro", PhysicsBogeyScenes::intro).
+		addStoryBoard("connector/intro", ConnectorScenes::intro);
 
 		helper.forComponents(SimurailBlocks.AUTOMATIC_COUPLER, SimurailBlocks.COPYCAT_PANEL_AUTOMATIC_COUPLER).
-		addStoryBoard("automatic_coupler/intro", AutomaticCouplerScenes::intro);
+		addStoryBoard("automatic_coupler/intro", AutomaticCouplerScenes::intro).
+		addStoryBoard("connector/coupler", ConnectorScenes::coupler).
+		addStoryBoard("gangway_frame/coupler", GangwayFrameScenes::coupler);
 
 		helper.forComponents(SimurailBlocks.GANGWAY_FRAME).
 		addStoryBoard("gangway_frame/intro", GangwayFrameScenes::intro).

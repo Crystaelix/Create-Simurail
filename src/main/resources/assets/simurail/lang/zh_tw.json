@@ -462,5 +462,5 @@
 	"simurail.ponder.physics_roller.materials.text_2": "應用於單一壓路機的任何設定都會共用給同一排的其他所有壓路機",
 	"simurail.ponder.physics_roller.materials.text_3": "沒有自備容器的壓路機會沿著佇列從最近的、且仍有對應材料的容器中提取",
 	"simurail.ponder.physics_roller.materials.text_4": "設定過濾器後，該佇列破壞的方塊會被收集到最近的有剩餘空間的容器中",
-	"simurail.ponder.physics_roller.materials.text_5": "使用任何存儲設備皆可，例如通過傳送帶不斷補充和清空的儲物倉可以完美服務較長的佇列"
+	"simurail.ponder.physics_roller.materials.text_5": "使用任何存儲設備皆可，例如通過傳送帶不斷補充和清空的儲物倉可以服務較長的佇列"
 }

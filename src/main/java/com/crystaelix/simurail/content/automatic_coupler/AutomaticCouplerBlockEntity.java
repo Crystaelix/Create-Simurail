@@ -842,7 +842,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		tag.putInt("gangway_color", gangwayColor);
 
 		if(connectedPos != null) {
-			tag.put("connected", NbtUtils.writeBlockPos(connectedPos));
+			tag.put("connected_offset", NbtUtils.writeBlockPos(connectedPos.subtract(getBlockPos())));
 			tag.putBoolean("connected_front", connectedFront);
 		}
 
@@ -896,7 +896,10 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 			gangwayColor = tag.getInt("gangway_color");
 		}
 
-		connectedPos = NbtUtils.readBlockPos(tag, "connected").orElse(null);
+		connectedPos = NbtUtils.readBlockPos(tag, "connected_offset").
+				map(c -> c.offset(getBlockPos())).
+				or(() -> NbtUtils.readBlockPos(tag, "connected")).
+				orElse(null);
 		connectedFront = tag.getBoolean("connected_front");
 
 		Pair<BlockPos, UUID> partner = SchematicContextUtil.readTransform(

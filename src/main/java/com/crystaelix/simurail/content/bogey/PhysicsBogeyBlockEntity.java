@@ -38,6 +38,7 @@ import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockEntity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Floats;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
@@ -265,7 +266,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			double z = otherPos.z - selfPos.z;
 			return selfNormal.dot(x, y, z) > 0 && otherNormal.dot(x, y, z) < 0;
 		}
-		if(other instanceof AutomaticCouplerBlockEntity) {
+		if(other instanceof AutomaticCouplerBlockEntity ||
+				other instanceof PhysicsRollerBlockEntity) {
 			return other.canConnectTo(otherDir, this, selfDir);
 		}
 		return false;
@@ -281,7 +283,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				return SimurailConfig.server().blocks.connectionBogeyRangeDifferent.get();
 			}
 		}
-		if(other instanceof AutomaticCouplerBlockEntity) {
+		if(other instanceof AutomaticCouplerBlockEntity ||
+				other instanceof PhysicsRollerBlockEntity) {
 			return other.connectionRange(this);
 		}
 		return 0;
@@ -316,7 +319,8 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 			}
 			otherBogey.propagateConnect(otherFront, this, front);
 		}
-		if(other instanceof AutomaticCouplerBlockEntity) {
+		if(other instanceof AutomaticCouplerBlockEntity ||
+				other instanceof PhysicsRollerBlockEntity) {
 			other.connect(otherFront, this, front);
 		}
 	}

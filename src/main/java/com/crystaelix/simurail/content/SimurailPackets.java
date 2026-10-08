@@ -8,6 +8,7 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyOptionsPacket;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderDataPacket;
 import com.crystaelix.simurail.content.connector.ConnectorConnectPacket;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameOptionsPacket;
+import com.crystaelix.simurail.content.physics_roller.PhysicsRollerRenderDataPacket;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderOptionsPacket;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerModePacket;
 
@@ -19,6 +20,7 @@ public class SimurailPackets {
 
 	public static void register() {
 		INSTANCE.registerClientbound(PhysicsBogeyRenderDataPacket.TYPE, PhysicsBogeyRenderDataPacket.CODEC, PhysicsBogeyRenderDataPacket::handle);
+		INSTANCE.registerClientbound(PhysicsRollerRenderDataPacket.TYPE, PhysicsRollerRenderDataPacket.CODEC, PhysicsRollerRenderDataPacket::handle);
 
 		INSTANCE.registerServerbound(PhysicsBogeyOptionsPacket.TYPE, PhysicsBogeyOptionsPacket.CODEC, PhysicsBogeyOptionsPacket::handle);
 		INSTANCE.registerServerbound(PhysicsBogeyCurvePlacementPacket.TYPE, PhysicsBogeyCurvePlacementPacket.CODEC, PhysicsBogeyCurvePlacementPacket::handle);

@@ -188,4 +188,8 @@ public class ConnectorScenes {
 		scene.addInstruction(new PhysicsBogeyConnectionInstruction(grid.at(6, 2, 4), false, grid.at(1, 2, 4), true));
 		scene.idle(10);
 	}
+
+	public static void roller(SceneBuilder builder, SceneBuildingUtil util) {
+		// TODO
+	}
 }

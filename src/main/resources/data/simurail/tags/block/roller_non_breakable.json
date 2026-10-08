@@ -1,0 +1,7 @@
+{
+	"values": [
+		"#create:tracks",
+		{"id": "#create:non_breakable", "required": false},
+		"simurail:track_switch"
+	]
+}

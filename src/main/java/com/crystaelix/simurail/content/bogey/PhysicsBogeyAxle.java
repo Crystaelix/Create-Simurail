@@ -934,7 +934,7 @@ public class PhysicsBogeyAxle {
 		removeAxleBox(subLevel);
 	}
 
-	protected ITrackSelector control(TravellingPoint point) {
+	public ITrackSelector control(TravellingPoint point) {
 		return (graph, pair) -> {
 			PhysicsBogeyAxle followingAxle = null;
 			TravellingPoint nextPoint = null;
@@ -971,7 +971,7 @@ public class PhysicsBogeyAxle {
 		};
 	}
 
-	protected ITrackSelector followOtherOrSteer(TravellingPoint point) {
+	public ITrackSelector followOtherOrSteer(TravellingPoint point) {
 		return (graph, pair) -> {
 			PhysicsBogeyAxle followingAxle = other();
 			TravellingPoint nextPoint = null;
@@ -994,7 +994,7 @@ public class PhysicsBogeyAxle {
 		};
 	}
 
-	protected ITrackSelector navigate(TravellingPoint point, List<Couple<TrackNode>> path) {
+	public ITrackSelector navigate(TravellingPoint point, List<Couple<TrackNode>> path) {
 		return (graph, pair) -> {
 			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
 			if(path.isEmpty()) {
@@ -1013,7 +1013,7 @@ public class PhysicsBogeyAxle {
 		};
 	}
 
-	protected ITrackSelector steer(TravellingPoint point) {
+	public ITrackSelector steer(TravellingPoint point) {
 		return (graph, pair) -> {
 			List<Map.Entry<TrackNode, TrackEdge>> targets = pair.getSecond();
 			List<Map.Entry<TrackNode, TrackEdge>> leftTargets = new ArrayList<>();
@@ -1076,7 +1076,7 @@ public class PhysicsBogeyAxle {
 		};
 	}
 
-	protected ITrackSelector follow(TravellingPoint other, BooleanConsumer success) {
+	public ITrackSelector follow(TravellingPoint other, BooleanConsumer success) {
 		return (graph, pair) -> {
 			List<Map.Entry<TrackNode, TrackEdge>> validTargets = pair.getSecond();
 			for(Map.Entry<TrackNode, TrackEdge> entry : validTargets) {

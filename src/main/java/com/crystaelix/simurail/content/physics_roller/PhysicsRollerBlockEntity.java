@@ -574,15 +574,15 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity implements Horizo
 		rollerScout.position = point.position;
 
 		Direction.Axis axis = bogeyFacing.getAxis();
-		int step = bogeyFacing.getAxisDirection().getStep();
+		int step = front ? 1 : -1;
 		double spacing = bogey.getOptions().type.logicalAxleSpacing() * 0.5;
 		Vec3i offset = getBlockPos().subtract(bogey.getBlockPos());
 		double latOffset = axis.choose(offset.getZ(), 0, -offset.getX()) * step;
-		double dirOffset = (axis.choose(offset.getX(), 0, offset.getZ()) + spacing - 0.5) * step;
+		double dirOffset = (axis.choose(offset.getX(), 0, offset.getZ()) + spacing + 1) * step;
 
 		double distanceToTravel = 2 * step;
 		PaveTask heightProfile = new PaveTask(latOffset, latOffset);
-		ITrackSelector steering = rollerScout.steer(SteerDirection.NONE, new Vec3(0, 1, 0));
+		ITrackSelector steering = axle.followOtherOrSteer(rollerScout);
 
 		rollerScout.traversalCallback = (edge, coords) -> {};
 		rollerScout.travel(graph, dirOffset, steering);

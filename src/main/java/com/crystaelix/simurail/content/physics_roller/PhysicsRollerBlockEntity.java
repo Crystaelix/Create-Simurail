@@ -579,7 +579,7 @@ public class PhysicsRollerBlockEntity extends SmartBlockEntity implements Horizo
 		int alignStep = front ? 1 : -1;
 		double spacing = bogey.getOptions().type.logicalAxleSpacing() * 0.5;
 		Vec3i offset = getBlockPos().subtract(bogey.getBlockPos());
-		double latOffset = axis.choose(offset.getZ(), 0, -offset.getX()) * axisStep;
+		double latOffset = axis.choose(offset.getZ(), 0, -offset.getX()) * axisStep * alignStep;
 		double dirOffset = (axis.choose(offset.getX(), 0, offset.getZ()) * axisStep + spacing + 1) * alignStep - distanceToTravel * 0.5;
 
 		PaveTask heightProfile = new PaveTask(latOffset, latOffset);

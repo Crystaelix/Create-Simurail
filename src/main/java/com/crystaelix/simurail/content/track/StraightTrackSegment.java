@@ -17,20 +17,24 @@ public final class StraightTrackSegment extends TrackSegment {
 
 	final TrackNodeLocation trackStart;
 	final TrackNodeLocation trackEnd;
+	final double startOffset;
+	final double endOffset;
 
-	public StraightTrackSegment(TrackNodeLocation trackStart, TrackNodeLocation trackEnd, Vector3dc normal, TrackMaterial material) {
+	public StraightTrackSegment(TrackNodeLocation trackStart, TrackNodeLocation trackEnd, double startOffset, double endOffset, Vector3dc normal, TrackMaterial material) {
 		super(trackStart.dimension,
-				JOMLConversion.toJOML(trackStart.getLocation()),
-				JOMLConversion.toJOML(trackEnd.getLocation()),
+				JOMLConversion.toJOML(trackStart.getLocation()).add(0, startOffset, 0),
+				JOMLConversion.toJOML(trackEnd.getLocation()).add(0, endOffset, 0),
 				normal,
 				material);
 		this.trackStart = trackStart;
 		this.trackEnd = trackEnd;
+		this.startOffset = startOffset;
+		this.endOffset = endOffset;
 	}
 
 	@Override
 	public StraightTrackSegment reverse() {
-		return new StraightTrackSegment(trackEnd, trackStart, normal, material);
+		return new StraightTrackSegment(trackEnd, trackStart, endOffset, startOffset, normal, material);
 	}
 
 	@Override

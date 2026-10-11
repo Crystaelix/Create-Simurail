@@ -198,11 +198,13 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 		case "straight" -> {
 			TrackNodeLocation trackStart = TrackNodeLocation.read(tag.getCompound("start"), null);
 			TrackNodeLocation trackEnd = TrackNodeLocation.read(tag.getCompound("end"), null);
+			double startOffset = tag.getDouble("start_offset");
+			double endOffset = tag.getDouble("end_offset");
 			Vector3dc trackNormal = SableNBTUtils.readVector3d(tag.getCompound("normal"));
 			TrackMaterial material = TrackMaterial.deserialize(tag.getString("material"));
 			trackStart.dimension = dimension;
 			trackEnd.dimension = dimension;
-			return new StraightTrackSegment(trackStart, trackEnd, trackNormal, material);
+			return new StraightTrackSegment(trackStart, trackEnd, startOffset, endOffset, trackNormal, material);
 		}
 		case "curved" -> {
 			BezierConnection curve = new BezierConnection(tag.getCompound("curve"), BlockPos.ZERO);

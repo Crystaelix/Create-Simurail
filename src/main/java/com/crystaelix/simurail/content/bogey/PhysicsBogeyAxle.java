@@ -364,7 +364,7 @@ public class PhysicsBogeyAxle {
 							probe.ignoreTurns(),
 							$ -> true);
 					if(!probe.blocked) {
-						TrackSegment nextSegment = TrackSegmentHelper.fromTrackEdge(probe.edge, reverse);
+						TrackSegment nextSegment = TrackSegmentHelper.fromTrackEdge(trackGraph, probe.edge, reverse);
 						while(nextSegment != null) {
 							if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
 								break;

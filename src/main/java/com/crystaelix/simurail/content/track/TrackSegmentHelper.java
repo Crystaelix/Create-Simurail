@@ -13,6 +13,7 @@ import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 import com.simibubi.create.content.trains.graph.TrackEdge;
+import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphHelper;
 import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.track.BezierConnection;
@@ -43,7 +44,7 @@ public class TrackSegmentHelper {
 		SEGMENT_FINDERS.add(CurvedTrackSegmentCache::findSegmentGlobal);
 	}
 
-	public static TrackSegment fromTrackEdge(TrackEdge edge, boolean reverse) {
+	public static TrackSegment fromTrackEdge(TrackGraph graph, TrackEdge edge, boolean reverse) {
 		if(edge.isInterDimensional()) {
 			return null;
 		}
@@ -52,7 +53,9 @@ public class TrackSegmentHelper {
 			return new CurvedTrackSegment(edge.node1.getLocation().getDimension(), curve, reverse ? curve.getSegmentCount() - 1 : 0);
 		}
 		else {
-			return new StraightTrackSegment(edge.node1.getLocation(), edge.node2.getLocation(), JOMLConversion.toJOML(edge.node1.getNormal()), edge.getTrackMaterial());
+			double startOffset = edge.getPosition(graph, 0).y - edge.node1.getLocation().getLocation().y;
+			double endOffset = edge.getPosition(graph, 1).y - edge.node2.getLocation().getLocation().y;
+			return new StraightTrackSegment(edge.node1.getLocation(), edge.node2.getLocation(), startOffset, endOffset, JOMLConversion.toJOML(edge.getNormal(graph, 0.5)), edge.getTrackMaterial());
 		}
 	}
 
@@ -75,7 +78,8 @@ public class TrackSegmentHelper {
 		BlockPos trackPos = null;
 		ITrackBlock trackBlock = null;
 		Pair<Vec3, AxisDirection> trackAxis = null;
-		Vector3d trackNormal = new Vector3d();
+		Vector3d trackStart = new Vector3d();
+		Vector3d trackEnd = new Vector3d();
 
 		MutableBlockPos checkPos = new MutableBlockPos();
 		Vector3d checkLocalPos = new Vector3d();
@@ -129,7 +133,8 @@ public class TrackSegmentHelper {
 								trackPos = checkPos.immutable();
 								trackBlock = checkBlock;
 								trackAxis = checkAxis;
-								trackNormal.set(checkTrackVert);
+								trackStart.set(checkTrackStart);
+								trackStart.add(checkTrackDelta, trackEnd);
 							}
 						}
 					}
@@ -145,6 +150,11 @@ public class TrackSegmentHelper {
 			TrackPropagator.onRailAdded(level, trackPos, level.getBlockState(trackPos));
 			return null;
 		}
-		return ObjectDoublePair.of(new StraightTrackSegment(graphLocation.edge.getFirst(), graphLocation.edge.getSecond(), trackNormal, trackBlock.getMaterial()), score);
+		TrackGraph graph = graphLocation.graph;
+		TrackEdge edge = graph.getConnection(graphLocation.edge.map(graph::locateNode));
+		double startOffset = edge.getPosition(graph, 0).y - trackStart.y;
+		double endOffset = edge.getPosition(graph, 1).y - trackEnd.y;
+		Vector3d trackNormal = JOMLConversion.toJOML(edge.getNormal(graph, 0.5));
+		return ObjectDoublePair.of(new StraightTrackSegment(graphLocation.edge.getFirst(), graphLocation.edge.getSecond(), startOffset, endOffset, trackNormal, trackBlock.getMaterial()), score);
 	}
 }

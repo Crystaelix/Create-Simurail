@@ -1,5 +1,7 @@
 package com.crystaelix.simurail.api.math;
 
+import java.util.Objects;
+
 import org.joml.Matrix3d;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
@@ -226,5 +228,24 @@ public class Frame3d implements Frame3dc {
 		lateral.set(SableNBTUtils.readVector3d(tag.getCompound("l")));
 		position.set(SableNBTUtils.readVector3d(tag.getCompound("p")));
 		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(direction, lateral, vertical, position);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof Frame3dc other) {
+			return Objects.equals(direction, other.direction()) &&
+					Objects.equals(lateral, other.lateral()) &&
+					Objects.equals(vertical, other.vertical()) &&
+					Objects.equals(vertical, other.position());
+		}
+		return false;
 	}
 }

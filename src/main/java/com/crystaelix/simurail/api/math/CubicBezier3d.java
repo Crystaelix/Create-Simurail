@@ -1,5 +1,7 @@
 package com.crystaelix.simurail.api.math;
 
+import java.util.Objects;
+
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -325,6 +327,25 @@ public class CubicBezier3d implements CubicBezier3dc {
 			dest[i] = length(t0, Mth.lerp((double)i / segments, t0, t1));
 		}
 		return dest;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(end1, end2, handle1, handle2);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof CubicBezier3dc other) {
+			return Objects.equals(end1, other.end1()) &&
+					Objects.equals(end2, other.end2()) &&
+					Objects.equals(handle1, other.handle1()) &&
+					Objects.equals(handle2, other.handle2());
+		}
+		return false;
 	}
 
 	private static final double[] X3 = {

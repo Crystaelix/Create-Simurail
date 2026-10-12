@@ -1,8 +1,6 @@
 package com.crystaelix.simurail.content.automatic_coupler.copycat;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.joml.Quaterniond;
@@ -25,7 +23,6 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
-import com.crystaelix.simurail.content.gangway_frame.GangwayFrameShape;
 import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 
@@ -41,8 +38,6 @@ import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -149,9 +144,9 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 	}
 
 	@Override
-	public Vector3d getGangwayCenter(Vector3d dest) {
+	public Vector3d getGangwayAnchor(Vector3d dest) {
 		BlockPos pos = getBlockPos();
-		return getGangwayShape().center(getFacing(), dest).add(pos.getX(), pos.getY(), pos.getZ());
+		return getGangwayShape().anchor(getFacing(), dest).add(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	@Override
@@ -161,7 +156,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 
 	@Override
 	public boolean isGangwayPowered() {
-		return isPowered() || GangwayFrame.getNeighbors(this, level, 15).stream().anyMatch(GangwayFrame::isPowered);
+		return isPowered() || getNeighbors(level, 15).stream().anyMatch(GangwayFrame::isPowered);
 	}
 
 	@Override
@@ -293,7 +288,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			return;
 		}
 		if(level.getBlockEntity(gangwayPartnerPos) instanceof GangwayFrame partner &&
-				getGangwayShape().connectsTo() == partner.getGangwayShape()) {
+				getGangwayShape().canConnectTo(partner.getGangwayShape())) {
 			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, gangwayPartnerPos);
 			if(this.gangwayPartnerPos != null) {
 				removeGangwayPartner();
@@ -441,7 +436,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, partnerPos);
 			Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.logicalPose();
 
-			gangwayPartner.getGangwayCenter(gangwayEndPose.position());
+			gangwayPartner.getGangwayAnchor(gangwayEndPose.position());
 			partnerPose.transformPosition(gangwayEndPose.position());
 			selfPose.transformPositionInverse(gangwayEndPose.position());
 			gangwayEndPose.position().sub(selfPos.getX(), selfPos.getY(), selfPos.getZ());
@@ -450,7 +445,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			gangwayEndPose.orientation().mul(partnerPose.orientation());
 			gangwayEndPose.orientation().mul(gangwayPartner.getOrientation()).rotateY(Math.PI);
 
-			gangwayShape.center(facing, gangwayCenterOffset);
+			gangwayShape.anchor(facing, gangwayCenterOffset);
 
 			double x = gangwayEndPose.position().x - gangwayCenterOffset.x;
 			double y = gangwayEndPose.position().y - gangwayCenterOffset.y;
@@ -653,7 +648,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 
 		if(pos != null) {
 			setCouplerPartner(pos);
-			tryConnectGangway();
+			tryConnectGangway(level, 15);
 		}
 	}
 
@@ -669,64 +664,6 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			joint = null;
 			lastJointLength = 0;
 		}
-	}
-
-	public void tryConnectGangway() {
-		if(getGangwayShape() == GangwayFrameBlockShape.NONE || isGangwayPowered()) {
-			return;
-		}
-		GangwayFrame partner = GangwayFrame.findGangwayPartner(this, level);
-		if(partner == null) {
-			return;
-		}
-		setGangwayPartner(partner.getBlockPos());
-		Set<GangwayFrame> visited = new HashSet<>();
-		Couple<GangwayFrame> selfCouple = Couple.create(this, this);
-		Couple<GangwayFrame> partnerCouple = Couple.create(partner, partner);
-		for(int i = 0; i < 15; ++i) {
-			for(boolean cw : Iterate.trueAndFalse) {
-				if(selfCouple.get(cw) != null) {
-					GangwayFrame cSelf = selfCouple.get(cw);
-					GangwayFrame cPartner = partnerCouple.get(cw);
-					GangwayFrameShape selfShape = cSelf.getGangwayShape();
-					GangwayFrameShape partnerShape = cPartner.getGangwayShape();
-					Direction selfOffset = selfShape.adjacentOffset(cSelf.getFacing(), cw);
-					Direction partnerOffset = partnerShape.adjacentOffset(cPartner.getFacing(), !cw);
-					BlockPos selfPos = cSelf.getBlockPos().relative(selfOffset);
-					BlockPos partnerPos = cPartner.getBlockPos().relative(partnerOffset);
-					if(level.getBlockEntity(selfPos) instanceof GangwayFrame selfNeighbor &&
-							!visited.contains(selfNeighbor) &&
-							cSelf.getFacing() == selfNeighbor.getFacing()) {
-						GangwayFrameShape neighborShape = selfNeighbor.getGangwayShape();
-						int selfAdj = selfShape.adjacentTo(neighborShape, cw);
-						int neighborAdj = neighborShape.adjacentTo(selfShape, !cw);
-						if((selfAdj != 0 || neighborAdj != 0) &&
-								level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
-								cPartner.getFacing() == partnerNeighbor.getFacing() &&
-								neighborShape.connectsTo().equals(partnerNeighbor.getGangwayShape())) {
-							visited.add(selfNeighbor);
-							selfCouple.set(cw, selfNeighbor);
-							partnerCouple.set(cw, partnerNeighbor);
-							selfNeighbor.setGangwayPartner(partnerPos);
-							if(selfAdj < 0 || neighborAdj < 0) {
-								cw = !cw;
-							}
-							continue;
-						}
-					}
-					selfCouple.set(cw, null);
-					partnerCouple.set(cw, null);
-				}
-			}
-		}
-	}
-
-	public void tryDisconnectGangway() {
-		removeGangwayPartner();
-		if(getGangwayShape() == GangwayFrameBlockShape.NONE) {
-			return;
-		}
-		GangwayFrame.getNeighbors(this, level, 15).forEach(GangwayFrame::removeGangwayPartner);
 	}
 
 	@Override

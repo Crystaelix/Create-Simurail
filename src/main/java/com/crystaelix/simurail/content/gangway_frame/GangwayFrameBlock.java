@@ -168,10 +168,10 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 		if(previouslyPowered != isPowered) {
 			level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
 			if(isPowered) {
-				withBlockEntityDo(level, pos, GangwayFrameBlockEntity::tryDisconnectGangway);
+				withBlockEntityDo(level, pos, be -> be.tryDisconnectGangway(level, 15));
 			}
 			else {
-				withBlockEntityDo(level, pos, GangwayFrameBlockEntity::tryConnectGangway);
+				withBlockEntityDo(level, pos, be -> be.tryConnectGangway(level, 15));
 			}
 		}
 	}
@@ -201,10 +201,10 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 			if(!level.isClientSide()) {
 				withBlockEntityDo(level, pos, be -> {
 					if(be.getGangwayPartner() == null) {
-						be.tryConnectGangway();
+						be.tryConnectGangway(level, 15);
 					}
 					else if(player.isSecondaryUseActive()) {
-						be.tryDisconnectGangway();
+						be.tryDisconnectGangway(level, 15);
 					}
 				});
 			}

@@ -1,5 +1,7 @@
 package com.crystaelix.simurail.api.math;
 
+import java.util.Objects;
+
 import org.joml.Matrix3f;
 import org.joml.Quaterniondc;
 import org.joml.Quaternionfc;
@@ -207,5 +209,23 @@ public class Basis3f implements Basis3fc {
 	@Override
 	public boolean equals(Basis3fc other, float delta) {
 		return direction.equals(other.direction(), delta) && vertical.equals(other.vertical(), delta) && lateral.equals(other.lateral(), delta);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(direction, lateral, vertical);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof Basis3fc other) {
+			return Objects.equals(direction, other.direction()) &&
+					Objects.equals(lateral, other.lateral()) &&
+					Objects.equals(vertical, other.vertical());
+		}
+		return false;
 	}
 }

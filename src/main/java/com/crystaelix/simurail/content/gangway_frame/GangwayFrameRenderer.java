@@ -57,8 +57,7 @@ public class GangwayFrameRenderer extends SmartBlockEntityRenderer<GangwayFrameB
 		GangwayFrameBlockShape shape = be.getGangwayShape();
 		Vector3dc selfDir = be.getDirection();
 
-		shape.quad(facing, selfQuad);
-		shape.center(facing, restPose.position());
+		shape.anchor(facing, restPose.position());
 		restPose.position().fma(be.restLength * 2, selfDir);
 		restPose.orientation().set(be.getOrientation());
 
@@ -72,7 +71,7 @@ public class GangwayFrameRenderer extends SmartBlockEntityRenderer<GangwayFrameB
 			Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
 			Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
 
-			partner.getGangwayCenter(endPose.position());
+			partner.getGangwayAnchor(endPose.position());
 			partnerPose.transformPosition(endPose.position());
 			selfPose.transformPositionInverse(endPose.position());
 			endPose.position().sub(pos.getX(), pos.getY(), pos.getZ());
@@ -92,25 +91,28 @@ public class GangwayFrameRenderer extends SmartBlockEntityRenderer<GangwayFrameB
 
 		restPose.lerp(endPose, endF, interpPose);
 
-		shape.quad(Direction.EAST, partnerQuad);
-		partnerQuad.sub(shape.center(Direction.EAST, dir0));
-		partnerQuad.transformPosition(interpPose);
-		interpPose.transformNormal(SimurailMath.DIR_XN, partnerDir);
+		for(int i = 0; i < shape.quadCount(); ++i) {
+			shape.quad(i, facing, selfQuad);
+			shape.quad(i, Direction.EAST, partnerQuad);
+			partnerQuad.sub(shape.anchor(Direction.EAST, dir0));
+			partnerQuad.transformPosition(interpPose);
+			interpPose.transformNormal(SimurailMath.DIR_XN, partnerDir);
 
-		curve0.setHermite(selfQuad.v0, partnerQuad.v0, selfDir, partnerDir);
-		curve1.setHermite(selfQuad.v1, partnerQuad.v1, selfDir, partnerDir);
-		curve2.setHermite(selfQuad.v2, partnerQuad.v2, selfDir, partnerDir);
-		curve3.setHermite(selfQuad.v3, partnerQuad.v3, selfDir, partnerDir);
-		curve0.lengthLUT(0, 0.5, lut0);
-		curve1.lengthLUT(0, 0.5, lut1);
-		curve2.lengthLUT(0, 0.5, lut2);
-		curve3.lengthLUT(0, 0.5, lut3);
+			curve0.setHermite(selfQuad.v0, partnerQuad.v0, selfDir, partnerDir);
+			curve1.setHermite(selfQuad.v1, partnerQuad.v1, selfDir, partnerDir);
+			curve2.setHermite(selfQuad.v2, partnerQuad.v2, selfDir, partnerDir);
+			curve3.setHermite(selfQuad.v3, partnerQuad.v3, selfDir, partnerDir);
+			curve0.lengthLUT(0, 0.5, lut0);
+			curve1.lengthLUT(0, 0.5, lut1);
+			curve2.lengthLUT(0, 0.5, lut2);
+			curve3.lengthLUT(0, 0.5, lut3);
 
-		VertexConsumer vb = bufferSource.getBuffer(RenderType.solid());
+			VertexConsumer vb = bufferSource.getBuffer(RenderType.solid());
 
-		poseStack.pushPose();
-		renderBellows(poseStack, vb, 0xFF000000 | be.color, light, overlay);
-		poseStack.popPose();
+			poseStack.pushPose();
+			renderBellows(poseStack, vb, 0xFF000000 | be.color, light, overlay);
+			poseStack.popPose();
+		}
 	}
 
 	private void renderBellows(PoseStack poseStack, VertexConsumer vb, int color, int light, int overlay) {

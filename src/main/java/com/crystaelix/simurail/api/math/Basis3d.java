@@ -1,5 +1,7 @@
 package com.crystaelix.simurail.api.math;
 
+import java.util.Objects;
+
 import org.joml.Matrix3d;
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
@@ -199,5 +201,23 @@ public class Basis3d implements Basis3dc {
 		vertical.set(SableNBTUtils.readVector3d(tag.getCompound("v")));
 		lateral.set(SableNBTUtils.readVector3d(tag.getCompound("l")));
 		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(direction, lateral, vertical);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof Basis3dc other) {
+			return Objects.equals(direction, other.direction()) &&
+					Objects.equals(lateral, other.lateral()) &&
+					Objects.equals(vertical, other.vertical());
+		}
+		return false;
 	}
 }

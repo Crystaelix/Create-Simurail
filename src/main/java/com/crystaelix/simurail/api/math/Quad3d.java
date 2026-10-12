@@ -1,5 +1,7 @@
 package com.crystaelix.simurail.api.math;
 
+import java.util.Objects;
+
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -243,5 +245,24 @@ public class Quad3d implements Quad3dc {
 		v2.sub(x, y, z);
 		v3.sub(x, y, z);
 		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(v0, v1, v2, v3);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof Quad3dc other) {
+			return Objects.equals(v0, other.v0()) &&
+					Objects.equals(v1, other.v1()) &&
+					Objects.equals(v2, other.v2()) &&
+					Objects.equals(v3, other.v3());
+		}
+		return false;
 	}
 }

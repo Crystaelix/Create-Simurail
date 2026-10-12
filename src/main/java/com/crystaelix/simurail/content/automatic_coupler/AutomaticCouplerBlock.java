@@ -168,7 +168,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 		if(isPowered) {
 			level.setBlock(pos, state.setValue(POWERED, true).setValue(TRIGGERED, false), UPDATE_CLIENTS);
 			if(previouslyPowered != isPowered) {
-				withBlockEntityDo(level, pos, AutomaticCouplerBlockEntity::tryDisconnectGangway);
+				withBlockEntityDo(level, pos, be -> be.tryDisconnectGangway(level, 15));
 			}
 		}
 		else if(!state.getValue(TRIGGERED)) {
@@ -203,7 +203,7 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 						BlockState newState = state.setValue(POWERED, true).setValue(TRIGGERED, true);
 						level.setBlock(pos, newState, UPDATE_CLIENTS);
 						if(!level.isClientSide()) {
-							withBlockEntityDo(level, pos, AutomaticCouplerBlockEntity::tryDisconnectGangway);
+							withBlockEntityDo(level, pos, be -> be.tryDisconnectGangway(level, 15));
 						}
 					}
 					else if(state.getValue(TRIGGERED)) {
@@ -220,10 +220,10 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 				if(!level.isClientSide()) {
 					withBlockEntityDo(level, pos, be -> {
 						if(be.getGangwayPartner() == null) {
-							be.tryConnectGangway();
+							be.tryConnectGangway(level, 15);
 						}
 						else if(player.isSecondaryUseActive()) {
-							be.tryDisconnectGangway();
+							be.tryDisconnectGangway(level, 15);
 						}
 					});
 				}

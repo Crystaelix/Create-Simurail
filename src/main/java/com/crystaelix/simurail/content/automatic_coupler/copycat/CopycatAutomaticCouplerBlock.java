@@ -168,7 +168,7 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 		if(isPowered) {
 			level.setBlock(pos, state.setValue(POWERED, true).setValue(TRIGGERED, false), UPDATE_CLIENTS);
 			if(previouslyPowered != isPowered) {
-				withCouplerBlockEntityDo(level, pos, CopycatAutomaticCouplerBlockEntity::tryDisconnectGangway);
+				withCouplerBlockEntityDo(level, pos, be -> be.tryDisconnectGangway(level, 15));
 			}
 		}
 		else if(!state.getValue(TRIGGERED)) {
@@ -204,7 +204,7 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 						BlockState newState = state.setValue(POWERED, true).setValue(TRIGGERED, true);
 						level.setBlock(pos, newState, UPDATE_CLIENTS);
 						if(!level.isClientSide()) {
-							withCouplerBlockEntityDo(level, pos, CopycatAutomaticCouplerBlockEntity::tryDisconnectGangway);
+							withCouplerBlockEntityDo(level, pos, be -> be.tryDisconnectGangway(level, 15));
 						}
 					}
 					else if(state.getValue(TRIGGERED)) {
@@ -222,10 +222,10 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 				if(!level.isClientSide()) {
 					withCouplerBlockEntityDo(level, pos, be -> {
 						if(be.getGangwayPartner() == null) {
-							be.tryConnectGangway();
+							be.tryConnectGangway(level, 15);
 						}
 						else if(player.isSecondaryUseActive()) {
-							be.tryDisconnectGangway();
+							be.tryDisconnectGangway(level, 15);
 						}
 					});
 				}

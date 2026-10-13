@@ -27,6 +27,10 @@
 	"block.simurail.gangway_frame.dr": "长 右下",
 	"block.simurail.gangway_frame.ul": "长 左上",
 	"block.simurail.gangway_frame.ru": "长 右上",
+	"block.simurail.gangway_frame.dra": "弯折 左下",
+	"block.simurail.gangway_frame.dla": "弯折 右下",
+	"block.simurail.gangway_frame.ura": "弯折 左上",
+	"block.simurail.gangway_frame.ula": "弯折 右上",
 
 	"block.simurail.probe_reader.invalid": "读取器没有有效的目标，尝试重新放置它",
 	"block.simurail.probe_reader.set": "已选择目标位置",

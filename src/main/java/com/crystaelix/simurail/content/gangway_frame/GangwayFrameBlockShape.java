@@ -95,6 +95,31 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 			HorizontalRelativeDirection.D,
 			new Quad2d(v(0, 12), v(12, 0), v(14, 0), v(0, 14)),
 			GangwayFrameBlockShape::ruShape),
+	// Two-segment horizontal
+	DRA(
+			HorizontalRelativeDirection.CW,
+			HorizontalRelativeDirection.D,
+			List.of(new Quad2d(v(0, 2), v(10, 2), v(10, 4), v(0, 4)),
+					new Quad2d(v(10, 2), v(12, 0), v(14, 0), v(10, 4))),
+			GangwayFrameBlockShape::draShape),
+	DLA(
+			HorizontalRelativeDirection.ACW,
+			HorizontalRelativeDirection.D,
+			List.of(new Quad2d(v(4, 0), v(6, 2), v(6, 4), v(2, 0)),
+					new Quad2d(v(6, 2), v(16, 2), v(16, 4), v(6, 4))),
+			GangwayFrameBlockShape::dlaShape),
+	URA(
+			HorizontalRelativeDirection.CW,
+			HorizontalRelativeDirection.U,
+			List.of(new Quad2d(v(0, 12), v(10, 12), v(10, 14), v(0, 14)),
+					new Quad2d(v(10, 12), v(14, 16), v(12, 16), v(10, 14))),
+			GangwayFrameBlockShape::uraShape),
+	ULA(
+			HorizontalRelativeDirection.ACW,
+			HorizontalRelativeDirection.U,
+			List.of(new Quad2d(v(2, 16), v(6, 12), v(6, 14), v(4, 16)),
+					new Quad2d(v(6, 12), v(16, 12), v(16, 14), v(6, 14))),
+			GangwayFrameBlockShape::ulaShape),
 	// None
 	NONE(
 			HorizontalRelativeDirection.I,
@@ -106,18 +131,18 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 	public static final IntFunction<GangwayFrameBlockShape> BY_ID = ByIdMap.continuous(GangwayFrameBlockShape::ordinal, values(), OutOfBoundsStrategy.ZERO);
 	public static final StreamCodec<ByteBuf, GangwayFrameBlockShape> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, GangwayFrameBlockShape::ordinal);
 
-	public static final Set<GangwayFrameBlockShape> NORMAL = EnumSet.of(D, U, L, R, DL, RD, LU, UR, LD, DR, UL, RU);
+	public static final Set<GangwayFrameBlockShape> NORMAL = EnumSet.complementOf(EnumSet.of(NONE));
 	public static final Set<GangwayFrameBlockShape> COUPLER = EnumSet.of(D, U, NONE);
 
-	public static final Set<GangwayFrameBlockShape> D_CW = EnumSet.of(D, RD, LD);
-	public static final Set<GangwayFrameBlockShape> D_ACW = EnumSet.of(D, DL, DR);
-	public static final Set<GangwayFrameBlockShape> U_CW = EnumSet.of(U, UR, UL);
-	public static final Set<GangwayFrameBlockShape> U_ACW = EnumSet.of(U, LU, RU);
+	public static final Set<GangwayFrameBlockShape> D_CW = EnumSet.of(D, RD, LD, DLA);
+	public static final Set<GangwayFrameBlockShape> D_ACW = EnumSet.of(D, DL, DR, DRA);
+	public static final Set<GangwayFrameBlockShape> U_CW = EnumSet.of(U, UR, UL, ULA);
+	public static final Set<GangwayFrameBlockShape> U_ACW = EnumSet.of(U, LU, RU, URA);
 
-	public static final Set<GangwayFrameBlockShape> L_D = EnumSet.of(L, LU, LD);
-	public static final Set<GangwayFrameBlockShape> L_U = EnumSet.of(L, DL, UL);
-	public static final Set<GangwayFrameBlockShape> R_D = EnumSet.of(R, UR, DR);
-	public static final Set<GangwayFrameBlockShape> R_U = EnumSet.of(R, RD, RU);
+	public static final Set<GangwayFrameBlockShape> L_D = EnumSet.of(L, LU, LD, ULA);
+	public static final Set<GangwayFrameBlockShape> L_U = EnumSet.of(L, DL, UL, DLA);
+	public static final Set<GangwayFrameBlockShape> R_D = EnumSet.of(R, UR, DR, URA);
+	public static final Set<GangwayFrameBlockShape> R_U = EnumSet.of(R, RD, RU, DRA);
 
 	private final Couple<HorizontalRelativeDirection> adjacentOffsets;
 
@@ -193,6 +218,10 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 		case DR -> LD;
 		case UL -> RU;
 		case RU -> UL;
+		case DLA -> DRA;
+		case DRA -> DLA;
+		case ULA -> URA;
+		case URA -> ULA;
 		case NONE -> NONE;
 		};
 	}
@@ -208,29 +237,29 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 		switch(offset) {
 		case CW -> {
 			switch(this) {
-			case D, RD, LD -> adjacent = D_CW;
-			case U, UR, UL -> adjacent = U_CW;
+			case D, RD, LD, DRA -> adjacent = D_CW;
+			case U, UR, UL, URA -> adjacent = U_CW;
 			default -> {}
 			}
 		}
 		case ACW -> {
 			switch(this) {
-			case D, RD, LD -> adjacent = D_ACW;
-			case U, UR, UL -> adjacent = U_ACW;
+			case D, RD, LD, DLA -> adjacent = D_ACW;
+			case U, UR, UL, ULA -> adjacent = U_ACW;
 			default -> {}
 			}
 		}
 		case D -> {
 			switch(this) {
-			case L, DL, UL -> adjacent = L_D;
-			case R, RD, RU -> adjacent = R_D;
+			case L, DL, UL, DLA -> adjacent = L_D;
+			case R, RD, RU, DRA -> adjacent = R_D;
 			default -> {}
 			}
 		}
 		case U -> {
 			switch(this) {
-			case L, LU, LD -> adjacent = L_U;
-			case R, UR, DR -> adjacent = R_U;
+			case L, LU, LD, ULA -> adjacent = L_U;
+			case R, UR, DR, URA -> adjacent = R_U;
 			default -> {}
 			}
 		}
@@ -375,6 +404,46 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 		for(int i = 0; i < 14; ++i) {
 			shape = Shapes.joinUnoptimized(
 					shape, clampedBox(0+i, 11-i, 0, 1+i, 14-i, z),
+					BooleanOp.OR);
+		}
+		return VoxelShaper.forHorizontal(shape.optimize(), Direction.SOUTH);
+	}
+
+	private static VoxelShaper draShape(double z) {
+		VoxelShape shape = Block.box(0, 2, 0, 10, 4, z);
+		for(int i = 0; i < 4; ++i) {
+			shape = Shapes.joinUnoptimized(
+					shape, clampedBox(10+i, 1-i, 0, 11+i, 4-i, z),
+					BooleanOp.OR);
+		}
+		return VoxelShaper.forHorizontal(shape.optimize(), Direction.SOUTH);
+	}
+
+	private static VoxelShaper dlaShape(double z) {
+		VoxelShape shape = Block.box(6, 2, 0, 16, 4, z);
+		for(int i = 0; i < 4; ++i) {
+			shape = Shapes.joinUnoptimized(
+					shape, clampedBox(2+i, -2+i, 0, 3+i, 1+i, z),
+					BooleanOp.OR);
+		}
+		return VoxelShaper.forHorizontal(shape.optimize(), Direction.SOUTH);
+	}
+
+	private static VoxelShaper uraShape(double z) {
+		VoxelShape shape = Block.box(0, 12, 0, 10, 14, z);
+		for(int i = 0; i < 4; ++i) {
+			shape = Shapes.joinUnoptimized(
+					shape, clampedBox(10+i, 12+i, 0, 11+i, 15+i, z),
+					BooleanOp.OR);
+		}
+		return VoxelShaper.forHorizontal(shape.optimize(), Direction.SOUTH);
+	}
+
+	private static VoxelShaper ulaShape(double z) {
+		VoxelShape shape = Block.box(6, 12, 0, 16, 14, z);
+		for(int i = 0; i < 4; ++i) {
+			shape = Shapes.joinUnoptimized(
+					shape, clampedBox(2+i, 15-i, 0, 3+i, 18-i, z),
 					BooleanOp.OR);
 		}
 		return VoxelShaper.forHorizontal(shape.optimize(), Direction.SOUTH);

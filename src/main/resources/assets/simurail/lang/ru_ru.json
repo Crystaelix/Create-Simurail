@@ -27,6 +27,10 @@
 	"block.simurail.gangway_frame.dr": "Нижний длинный правый угол",
 	"block.simurail.gangway_frame.ul": "Верхний длинный левый угол",
 	"block.simurail.gangway_frame.ru": "Верхний длинный правый угол",
+	"block.simurail.gangway_frame.dra": "Bent Lower Left",
+	"block.simurail.gangway_frame.dla": "Bent Lower Right",
+	"block.simurail.gangway_frame.ura": "Bent Upper Left",
+	"block.simurail.gangway_frame.ula": "Bent Upper Right",
 
 	"block.simurail.probe_reader.invalid": "Невозможно поставить считыватель здесь, попробуйте снова",
 	"block.simurail.probe_reader.set": "Выбрана целевая позиция",

@@ -204,6 +204,74 @@
 			"y": 90
 		},
 
+		"facing=south,shape=dla,powered=false": {
+			"model": "simurail:block/gangway_frame/dla_normal",
+			"y": 0
+		},
+		"facing=south,shape=dra,powered=false": {
+			"model": "simurail:block/gangway_frame/dra_normal",
+			"y": 0
+		},
+		"facing=south,shape=ula,powered=false": {
+			"model": "simurail:block/gangway_frame/ula_normal",
+			"y": 0
+		},
+		"facing=south,shape=ura,powered=false": {
+			"model": "simurail:block/gangway_frame/ura_normal",
+			"y": 0
+		},
+
+		"facing=north,shape=dla,powered=false": {
+			"model": "simurail:block/gangway_frame/dla_normal",
+			"y": 180
+		},
+		"facing=north,shape=dra,powered=false": {
+			"model": "simurail:block/gangway_frame/dra_normal",
+			"y": 180
+		},
+		"facing=north,shape=ula,powered=false": {
+			"model": "simurail:block/gangway_frame/ula_normal",
+			"y": 180
+		},
+		"facing=north,shape=ura,powered=false": {
+			"model": "simurail:block/gangway_frame/ura_normal",
+			"y": 180
+		},
+
+		"facing=east,shape=dla,powered=false": {
+			"model": "simurail:block/gangway_frame/dla_normal",
+			"y": -90
+		},
+		"facing=east,shape=dra,powered=false": {
+			"model": "simurail:block/gangway_frame/dra_normal",
+			"y": -90
+		},
+		"facing=east,shape=ula,powered=false": {
+			"model": "simurail:block/gangway_frame/ula_normal",
+			"y": -90
+		},
+		"facing=east,shape=ura,powered=false": {
+			"model": "simurail:block/gangway_frame/ura_normal",
+			"y": -90
+		},
+
+		"facing=west,shape=dla,powered=false": {
+			"model": "simurail:block/gangway_frame/dla_normal",
+			"y": 90
+		},
+		"facing=west,shape=dra,powered=false": {
+			"model": "simurail:block/gangway_frame/dra_normal",
+			"y": 90
+		},
+		"facing=west,shape=ula,powered=false": {
+			"model": "simurail:block/gangway_frame/ula_normal",
+			"y": 90
+		},
+		"facing=west,shape=ura,powered=false": {
+			"model": "simurail:block/gangway_frame/ura_normal",
+			"y": 90
+		},
+
 		"facing=south,shape=d,powered=true": {
 			"model": "simurail:block/gangway_frame/d_powered",
 			"y": 0
@@ -405,6 +473,74 @@
 		},
 		"facing=west,shape=ru,powered=true": {
 			"model": "simurail:block/gangway_frame/ru_powered",
+			"y": 90
+		},
+
+		"facing=south,shape=dla,powered=true": {
+			"model": "simurail:block/gangway_frame/dla_powered",
+			"y": 0
+		},
+		"facing=south,shape=dra,powered=true": {
+			"model": "simurail:block/gangway_frame/dra_powered",
+			"y": 0
+		},
+		"facing=south,shape=ula,powered=true": {
+			"model": "simurail:block/gangway_frame/ula_powered",
+			"y": 0
+		},
+		"facing=south,shape=ura,powered=true": {
+			"model": "simurail:block/gangway_frame/ura_powered",
+			"y": 0
+		},
+
+		"facing=north,shape=dla,powered=true": {
+			"model": "simurail:block/gangway_frame/dla_powered",
+			"y": 180
+		},
+		"facing=north,shape=dra,powered=true": {
+			"model": "simurail:block/gangway_frame/dra_powered",
+			"y": 180
+		},
+		"facing=north,shape=ula,powered=true": {
+			"model": "simurail:block/gangway_frame/ula_powered",
+			"y": 180
+		},
+		"facing=north,shape=ura,powered=true": {
+			"model": "simurail:block/gangway_frame/ura_powered",
+			"y": 180
+		},
+
+		"facing=east,shape=dla,powered=true": {
+			"model": "simurail:block/gangway_frame/dla_powered",
+			"y": -90
+		},
+		"facing=east,shape=dra,powered=true": {
+			"model": "simurail:block/gangway_frame/dra_powered",
+			"y": -90
+		},
+		"facing=east,shape=ula,powered=true": {
+			"model": "simurail:block/gangway_frame/ula_powered",
+			"y": -90
+		},
+		"facing=east,shape=ura,powered=true": {
+			"model": "simurail:block/gangway_frame/ura_powered",
+			"y": -90
+		},
+
+		"facing=west,shape=dla,powered=true": {
+			"model": "simurail:block/gangway_frame/dla_powered",
+			"y": 90
+		},
+		"facing=west,shape=dra,powered=true": {
+			"model": "simurail:block/gangway_frame/dra_powered",
+			"y": 90
+		},
+		"facing=west,shape=ula,powered=true": {
+			"model": "simurail:block/gangway_frame/ula_powered",
+			"y": 90
+		},
+		"facing=west,shape=ura,powered=true": {
+			"model": "simurail:block/gangway_frame/ura_powered",
 			"y": 90
 		}
 	}

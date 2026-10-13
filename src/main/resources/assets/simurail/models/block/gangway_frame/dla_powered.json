@@ -1,0 +1,12 @@
+{
+	"parent": "block/block",
+	"render_type": "solid",
+	"loader": "neoforge:obj",
+	"model": "simurail:models/block/gangway_frame/dla.obj",
+	"flip_v": true,
+	"textures": {
+		"particle": "simurail:block/gangway_frame/bellows_item",
+		"base": "simurail:block/gangway_frame/base_powered",
+		"side": "simurail:block/gangway_frame/base_diag"
+	}
+}

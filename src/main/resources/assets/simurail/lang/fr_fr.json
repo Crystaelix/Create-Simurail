@@ -27,6 +27,10 @@
 	"block.simurail.gangway_frame.dr": "Bas droite long",
 	"block.simurail.gangway_frame.ul": "Haut gauche long",
 	"block.simurail.gangway_frame.ru": "Haut droite long",
+	"block.simurail.gangway_frame.dra": "Bent Lower Left",
+	"block.simurail.gangway_frame.dla": "Bent Lower Right",
+	"block.simurail.gangway_frame.ura": "Bent Upper Left",
+	"block.simurail.gangway_frame.ula": "Bent Upper Right",
 
 	"block.simurail.probe_reader.invalid": "Aucune cible valide, essayez de le replacer",
 	"block.simurail.probe_reader.set": "Position ciblée sélectionnée",

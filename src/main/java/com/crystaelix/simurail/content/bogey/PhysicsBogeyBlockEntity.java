@@ -137,6 +137,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected GenericConstraintHandle motorJoint;
 	protected final PhysicsBogeyAxle axleFront;
 	protected final PhysicsBogeyAxle axleBack;
+	protected float lastStress = 0;
 	public double visualSpeed = 0;
 	protected double lastVisualSpeed = 0;
 	public double slipSpeed = 0;
@@ -538,12 +539,15 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		lastLocalPivotOffset.set(localPivotOffset);
 		renderPivotRot.initialize(localPivotRot);
 		resetPivotPose();
-		if(!level.isClientSide() && Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
-			lastScale.set(subLevel.logicalPose().scale());
-			createPivot(subLevel);
-			axleFront.init(subLevel);
-			axleBack.init(subLevel);
-			updateForceLoad(subLevel);
+		if(!level.isClientSide()) {
+			lastStress = calculateStressApplied();
+			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
+				lastScale.set(subLevel.logicalPose().scale());
+				createPivot(subLevel);
+				axleFront.init(subLevel);
+				axleBack.init(subLevel);
+				updateForceLoad(subLevel);
+			}
 		}
 		initialized = true;
 	}
@@ -622,6 +626,11 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 		if(!level.isClientSide()) {
 			if(!computerBehaviour.hasAttachedComputer() && computerOverrides.hasOverrides()) {
 				computerOverrides.reset();
+			}
+			float newStress = calculateStressApplied();
+			if(lastStress != newStress) {
+				getOrCreateNetwork().updateStressFor(this, newStress);
+				lastStress = newStress;
 			}
 			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
 				Vector3d currentScale = subLevel.logicalPose().scale();

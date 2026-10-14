@@ -152,6 +152,11 @@ public class TrackSegmentHelper {
 		}
 		TrackGraph graph = graphLocation.graph;
 		TrackEdge edge = graph.getConnection(graphLocation.edge.map(graph::locateNode));
+		if(edge == null) {
+			// Also broken track, notify
+			TrackPropagator.onRailAdded(level, trackPos, level.getBlockState(trackPos));
+			return null;
+		}
 		double startOffset = edge.getPosition(graph, 0).y - trackStart.y;
 		double endOffset = edge.getPosition(graph, 1).y - trackEnd.y;
 		Vector3d trackNormal = JOMLConversion.toJOML(edge.getNormal(graph, 0.5));

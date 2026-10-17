@@ -586,7 +586,7 @@ public class PhysicsBogeyAxle {
 		double zLimit = 0;
 
 		if(!yFixed) {
-			double yTime = bogey.options.allowVerticalMovement ? 20 : 10;
+			double yTime = bogey.options.allowVerticalMovement || bogey.staffRestrained ? 20 : 10;
 			double yDist = Math.abs(SimurailMath.projectTLinePoint(trackFrame.position, trackFrame.vertical, trackAxleFrame.position));
 			yLimit = Math.max(Math.min(yDist - 0.5 * timeStep, yDist - yDist * yFixedTimer / yTime), 0);
 			yFixedTimer += timeStep;
@@ -605,7 +605,7 @@ public class PhysicsBogeyAxle {
 		double t = trackSegment.projectT(trackAxleFrame.position);
 		trackSubLevelPose.transformNormal(trackSegment.curvature(t, globalTrackCurvature));
 		double speedSq = Mth.square(speed);
-		boolean checkVertical = bogey.isInverted() || !bogey.options.allowVerticalMovement;
+		boolean checkVertical = (bogey.isInverted() || !bogey.options.allowVerticalMovement) && !bogey.staffRestrained;
 
 		if(kLateral > SimurailMath.EPSILON) {
 			double lateralMaxSpeedFactor = trackType.lateralMaxSpeedFactor().getAsDouble();
@@ -632,6 +632,10 @@ public class PhysicsBogeyAxle {
 		if(checkVertical) {
 			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, yLimit);
 			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -(yLimit + bogeyVerticalPlay), yLimit + bogeyVerticalPlay);
+		}
+		else if(bogey.isInverted()) {
+			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -Short.MAX_VALUE, yLimit);
+			bogeyJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -Short.MAX_VALUE, yLimit + bogeyVerticalPlay);
 		}
 		else {
 			trackJoint.setLimit(ConstraintJointAxis.LINEAR_Y, -yLimit, Short.MAX_VALUE);

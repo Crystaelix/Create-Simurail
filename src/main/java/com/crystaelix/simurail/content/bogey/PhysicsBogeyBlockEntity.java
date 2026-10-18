@@ -628,10 +628,10 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 				computerOverrides.reset();
 			}
 			float newStress = calculateStressApplied();
-			if(lastStress != newStress) {
+			if(lastStress != newStress && hasNetwork()) {
 				getOrCreateNetwork().updateStressFor(this, newStress);
-				lastStress = newStress;
 			}
+			lastStress = newStress;
 			if(Sable.HELPER.getContaining(this) instanceof ServerSubLevel subLevel) {
 				Vector3d currentScale = subLevel.logicalPose().scale();
 				if(!lastScale.equals(currentScale, SimurailMath.EPSILON)) {

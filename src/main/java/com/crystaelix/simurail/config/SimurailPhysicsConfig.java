@@ -62,7 +62,7 @@ public class SimurailPhysicsConfig extends SimurailBaseConfig {
 	}
 
 	public boolean requiresPivotCompatibilityMode() {
-		return SimurailCompat.POCKET.isLoaded();
+		return SimurailCompat.POCKET.isLoaded() || SimurailCompat.PYM.isLoaded();
 	}
 
 	public boolean isPivotCompatibilityMode() {

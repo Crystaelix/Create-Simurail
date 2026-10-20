@@ -14,6 +14,7 @@ public enum SimurailCompat {
 	OFFROAD("offroad"),
 	RAILWAYS(() -> isClassLoaded("com.railwayteam.railways.Railways")),
 	POCKET(() -> isClassLoaded("com.misterblusky9.pocket.PocketSized")),
+	PYM("pym"),
 	;
 
 	public final BooleanSupplier isLoaded;

@@ -9,8 +9,13 @@ import com.simibubi.create.infrastructure.config.CTrains;
 @Mixin(CTrains.class)
 public abstract class CTrainsMixin {
 
+	@ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/infrastructure/config/CTrains;i(IIILjava/lang/String;[Ljava/lang/String;)Lnet/createmod/catnip/config/ConfigBase$ConfigInt;"), index = 0)
+	private int simurail$modifyMaxTrackPlacementLengthDefault(int current, int min, int max, String name, String[] comment) {
+		return !name.equals("maxTrackPlacementLength") ? current : Math.max(current, 64);
+	}
+
 	@ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/infrastructure/config/CTrains;i(IIILjava/lang/String;[Ljava/lang/String;)Lnet/createmod/catnip/config/ConfigBase$ConfigInt;"), index = 2)
-	private int simurail$modifyMaxTrackPlacementLength(int current, int min, int max, String name, String[] comment) {
+	private int simurail$modifyMaxTrackPlacementLengthMax(int current, int min, int max, String name, String[] comment) {
 		return !name.equals("maxTrackPlacementLength") ? max : Math.max(max, 256);
 	}
 }

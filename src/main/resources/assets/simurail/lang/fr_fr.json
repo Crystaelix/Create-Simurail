@@ -5,6 +5,7 @@
 	"block.simurail.automatic_coupler": "Attelage automatique",
 	"block.simurail.copycat_panel_automatic_coupler": "Copycat Panel Automatic Coupler",
 	"block.simurail.gangway_frame": "Cadre de soufflet",
+	"block.simurail.copycat_panel_gangway_frame": "Copycat Panel Gangway Frame",
 	"block.simurail.probe_reader": "Lecteur de sonde de bogie",
 	"block.simurail.remote_controller": "Télécommande de bogie",
 	"block.simurail.physics_roller": "Rouleau mécanique dynamique",

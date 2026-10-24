@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.content.automatic_coupler.copycat;
 
-import java.util.stream.IntStream;
-
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.simibubi.create.content.decoration.copycat.CopycatSpecialCases;
 
@@ -19,12 +17,12 @@ public class CopycatPanelAutomaticCouplerBlock extends CopycatAutomaticCouplerBl
 	public static final VoxelShaper SHAPES = VoxelShaper.forHorizontal(box(0, 0, 0, 16, 16, 3), Direction.SOUTH);
 	public static final VoxelShaper TOP_SHAPES = VoxelShaper.forHorizontal(box(0, 4, 0, 16, 16, 3), Direction.SOUTH);
 	public static final VoxelShaper BOTTOM_SHAPES = VoxelShaper.forHorizontal(box(0, 0, 0, 16, 12, 3), Direction.SOUTH);
-	public static final VoxelShaper[] TOP_GANGWAY_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(0, 4, 0, 16, 16, 3), GangwayFrameBlockShape.D.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
-			toArray(VoxelShaper[]::new);
-	public static final VoxelShaper[] BOTTOM_GANGWAY_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(0, 0, 0, 16, 12, 3), GangwayFrameBlockShape.U.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
-			toArray(VoxelShaper[]::new);
+	public static final VoxelShaper TOP_GANGWAY_SHAPES = combine(TOP_SHAPES, GangwayFrameBlockShape.D.shapes);
+	public static final VoxelShaper BOTTOM_GANGWAY_SHAPES = combine(BOTTOM_SHAPES, GangwayFrameBlockShape.U.shapes);
+
+	public static VoxelShaper combine(VoxelShaper shapes1, VoxelShaper shapes2) {
+		return VoxelShaper.forHorizontal(Shapes.or(shapes1.get(Direction.SOUTH), shapes2.get(Direction.SOUTH)), Direction.SOUTH);
+	}
 
 	public CopycatPanelAutomaticCouplerBlock(Properties properties) {
 		super(properties);
@@ -32,37 +30,31 @@ public class CopycatPanelAutomaticCouplerBlock extends CopycatAutomaticCouplerBl
 
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		Direction facing = state.getValue(FACING);
 		return switch(state.getValue(SHAPE)) {
-		case TOP -> (state.getValue(GANGWAY) ? TOP_GANGWAY_SHAPES[0] : TOP_SHAPES).get(state.getValue(FACING));
-		case BOTTOM -> (state.getValue(GANGWAY) ? BOTTOM_GANGWAY_SHAPES[0] : BOTTOM_SHAPES).get(state.getValue(FACING));
-		case null, default -> SHAPES.get(state.getValue(FACING));
-		};
-	}
-
-	@Override
-	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, int shapeIndex) {
-		return switch(state.getValue(SHAPE)) {
-		case TOP -> TOP_GANGWAY_SHAPES[shapeIndex].get(state.getValue(FACING));
-		case BOTTOM -> BOTTOM_GANGWAY_SHAPES[shapeIndex].get(state.getValue(FACING));
-		case null, default -> SHAPES.get(state.getValue(FACING));
-		};
-	}
-
-	@Override
-	public VoxelShape getSubLevelCollisionShape(BlockGetter blockGetter, BlockState state) {
-		return switch(state.getValue(SHAPE)) {
-		case TOP -> TOP_SHAPES.get(state.getValue(FACING));
-		case BOTTOM -> BOTTOM_SHAPES.get(state.getValue(FACING));
-		case null, default -> SHAPES.get(state.getValue(FACING));
+		case TOP -> (state.getValue(GANGWAY) ? TOP_GANGWAY_SHAPES : TOP_SHAPES).get(facing);
+		case BOTTOM -> (state.getValue(GANGWAY) ? BOTTOM_GANGWAY_SHAPES : BOTTOM_SHAPES).get(facing);
+		case null, default -> SHAPES.get(facing);
 		};
 	}
 
 	@Override
 	protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+		Direction facing = state.getValue(FACING);
 		return switch(state.getValue(SHAPE)) {
-		case TOP -> TOP_SHAPES.get(state.getValue(FACING));
-		case BOTTOM -> BOTTOM_SHAPES.get(state.getValue(FACING));
-		case null, default -> SHAPES.get(state.getValue(FACING));
+		case TOP -> TOP_SHAPES.get(facing);
+		case BOTTOM -> BOTTOM_SHAPES.get(facing);
+		case null, default -> SHAPES.get(facing);
+		};
+	}
+
+	@Override
+	public VoxelShape getSubLevelCollisionShape(BlockGetter blockGetter, BlockState state) {
+		Direction facing = state.getValue(FACING);
+		return switch(state.getValue(SHAPE)) {
+		case TOP -> TOP_SHAPES.get(facing);
+		case BOTTOM -> BOTTOM_SHAPES.get(facing);
+		case null, default -> SHAPES.get(facing);
 		};
 	}
 

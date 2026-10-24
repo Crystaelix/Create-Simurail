@@ -101,6 +101,10 @@ public class SubLevelAuxiliaryPhysicsBody implements AuxiliaryPhysicsBody {
 	public PhysicsPipelineBody physicsBody() {
 		return subLevel;
 	}
+	
+	public BlockPos anchorPos() {
+		return anchorPos;
+	}
 
 	@Override
 	public CompoundTag write() {

@@ -1,6 +1,8 @@
 package com.crystaelix.simurail.content.gangway_frame;
 
 import com.crystaelix.simurail.Simurail;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameBlock;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameBlockEntity;
 
 import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
@@ -27,13 +29,24 @@ public record GangwayFrameOptionsPacket(BlockPos pos, GangwayFrameBlockShape sha
 
 	public void handle(ServerPacketContext context) {
 		Level level = context.level();
-		if(level.getBlockEntity(pos) instanceof GangwayFrameBlockEntity gangway) {
+		switch(level.getBlockEntity(pos)) {
+		case GangwayFrameBlockEntity gangway -> {
 			gangway.restLength = restLength;
 			gangway.setChanged();
 			gangway.sendData();
 			if(shape != GangwayFrameBlockShape.NONE) {
 				level.setBlock(pos, gangway.getBlockState().setValue(GangwayFrameBlock.SHAPE, shape), Block.UPDATE_ALL);
 			}
+		}
+		case CopycatGangwayFrameBlockEntity copycat -> {
+			copycat.restLength = restLength;
+			copycat.setChanged();
+			copycat.sendData();
+			if(shape != GangwayFrameBlockShape.NONE) {
+				level.setBlock(pos, copycat.getBlockState().setValue(CopycatGangwayFrameBlock.SHAPE, shape), Block.UPDATE_ALL);
+			}
+		}
+		default -> {}
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.crystaelix.simurail.api.physics.AuxiliaryPhysicsObjectAnchor;
+import com.crystaelix.simurail.api.physics.SubLevelAuxiliaryPhysicsBody;
 import com.crystaelix.simurail.api.util.SchematicContextUtil;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -42,7 +43,11 @@ public class PhysicsBogeyPivotBlockEntity extends SmartBlockEntity implements Au
 
 	@Override
 	public void lazyTick() {
-		if(parent == null || !(level.getBlockEntity(parent) instanceof PhysicsBogeyBlockEntity)) {
+		if(!level.isClientSide()) {
+			if(parent != null && level.getBlockEntity(parent) instanceof PhysicsBogeyBlockEntity bogey &&
+					(bogey.pivot == null || bogey.pivot instanceof SubLevelAuxiliaryPhysicsBody body && body.anchorPos().equals(getBlockPos()))) {
+				return;
+			}
 			level.removeBlock(getBlockPos(), false);
 		}
 	}

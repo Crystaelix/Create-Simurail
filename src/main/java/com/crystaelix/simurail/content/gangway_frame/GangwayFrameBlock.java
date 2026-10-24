@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
 import dev.ryanhcode.sable.api.block.BlockSubLevelCollisionShape;
-import dev.ryanhcode.sable.api.physics.collider.SableCollisionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -132,30 +131,12 @@ public class GangwayFrameBlock extends HorizontalDirectionalBlock implements IBE
 
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return state.getValue(SHAPE).getShape(state.getValue(FACING));
-	}
-
-	@Override
-	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		if(!(context instanceof SableCollisionContext) && level.getBlockEntity(pos) instanceof GangwayFrameBlockEntity be && be.collisionShape != null) {
-			return be.collisionShape;
-		}
-		return state.getShape(level, pos, context);
-	}
-
-	@Override
-	protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return state.getShape(level, pos, context);
-	}
-
-	@Override
-	public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
-		return state.getShape(level, pos);
+		return state.getValue(SHAPE).shapes.get(state.getValue(FACING));
 	}
 
 	@Override
 	public VoxelShape getSubLevelCollisionShape(BlockGetter level, BlockState state) {
-		return state.getValue(SHAPE).getSubLevelShape(state.getValue(FACING));
+		return state.getValue(SHAPE).subLevelShapes.get(state.getValue(FACING));
 	}
 
 	@Override

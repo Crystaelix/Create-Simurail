@@ -37,95 +37,129 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.ACW,
 			new Quad2d(v(0, 2), v(16, 2), v(16, 4), v(0, 4)),
-			z -> VoxelShaper.forHorizontal(Block.box(0, 2, 0, 16, 4, z), Direction.SOUTH)),
+			List.of(v(1, 3), v(3, 3), v(5, 3), v(7, 3), v(9, 3), v(11, 3), v(13, 3), v(15, 3)),
+			z -> VoxelShaper.forHorizontal(Block.box(0, 2, 0, 16, 4, z), Direction.SOUTH),
+			0),
 	U(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.ACW,
 			new Quad2d(v(0, 12), v(16, 12), v(16, 14), v(0, 14)),
-			z -> VoxelShaper.forHorizontal(Block.box(0, 12, 0, 16, 14, z), Direction.SOUTH)),
+			List.of(v(1, 13), v(3, 13), v(5, 13), v(7, 13), v(9, 13), v(11, 13), v(13, 13), v(15, 13)),
+			z -> VoxelShaper.forHorizontal(Block.box(0, 12, 0, 16, 14, z), Direction.SOUTH),
+			1),
 	L(
 			HorizontalRelativeDirection.D,
 			HorizontalRelativeDirection.U,
 			new Quad2d(v(2, 16), v(2, 0), v(4, 0), v(4, 16)),
-			z -> VoxelShaper.forHorizontal(Block.box(2, 0, 0, 4, 16, z), Direction.SOUTH)),
+			List.of(v(3, 1), v(3, 2), v(3, 5), v(3, 7), v(3, 9), v(3, 11), v(3, 13), v(3, 15)),
+			z -> VoxelShaper.forHorizontal(Block.box(2, 0, 0, 4, 16, z), Direction.SOUTH),
+			2),
 	R(
 			HorizontalRelativeDirection.D,
 			HorizontalRelativeDirection.U,
 			new Quad2d(v(12, 16), v(12, 0), v(14, 0), v(14, 16)),
-			z -> VoxelShaper.forHorizontal(Block.box(12, 0, 0, 14, 16, z), Direction.SOUTH)),
+			List.of(v(13, 1), v(13, 2), v(13, 5), v(13, 7), v(13, 9), v(13, 11), v(13, 13), v(13, 15)),
+			z -> VoxelShaper.forHorizontal(Block.box(12, 0, 0, 14, 16, z), Direction.SOUTH),
+			3),
 	// Short diagonal
 	DL(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.D,
 			new Quad2d(v(0, 2), v(2, 0), v(4, 0), v(0, 4)),
-			GangwayFrameBlockShape::dlShape),
+			List.of(v(1, 2), v(2, 1)),
+			GangwayFrameBlockShape::dlShape,
+			4),
 	RD(
 			HorizontalRelativeDirection.ACW,
 			HorizontalRelativeDirection.D,
 			new Quad2d(v(14, 0), v(16, 2), v(16, 4), v(12, 0)),
-			GangwayFrameBlockShape::rdShape),
+			List.of(v(14, 1), v(15, 2)),
+			GangwayFrameBlockShape::rdShape,
+			5),
 	LU(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.U,
 			new Quad2d(v(0, 12), v(4, 16), v(2, 16), v(0, 14)),
-			GangwayFrameBlockShape::luShape),
+			List.of(v(1, 14), v(2, 15)),
+			GangwayFrameBlockShape::luShape,
+			6),
 	UR(
 			HorizontalRelativeDirection.ACW,
 			HorizontalRelativeDirection.U,
 			new Quad2d(v(12, 16), v(16, 12), v(16, 14), v(14, 16)),
-			GangwayFrameBlockShape::urShape),
+			List.of(v(14, 15), v(15, 14)),
+			GangwayFrameBlockShape::urShape,
+			7),
 	// Long diagonal
 	LD(
 			HorizontalRelativeDirection.ACW,
 			HorizontalRelativeDirection.U,
 			new Quad2d(v(2, 16), v(16, 2), v(16, 4), v(4, 16)),
-			GangwayFrameBlockShape::ldShape),
+			List.of(v(4, 15), v(5.375, 13.625), v(6.75, 12.25), v(8.125, 10.875), v(9.5, 9.5), v(10.875, 8.125), v(12.25, 6.75), v(13.625, 5.375), v(15, 4)),
+			GangwayFrameBlockShape::ldShape,
+			0),
 	DR(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.U,
 			new Quad2d(v(0, 2), v(14, 16), v(12, 16), v(0, 4)),
-			GangwayFrameBlockShape::drShape),
+			List.of(v(1, 4), v(2.375, 5.375), v(3.75, 6.75), v(5.125, 8.125), v(6.5, 9.5), v(7.875, 10.875), v(9.25, 12.25), v(10.625, 13.625), v(12, 15)),
+			GangwayFrameBlockShape::drShape,
+			0),
 	UL(
 			HorizontalRelativeDirection.ACW,
 			HorizontalRelativeDirection.D,
 			new Quad2d(v(4, 0), v(16, 12), v(16, 14), v(2, 0)),
-			GangwayFrameBlockShape::ulShape),
+			List.of(v(4, 1), v(5.375, 2.375), v(6.75, 3.75), v(8.125, 5.125), v(9.5, 6.5), v(10.875, 7.875), v(12.25, 9.25), v(13.625, 10.625), v(15, 12)),
+			GangwayFrameBlockShape::ulShape,
+			0),
 	RU(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.D,
 			new Quad2d(v(0, 12), v(12, 0), v(14, 0), v(0, 14)),
-			GangwayFrameBlockShape::ruShape),
+			List.of(v(1, 12), v(2.375, 10.625), v(3.75, 9.25), v(5.125, 7.875), v(6.5, 6.5), v(7.875, 5.125), v(9.25, 3.75), v(10.625, 2.375), v(12, 1)),
+			GangwayFrameBlockShape::ruShape,
+			0),
 	// Two-segment horizontal
 	DRA(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.D,
 			List.of(new Quad2d(v(0, 2), v(10, 2), v(10, 4), v(0, 4)),
 					new Quad2d(v(10, 2), v(12, 0), v(14, 0), v(10, 4))),
-			GangwayFrameBlockShape::draShape),
+			List.of(v(1, 3), v(3, 3), v(5, 3), v(7, 3), v(9, 3), v(11, 2), v(12, 1)),
+			GangwayFrameBlockShape::draShape,
+			8),
 	DLA(
 			HorizontalRelativeDirection.ACW,
 			HorizontalRelativeDirection.D,
 			List.of(new Quad2d(v(4, 0), v(6, 2), v(6, 4), v(2, 0)),
 					new Quad2d(v(6, 2), v(16, 2), v(16, 4), v(6, 4))),
-			GangwayFrameBlockShape::dlaShape),
+			List.of(v(4, 1), v(5, 2), v(7, 3), v(9, 3), v(11, 3), v(13, 3), v(15, 3)),
+			GangwayFrameBlockShape::dlaShape,
+			9),
 	URA(
 			HorizontalRelativeDirection.CW,
 			HorizontalRelativeDirection.U,
 			List.of(new Quad2d(v(0, 12), v(10, 12), v(10, 14), v(0, 14)),
 					new Quad2d(v(10, 12), v(14, 16), v(12, 16), v(10, 14))),
-			GangwayFrameBlockShape::uraShape),
+			List.of(v(1, 13), v(3, 13), v(5, 13), v(7, 13), v(9, 13), v(11, 14), v(12, 15)),
+			GangwayFrameBlockShape::uraShape,
+			10),
 	ULA(
 			HorizontalRelativeDirection.ACW,
 			HorizontalRelativeDirection.U,
 			List.of(new Quad2d(v(2, 16), v(6, 12), v(6, 14), v(4, 16)),
 					new Quad2d(v(6, 12), v(16, 12), v(16, 14), v(6, 14))),
-			GangwayFrameBlockShape::ulaShape),
+			List.of(v(4, 15), v(5, 14), v(7, 13), v(9, 13), v(11, 13), v(13, 13), v(15, 13)),
+			GangwayFrameBlockShape::ulaShape,
+			11),
 	// None
 	NONE(
 			HorizontalRelativeDirection.I,
 			HorizontalRelativeDirection.I,
 			List.of(),
-			z -> VoxelShaper.forHorizontal(Shapes.empty(), Direction.SOUTH)),
+			List.of(),
+			z -> VoxelShaper.forHorizontal(Shapes.empty(), Direction.SOUTH),
+			0),
 	;
 
 	public static final IntFunction<GangwayFrameBlockShape> BY_ID = ByIdMap.continuous(GangwayFrameBlockShape::ordinal, values(), OutOfBoundsStrategy.ZERO);
@@ -133,6 +167,9 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 
 	public static final Set<GangwayFrameBlockShape> NORMAL = EnumSet.complementOf(EnumSet.of(NONE));
 	public static final Set<GangwayFrameBlockShape> COUPLER = EnumSet.of(D, U, NONE);
+	public static final Set<GangwayFrameBlockShape> COPYCAT = EnumSet.complementOf(EnumSet.of(LD, DR, UL, RU, NONE));
+
+	public static final IntFunction<GangwayFrameBlockShape> BY_ID_COPYCAT = ByIdMap.continuous(shape -> shape.copycatIndex, COPYCAT.toArray(GangwayFrameBlockShape[]::new), OutOfBoundsStrategy.ZERO);
 
 	public static final Set<GangwayFrameBlockShape> D_CW = EnumSet.of(D, RD, LD, DLA);
 	public static final Set<GangwayFrameBlockShape> D_ACW = EnumSet.of(D, DL, DR, DRA);
@@ -148,11 +185,14 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 
 	private final List<Quad2dc> quads;
 	private final Vector2dc anchor;
+	private final List<Vector2dc> colliderPoints;
 
-	private final VoxelShaper[] shapes;
-	private final VoxelShaper subLevelShapes;
+	public final VoxelShaper shapes;
+	public final VoxelShaper subLevelShapes;
 
-	GangwayFrameBlockShape(HorizontalRelativeDirection offset1, HorizontalRelativeDirection offset2, List<Quad2dc> quads, DoubleFunction<VoxelShaper> shapes) {
+	public final int copycatIndex;
+
+	GangwayFrameBlockShape(HorizontalRelativeDirection offset1, HorizontalRelativeDirection offset2, List<Quad2dc> quads, List<Vector2dc> colliderPoints, DoubleFunction<VoxelShaper> shapes, int copycatIndex) {
 		this.adjacentOffsets = Couple.create(offset1, offset2);
 
 		this.quads = quads;
@@ -165,16 +205,16 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 			anchor.fma(weight, quad.v3());
 		}
 		this.anchor = anchor;
+		this.colliderPoints = colliderPoints;
 
-		this.shapes = new VoxelShaper[30];
-		for(int i = 0; i < 30; ++i) {
-			this.shapes[i] = shapes.apply(i + 3);
-		}
+		this.shapes = shapes.apply(3);
 		this.subLevelShapes = shapes.apply(0.25);
+
+		this.copycatIndex = copycatIndex;
 	}
 
-	GangwayFrameBlockShape(HorizontalRelativeDirection offset1, HorizontalRelativeDirection offset2, Quad2dc quad, DoubleFunction<VoxelShaper> shapes) {
-		this(offset1, offset2, List.of(quad), shapes);
+	GangwayFrameBlockShape(HorizontalRelativeDirection offset1, HorizontalRelativeDirection offset2, Quad2dc quad, List<Vector2dc> colliderPoints, DoubleFunction<VoxelShaper> shapes, int copycatIndex) {
+		this(offset1, offset2, List.of(quad), colliderPoints, shapes, copycatIndex);
 	}
 
 	@Override
@@ -201,6 +241,14 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 	@Override
 	public Vector3d anchor(Direction facing, Vector3d dest) {
 		return rotate(anchor, facing, dest);
+	}
+
+	public int colliderPointCount() {
+		return colliderPoints.size();
+	}
+
+	public Vector3d colliderPoint(int index, Direction facing, Vector3d dest) {
+		return rotate(colliderPoints.get(index), facing, dest);
 	}
 
 	@Override
@@ -266,22 +314,6 @@ public enum GangwayFrameBlockShape implements GangwayFrameShape, StringRepresent
 		case null, default -> {}
 		}
 		return adjacent.contains(other);
-	}
-
-	public VoxelShape getShape(Direction facing) {
-		return getShape(facing, 0);
-	}
-
-	public VoxelShape getShape(Direction facing, int index) {
-		return shapes[Math.clamp(index, 0, 29)].get(facing);
-	}
-
-	public VoxelShape getShapeForLength(Direction facing, double length) {
-		return getShape(facing, (int)Math.round(length) - 1);
-	}
-
-	public VoxelShape getSubLevelShape(Direction facing) {
-		return subLevelShapes.get(facing);
 	}
 
 	private static Vector2d v(double x, double y) {

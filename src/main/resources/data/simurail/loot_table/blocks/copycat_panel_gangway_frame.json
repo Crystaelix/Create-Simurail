@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:block",
+	"pools": [{
+		"rolls": 1,
+		"entries": [{
+			"type": "minecraft:item",
+			"name": "simurail:copycat_panel_gangway_frame"
+		}],
+		"conditions": [{
+			"condition": "minecraft:survives_explosion"
+		}]
+	}],
+	"random_sequence": "simurail:blocks/copycat_panel_gangway_frame"
+}

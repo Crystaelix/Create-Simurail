@@ -1,4 +1,4 @@
-package com.crystaelix.simurail.content.automatic_coupler.copycat;
+package com.crystaelix.simurail.content.copycat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +16,14 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
-public class CopycatBarsAutomaticCouplerModel extends CopycatModel {
+public class CopycatBarsModel extends CopycatModel {
 
-	public CopycatBarsAutomaticCouplerModel(BakedModel originalModel) {
+	public CopycatBarsModel(BakedModel originalModel) {
 		super(originalModel);
 	}
 
 	@Override
-	protected List<BakedQuad> getCroppedQuads(BlockState state, Direction side, RandomSource rand, BlockState material, ModelData wrappedData, RenderType renderType) {
+	public List<BakedQuad> getCroppedQuads(BlockState state, Direction side, RandomSource rand, BlockState material, ModelData wrappedData, RenderType renderType) {
 		BakedModel model = getModelOf(material);
 		List<BakedQuad> superQuads = originalModel.getQuads(state, side, rand, wrappedData, renderType);
 		TextureAtlasSprite targetSprite = model.getParticleIcon(wrappedData);

@@ -5,6 +5,7 @@
 	"block.simurail.automatic_coupler": "自动车钩",
 	"block.simurail.copycat_panel_automatic_coupler": "伪装板自动车钩",
 	"block.simurail.gangway_frame": "风挡框",
+	"block.simurail.copycat_panel_gangway_frame": "伪装板风挡框",
 	"block.simurail.probe_reader": "转向架探针读取器",
 	"block.simurail.remote_controller": "转向架远端控制器",
 	"block.simurail.physics_roller": "物理压路机",

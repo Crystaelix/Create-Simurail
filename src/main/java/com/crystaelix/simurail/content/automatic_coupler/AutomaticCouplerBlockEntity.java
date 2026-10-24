@@ -20,6 +20,7 @@ import com.crystaelix.simurail.content.SimurailSoundEvents;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockCollisions;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -32,6 +33,7 @@ import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration
 import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.companion.math.BoundingBox3dc;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
@@ -59,8 +61,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements MenuProvider, BlockEntitySubLevelActor, AutomaticCoupler, GangwayFrame, ClipboardCloneable {
 
@@ -91,11 +91,11 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	protected Pose3d gangwayEndPose = new Pose3d();
 	protected boolean hasGangwayPartner = false;
 	public int gangwayTimer;
-
-	protected VoxelShape collisionShape = Shapes.empty();
+	protected final Iterable<BoundingBox3dc> gangwayCollisionBoxes;
 
 	public AutomaticCouplerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		gangwayCollisionBoxes = new GangwayFrameBlockCollisions(this::getGangwayShape, this::getFacing, () -> this.gangwayRestLength, () -> this.hasGangwayPartner, gangwayEndPose);
 	}
 
 	@Override
@@ -354,6 +354,11 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		return null;
 	}
 
+	@Override
+	public Iterable<BoundingBox3dc> getGangwayCollisions() {
+		return gangwayCollisionBoxes;
+	}
+
 	public void setColor(int color) {
 		this.color = color;
 		if(!level.isClientSide()) {
@@ -416,7 +421,6 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		}
 		initialized = true;
 		hasGangwayPartner = getGangwayPartner() != null;
-		collisionShape = getBlockState().getShape(level, gangwayPartnerPos);
 	}
 
 	@Override
@@ -426,7 +430,6 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		GangwayFrame gangwayPartner = getGangwayPartner();
 		GangwayFrameBlockShape gangwayShape = getGangwayShape();
 		Direction facing = getFacing();
-		int shapeIndex = 0;
 
 		if(gangwayPartner != null != hasGangwayPartner) {
 			hasGangwayPartner = gangwayPartner != null;
@@ -451,22 +454,7 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 			gangwayEndPose.orientation().mul(gangwayPartner.getOrientation()).rotateY(Math.PI);
 
 			gangwayShape.anchor(facing, gangwayCenterOffset);
-
-			double x = gangwayEndPose.position().x - gangwayCenterOffset.x;
-			double y = gangwayEndPose.position().y - gangwayCenterOffset.y;
-			double z = gangwayEndPose.position().z - gangwayCenterOffset.z;
-			double length = getDirection().dot(x, y, z) * 0.5625;
-
-			shapeIndex = Math.clamp((int)Math.round(length * 16) - 1, 0, 29);
 		}
-		else {
-			shapeIndex = Math.clamp((int)Math.round(gangwayRestLength * 16) - 1, 0, 29);
-		}
-		collisionShape = switch(gangwayShape) {
-		case D -> AutomaticCouplerBlock.D_SHAPES[shapeIndex].get(getFacing());
-		case U -> AutomaticCouplerBlock.U_SHAPES[shapeIndex].get(getFacing());
-		case null, default -> getBlockState().getShape(level, getBlockPos());
-		};
 		if(gangwayTimer > 0) {
 			gangwayTimer--;
 		}

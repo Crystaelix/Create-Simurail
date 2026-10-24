@@ -1,7 +1,5 @@
 package com.crystaelix.simurail.content.automatic_coupler;
 
-import java.util.stream.IntStream;
-
 import com.crystaelix.simurail.content.SimurailBlockEntities;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
@@ -14,7 +12,6 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
 import dev.ryanhcode.sable.api.block.BlockSubLevelCollisionShape;
-import dev.ryanhcode.sable.api.physics.collider.SableCollisionContext;
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -58,15 +55,15 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 	public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
 	public static final VoxelShaper SHAPES = VoxelShaper.forHorizontal(box(4, 5, 0, 12, 11, 3), Direction.SOUTH);
-	public static final VoxelShaper[] D_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 3), GangwayFrameBlockShape.D.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
-			toArray(VoxelShaper[]::new);
-	public static final VoxelShaper[] U_SHAPES = IntStream.range(0, 30).
-			mapToObj(i -> VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 3), GangwayFrameBlockShape.U.getShape(Direction.SOUTH, i)), Direction.SOUTH)).
-			toArray(VoxelShaper[]::new);
+	public static final VoxelShaper D_SHAPES = combine(SHAPES, GangwayFrameBlockShape.D.shapes);
+	public static final VoxelShaper U_SHAPES = combine(SHAPES, GangwayFrameBlockShape.U.shapes);
 	public static final VoxelShaper SUBLEVEL_SHAPES = VoxelShaper.forHorizontal(box(4, 5, 0, 12, 11, 0.25), Direction.SOUTH);
-	public static final VoxelShaper SUBLEVEL_D_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 0.25), box(0, 2, 0, 16, 4, 0.25)), Direction.SOUTH);
-	public static final VoxelShaper SUBLEVEL_U_SHAPES = VoxelShaper.forHorizontal(Shapes.or(box(4, 5, 0, 12, 11, 0.25), box(0, 12, 0, 16, 14, 0.25)), Direction.SOUTH);
+	public static final VoxelShaper SUBLEVEL_D_SHAPES = combine(SUBLEVEL_SHAPES, GangwayFrameBlockShape.D.subLevelShapes);
+	public static final VoxelShaper SUBLEVEL_U_SHAPES = combine(SUBLEVEL_SHAPES, GangwayFrameBlockShape.U.subLevelShapes);
+
+	public static VoxelShaper combine(VoxelShaper shapes1, VoxelShaper shapes2) {
+		return VoxelShaper.forHorizontal(Shapes.or(shapes1.get(Direction.SOUTH), shapes2.get(Direction.SOUTH)), Direction.SOUTH);
+	}
 
 	public AutomaticCouplerBlock(Properties properties) {
 		super(properties);
@@ -125,28 +122,10 @@ public class AutomaticCouplerBlock extends HorizontalDirectionalBlock implements
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return switch(state.getValue(GANGWAY_SHAPE)) {
-		case D -> D_SHAPES[0].get(state.getValue(FACING));
-		case U -> U_SHAPES[0].get(state.getValue(FACING));
+		case D -> D_SHAPES.get(state.getValue(FACING));
+		case U -> U_SHAPES.get(state.getValue(FACING));
 		case null, default -> SHAPES.get(state.getValue(FACING));
 		};
-	}
-
-	@Override
-	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		if(!(context instanceof SableCollisionContext) && level.getBlockEntity(pos) instanceof AutomaticCouplerBlockEntity be && be.collisionShape != null) {
-			return be.collisionShape;
-		}
-		return state.getShape(level, pos, context);
-	}
-
-	@Override
-	protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return state.getShape(level, pos, context);
-	}
-
-	@Override
-	public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
-		return state.getShape(level, pos);
 	}
 
 	@Override

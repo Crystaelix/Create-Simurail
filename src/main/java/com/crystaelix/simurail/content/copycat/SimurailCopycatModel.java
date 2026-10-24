@@ -67,7 +67,7 @@ public abstract class SimurailCopycatModel extends CopycatModel {
 	}
 
 	protected abstract List<CropTransform> getComponents(BlockState state);
-	
+
 	protected List<CropTransform> getUnculledComponents(BlockState state) {
 		return List.of();
 	}

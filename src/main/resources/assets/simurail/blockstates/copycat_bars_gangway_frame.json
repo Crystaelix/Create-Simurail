@@ -1,0 +1,207 @@
+{
+	"variants": {
+		"facing=south,shape=d": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 180
+		},
+		"facing=south,shape=u": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 180
+		},
+		"facing=south,shape=l": {
+			"model": "simurail:block/copycat/bars_right",
+			"y": 180
+		},
+		"facing=south,shape=r": {
+			"model": "simurail:block/copycat/bars_left",
+			"y": 180
+		},
+
+		"facing=north,shape=d": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 0
+		},
+		"facing=north,shape=u": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 0
+		},
+		"facing=north,shape=l": {
+			"model": "simurail:block/copycat/bars_right",
+			"y": 0
+		},
+		"facing=north,shape=r": {
+			"model": "simurail:block/copycat/bars_left",
+			"y": 0
+		},
+
+		"facing=east,shape=d": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 90
+		},
+		"facing=east,shape=u": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 90
+		},
+		"facing=east,shape=l": {
+			"model": "simurail:block/copycat/bars_right",
+			"y": 90
+		},
+		"facing=east,shape=r": {
+			"model": "simurail:block/copycat/bars_left",
+			"y": 90
+		},
+
+		"facing=west,shape=d": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": -90
+		},
+		"facing=west,shape=u": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": -90
+		},
+		"facing=west,shape=l": {
+			"model": "simurail:block/copycat/bars_right",
+			"y": -90
+		},
+		"facing=west,shape=r": {
+			"model": "simurail:block/copycat/bars_left",
+			"y": -90
+		},
+
+		"facing=south,shape=dl": {
+			"model": "simurail:block/copycat/bars_dl",
+			"y": 180
+		},
+		"facing=south,shape=rd": {
+			"model": "simurail:block/copycat/bars_rd",
+			"y": 180
+		},
+		"facing=south,shape=lu": {
+			"model": "simurail:block/copycat/bars_lu",
+			"y": 180
+		},
+		"facing=south,shape=ur": {
+			"model": "simurail:block/copycat/bars_ur",
+			"y": 180
+		},
+
+		"facing=north,shape=dl": {
+			"model": "simurail:block/copycat/bars_dl",
+			"y": 0
+		},
+		"facing=north,shape=rd": {
+			"model": "simurail:block/copycat/bars_rd",
+			"y": 0
+		},
+		"facing=north,shape=lu": {
+			"model": "simurail:block/copycat/bars_lu",
+			"y": 0
+		},
+		"facing=north,shape=ur": {
+			"model": "simurail:block/copycat/bars_ur",
+			"y": 0
+		},
+
+		"facing=east,shape=dl": {
+			"model": "simurail:block/copycat/bars_dl",
+			"y": 90
+		},
+		"facing=east,shape=rd": {
+			"model": "simurail:block/copycat/bars_rd",
+			"y": 90
+		},
+		"facing=east,shape=lu": {
+			"model": "simurail:block/copycat/bars_lu",
+			"y": 90
+		},
+		"facing=east,shape=ur": {
+			"model": "simurail:block/copycat/bars_ur",
+			"y": 90
+		},
+
+		"facing=west,shape=dl": {
+			"model": "simurail:block/copycat/bars_dl",
+			"y": -90
+		},
+		"facing=west,shape=rd": {
+			"model": "simurail:block/copycat/bars_rd",
+			"y": -90
+		},
+		"facing=west,shape=lu": {
+			"model": "simurail:block/copycat/bars_lu",
+			"y": -90
+		},
+		"facing=west,shape=ur": {
+			"model": "simurail:block/copycat/bars_ur",
+			"y": -90
+		},
+
+		"facing=south,shape=dla": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 180
+		},
+		"facing=south,shape=dra": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 180
+		},
+		"facing=south,shape=ula": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 180
+		},
+		"facing=south,shape=ura": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 180
+		},
+
+		"facing=north,shape=dla": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 0
+		},
+		"facing=north,shape=dra": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 0
+		},
+		"facing=north,shape=ula": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 0
+		},
+		"facing=north,shape=ura": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 0
+		},
+
+		"facing=east,shape=dla": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 90
+		},
+		"facing=east,shape=dra": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": 90
+		},
+		"facing=east,shape=ula": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 90
+		},
+		"facing=east,shape=ura": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 90
+		},
+
+		"facing=west,shape=dla": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": -90
+		},
+		"facing=west,shape=dra": {
+			"model": "simurail:block/copycat/bars_top",
+			"y": -90
+		},
+		"facing=west,shape=ula": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": -90
+		},
+		"facing=west,shape=ura": {
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": -90
+		}
+	}
+}

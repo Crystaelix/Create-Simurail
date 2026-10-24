@@ -13,13 +13,16 @@
 			"y": 90
 		},
 		"facing=north,shape=full": {
-			"model": "simurail:block/copycat/bars_full"
+			"model": "simurail:block/copycat/bars_full",
+			"y": 0
 		},
 		"facing=north,shape=top": {
-			"model": "simurail:block/copycat/bars_top"
+			"model": "simurail:block/copycat/bars_top",
+			"y": 0
 		},
 		"facing=north,shape=bottom": {
-			"model": "simurail:block/copycat/bars_bottom"
+			"model": "simurail:block/copycat/bars_bottom",
+			"y": 0
 		},
 		"facing=south,shape=full": {
 			"model": "simurail:block/copycat/bars_full",

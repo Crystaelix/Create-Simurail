@@ -5,6 +5,7 @@
 	"block.simurail.automatic_coupler": "Automatic Coupler",
 	"block.simurail.copycat_panel_automatic_coupler": "Copycat Panel Automatic Coupler",
 	"block.simurail.gangway_frame": "Gangway Frame",
+	"block.simurail.copycat_panel_gangway_frame": "Copycat Panel Gangway Frame",
 	"block.simurail.probe_reader": "Bogie Probe Reader",
 	"block.simurail.remote_controller": "Bogie Remote Controller",
 	"block.simurail.track_switch": "Track Switch",

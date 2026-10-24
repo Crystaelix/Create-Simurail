@@ -9,6 +9,8 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBaseScreen;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyMenu;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameMenu;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameScreen;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameMenu;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameScreen;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderMenu;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderScreen;
 import com.crystaelix.simurail.content.remote_controller.RemoteControllerMenu;
@@ -26,11 +28,14 @@ public class SimurailMenus {
 	public static final MenuEntry<AutomaticCouplerMenu> AUTOMATIC_COUPLER = REGISTRATE.
 			menu("automatic_coupler", AutomaticCouplerMenu::new, () -> AutomaticCouplerBaseScreen::create).
 			register();
-	public static final MenuEntry<CopycatAutomaticCouplerMenu> COPYCAT_PANEL_AUTOMATIC_COUPLER = REGISTRATE.
-			menu("copycat_panel_automatic_coupler", CopycatAutomaticCouplerMenu::new, () -> CopycatAutomaticCouplerBaseScreen::create).
+	public static final MenuEntry<CopycatAutomaticCouplerMenu> COPYCAT_AUTOMATIC_COUPLER = REGISTRATE.
+			menu("copycat_automatic_coupler", CopycatAutomaticCouplerMenu::new, () -> CopycatAutomaticCouplerBaseScreen::create).
 			register();
 	public static final MenuEntry<GangwayFrameMenu> GANGWAY_FRAME = REGISTRATE.
 			menu("gangway_frame", GangwayFrameMenu::new, () -> GangwayFrameScreen::new).
+			register();
+	public static final MenuEntry<CopycatGangwayFrameMenu> COPYCAT_GANGWAY_FRAME = REGISTRATE.
+			menu("copycat_gangway_frame", CopycatGangwayFrameMenu::new, () -> CopycatGangwayFrameScreen::new).
 			register();
 	public static final MenuEntry<ProbeReaderMenu> PROBE_READER = REGISTRATE.
 			menu("probe_reader", ProbeReaderMenu::new, () -> ProbeReaderScreen::new).

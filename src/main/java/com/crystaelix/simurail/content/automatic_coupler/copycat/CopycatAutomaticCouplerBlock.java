@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntityTicker;
 
 import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
 import dev.ryanhcode.sable.api.block.BlockSubLevelCollisionShape;
-import dev.ryanhcode.sable.api.physics.collider.SableCollisionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -121,25 +120,8 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 	@Override
 	protected abstract VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
 
-	protected abstract VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, int shapeIndex);
-
 	@Override
-	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		if(!(context instanceof SableCollisionContext) && level.getBlockEntity(pos) instanceof CopycatAutomaticCouplerBlockEntity be && be.collisionShape != null) {
-			return be.collisionShape;
-		}
-		return state.getShape(level, pos, context);
-	}
-
-	@Override
-	protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return state.getShape(level, pos, context);
-	}
-
-	@Override
-	public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
-		return state.getShape(level, pos);
-	}
+	protected abstract VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos);
 
 	@Override
 	public abstract VoxelShape getSubLevelCollisionShape(BlockGetter blockGetter, BlockState state);
@@ -261,10 +243,9 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 			return InteractionResult.SUCCESS;
 		}
 		else if(hitGangway(state, context.getClickLocation().subtract(Vec3.atLowerCornerOf(pos)), level, pos, player)) {
-			if(level.isClientSide()) {
-				return InteractionResult.SUCCESS;
+			if(!level.isClientSide()) {
+				withCouplerBlockEntityDo(level, pos, be -> player.openMenu(be, buf -> CopycatAutomaticCouplerMenu.prepare(buf, be, true)));
 			}
-			withCouplerBlockEntityDo(level, pos, be -> player.openMenu(be, buf -> CopycatAutomaticCouplerMenu.prepare(buf, be, true)));
 			return InteractionResult.SUCCESS;
 		}
 		return super.onWrenched(state, context);
@@ -281,7 +262,7 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 		}
 		BlockPos pos = context.getClickedPos();
 		Player player = context.getPlayer();
-		boolean removedCoupler = hitGangway(state, context.getClickLocation().subtract(Vec3.atLowerCornerOf(pos)), level, pos, player);
+		boolean removedCoupler = !hitGangway(state, context.getClickLocation().subtract(Vec3.atLowerCornerOf(pos)), level, pos, player);
 		if(player != null && !player.isCreative()) {
 			ItemStack stack = removedCoupler ? new ItemStack(this) : SimurailBlocks.GANGWAY_FRAME.asStack();
 			player.getInventory().placeItemBackInInventory(stack);

@@ -13,6 +13,7 @@ import com.crystaelix.simurail.api.physics.HorizontalPointing;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 
 import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.companion.math.BoundingBox3dc;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.createmod.catnip.data.Couple;
@@ -41,6 +42,8 @@ public interface GangwayFrame extends HorizontalPointing {
 	void removeGangwayPartner();
 
 	GangwayFrame getGangwayPartner();
+
+	Iterable<BoundingBox3dc> getGangwayCollisions();
 
 	default Set<GangwayFrame> getNeighbors(Level level, int range) {
 		Set<GangwayFrame> neighbors = new LinkedHashSet<>();

@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dev.ryanhcode.sable.Sable;
+import dev.ryanhcode.sable.companion.math.BoundingBox3dc;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
@@ -22,7 +23,6 @@ import net.createmod.ponder.api.level.PonderLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -36,8 +36,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuProvider, GangwayFrame, ClipboardCloneable {
 
@@ -51,11 +49,11 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 	protected Pose3d endPose = new Pose3d();
 	protected boolean hasPartner = false;
 	public int timer = 0;
-
-	protected VoxelShape collisionShape = Shapes.empty();
+	protected final Iterable<BoundingBox3dc> collisionBoxes;
 
 	public GangwayFrameBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
 		super(type, pos, blockState);
+		collisionBoxes = new GangwayFrameBlockCollisions(this::getGangwayShape, this::getFacing, () -> this.restLength, () -> this.hasPartner, endPose);
 	}
 
 	@Override
@@ -160,6 +158,11 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 		return null;
 	}
 
+	@Override
+	public Iterable<BoundingBox3dc> getGangwayCollisions() {
+		return collisionBoxes;
+	}
+
 	public void setColor(int color) {
 		this.color = color;
 		if(!level.isClientSide()) {
@@ -178,7 +181,6 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 	public void initialize() {
 		super.initialize();
 		hasPartner = getGangwayPartner() != null;
-		collisionShape = getBlockState().getShape(level, gangwayPartnerPos);
 	}
 
 	@Override
@@ -212,16 +214,6 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 			endPose.orientation().mul(partner.getOrientation()).rotateY(Math.PI);
 
 			shape.anchor(facing, centerOffset);
-
-			double x = endPose.position().x - centerOffset.x;
-			double y = endPose.position().y - centerOffset.y;
-			double z = endPose.position().z - centerOffset.z;
-			double length = getDirection().dot(x, y, z) * 0.5625;
-
-			collisionShape = shape.getShapeForLength(facing, length * 16);
-		}
-		else {
-			collisionShape = shape.getShapeForLength(facing, restLength * 16);
 		}
 		if(timer > 0) {
 			timer--;
@@ -321,7 +313,7 @@ public class GangwayFrameBlockEntity extends SmartBlockEntity implements MenuPro
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag, Provider registries) {
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
 		super.writeSafe(tag, registries);
 		tag.putDouble("rest_length", restLength);
 		tag.putInt("color", color);

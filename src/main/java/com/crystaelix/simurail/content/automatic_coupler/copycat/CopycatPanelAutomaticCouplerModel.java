@@ -3,9 +3,11 @@ package com.crystaelix.simurail.content.automatic_coupler.copycat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.crystaelix.simurail.content.SimurailBlocks;
+import com.crystaelix.simurail.content.copycat.CopycatBarsModel;
 import com.crystaelix.simurail.content.copycat.SimurailCopycatModel;
 import com.simibubi.create.content.decoration.copycat.CopycatSpecialCases;
 
@@ -48,7 +50,7 @@ public class CopycatPanelAutomaticCouplerModel extends SimurailCopycatModel {
 					SimurailBlocks.COPYCAT_BARS_AUTOMATIC_COUPLER.getDefaultState().
 					setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(BlockStateProperties.HORIZONTAL_FACING)).
 					setValue(CopycatAutomaticCouplerBlock.SHAPE, state.getValue(CopycatAutomaticCouplerBlock.SHAPE)));
-			if(blockModel instanceof CopycatBarsAutomaticCouplerModel cm) {
+			if(blockModel instanceof CopycatBarsModel cm) {
 				return cm.getCroppedQuads(state, side, rand, material, wrappedData, renderType);
 			}
 		}
@@ -58,209 +60,80 @@ public class CopycatPanelAutomaticCouplerModel extends SimurailCopycatModel {
 	@Override
 	protected List<CropTransform> getComponents(BlockState state) {
 		Direction dir = state.getOptionalValue(BlockStateProperties.HORIZONTAL_FACING).orElse(Direction.NORTH);
-		Direction op = dir.getOpposite();
 		Direction ccw = dir.getCounterClockWise();
 		Direction cw = dir.getClockWise();
 		CopycatAutomaticCouplerShape shape = state.getOptionalValue(CopycatAutomaticCouplerBlock.SHAPE).orElse(CopycatAutomaticCouplerShape.FULL);
 		List<CropTransform> list = new ArrayList<>(12);
 		switch(shape) {
 		case FULL -> {
-			list.add(cropForHorizontal(
-					dir,
-					0, 0, 0,
-					4, 16, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 0, 14,
-					4, 16, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 0, 0,
-					16, 16, 1,
-					0, 0, 0,
-					EnumSet.of(dir, cw)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 0, 14,
-					16, 16, 16,
-					0, 0, -13,
-					EnumSet.of(op, cw)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 0, 0,
-					12, 5, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 0, 14,
-					12, 5, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 11, 0,
-					12, 16, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 11, 14,
-					12, 16, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw, cw, Direction.DOWN)));
+			addPanelCropPair(
+					list, dir,
+					0, 0, 4, 16, 0, 0,
+					EnumSet.of(ccw));
+			addPanelCropPair(
+					list, dir,
+					12, 0, 16, 16, 0, 0,
+					EnumSet.of(cw));
+			addPanelCropPair(
+					list, dir,
+					4, 0, 12, 5, 0, 0,
+					EnumSet.of(ccw, cw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					4, 11, 12, 16, 0, 0,
+					EnumSet.of(ccw, cw, Direction.DOWN));
 		}
 		case TOP -> {
-			list.add(cropForHorizontal(
-					dir,
-					0, 0, 0,
-					4, 6, 1,
-					0, 4, 0,
-					EnumSet.of(dir, ccw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 0, 14,
-					4, 6, 16,
-					0, 4, -13,
-					EnumSet.of(op, ccw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 0, 0,
-					16, 6, 1,
-					0, 4, 0,
-					EnumSet.of(dir, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 0, 14,
-					16, 6, 16,
-					0, 4, -13,
-					EnumSet.of(op, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 10, 0,
-					4, 16, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 10, 14,
-					4, 16, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 10, 0,
-					16, 16, 1,
-					0, 0, 0,
-					EnumSet.of(dir, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 10, 14,
-					16, 16, 16,
-					0, 0, -13,
-					EnumSet.of(op, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 0, 0,
-					12, 1, 1,
-					0, 4, 0,
-					EnumSet.of(dir, ccw, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 0, 14,
-					12, 1, 16,
-					0, 4, -13,
-					EnumSet.of(op, ccw, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 11, 0,
-					12, 16, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 11, 14,
-					12, 16, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw, cw, Direction.DOWN)));
+			addPanelCropPair(
+					list, dir,
+					0, 0, 4, 6, 0, 4,
+					EnumSet.of(ccw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					12, 0, 16, 6, 0, 4,
+					EnumSet.of(cw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					0, 10, 4, 16, 0, 0,
+					EnumSet.of(ccw, Direction.DOWN));
+			addPanelCropPair(
+					list, dir,
+					12, 10, 16, 16, 0, 0,
+					EnumSet.of(cw, Direction.DOWN));
+			addPanelCropPair(
+					list, dir,
+					4, 0, 12, 1, 0, 4,
+					EnumSet.of(ccw, cw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					4, 11, 12, 16, 0, 0,
+					EnumSet.of(ccw, cw, Direction.DOWN));
 		}
 		case BOTTOM -> {
-			list.add(cropForHorizontal(
-					dir,
-					0, 0, 0,
-					4, 6, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 0, 14,
-					4, 6, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 0, 0,
-					16, 6, 1,
-					0, 0, 0,
-					EnumSet.of(dir, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 0, 14,
-					16, 6, 16,
-					0, 0, -13,
-					EnumSet.of(op, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 10, 0,
-					4, 16, 1,
-					0, -4, 0,
-					EnumSet.of(dir, ccw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					0, 10, 14,
-					4, 16, 16,
-					0, -4, -13,
-					EnumSet.of(op, ccw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 10, 0,
-					16, 16, 1,
-					0, -4, 0,
-					EnumSet.of(dir, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					12, 10, 14,
-					16, 16, 16,
-					0, -4, -13,
-					EnumSet.of(op, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 0, 0,
-					12, 5, 1,
-					0, 0, 0,
-					EnumSet.of(dir, ccw, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 0, 14,
-					12, 5, 16,
-					0, 0, -13,
-					EnumSet.of(op, ccw, cw, Direction.UP)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 15, 0,
-					12, 16, 1,
-					0, -4, 0,
-					EnumSet.of(dir, ccw, cw, Direction.DOWN)));
-			list.add(cropForHorizontal(
-					dir,
-					4, 15, 14,
-					12, 16, 16,
-					0, -4, -13,
-					EnumSet.of(op, ccw, cw, Direction.DOWN)));
+			addPanelCropPair(
+					list, dir,
+					0, 0, 4, 6, 0, 0,
+					EnumSet.of(ccw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					12, 0, 16, 6, 0, 0,
+					EnumSet.of(cw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					0, 10, 4, 16, 0, -4,
+					EnumSet.of(ccw, Direction.DOWN));
+			addPanelCropPair(
+					list, dir,
+					12, 10, 16, 16, 0, -4,
+					EnumSet.of(cw, Direction.DOWN));
+			addPanelCropPair(
+					list, dir,
+					4, 0, 12, 5, 0, 0,
+					EnumSet.of(ccw, cw, Direction.UP));
+			addPanelCropPair(
+					list, dir,
+					4, 15, 12, 16, 0, -4,
+					EnumSet.of(ccw, cw, Direction.DOWN));
 		}
 		}
 		return list;
@@ -272,54 +145,47 @@ public class CopycatPanelAutomaticCouplerModel extends SimurailCopycatModel {
 		Direction ccw = dir.getCounterClockWise();
 		Direction cw = dir.getClockWise();
 		List<CropTransform> list = new ArrayList<>(12);
-		list.add(cropForHorizontal(
-				dir,
-				0, 5, 0,
-				1, 11, 1,
-				12, 0, 0,
-				EnumSet.complementOf(EnumSet.of(cw))));
-		list.add(cropForHorizontal(
-				dir,
-				0, 5, 14,
-				1, 11, 16,
-				12, 0, -13,
-				EnumSet.complementOf(EnumSet.of(cw))));
-		list.add(cropForHorizontal(
-				dir,
-				15, 5, 0,
-				16, 11, 1,
-				-12, 0, 0,
-				EnumSet.complementOf(EnumSet.of(ccw))));
-		list.add(cropForHorizontal(
-				dir,
-				15, 5, 14,
-				16, 11, 16,
-				-12, 0, -13,
-				EnumSet.complementOf(EnumSet.of(ccw))));
-		list.add(cropForHorizontal(
-				dir,
-				4, 0, 0,
-				12, 1, 1,
-				0, 11, 0,
-				EnumSet.complementOf(EnumSet.of(Direction.DOWN))));
-		list.add(cropForHorizontal(
-				dir,
-				4, 0, 14,
-				12, 1, 16,
-				0, 11, -13,
-				EnumSet.complementOf(EnumSet.of(Direction.DOWN))));
-		list.add(cropForHorizontal(
-				dir,
-				4, 15, 0,
-				12, 16, 1,
-				0, -11, 0,
-				EnumSet.complementOf(EnumSet.of(Direction.UP))));
-		list.add(cropForHorizontal(
-				dir,
-				4, 15, 14,
-				12, 16, 16,
-				0, -11, -13,
-				EnumSet.complementOf(EnumSet.of(Direction.UP))));
+		addPanelCropSidePair(
+				list, dir,
+				0, 5, 1, 11, 12, 0,
+				EnumSet.complementOf(EnumSet.of(cw)));
+		addPanelCropSidePair(
+				list, dir,
+				15, 5, 16, 11, -12, 0,
+				EnumSet.complementOf(EnumSet.of(ccw)));
+		addPanelCropSidePair(
+				list, dir,
+				4, 0, 12, 1, 0, 11,
+				EnumSet.complementOf(EnumSet.of(Direction.DOWN)));
+		addPanelCropSidePair(
+				list, dir,
+				4, 15, 12, 16, 0, -11,
+				EnumSet.complementOf(EnumSet.of(Direction.UP)));
 		return list;
+	}
+
+	protected void addPanelCropPair(
+			List<CropTransform> list, Direction facing,
+			double x1, double y1, double x2, double y2, double mx, double my,
+			Set<Direction> removedDirections) {
+		EnumSet<Direction> set1 = EnumSet.copyOf(removedDirections);
+		set1.add(facing);
+		set1.remove(facing.getOpposite());
+		list.add(cropForHorizontal(facing, x1, y1, 0, x2, y2, 1, mx, my, 0, set1));
+		EnumSet<Direction> set2 = EnumSet.copyOf(removedDirections);
+		set2.add(facing.getOpposite());
+		set2.remove(facing);
+		list.add(cropForHorizontal(facing, x1, y1, 14, x2, y2, 16, mx, my, -13, set2));
+	}
+
+	protected void addPanelCropSidePair(
+			List<CropTransform> list, Direction facing,
+			double x1, double y1, double x2, double y2, double mx, double my,
+			Set<Direction> removedDirections) {
+		EnumSet<Direction> set = EnumSet.copyOf(removedDirections);
+		set.remove(facing);
+		set.remove(facing.getOpposite());
+		list.add(cropForHorizontal(facing, x1, y1, 0, x2, y2, 1, mx, my, 0, removedDirections));
+		list.add(cropForHorizontal(facing, x1, y1, 14, x2, y2, 16, mx, my, -13, removedDirections));
 	}
 }

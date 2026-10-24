@@ -13,6 +13,8 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyRenderer;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyVisual;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockEntity;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameRenderer;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameBlockEntity;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameRenderer;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockEntity;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerRenderer;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerVisual;
@@ -56,6 +58,11 @@ public class SimurailBlockEntities {
 			blockEntity("gangway_frame", GangwayFrameBlockEntity::new).
 			renderer(() -> GangwayFrameRenderer::new).
 			validBlocks(SimurailBlocks.GANGWAY_FRAME).
+			register();
+	public static final BlockEntityEntry<CopycatGangwayFrameBlockEntity> COPYCAT_GANGWAY_FRAME = REGISTRATE.
+			blockEntity("copycat_gangway_frame", CopycatGangwayFrameBlockEntity::new).
+			renderer(() -> CopycatGangwayFrameRenderer::new).
+			validBlocks(SimurailBlocks.COPYCAT_PANEL_GANGWAY_FRAME).
 			register();
 	public static final BlockEntityEntry<ProbeReaderBlockEntity> PROBE_READER = REGISTRATE.
 			blockEntity("probe_reader", ProbeReaderBlockEntity::new).

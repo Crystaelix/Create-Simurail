@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Unique;
 import com.copycatsplus.copycats.foundation.copycat.CopycatExternalContext;
 import com.copycatsplus.copycats.foundation.copycat.ICopycatBlock;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlock;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatGangwayFrameBlock;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.simibubi.create.content.decoration.copycat.WaterloggedCopycatBlock;
@@ -26,10 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 // Use Copycats+ logic instead when it is present
-@Mixin(CopycatAutomaticCouplerBlock.class)
-public abstract class CopycatAutomaticCouplerBlockMixin extends WaterloggedCopycatBlock implements ICopycatBlock {
+@Mixin({CopycatAutomaticCouplerBlock.class, CopycatGangwayFrameBlock.class})
+public abstract class SimurailCopycatBlockMixin extends WaterloggedCopycatBlock implements ICopycatBlock {
 
-	public CopycatAutomaticCouplerBlockMixin(Properties properties) {
+	public SimurailCopycatBlockMixin(Properties properties) {
 		super(properties);
 	}
 

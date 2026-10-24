@@ -28,7 +28,7 @@ public class CopycatAutomaticCouplerMenu extends AbstractContainerMenu {
 	}
 
 	public CopycatAutomaticCouplerMenu(int windowId, CopycatAutomaticCouplerBlockEntity be) {
-		super(SimurailMenus.COPYCAT_PANEL_AUTOMATIC_COUPLER.get(), windowId);
+		super(SimurailMenus.COPYCAT_AUTOMATIC_COUPLER.get(), windowId);
 		pos = be.getBlockPos();
 		//isShort = be.isShort;
 		//couplerType = be.type;

@@ -22,6 +22,7 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockEn
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockEntity;
 import com.crystaelix.simurail.content.connector.ConnectorConnectable;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrame;
+import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockCollisions;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
@@ -33,6 +34,7 @@ import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration
 import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.companion.math.BoundingBox3dc;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
@@ -60,8 +62,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 //Copycat version of AutomaticCouplerBlockEntity
 public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity implements MenuProvider, BlockEntitySubLevelActor, AutomaticCoupler, GangwayFrame, ClipboardCloneable {
@@ -89,11 +89,11 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 	protected Pose3d gangwayEndPose = new Pose3d();
 	protected boolean hasGangwayPartner = false;
 	public int gangwayTimer;
-
-	protected VoxelShape collisionShape = Shapes.empty();
+	protected final Iterable<BoundingBox3dc> gangwayCollisionBoxes;
 
 	public CopycatAutomaticCouplerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		gangwayCollisionBoxes = new GangwayFrameBlockCollisions(this::getGangwayShape, this::getFacing, () -> this.gangwayRestLength, () -> this.hasGangwayPartner, gangwayEndPose);
 	}
 
 	@Override
@@ -349,6 +349,11 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		return null;
 	}
 
+	@Override
+	public Iterable<BoundingBox3dc> getGangwayCollisions() {
+		return gangwayCollisionBoxes;
+	}
+
 	public void setColor(int color) {
 		this.color = color;
 		if(!level.isClientSide()) {
@@ -411,7 +416,6 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		}
 		initialized = true;
 		hasGangwayPartner = getGangwayPartner() != null;
-		collisionShape = getBlockState().getShape(level, gangwayPartnerPos);
 	}
 
 	@Override
@@ -421,7 +425,6 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		GangwayFrame gangwayPartner = getGangwayPartner();
 		GangwayFrameBlockShape gangwayShape = getGangwayShape();
 		Direction facing = getFacing();
-		int shapeIndex = 0;
 
 		if(gangwayPartner != null != hasGangwayPartner) {
 			hasGangwayPartner = gangwayPartner != null;
@@ -446,19 +449,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			gangwayEndPose.orientation().mul(gangwayPartner.getOrientation()).rotateY(Math.PI);
 
 			gangwayShape.anchor(facing, gangwayCenterOffset);
-
-			double x = gangwayEndPose.position().x - gangwayCenterOffset.x;
-			double y = gangwayEndPose.position().y - gangwayCenterOffset.y;
-			double z = gangwayEndPose.position().z - gangwayCenterOffset.z;
-			double length = getDirection().dot(x, y, z) * 0.5625;
-
-			shapeIndex = Math.clamp((int)Math.round(length * 16) - 1, 0, 29);
 		}
-		else {
-			shapeIndex = Math.clamp((int)Math.round(gangwayRestLength * 16) - 1, 0, 29);
-		}
-		BlockState state = getBlockState();
-		collisionShape = ((CopycatAutomaticCouplerBlock)state.getBlock()).getCollisionShape(state, level, selfPos, shapeIndex);
 		if(gangwayTimer > 0) {
 			gangwayTimer--;
 		}

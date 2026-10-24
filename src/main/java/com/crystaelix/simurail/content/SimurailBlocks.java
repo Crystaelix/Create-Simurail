@@ -5,7 +5,6 @@ import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.AutomaticCouplerBlockItem;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatAutomaticCouplerBlockItem;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatBarsAutomaticCouplerBlock;
-import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatBarsAutomaticCouplerModel;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerBlock;
 import com.crystaelix.simurail.content.automatic_coupler.copycat.CopycatPanelAutomaticCouplerModel;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlock;
@@ -13,7 +12,11 @@ import com.crystaelix.simurail.content.bogey.PhysicsBogeyBlockItem;
 import com.crystaelix.simurail.content.bogey.PhysicsBogeyPivotBlock;
 import com.crystaelix.simurail.content.bogey.UnpoweredPhysicsBogeyBlock;
 import com.crystaelix.simurail.content.bogey.UnpoweredPhysicsBogeyBlockItem;
+import com.crystaelix.simurail.content.copycat.CopycatBarsModel;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlock;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatBarsGangwayFrameBlock;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatPanelGangwayFrameBlock;
+import com.crystaelix.simurail.content.gangway_frame.copycat.CopycatPanelGangwayFrameModel;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlock;
 import com.crystaelix.simurail.content.physics_roller.PhysicsRollerBlockItem;
 import com.crystaelix.simurail.content.probe_reader.ProbeReaderBlock;
@@ -56,27 +59,36 @@ public class SimurailBlocks {
 	public static final BlockEntry<AutomaticCouplerBlock> AUTOMATIC_COUPLER = REGISTRATE.
 			block("automatic_coupler", AutomaticCouplerBlock::new).
 			initialProperties(SharedProperties::softMetal).
-			properties(p -> p.noOcclusion().dynamicShape().mapColor(MapColor.NONE).sound(SoundType.METAL)).
+			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			item(AutomaticCouplerBlockItem::new).
 			build().
 			register();
 	public static final BlockEntry<CopycatPanelAutomaticCouplerBlock> COPYCAT_PANEL_AUTOMATIC_COUPLER = REGISTRATE.
 			block("copycat_panel_automatic_coupler", CopycatPanelAutomaticCouplerBlock::new).
 			transform(BuilderTransformers.copycat()).
-			properties(p -> p.dynamicShape()).
 			onRegister(CreateRegistrate.blockModel(() -> CopycatPanelAutomaticCouplerModel::new)).
 			item(CopycatAutomaticCouplerBlockItem::new).
 			build().
 			register();
 	public static final BlockEntry<CopycatBarsAutomaticCouplerBlock> COPYCAT_BARS_AUTOMATIC_COUPLER = REGISTRATE.
 			block("copycat_bars_automatic_coupler", CopycatBarsAutomaticCouplerBlock::new).
-			onRegister(CreateRegistrate.blockModel(() -> CopycatBarsAutomaticCouplerModel::new)).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatBarsModel::new)).
 			register();
 	public static final BlockEntry<GangwayFrameBlock> GANGWAY_FRAME = REGISTRATE.
 			block("gangway_frame", GangwayFrameBlock::new).
 			initialProperties(SharedProperties::softMetal).
-			properties(p -> p.noOcclusion().dynamicShape().mapColor(MapColor.NONE).sound(SoundType.METAL)).
+			properties(p -> p.noOcclusion().mapColor(MapColor.NONE).sound(SoundType.METAL)).
 			simpleItem().
+			register();
+	public static final BlockEntry<CopycatPanelGangwayFrameBlock> COPYCAT_PANEL_GANGWAY_FRAME = REGISTRATE.
+			block("copycat_panel_gangway_frame", CopycatPanelGangwayFrameBlock::new).
+			transform(BuilderTransformers.copycat()).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatPanelGangwayFrameModel::new)).
+			simpleItem().
+			register();
+	public static final BlockEntry<CopycatBarsGangwayFrameBlock> COPYCAT_BARS_GANGWAY_FRAME = REGISTRATE.
+			block("copycat_bars_gangway_frame", CopycatBarsGangwayFrameBlock::new).
+			onRegister(CreateRegistrate.blockModel(() -> CopycatBarsModel::new)).
 			register();
 	public static final BlockEntry<ProbeReaderBlock> PROBE_READER = REGISTRATE.
 			block("probe_reader", ProbeReaderBlock::new).

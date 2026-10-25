@@ -627,7 +627,8 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 				for(int y = Mth.floor(checkSelfEndPos.y) - 2; y < Mth.ceil(checkSelfEndPos.y) + 2; ++y) {
 					for(int z = Mth.floor(checkSelfEndPos.z) - 2; z < Mth.ceil(checkSelfEndPos.z) + 2; ++z) {
 						checkPos.set(x, y, z);
-						if(level.getBlockEntity(checkPos) instanceof AutomaticCoupler checkPartner &&
+						if(level.isLoaded(checkPos) &&
+								level.getBlockEntity(checkPos) instanceof AutomaticCoupler checkPartner &&
 								!checkPartner.hasCouplerPartner() &&
 								!checkPartner.isPowered() &&
 								type.canConnectTo(checkPartner.getCouplerType())) {

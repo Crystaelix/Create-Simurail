@@ -107,6 +107,9 @@ public class TrackSegmentHelper {
 				for(int y = Mth.floor(checkLocalPos.y) - 2; y < Mth.ceil(checkLocalPos.y) + 2; ++y) {
 					for(int z = Mth.floor(checkLocalPos.z) - 1; z < Mth.ceil(checkLocalPos.z) + 1; ++z) {
 						checkPos.set(x, y, z);
+						if(!level.isLoaded(checkPos)) {
+							continue;
+						}
 						BlockState checkState = level.getBlockState(checkPos);
 						if(checkState.getBlock() instanceof ITrackBlock checkBlock) {
 							TrackType type = TrackTypeOverrides.getTrackType(checkBlock.getMaterial());

@@ -435,7 +435,7 @@ public class PhysicsBogeyAxle {
 			globalAxleFrame.orientation(globalTrackRot);
 
 			clipResult = findGround(subLevel);
-			if(clipResult.getType() == HitResult.Type.BLOCK) {
+			if(clipResult != null && clipResult.getType() == HitResult.Type.BLOCK) {
 				JOMLConversion.toJOML(clipResult.getLocation(), clipPos);
 				clipSubLevel = (ServerSubLevel)Sable.HELPER.getContaining(level, clipPos);
 
@@ -802,7 +802,7 @@ public class PhysicsBogeyAxle {
 		double targetSpeedFactor = config.axleTargetSpeedFactor.get();
 		targetSpeed = (bogey.isUnpowered() ? 0 : bogey.getSpeed()) * targetSpeedFactor * bogey.getFacing().getAxisDirection().getStep() * bogey.getStressSign();
 
-		if(clipResult.getType() != HitResult.Type.BLOCK) {
+		if(clipResult == null || clipResult.getType() != HitResult.Type.BLOCK) {
 			if(targetSpeed != 0) {
 				visualSpeed = targetSpeed;
 			}
@@ -879,6 +879,11 @@ public class PhysicsBogeyAxle {
 		ServerLevel level = subLevel.getLevel();
 		Vec3 clipStart = bogey.pivotPose.transformPosition(new Vec3(axleFrame.position.x, axleFrame.position.y + 0.5, axleFrame.position.z));
 		Vec3 clipEnd = JOMLConversion.toMojang(globalAxleFrame.position);
+		if(!level.hasChunksAt(
+				Mth.floor(Math.min(clipStart.x, clipEnd.x)), Mth.floor(Math.min(clipStart.z, clipEnd.z)),
+				Mth.floor(Math.max(clipStart.x, clipEnd.x)), Mth.floor(Math.max(clipStart.z, clipEnd.z)))) {
+			return null;
+		}
 		ClipContext clipContext = new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
 		((ClipContextExtension)clipContext).sable$setIgnoredSubLevel(subLevel);
 		return level.clip(clipContext);

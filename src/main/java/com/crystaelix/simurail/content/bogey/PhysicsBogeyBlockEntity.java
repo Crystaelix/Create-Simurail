@@ -768,7 +768,7 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	@Override
 	public void sable$physicsTick(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
 		init();
-		if(pivot.isRemoved()) {
+		if(pivot.isRemoved() || pivotJoint == null || !pivotJoint.isValid()) {
 			createPivot(subLevel);
 		}
 		pivotPose.set(pivot.pose());

@@ -55,7 +55,8 @@ public interface GangwayFrame extends HorizontalPointing {
 					GangwayFrameShape shape = curr.getGangwayShape();
 					HorizontalRelativeDirection offset = shape.adjacentOffset(f);
 					BlockPos pos = curr.getBlockPos().relative(offset.transform(curr.getFacing()));
-					if(level.getBlockEntity(pos) instanceof GangwayFrame neighbor &&
+					if(level.isLoaded(pos) &&
+							level.getBlockEntity(pos) instanceof GangwayFrame neighbor &&
 							!neighbors.contains(neighbor) &&
 							curr.getFacing() == neighbor.getFacing()) {
 						GangwayFrameShape neighborShape = neighbor.getGangwayShape();
@@ -109,7 +110,8 @@ public interface GangwayFrame extends HorizontalPointing {
 				for(int y = Mth.floor(checkStartPos.y) - 2; y < Mth.ceil(checkStartPos.y) + 2; ++y) {
 					for(int z = Mth.floor(checkStartPos.z) - 2; z < Mth.ceil(checkStartPos.z) + 2; ++z) {
 						checkPos.set(x, y, z);
-						if(level.getBlockEntity(checkPos) instanceof GangwayFrame checkPartner &&
+						if(level.isLoaded(checkPos) &&
+								level.getBlockEntity(checkPos) instanceof GangwayFrame checkPartner &&
 								checkPartner != this &&
 								checkPartner.getGangwayPartner() == null &&
 								getGangwayShape().canConnectTo(checkPartner.getGangwayShape()) &&
@@ -162,7 +164,8 @@ public interface GangwayFrame extends HorizontalPointing {
 				HorizontalRelativeDirection partnerOffset = selfOffset.mirror();
 				BlockPos selfPos = cSelf.getBlockPos().relative(selfOffset.transform(cSelf.getFacing()));
 				BlockPos partnerPos = cPartner.getBlockPos().relative(partnerOffset.transform(cPartner.getFacing()));
-				if(level.getBlockEntity(selfPos) instanceof GangwayFrame selfNeighbor &&
+				if(level.isLoaded(selfPos) && level.isLoaded(partnerPos) &&
+						level.getBlockEntity(selfPos) instanceof GangwayFrame selfNeighbor &&
 						level.getBlockEntity(partnerPos) instanceof GangwayFrame partnerNeighbor &&
 						!visited.contains(selfNeighbor) &&
 						cSelf.getFacing() == selfNeighbor.getFacing()) {

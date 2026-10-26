@@ -236,7 +236,7 @@ public class PhysicsBogeyAxle {
 							TrackEdge edge = trackGraph.getConnection(nodes);
 							switch(point) {
 							case GlobalStation station -> {
-								if(probeData.stationDistance < 0) {
+								if(probeData.stationDistance < 0 && station.isPrimary(nodes.getSecond())) {
 									probeData.stationDistance = Math.abs(distance);
 									probeData.stationName = station.name;
 									probeData.stationId = station.id;

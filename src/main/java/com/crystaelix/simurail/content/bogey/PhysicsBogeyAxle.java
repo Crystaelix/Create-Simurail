@@ -1030,7 +1030,7 @@ public class PhysicsBogeyAxle {
 			Map.Entry<TrackNode, TrackEdge> straightTarget = null;
 			Object2DoubleMap<TrackNode> turnValues = new Object2DoubleArrayMap<>(targets.size());
 
-			Vector3dc trackLat = trackAxleFrame.lateral;
+			Vector3dc trackLat = trackFrame.lateral;
 			Vector3d turnCurvature = new Vector3d();
 			double minTurn = Double.MAX_VALUE;
 			double maxTurn = -Double.MAX_VALUE;
@@ -1040,7 +1040,14 @@ public class PhysicsBogeyAxle {
 				TrackEdge edge = entry.getValue();
 				if(edge.isTurn()) {
 					turn = SimurailMath.cachedControlPoints(edge.getTurn()).curvature(0, turnCurvature).dot(trackLat);
-					(turn < 0 ? leftTargets : rightTargets).add(entry);
+					if(Math.abs(turn) < SimurailMath.EPSILON) {
+						if(straightTarget != null) {
+							straightTarget = entry;
+						}
+					}
+					else {
+						(turn < 0 ? leftTargets : rightTargets).add(entry);
+					}
 				}
 				else {
 					straightTarget = entry;

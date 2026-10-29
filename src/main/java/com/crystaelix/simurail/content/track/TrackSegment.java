@@ -1,5 +1,9 @@
 package com.crystaelix.simurail.content.track;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
@@ -11,12 +15,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
-import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 
-import dev.ryanhcode.sable.util.SableNBTUtils;
 import net.createmod.catnip.data.Pair;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -24,6 +25,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public abstract class TrackSegment {
+
+	protected static final Map<String, BiFunction<ResourceKey<Level>, CompoundTag, ? extends TrackSegment>> READERS = new HashMap<>();
 
 	final ResourceKey<Level> dimension;
 	final Vector3dc start;
@@ -44,6 +47,8 @@ public abstract class TrackSegment {
 		delta = new Vector3d(end).sub(start);
 		basis = new Basis3d().orthogonalized(delta, normal);
 	}
+
+	public abstract String type();
 
 	public ResourceKey<Level> dimension() {
 		return dimension;
@@ -169,51 +174,19 @@ public abstract class TrackSegment {
 				inLineRange(segmentStart, segmentVertical, segmentLateral, localPosition, localVertical, inverted);
 	}
 
-	public CompoundTag write() {
+	public final CompoundTag write() {
 		CompoundTag tag = new CompoundTag();
-		switch(this) {
-		case StraightTrackSegment straight -> {
-			tag.putString("type", "straight");
-			tag.put("start", straight.edgeStart().write(null));
-			tag.put("end", straight.edgeEnd().write(null));
-			tag.put("normal", SableNBTUtils.writeVector3d(normal));
-			tag.putString("material", material().id.toString());
-		}
-		case CurvedTrackSegment curve -> {
-			tag.putString("type", "curved");
-			tag.put("curve", curve.curve().write(BlockPos.ZERO));
-			tag.putInt("segment", curve.segment());
-			tag.putBoolean("reversed", curve.reversed());
-		}
-		default -> {}
-		}
+		tag.putString("type", type());
 		tag.putString("dimension", dimension().location().toString());
-		return tag;
+		return write(tag);
 	}
+
+	protected abstract CompoundTag write(CompoundTag tag);
 
 	public static TrackSegment read(CompoundTag tag) {
 		String type = tag.getString("type");
 		ResourceLocation dimensionKey = ResourceLocation.tryParse(tag.getString("dimension"));
 		ResourceKey<Level> dimension = dimensionKey == null ? Level.OVERWORLD : ResourceKey.create(Registries.DIMENSION, dimensionKey);
-		switch(type) {
-		case "straight" -> {
-			TrackNodeLocation trackStart = TrackNodeLocation.read(tag.getCompound("start"), null);
-			TrackNodeLocation trackEnd = TrackNodeLocation.read(tag.getCompound("end"), null);
-			double startOffset = tag.getDouble("start_offset");
-			double endOffset = tag.getDouble("end_offset");
-			Vector3dc trackNormal = SableNBTUtils.readVector3d(tag.getCompound("normal"));
-			TrackMaterial material = TrackMaterial.deserialize(tag.getString("material"));
-			trackStart.dimension = dimension;
-			trackEnd.dimension = dimension;
-			return new StraightTrackSegment(trackStart, trackEnd, startOffset, endOffset, trackNormal, material);
-		}
-		case "curved" -> {
-			BezierConnection curve = new BezierConnection(tag.getCompound("curve"), BlockPos.ZERO);
-			int segment = tag.getInt("segment");
-			boolean reversed = tag.getBoolean("reversed");
-			return new CurvedTrackSegment(dimension, curve, segment, reversed);
-		}
-		}
-		return null;
+		return READERS.getOrDefault(type, (d, t) -> null).apply(dimension, tag);
 	}
 }

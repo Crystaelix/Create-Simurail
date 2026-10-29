@@ -11,9 +11,17 @@ import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
+import dev.ryanhcode.sable.util.SableNBTUtils;
 import net.createmod.catnip.data.Couple;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 public final class StraightTrackSegment extends TrackSegment {
+
+	static {
+		READERS.put("straight", StraightTrackSegment::read);
+	}
 
 	final TrackNodeLocation trackStart;
 	final TrackNodeLocation trackEnd;
@@ -30,6 +38,11 @@ public final class StraightTrackSegment extends TrackSegment {
 		this.trackEnd = trackEnd;
 		this.startOffset = startOffset;
 		this.endOffset = endOffset;
+	}
+
+	@Override
+	public String type() {
+		return "straight";
 	}
 
 	@Override
@@ -58,6 +71,27 @@ public final class StraightTrackSegment extends TrackSegment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected CompoundTag write(CompoundTag tag) {
+		tag.put("start", trackStart.write(null));
+		tag.put("end", trackEnd.write(null));
+		tag.put("normal", SableNBTUtils.writeVector3d(normal));
+		tag.putString("material", material().id.toString());
+		return tag;
+	}
+
+	public static StraightTrackSegment read(ResourceKey<Level> dimension, CompoundTag tag) {
+		TrackNodeLocation trackStart = TrackNodeLocation.read(tag.getCompound("start"), null);
+		TrackNodeLocation trackEnd = TrackNodeLocation.read(tag.getCompound("end"), null);
+		double startOffset = tag.getDouble("start_offset");
+		double endOffset = tag.getDouble("end_offset");
+		Vector3dc trackNormal = SableNBTUtils.readVector3d(tag.getCompound("normal"));
+		TrackMaterial material = TrackMaterial.deserialize(tag.getString("material"));
+		trackStart.dimension = dimension;
+		trackEnd.dimension = dimension;
+		return new StraightTrackSegment(trackStart, trackEnd, startOffset, endOffset, trackNormal, material);
 	}
 
 	@Override

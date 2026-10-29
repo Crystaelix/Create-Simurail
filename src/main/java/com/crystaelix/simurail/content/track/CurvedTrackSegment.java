@@ -14,11 +14,17 @@ import com.simibubi.create.content.trains.track.BezierConnection;
 
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import net.createmod.catnip.data.Couple;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public final class CurvedTrackSegment extends TrackSegment {
+
+	static {
+		READERS.put("curved", CurvedTrackSegment::read);
+	}
 
 	final BezierConnection curve;
 	final int segment;
@@ -87,6 +93,11 @@ public final class CurvedTrackSegment extends TrackSegment {
 		curveStart.yOffsetPixels = curve.yOffsetAt(startEnd);
 		curveEnd = new TrackNodeLocation(endEnd).in(dimension);
 		curveEnd.yOffsetPixels = curve.yOffsetAt(endEnd);
+	}
+
+	@Override
+	public String type() {
+		return "curved";
 	}
 
 	public BezierConnection curve() {
@@ -174,6 +185,21 @@ public final class CurvedTrackSegment extends TrackSegment {
 			return null;
 		}
 		return new CurvedTrackSegment(dimension, curve, nextSegment, reversed);
+	}
+
+	@Override
+	protected CompoundTag write(CompoundTag tag) {
+		tag.put("curve", curve.write(BlockPos.ZERO));
+		tag.putInt("segment", segment);
+		tag.putBoolean("reversed", reversed);
+		return tag;
+	}
+
+	public static CurvedTrackSegment read(ResourceKey<Level> dimension, CompoundTag tag) {
+		BezierConnection curve = new BezierConnection(tag.getCompound("curve"), BlockPos.ZERO);
+		int segment = tag.getInt("segment");
+		boolean reversed = tag.getBoolean("reversed");
+		return new CurvedTrackSegment(dimension, curve, segment, reversed);
 	}
 
 	@Override

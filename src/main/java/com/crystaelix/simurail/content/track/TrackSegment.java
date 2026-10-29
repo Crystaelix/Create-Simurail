@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
-public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTrackSegment {
+public abstract class TrackSegment {
 
 	final ResourceKey<Level> dimension;
 	final Vector3dc start;
@@ -185,6 +185,7 @@ public sealed abstract class TrackSegment permits StraightTrackSegment, CurvedTr
 			tag.putInt("segment", curve.segment());
 			tag.putBoolean("reversed", curve.reversed());
 		}
+		default -> {}
 		}
 		tag.putString("dimension", dimension().location().toString());
 		return tag;

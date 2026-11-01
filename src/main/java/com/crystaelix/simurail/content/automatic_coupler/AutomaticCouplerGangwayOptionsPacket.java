@@ -6,17 +6,20 @@ import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
 import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 
-public record AutomaticCouplerGangwayOptionsPacket(BlockPos pos, GangwayFrameBlockShape shape, float restLength) implements CustomPacketPayload {
+public record AutomaticCouplerGangwayOptionsPacket(ResourceKey<Level> dimension, BlockPos pos, GangwayFrameBlockShape shape, float restLength) implements CustomPacketPayload {
 
 	public static final Type<AutomaticCouplerGangwayOptionsPacket> TYPE = new Type<>(Simurail.id("automatic_coupler_gangway_options"));
 	public static final StreamCodec<ByteBuf, AutomaticCouplerGangwayOptionsPacket> CODEC = StreamCodec.composite(
+			ResourceKey.streamCodec(Registries.DIMENSION), AutomaticCouplerGangwayOptionsPacket::dimension,
 			BlockPos.STREAM_CODEC, AutomaticCouplerGangwayOptionsPacket::pos,
 			GangwayFrameBlockShape.STREAM_CODEC, AutomaticCouplerGangwayOptionsPacket::shape,
 			ByteBufCodecs.FLOAT, AutomaticCouplerGangwayOptionsPacket::restLength,
@@ -28,8 +31,8 @@ public record AutomaticCouplerGangwayOptionsPacket(BlockPos pos, GangwayFrameBlo
 	}
 
 	public void handle(ServerPacketContext context) {
-		Level level = context.level();
-		if(level.getBlockEntity(pos) instanceof AutomaticCouplerBlockEntity coupler) {
+		Level level = context.server().getLevel(dimension);
+		if(level != null && level.getBlockEntity(pos) instanceof AutomaticCouplerBlockEntity coupler) {
 			coupler.gangwayRestLength = restLength;
 			coupler.setChanged();
 			coupler.sendData();

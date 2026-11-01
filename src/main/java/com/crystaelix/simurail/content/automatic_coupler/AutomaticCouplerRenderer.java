@@ -61,7 +61,7 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 		Level level = be.getLevel();
 
 		BlockPos pos = be.getBlockPos();
-		ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(pos);
+		ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(be);
 		Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
 
 		if(!VisualizationManager.supportsVisualization(level)) {
@@ -71,7 +71,7 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 			be.getCouplerJointPos(jointPos);
 			if(be.partnerPos != null && level.getBlockEntity(be.partnerPos) instanceof AutomaticCoupler partner) {
 				hasPartner = true;
-				ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partner.getBlockPos());
+				ClientSubLevel partnerSubLevel = (ClientSubLevel)Sable.HELPER.getContaining(level, partner.getBlockPos());
 				Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
 				selfPose.transformPositionInverse(partnerPose.transformPosition(partner.getCouplerJointPos(targetPos)));
 				selfPose.orientation().transformInverse(partnerPose.orientation().transform(SimurailMathf.DIR_YP, targetVert));
@@ -134,7 +134,7 @@ public class AutomaticCouplerRenderer extends SmartBlockEntityRenderer<Automatic
 		}
 		else {
 			BlockPos partnerPos = partner.getBlockPos();
-			ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partnerPos);
+			ClientSubLevel partnerSubLevel = (ClientSubLevel)Sable.HELPER.getContaining(level, partnerPos);
 			Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
 
 			partner.getGangwayAnchor(endPose.position());

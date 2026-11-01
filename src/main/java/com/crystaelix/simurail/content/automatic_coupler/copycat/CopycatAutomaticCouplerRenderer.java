@@ -62,7 +62,7 @@ public class CopycatAutomaticCouplerRenderer extends SmartBlockEntityRenderer<Co
 		Level level = be.getLevel();
 
 		BlockPos pos = be.getBlockPos();
-		ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(pos);
+		ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(be);
 		Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
 
 		if(!VisualizationManager.supportsVisualization(level)) {

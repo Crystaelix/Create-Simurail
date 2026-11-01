@@ -22,6 +22,7 @@ import com.crystaelix.simurail.api.bogey.menu.BogeyMenuManager;
 import com.crystaelix.simurail.api.bogey.menu.BogeyMenuSelection;
 import com.crystaelix.simurail.api.bogey.menu.BogeyParentCategory;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
+import com.crystaelix.simurail.compat.imm_ptl.ClientLevels;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailGuiTextures;
 import com.crystaelix.simurail.content.SimurailItems;
@@ -52,7 +53,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
@@ -76,7 +76,6 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 	public static final Component CONFIRM_TOOLTIP = Component.translatable("create.action.confirm");
 	public static final Component OPTIONS_TOOLTIP = Component.translatable("gui.simurail.physics_bogey.options");
 
-	final BlockPos pos;
 	final PhysicsBogeyOptions options;
 	final boolean unpowered;
 	final boolean inverted;
@@ -124,7 +123,6 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 
 	public PhysicsBogeyMenuScreen(PhysicsBogeyMenu menu, Component title) {
 		super(menu, title);
-		pos = menu.pos;
 		options = menu.options;
 		unpowered = menu.unpowered;
 		inverted = menu.inverted;
@@ -593,7 +591,7 @@ public class PhysicsBogeyMenuScreen extends PhysicsBogeyBaseScreen {
 	}
 
 	private void onConfirm() {
-		if(minecraft.level.getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity be) {
+		if(ClientLevels.getLevel(menu.dimension).getBlockEntity(menu.pos) instanceof PhysicsBogeyBlockEntity be) {
 			be.renderPivotOffset.step();
 			be.renderPivotRot.step();
 		}

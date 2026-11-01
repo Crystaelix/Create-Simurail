@@ -17,7 +17,6 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -55,7 +54,6 @@ public class ProbeReaderScreen extends AbstractSimiScreen implements MenuAccess<
 
 	final ProbeReaderMenu menu;
 
-	final BlockPos pos;
 	final ProbeReaderOptions options;
 
 	private SLabel modeLabel;
@@ -73,7 +71,6 @@ public class ProbeReaderScreen extends AbstractSimiScreen implements MenuAccess<
 	public ProbeReaderScreen(ProbeReaderMenu menu, Inventory inv, Component title) {
 		super(title);
 		this.menu = menu;
-		pos = menu.pos;
 		options = menu.options;
 	}
 

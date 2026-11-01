@@ -1,10 +1,10 @@
 package com.crystaelix.simurail.content.track;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -12,19 +12,23 @@ import org.joml.Vector3dc;
 import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
+import com.google.common.collect.Collections2;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphHelper;
 import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.ITrackBlock;
+import com.simibubi.create.content.trains.track.TrackBlock;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 import com.simibubi.create.content.trains.track.TrackPropagator;
+import com.simibubi.create.content.trains.track.TrackShape;
 
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
+import it.unimi.dsi.fastutil.objects.ObjectIntPair;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -37,11 +41,19 @@ import net.minecraft.world.phys.Vec3;
 public class TrackSegmentHelper {
 
 	public static final double ORIENT_SCORE_WEIGHT = 0.04;
-	public static final List<TrackSegmentFinder> SEGMENT_FINDERS = new ArrayList<>();
+	private static final TreeSet<ObjectIntPair<TrackSegmentFinder>> SEGMENT_FINDERS = new TreeSet<>(Comparator.comparing(ObjectIntPair::secondInt));
 
 	static {
-		SEGMENT_FINDERS.add(TrackSegmentHelper::findBlockTrackSegment);
-		SEGMENT_FINDERS.add(CurvedTrackSegmentCache::findSegmentGlobal);
+		addSegmentFinder(TrackSegmentHelper::findBlockTrackSegment, 10);
+		addSegmentFinder(CurvedTrackSegmentCache::findSegmentGlobal, 20);
+	}
+
+	public static void addSegmentFinder(TrackSegmentFinder finder, int order) {
+		SEGMENT_FINDERS.add(ObjectIntPair.of(finder, order));
+	}
+
+	public static Collection<TrackSegmentFinder> getSegmentFinders() {
+		return Collections2.transform(SEGMENT_FINDERS, ObjectIntPair::first);
 	}
 
 	public static TrackSegment fromTrackEdge(TrackGraph graph, TrackEdge edge, boolean reverse) {
@@ -55,15 +67,18 @@ public class TrackSegmentHelper {
 		else {
 			double startOffset = edge.getPosition(graph, 0).y - edge.node1.getLocation().getLocation().y;
 			double endOffset = edge.getPosition(graph, 1).y - edge.node2.getLocation().getLocation().y;
-			return new StraightTrackSegment(edge.node1.getLocation(), edge.node2.getLocation(), startOffset, endOffset, JOMLConversion.toJOML(edge.getNormal(graph, 0.5)), edge.getTrackMaterial());
+			boolean startPortal = graph.getConnectionsFrom(edge.node1).values().stream().anyMatch(TrackEdge::isInterDimensional);
+			boolean endPortal = graph.getConnectionsFrom(edge.node2).values().stream().anyMatch(TrackEdge::isInterDimensional);
+			return new StraightTrackSegment(edge.node1.getLocation(), edge.node2.getLocation(), startOffset, endOffset, startPortal, endPortal, JOMLConversion.toJOML(edge.getNormal(graph, 0.5)), edge.getTrackMaterial());
 		}
 	}
 
 	public static TrackSegment findTrackSegment(Level level, SubLevel subLevel, Vector3dc globalPos, Vector3dc globalDir, Vector3dc globalNormal, boolean inverted, Set<TrackType> validTypes) {
-		return SEGMENT_FINDERS.stream().
+		return getSegmentFinders().
+				stream().
 				map(f -> f.findTrackSegment(level, subLevel, globalPos, globalDir, globalNormal, inverted, validTypes)).
 				filter(Objects::nonNull).
-				min(Comparator.comparingDouble(ObjectDoublePair::secondDouble)).
+				reduce((r, e) -> r.rightDouble() - e.rightDouble() > SimurailMath.EPSILON ? e : r).
 				map(ObjectDoublePair::first).
 				orElse(null);
 	}
@@ -116,11 +131,21 @@ public class TrackSegmentHelper {
 							if(!validTypes.contains(type) && !TrackTypeOverrides.isUniversal(type)) {
 								continue;
 							}
+							TrackShape shape = checkState.getOptionalValue(TrackBlock.SHAPE).orElse(TrackShape.NONE);
 							Pair<Vec3, AxisDirection> checkAxis = checkBlock.getNearestTrackAxis(level, checkPos, checkState, JOMLConversion.toMojang(checkLocalDir));
 							JOMLConversion.toJOML(checkAxis.getFirst(), checkTrackDelta);
 							JOMLConversion.toJOML(checkBlock.getUpNormal(level, checkPos, checkState), checkTrackVert).normalize();
 							checkTrackDelta.cross(checkTrackVert, checkTrackLat).normalize();
 							JOMLConversion.atBottomCenterOf(checkPos, checkTrackCenter).add(0, checkBlock.getElevationAtCenter(level, checkPos, checkState), 0);
+							if(shape.isPortal()) {
+								checkTrackDelta.mul(2);
+								switch(shape) {
+								case TN -> checkTrackCenter.add(0, 0, -0.5);
+								case TS -> checkTrackCenter.add(0, 0, 0.5);
+								case TE -> checkTrackCenter.add(0.5, 0, 0);
+								default -> checkTrackCenter.add(-0.5, 0, 0);
+								}
+							}
 							checkTrackStart.set(checkTrackCenter).fma(-0.5, checkTrackDelta);
 							if(!TrackSegment.inSegmentRange(checkTrackStart, checkTrackDelta, checkTrackVert, checkTrackLat, checkLocalPos, checkLocalVert, inverted)) {
 								continue;
@@ -162,7 +187,9 @@ public class TrackSegmentHelper {
 		}
 		double startOffset = edge.getPosition(graph, 0).y - trackStart.y;
 		double endOffset = edge.getPosition(graph, 1).y - trackEnd.y;
+		boolean startPortal = graph.getConnectionsFrom(edge.node1).values().stream().anyMatch(TrackEdge::isInterDimensional);
+		boolean endPortal = graph.getConnectionsFrom(edge.node2).values().stream().anyMatch(TrackEdge::isInterDimensional);
 		Vector3d trackNormal = JOMLConversion.toJOML(edge.getNormal(graph, 0.5));
-		return ObjectDoublePair.of(new StraightTrackSegment(graphLocation.edge.getFirst(), graphLocation.edge.getSecond(), startOffset, endOffset, trackNormal, trackBlock.getMaterial()), score);
+		return ObjectDoublePair.of(new StraightTrackSegment(graphLocation.edge.getFirst(), graphLocation.edge.getSecond(), startOffset, endOffset, startPortal, endPortal, trackNormal, trackBlock.getMaterial()), score);
 	}
 }

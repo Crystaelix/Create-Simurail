@@ -334,23 +334,22 @@ public class PhysicsBogeyAxle {
 			boolean inverted = bogey.isInverted();
 			if(!trackSegment.inSegmentRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
 				// No longer on track segment
+				TrackSegment nextSegment;
 				double t = trackSegment.projectT(trackAxleFrame.position);
 				boolean reverse = t < 0.5;
-				if(trackSegment instanceof CurvedTrackSegment curve) {
-					CurvedTrackSegment nextSegment = curve.next(reverse);
-					while(nextSegment != null) {
-						if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
-							break;
-						}
-						if(nextSegment.inProjectionRange(trackAxleFrame.position, trackAxleFrame.vertical)) {
-							trackSegment = nextSegment;
-							trackRecheckTime = SimurailConfig.server().physics.axleTrackRecheckTime.get();
-							bogey.setChanged();
-							break t;
-						}
-						else {
-							nextSegment = nextSegment.next(reverse);
-						}
+				nextSegment = trackSegment.next(reverse);
+				while(nextSegment != null) {
+					if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
+						break;
+					}
+					if(nextSegment.inProjectionRange(trackAxleFrame.position, trackAxleFrame.vertical)) {
+						trackSegment = nextSegment;
+						trackRecheckTime = SimurailConfig.server().physics.axleTrackRecheckTime.get();
+						bogey.setChanged();
+						break t;
+					}
+					else {
+						nextSegment = nextSegment.next(reverse);
 					}
 				}
 
@@ -364,7 +363,7 @@ public class PhysicsBogeyAxle {
 							probe.ignoreTurns(),
 							$ -> true);
 					if(!probe.blocked) {
-						TrackSegment nextSegment = TrackSegmentHelper.fromTrackEdge(trackGraph, probe.edge, reverse);
+						nextSegment = trackSegment.next(trackGraph, probe.edge, reverse);
 						while(nextSegment != null) {
 							if(!nextSegment.inLineRange(trackAxleFrame.position, trackAxleFrame.vertical, inverted)) {
 								break;

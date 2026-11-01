@@ -179,7 +179,8 @@ public final class CurvedTrackSegment extends TrackSegment {
 		return null;
 	}
 
-	public CurvedTrackSegment next(boolean reverse) {
+	@Override
+	public TrackSegment next(boolean reverse) {
 		int nextSegment = segment + (reverse != reversed ? -1 : 1);
 		if(nextSegment < 0 || nextSegment >= curve.getSegmentCount()) {
 			return null;
@@ -188,7 +189,7 @@ public final class CurvedTrackSegment extends TrackSegment {
 	}
 
 	@Override
-	protected CompoundTag write(CompoundTag tag) {
+	public CompoundTag write(CompoundTag tag) {
 		tag.put("curve", curve.write(BlockPos.ZERO));
 		tag.putInt("segment", segment);
 		tag.putBoolean("reversed", reversed);

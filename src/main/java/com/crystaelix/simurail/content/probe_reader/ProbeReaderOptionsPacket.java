@@ -6,6 +6,7 @@ import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.level.Level;
 
 
 public record ProbeReaderOptionsPacket(ProbeReaderOptions options) implements CustomPacketPayload {
@@ -19,8 +20,11 @@ public record ProbeReaderOptionsPacket(ProbeReaderOptions options) implements Cu
 	}
 
 	public void handle(ServerPacketContext context) {
-		if(context.player().containerMenu instanceof ProbeReaderMenu menu && context.level().getBlockEntity(menu.pos) instanceof ProbeReaderBlockEntity reader) {
-			reader.setOptions(options);
+		if(context.player().containerMenu instanceof ProbeReaderMenu menu) {
+			Level level = context.server().getLevel(menu.dimension);
+			if(level != null && level.getBlockEntity(menu.pos) instanceof ProbeReaderBlockEntity reader) {
+				reader.setOptions(options);
+			}
 		}
 	}
 }

@@ -2,6 +2,7 @@ package com.crystaelix.simurail.content.automatic_coupler;
 
 import java.util.List;
 
+import com.crystaelix.simurail.compat.imm_ptl.ClientLevels;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailGuiTextures;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
@@ -16,7 +17,6 @@ import foundry.veil.api.network.VeilPacketManager;
 import net.createmod.catnip.gui.TextureSheetSegment;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
 public class AutomaticCouplerGangwayScreen extends AutomaticCouplerBaseScreen {
@@ -30,7 +30,6 @@ public class AutomaticCouplerGangwayScreen extends AutomaticCouplerBaseScreen {
 
 	public static final List<GangwayFrameBlockShape> OPTIONS = List.of(GangwayFrameBlockShape.D, GangwayFrameBlockShape.U);
 
-	final BlockPos pos;
 	GangwayFrameBlockShape shape;
 	float restLength;
 
@@ -44,7 +43,6 @@ public class AutomaticCouplerGangwayScreen extends AutomaticCouplerBaseScreen {
 
 	public AutomaticCouplerGangwayScreen(AutomaticCouplerMenu menu, Component title) {
 		super(menu, title);
-		pos = menu.pos;
 		shape = menu.gangwayShape;
 		restLength = menu.gangwayRestLength;
 	}
@@ -112,10 +110,10 @@ public class AutomaticCouplerGangwayScreen extends AutomaticCouplerBaseScreen {
 	}
 
 	private void onConfirm() {
-		if(minecraft.level.getBlockEntity(pos) instanceof AutomaticCouplerBlockEntity be) {
+		if(ClientLevels.getLevel(menu.dimension).getBlockEntity(menu.pos) instanceof AutomaticCouplerBlockEntity be) {
 			be.gangwayRestLength = restLength;
 		}
-		VeilPacketManager.server().sendPacket(new AutomaticCouplerGangwayOptionsPacket(pos, shape, restLength));
+		VeilPacketManager.server().sendPacket(new AutomaticCouplerGangwayOptionsPacket(menu.dimension, menu.pos, shape, restLength));
 		onClose();
 	}
 }

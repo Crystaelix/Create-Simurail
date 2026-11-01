@@ -6,6 +6,7 @@ import foundry.veil.api.network.handler.ServerPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.level.Level;
 
 public record PhysicsBogeyOptionsPacket(PhysicsBogeyOptions options) implements CustomPacketPayload {
 
@@ -19,8 +20,11 @@ public record PhysicsBogeyOptionsPacket(PhysicsBogeyOptions options) implements 
 	}
 
 	public void handle(ServerPacketContext context) {
-		if(context.player().containerMenu instanceof PhysicsBogeyMenu menu && context.level().getBlockEntity(menu.pos) instanceof PhysicsBogeyBlockEntity bogey) {
-			bogey.setOptions(options);
+		if(context.player().containerMenu instanceof PhysicsBogeyMenu menu) {
+			Level level = context.server().getLevel(menu.dimension);
+			if(level != null && level.getBlockEntity(menu.pos) instanceof PhysicsBogeyBlockEntity bogey) {
+				bogey.setOptions(options);
+			}
 		}
 	}
 }

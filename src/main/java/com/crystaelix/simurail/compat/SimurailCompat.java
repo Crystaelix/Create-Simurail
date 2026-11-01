@@ -11,6 +11,8 @@ public enum SimurailCompat {
 	COMPUTERCRAFT("computercraft"),
 	ELECTROENERGETICS("electroenergetics"),
 	BLOCKSBOGIES("create_bb"),
+	IMMERSIVEPORTALS("imm_ptl"),
+	IPAERONAUTICS("ip_aeronautics"),
 	OFFROAD("offroad"),
 	RAILWAYS(() -> isClassLoaded("com.railwayteam.railways.Railways")),
 	POCKET(() -> isClassLoaded("com.misterblusky9.pocket.PocketSized")),

@@ -28,14 +28,14 @@ public abstract class TrackSegment {
 
 	protected static final Map<String, BiFunction<ResourceKey<Level>, CompoundTag, ? extends TrackSegment>> READERS = new HashMap<>();
 
-	final ResourceKey<Level> dimension;
-	final Vector3dc start;
-	final Vector3dc end;
-	final Vector3dc normal;
-	final TrackMaterial material;
+	protected final ResourceKey<Level> dimension;
+	protected final Vector3dc start;
+	protected final Vector3dc end;
+	protected final Vector3dc normal;
+	protected final TrackMaterial material;
 
-	final Vector3dc delta;
-	final Basis3dc basis;
+	protected final Vector3dc delta;
+	protected final Basis3dc basis;
 
 	public TrackSegment(ResourceKey<Level> dimension, Vector3dc start, Vector3dc end, Vector3dc normal, TrackMaterial material) {
 		this.dimension = dimension;
@@ -66,6 +66,10 @@ public abstract class TrackSegment {
 
 	public Vector3dc delta() {
 		return delta;
+	}
+
+	public Vector3dc normal() {
+		return normal;
 	}
 
 	public Basis3dc basis() {
@@ -126,6 +130,12 @@ public abstract class TrackSegment {
 
 	public abstract TrackEdge graphEdge(TrackGraph graph);
 
+	public abstract TrackSegment next(boolean reverse);
+
+	public TrackSegment next(TrackGraph graph, TrackEdge edge, boolean reverse) {
+		return TrackSegmentHelper.fromTrackEdge(graph, edge, reverse); 
+	}
+
 	public boolean inLineRange(Vector3dc localPosition, Vector3dc localVertical, boolean inverted) {
 		return inLineRange(start(), basis().vertical(), basis().lateral(), localPosition, localVertical, inverted);
 	}
@@ -181,7 +191,7 @@ public abstract class TrackSegment {
 		return write(tag);
 	}
 
-	protected abstract CompoundTag write(CompoundTag tag);
+	public abstract CompoundTag write(CompoundTag tag);
 
 	public static TrackSegment read(CompoundTag tag) {
 		String type = tag.getString("type");

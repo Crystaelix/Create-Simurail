@@ -27,6 +27,9 @@ public class SimurailMixinPlugin implements IMixinConfigPlugin {
 		if(mixinClassName.contains("compat.electroenergetics.")) {
 			return isLoaded("electroenergetics");
 		}
+		if(mixinClassName.contains("compat.ip_aeronautics.")) {
+			return isLoaded("ip_aeronautics");
+		}
 		if(mixinClassName.contains("compat.offroad.")) {
 			return isLoaded("offroad");
 		}

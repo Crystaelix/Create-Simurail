@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.level.Level;
 
 public record PhysicsRollerRenderDataPacket(BlockPos pos, float visualSpeed) implements CustomPacketPayload {
 
@@ -28,8 +27,7 @@ public record PhysicsRollerRenderDataPacket(BlockPos pos, float visualSpeed) imp
 	}
 
 	public void handle(ClientPacketContext context) {
-		Level level = context.level();
-		if(level.getBlockEntity(pos) instanceof PhysicsRollerBlockEntity roller) {
+		if(context.level().getBlockEntity(pos) instanceof PhysicsRollerBlockEntity roller) {
 			roller.visualSpeed = visualSpeed;
 		}
 	}

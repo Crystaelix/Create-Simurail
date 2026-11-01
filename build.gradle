@@ -216,6 +216,7 @@ dependencies {
 
 	// Leave mods out with -PwithoutMods=all, -PwithoutMods=electroenergetics,railways
 	def compat = ["compileOnly", "runtimeOnly"]
+	def compatNoRun = ["compileOnly"]
 	def extra = ["runtimeOnly"]
 	def mods = [
 		// Compat
@@ -227,6 +228,7 @@ dependencies {
 		railx             : [configurations: compat, notation: "com.lhwdev.minecraft:railx:0.2.0-build.15:mc1.21.1", dependsOn: ["kotlinforforge", "railways"]],
 		offroad           : [configurations: compat, notation: "dev.ryanhcode.offroad:offroad-neoforge-1.21.1:1.3.1", transitive: false],
 		copycats          : [configurations: compat, notation: "com.copycatsplus:copycats:3.0.8+mc.1.21.1-neoforge", transitive: false],
+		ip_aeronautics    : [configurations: compatNoRun, notation: "curse.maven:immersive-portals-aeronautics-1735987:9350956"],
 
 		// Testing
 		aeronautics           : [configurations: extra, notation: "dev.eriksonn.aeronautics:aeronautics-neoforge-1.21.1:1.3.1", transitive: false],

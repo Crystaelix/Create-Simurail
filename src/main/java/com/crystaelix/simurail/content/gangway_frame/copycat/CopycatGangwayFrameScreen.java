@@ -1,5 +1,6 @@
 package com.crystaelix.simurail.content.gangway_frame.copycat;
 
+import com.crystaelix.simurail.compat.imm_ptl.ClientLevels;
 import com.crystaelix.simurail.content.SimurailBlocks;
 import com.crystaelix.simurail.content.SimurailGuiTextures;
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
@@ -16,7 +17,6 @@ import net.createmod.catnip.gui.TextureSheetSegment;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -31,7 +31,6 @@ public class CopycatGangwayFrameScreen extends AbstractSimiScreen implements Men
 
 	final CopycatGangwayFrameMenu menu;
 
-	final BlockPos pos;
 	GangwayFrameBlockShape shape;
 	float restLength;
 
@@ -46,7 +45,6 @@ public class CopycatGangwayFrameScreen extends AbstractSimiScreen implements Men
 	public CopycatGangwayFrameScreen(CopycatGangwayFrameMenu menu, Inventory inv, Component title) {
 		super(title);
 		this.menu = menu;
-		pos = menu.pos;
 		shape = menu.shape;
 		restLength = menu.restLength;
 	}
@@ -119,10 +117,10 @@ public class CopycatGangwayFrameScreen extends AbstractSimiScreen implements Men
 	}
 
 	private void onConfirm() {
-		if(minecraft.level.getBlockEntity(pos) instanceof CopycatGangwayFrameBlockEntity be) {
+		if(ClientLevels.getLevel(menu.dimension).getBlockEntity(menu.pos) instanceof CopycatGangwayFrameBlockEntity be) {
 			be.restLength = restLength;
 		}
-		VeilPacketManager.server().sendPacket(new GangwayFrameOptionsPacket(pos, shape, restLength));
+		VeilPacketManager.server().sendPacket(new GangwayFrameOptionsPacket(menu.dimension, menu.pos, shape, restLength));
 		onClose();
 	}
 }

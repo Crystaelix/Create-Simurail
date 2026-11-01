@@ -29,6 +29,8 @@
 		"compat.copycats.SimurailCopycatBlockMixin",
 		"compat.electroenergetics.AutomaticCouplerBlockMixin",
 		"compat.electroenergetics.PhysicsBogeyBlockMixin",
+		"compat.ip_aeronautics.IPStraddleSessionAccessor",
+		"compat.ip_aeronautics.IPStraddleSessionsMixin",
 		"compat.offroad.BoreheadBearingBlockEntityMixin",
 		"compat.railways.TrackBufferBlockMixin",
 		"compat.railways_copycats.CopycatHeadstockBlockMixin",
@@ -37,7 +39,10 @@
 	"client": [
 		"DefaultPonderSceneRegistrationHelperMixin",
 		"GenericPonderSceneRegistrationHelperMixin",
-		"TrackTargetingClientMixin"
+		"TrackTargetingClientMixin",
+
+		"compat.ip_aeronautics.ConnectionRendererMixin",
+		"compat.ip_aeronautics.ConnectionVisualMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -15,7 +15,6 @@ import net.createmod.catnip.gui.TextureSheetSegment;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -49,7 +48,6 @@ public class RemoteControllerScreen extends AbstractSimiScreen implements MenuAc
 
 	final RemoteControllerMenu menu;
 
-	final BlockPos pos;
 	RemoteControllerMode mode;
 
 	private SLabel modeLabel;
@@ -61,7 +59,6 @@ public class RemoteControllerScreen extends AbstractSimiScreen implements MenuAc
 	public RemoteControllerScreen(RemoteControllerMenu menu, Inventory inv, Component title) {
 		super(title);
 		this.menu = menu;
-		pos = menu.pos;
 		mode = menu.mode;
 	}
 

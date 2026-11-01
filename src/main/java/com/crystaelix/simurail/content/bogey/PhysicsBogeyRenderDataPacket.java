@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.level.Level;
 
 public record PhysicsBogeyRenderDataPacket(BlockPos pos, Vector3dc pivotOffset, Quaterniondc pivotRot, float visualSpeed, float slipSpeed, float movementSpeed) implements CustomPacketPayload {
 
@@ -36,8 +35,7 @@ public record PhysicsBogeyRenderDataPacket(BlockPos pos, Vector3dc pivotOffset, 
 	}
 
 	public void handle(ClientPacketContext context) {
-		Level level = context.level();
-		if(level.getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {
+		if(context.level().getBlockEntity(pos) instanceof PhysicsBogeyBlockEntity bogey) {
 			bogey.updateRenderData(pivotOffset, pivotRot, visualSpeed, slipSpeed, movementSpeed);
 		}
 	}

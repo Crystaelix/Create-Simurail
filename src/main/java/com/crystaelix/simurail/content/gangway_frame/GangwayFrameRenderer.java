@@ -66,8 +66,8 @@ public class GangwayFrameRenderer extends SmartBlockEntityRenderer<GangwayFrameB
 		}
 		else {
 			BlockPos partnerPos = partner.getBlockPos();
-			ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(pos);
-			ClientSubLevel partnerSubLevel = Sable.HELPER.getContainingClient(partnerPos);
+			ClientSubLevel selfSubLevel = Sable.HELPER.getContainingClient(be);
+			ClientSubLevel partnerSubLevel = (ClientSubLevel)Sable.HELPER.getContaining(be.getLevel(), partnerPos);
 			Pose3dc selfPose = selfSubLevel == null ? SimurailMath.POSE_I : selfSubLevel.renderPose(partialTick);
 			Pose3dc partnerPose = partnerSubLevel == null ? SimurailMath.POSE_I : partnerSubLevel.renderPose(partialTick);
 

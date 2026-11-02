@@ -14,6 +14,7 @@ import com.crystaelix.simurail.content.track.TrackSegmentHelper;
 import com.crystaelix.simurail.mixin.compat.ip_aeronautics.IPStraddleSessionAccessor;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
+import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
@@ -60,21 +61,27 @@ public class IPAProjectedTrackSegmentFinder {
 			return null;
 		}
 
+		SubLevel dstSubLevel = Sable.HELPER.getContaining(dstLevel, dstSegment.first().start());
 		IPShipPortalAnchors.Mount mount = session.simurail$mount();
+
+		if(dstSubLevel != (mount == null ? null : mount.destination())) {
+			return null;
+		}
+
 		if(mount != null) {
-			if(mount.source() != null) {
-				Pose3dc pose = mount.source().logicalPose();
-				isometry = new IPPortalIsometry(
-						pose.transformPositionInverse(isometry.origin()),
-						isometry.dest(),
-						isometry.rotation().mul(pose.orientation(), new Quaterniond()));
-			}
 			if(mount.destination() != null) {
 				Pose3dc pose = mount.destination().logicalPose();
 				isometry = new IPPortalIsometry(
 						isometry.origin(),
 						pose.transformPositionInverse(isometry.dest()),
 						pose.orientation().conjugate(new Quaterniond()).mul(isometry.rotation()));
+			}
+			if(mount.source() != null) {
+				Pose3dc pose = mount.source().logicalPose();
+				isometry = new IPPortalIsometry(
+						pose.transformPositionInverse(isometry.origin()),
+						isometry.dest(),
+						isometry.rotation().mul(pose.orientation(), new Quaterniond()));
 			}
 		}
 

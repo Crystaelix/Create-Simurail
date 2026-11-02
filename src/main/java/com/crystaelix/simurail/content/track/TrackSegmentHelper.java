@@ -185,8 +185,8 @@ public class TrackSegmentHelper {
 			TrackPropagator.onRailAdded(level, trackPos, level.getBlockState(trackPos));
 			return null;
 		}
-		double startOffset = edge.getPosition(graph, 0).y - trackStart.y;
-		double endOffset = edge.getPosition(graph, 1).y - trackEnd.y;
+		double startOffset = edge.getPosition(graph, 0).y - edge.node1.getLocation().getLocation().y;
+		double endOffset = edge.getPosition(graph, 1).y - edge.node2.getLocation().getLocation().y;
 		boolean startPortal = graph.getConnectionsFrom(edge.node1).values().stream().anyMatch(TrackEdge::isInterDimensional);
 		boolean endPortal = graph.getConnectionsFrom(edge.node2).values().stream().anyMatch(TrackEdge::isInterDimensional);
 		Vector3d trackNormal = JOMLConversion.toJOML(edge.getNormal(graph, 0.5));

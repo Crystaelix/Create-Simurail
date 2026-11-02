@@ -28,11 +28,6 @@ public class IPStraddleSessionsMixin {
 		return session;
 	}
 
-	@Inject(method = "dropShip", at = @At("TAIL"))
-	private static void simurail$onDropShip(UUID subLevelId, CallbackInfo ci) {
-		IPStraddleSessionCache.removeSubLevel(subLevelId);
-	}
-
 	@Inject(method = "reset", at = @At("TAIL"))
 	private static void simurail$onReset(CallbackInfo ci) {
 		IPStraddleSessionCache.clear();

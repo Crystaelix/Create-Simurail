@@ -36,3 +36,9 @@ issueTrackerURL = "https://github.com/Crystaelix/Create-Simurail/issues"
 	type = "optional"
 	reason = "Versions of Create Pocket Sized before 0.19.2 do not work properly with Create Simurail."
 	versionRange = "[0.19.2,)"
+
+[[dependencies.simurail]]
+	modId = "ip_aeronautics"
+	type = "optional"
+	reason = "Create Simurail requires Immersive Portals: Aeronautics 2.8.0+."
+	versionRange = "[2.8.0,)"

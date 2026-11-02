@@ -62,14 +62,15 @@ public class IPAProjectedTrackSegmentFinder {
 
 		IPShipPortalAnchors.Mount mount = session.simurail$mount();
 		if(mount != null) {
-			Pose3dc pose = mount.carrier().logicalPose();
-			if(mount.carrierIsSource()) {
+			if(mount.source() != null) {
+				Pose3dc pose = mount.source().logicalPose();
 				isometry = new IPPortalIsometry(
 						pose.transformPositionInverse(isometry.origin()),
 						isometry.dest(),
 						isometry.rotation().mul(pose.orientation(), new Quaterniond()));
 			}
-			else {
+			if(mount.destination() != null) {
+				Pose3dc pose = mount.destination().logicalPose();
 				isometry = new IPPortalIsometry(
 						isometry.origin(),
 						pose.transformPositionInverse(isometry.dest()),

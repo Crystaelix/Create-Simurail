@@ -124,6 +124,9 @@ public abstract class CopycatAutomaticCouplerBlock extends WaterloggedCopycatBlo
 	protected abstract VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos);
 
 	@Override
+	protected abstract VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos);
+
+	@Override
 	public abstract VoxelShape getSubLevelCollisionShape(BlockGetter blockGetter, BlockState state);
 
 	protected boolean hasGangway(BlockState state, BlockGetter level, BlockPos pos) {

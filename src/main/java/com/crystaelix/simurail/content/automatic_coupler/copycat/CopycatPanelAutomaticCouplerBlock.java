@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.content.automatic_coupler.copycat;
 
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.decoration.copycat.CopycatSpecialCases;
 
 import net.createmod.catnip.math.VoxelShaper;
@@ -56,6 +57,11 @@ public class CopycatPanelAutomaticCouplerBlock extends CopycatAutomaticCouplerBl
 		case BOTTOM -> BOTTOM_SHAPES.get(facing);
 		case null, default -> SHAPES.get(facing);
 		};
+	}
+
+	@Override
+	protected VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+		return AllShapes.CASING_3PX.get(state.getValue(FACING));
 	}
 
 	@Override

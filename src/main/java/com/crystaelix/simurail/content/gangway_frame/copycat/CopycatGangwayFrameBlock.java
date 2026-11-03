@@ -110,6 +110,9 @@ public abstract class CopycatGangwayFrameBlock extends WaterloggedCopycatBlock i
 	protected abstract VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos);
 
 	@Override
+	protected abstract VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos);
+
+	@Override
 	public abstract VoxelShape getSubLevelCollisionShape(BlockGetter blockGetter, BlockState state);
 
 	protected boolean hitGangway(BlockState state, Vec3 hitLocation, LevelReader level, BlockPos pos, Player player) {

@@ -1,6 +1,7 @@
 package com.crystaelix.simurail.content.gangway_frame.copycat;
 
 import com.crystaelix.simurail.content.gangway_frame.GangwayFrameBlockShape;
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.decoration.copycat.CopycatSpecialCases;
 
 import net.createmod.catnip.math.VoxelShaper;
@@ -105,6 +106,11 @@ public class CopycatPanelGangwayFrameBlock extends CopycatGangwayFrameBlock {
 		case ULA -> ULA_SHAPES.get(facing);
 		default -> Shapes.empty();
 		};
+	}
+
+	@Override
+	protected VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+		return AllShapes.CASING_3PX.get(state.getValue(FACING));
 	}
 
 	@Override

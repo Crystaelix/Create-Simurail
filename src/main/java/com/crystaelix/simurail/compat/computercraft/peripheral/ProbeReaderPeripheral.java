@@ -56,7 +56,7 @@ public class ProbeReaderPeripheral extends SyncedPeripheral<ProbeReaderBlockEnti
 	}
 
 	@LuaFunction(mainThread = true)
-	public final void setMode(String filter) {
+	public final void setFilter(String filter) {
 		blockEntity.getOptions().setFilter(filter);
 		blockEntity.setChanged();
 	}

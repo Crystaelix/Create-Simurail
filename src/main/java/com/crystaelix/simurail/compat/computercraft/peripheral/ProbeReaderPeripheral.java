@@ -67,8 +67,8 @@ public class ProbeReaderPeripheral extends SyncedPeripheral<ProbeReaderBlockEnti
 	}
 
 	@LuaFunction(mainThread = true)
-	public final void setMinDistance(double minDistance) {
-		blockEntity.getOptions().setMinDistance((float)minDistance);
+	public final void setMinDistance(double distance) {
+		blockEntity.getOptions().setMinDistance((float)distance);
 		blockEntity.setChanged();
 	}
 
@@ -78,8 +78,8 @@ public class ProbeReaderPeripheral extends SyncedPeripheral<ProbeReaderBlockEnti
 	}
 
 	@LuaFunction(mainThread = true)
-	public final void setMaxDistance(double maxDistance) {
-		blockEntity.getOptions().setMaxDistance((float)maxDistance);
+	public final void setMaxDistance(double distance) {
+		blockEntity.getOptions().setMaxDistance((float)distance);
 		blockEntity.setChanged();
 	}
 }

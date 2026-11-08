@@ -32,24 +32,24 @@ public class ProbeReaderOptions {
 		return filter;
 	}
 
-	public void setFilter(String stationFilter) {
-		this.filter = Strings.nullToEmpty(stationFilter);
+	public void setFilter(String filter) {
+		this.filter = Strings.nullToEmpty(filter);
 	}
 
 	public float getMinDistance() {
 		return minDistance;
 	}
 
-	public void setMinDistance(float minDistance) {
-		this.minDistance = Math.clamp(minDistance, 0, maxDistance);
+	public void setMinDistance(float distance) {
+		minDistance = Math.clamp(distance, 0, maxDistance);
 	}
 
 	public float getMaxDistance() {
 		return maxDistance;
 	}
 
-	public void setMaxDistance(float maxDistance) {
-		this.maxDistance = Math.clamp(maxDistance, minDistance, 256);
+	public void setMaxDistance(float distance) {
+		maxDistance = Math.clamp(distance, minDistance, 256);
 	}
 
 	public CompoundTag write() {

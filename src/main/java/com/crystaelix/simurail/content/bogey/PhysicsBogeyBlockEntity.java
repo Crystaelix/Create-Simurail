@@ -129,9 +129,9 @@ public class PhysicsBogeyBlockEntity extends KineticBlockEntity implements Namea
 	protected AuxiliaryPhysicsBody pivot;
 	protected CompoundTag pivotTag;
 	protected final Pose3d pivotPose = new Pose3d();
-	protected Vector3d localPivotOffset;
+	public Vector3d localPivotOffset;
 	protected final Vector3d lastLocalPivotOffset = new Vector3d();
-	protected Quaterniond localPivotRot;
+	public Quaterniond localPivotRot;
 	protected final Quaterniond lastLocalPivotRot = new Quaterniond();
 	protected GenericConstraintHandle pivotJoint;
 	protected GenericConstraintHandle motorJoint;

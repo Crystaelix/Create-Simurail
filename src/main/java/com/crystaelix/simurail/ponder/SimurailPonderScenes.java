@@ -32,6 +32,7 @@ public class SimurailPonderScenes {
 
 		helper.forComponents(SimurailBlocks.PHYSICS_BOGEY, SimurailItems.INVERTED_PHYSICS_BOGEY, SimurailBlocks.UNPOWERED_PHYSICS_BOGEY, SimurailItems.INVERTED_UNPOWERED_PHYSICS_BOGEY).
 		addStoryBoard("physics_bogey/intro", PhysicsBogeyScenes::intro).
+		addStoryBoard("physics_bogey/options", PhysicsBogeyScenes::options).
 		addStoryBoard("connector/intro", ConnectorScenes::intro);
 
 		helper.forComponents(SimurailBlocks.AUTOMATIC_COUPLER, SimurailBlocks.COPYCAT_PANEL_AUTOMATIC_COUPLER).

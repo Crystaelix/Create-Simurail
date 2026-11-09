@@ -55,6 +55,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -285,6 +286,15 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 	public void disconnect(boolean front) {
 		connectedPos = null;
 		setChanged();
+	}
+
+	@Override
+	public GangwayFrame findGangwayPartner(Level level) {
+		if(level.getBlockEntity(partnerPos) instanceof GangwayFrame partner &&
+				getGangwayShape().canConnectTo(partner.getGangwayShape())) {
+			return partner;
+		}
+		return GangwayFrame.super.findGangwayPartner(level);
 	}
 
 	@Override

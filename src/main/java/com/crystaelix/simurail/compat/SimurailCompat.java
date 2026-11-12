@@ -13,6 +13,7 @@ public enum SimurailCompat {
 	BLOCKSBOGIES("create_bb"),
 	IMMERSIVEPORTALS("imm_ptl"),
 	IPAERONAUTICS("ip_aeronautics"),
+	LOCONAUTICS("loconautics"),
 	OFFROAD("offroad"),
 	RAILWAYS(() -> isClassLoaded("com.railwayteam.railways.Railways")),
 	POCKET(() -> isClassLoaded("com.misterblusky9.pocket.PocketSized")),

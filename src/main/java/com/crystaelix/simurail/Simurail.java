@@ -5,6 +5,7 @@ import com.crystaelix.simurail.compat.computercraft.SimurailComputerCraftProxy;
 import com.crystaelix.simurail.compat.create_bb.SimurailBlocksBogiesCompat;
 import com.crystaelix.simurail.compat.electroenergetics.SimurailElectroEnergeticsCompat;
 import com.crystaelix.simurail.compat.ip_aeronautics.SimurailIPAeronauticsCompat;
+import com.crystaelix.simurail.compat.loconautics.SimurailLoconauticsCompat;
 import com.crystaelix.simurail.compat.offroad.SimurailOffroadCompat;
 import com.crystaelix.simurail.compat.railways.SimurailRailwaysCompat;
 import com.crystaelix.simurail.config.SimurailConfig;
@@ -87,6 +88,7 @@ public class Simurail {
 			SimurailCompat.RAILWAYS.ifLoaded(() -> () -> SimurailRailwaysCompat.onCommonSetupLate());
 			SimurailCompat.IPAERONAUTICS.ifLoaded(() -> () -> SimurailIPAeronauticsCompat.onCommonSetupLate());
 			SimurailCompat.OFFROAD.ifLoaded(() -> () -> SimurailOffroadCompat.onCommonSetupLate());
+			SimurailCompat.LOCONAUTICS.ifLoaded(() -> () -> SimurailLoconauticsCompat.onCommonSetupLate());
 		});
 	}
 

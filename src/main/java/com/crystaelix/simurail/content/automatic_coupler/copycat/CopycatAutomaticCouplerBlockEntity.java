@@ -241,6 +241,10 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		return partnerPos;
 	}
 
+	public UUID getPartnerSubLevelID() {
+		return partnerSubLevelID;
+	}
+
 	public boolean isPrimary() {
 		return partnerPos != null && joint != null;
 	}

@@ -246,6 +246,10 @@ public class AutomaticCouplerBlockEntity extends SmartBlockEntity implements Men
 		return partnerPos;
 	}
 
+	public UUID getPartnerSubLevelID() {
+		return partnerSubLevelID;
+	}
+
 	public boolean isPrimary() {
 		return partnerPos != null && joint != null;
 	}

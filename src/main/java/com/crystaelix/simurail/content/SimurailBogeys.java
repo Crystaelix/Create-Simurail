@@ -33,8 +33,8 @@ public class SimurailBogeys {
 
 		BogeyType.setDefault(TrackType.STANDARD, false, SMALL.type());
 
-		BogeyPropertyOverrides.setLogicalAxleSpacingOverride(SMALL.type(), 2);
-		BogeyPropertyOverrides.setLogicalAxleSpacingOverride(LARGE.type(), 1);
+		BogeyPropertyOverrides.setAxleSpacingOverride(SMALL.type(), 2);
+		BogeyPropertyOverrides.setAxleSpacingOverride(LARGE.type(), 0);
 
 		BogeyPropertyOverrides.setAxleCountOverride(SMALL.type(), 2);
 		BogeyPropertyOverrides.setAxleCountOverride(LARGE.type(), 1);

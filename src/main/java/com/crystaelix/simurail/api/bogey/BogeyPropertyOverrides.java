@@ -10,6 +10,7 @@ import java.util.function.ToIntFunction;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import com.crystaelix.simurail.api.math.SimurailMath;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
@@ -50,12 +51,12 @@ public final class BogeyPropertyOverrides {
 	}
 
 	public static void setAxleSpacingOverride(BogeyType type, ToDoubleFunction<CompoundTag> axleSpacing) {
-		setLogicalAxleSpacingOverride(type, roundToInt(axleSpacing));
+		setLogicalAxleSpacingOverride(type, visualToLogical(axleSpacing));
 		setVisualAxleSpacingOverride(type, axleSpacing);
 	}
 
 	public static void setAxleSpacingOverride(BogeyType type, double axleSpacing) {
-		setLogicalAxleSpacingOverride(type, (int)Math.round(axleSpacing));
+		setLogicalAxleSpacingOverride(type, (int)Math.round(axleSpacing * SimurailMath.SQRT_2 * 0.5));
 		setVisualAxleSpacingOverride(type, axleSpacing);
 	}
 
@@ -133,7 +134,7 @@ public final class BogeyPropertyOverrides {
 		return t -> Math.max(function.applyAsDouble(t), min);
 	}
 
-	private static <T> ToIntFunction<T> roundToInt(ToDoubleFunction<T> function) {
-		return t -> (int)Math.round(function.applyAsDouble(t));
+	private static <T> ToIntFunction<T> visualToLogical(ToDoubleFunction<T> function) {
+		return t -> (int)Math.round(function.applyAsDouble(t) * SimurailMath.SQRT_2 * 0.5);
 	}
 }

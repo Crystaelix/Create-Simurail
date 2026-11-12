@@ -228,6 +228,7 @@ public class RailwaysBogeys {
 
 		axleSpacing(INVISIBLE, 0);
 		axleSpacing(INVISIBLE_ALT, 0);
+		axleSpacing(MONOBOGEY, 32);
 		axleSpacing(NARROW_STANDARD_SMALL, 20);
 		axleSpacing(NARROW_SCOTCH_YOKE_1, 0);
 		axleSpacing(NARROW_SCOTCH_YOKE_2, 24);

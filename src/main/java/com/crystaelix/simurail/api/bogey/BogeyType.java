@@ -7,6 +7,7 @@ import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import com.crystaelix.simurail.api.math.SimurailMath;
 import com.crystaelix.simurail.api.network.SimurailStreamCodecs;
 import com.crystaelix.simurail.api.track.TrackTypeEntries;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
@@ -62,7 +63,7 @@ public final class BogeyType {
 		if(BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.containsKey(this)) {
 			return BogeyPropertyOverrides.LOGICAL_AXLE_SPACING_OVERRIDE.get(this).applyAsInt(extra);
 		}
-		return (int)Math.round(block.getWheelPointSpacing());
+		return (int)Math.round(block.getWheelPointSpacing() * SimurailMath.SQRT_2 * 0.5);
 	}
 
 	public double visualAxleSpacing(CompoundTag extra) {

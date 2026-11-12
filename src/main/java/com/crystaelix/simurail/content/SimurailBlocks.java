@@ -54,7 +54,7 @@ public class SimurailBlocks {
 			register();
 	public static final BlockEntry<PhysicsBogeyPivotBlock> PHYSICS_BOGEY_PIVOT = REGISTRATE.
 			block("physics_bogey_pivot", PhysicsBogeyPivotBlock::new).
-			properties(p -> p.noOcclusion().noTerrainParticles().noLootTable()).
+			properties(p -> p.noOcclusion().noTerrainParticles().noLootTable().mapColor(MapColor.NONE).sound(SoundType.EMPTY)).
 			register();
 	public static final BlockEntry<AutomaticCouplerBlock> AUTOMATIC_COUPLER = REGISTRATE.
 			block("automatic_coupler", AutomaticCouplerBlock::new).

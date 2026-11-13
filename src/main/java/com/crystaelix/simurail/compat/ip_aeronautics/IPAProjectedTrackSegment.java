@@ -2,7 +2,7 @@ package com.crystaelix.simurail.compat.ip_aeronautics;
 
 import java.util.Objects;
 
-import com.crystaelix.simurail.content.track.TrackSegment;
+import com.crystaelix.simurail.api.track.TrackSegment;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
@@ -13,10 +13,6 @@ import net.minecraft.world.level.Level;
 import qouteall.imm_ptl.core.compat.sable_straddle.IPPortalIsometry;
 
 public final class IPAProjectedTrackSegment extends TrackSegment {
-
-	static {
-		READERS.put("ipa_projected", IPAProjectedTrackSegment::read);
-	}
 
 	final IPPortalIsometry isometry;
 	final TrackSegment segment;

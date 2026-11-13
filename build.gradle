@@ -153,7 +153,7 @@ def modId = "simurail"
 def specVersion = "0"
 def vendor = "thelm"
 group = "com.crystaelix"
-def baseVersion = "0.1.1"
+def baseVersion = "0.2.0"
 
 version = hasProperty("commitHash") ? "${baseVersion}+mc${mcVersion}+${commitHash}" : "${baseVersion}+mc${mcVersion}"
 

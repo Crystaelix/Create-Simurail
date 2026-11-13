@@ -9,6 +9,7 @@ import org.joml.Vector3dc;
 import com.crystaelix.simurail.api.extension.BezierConnectionExtension;
 import com.crystaelix.simurail.api.math.CubicBezier3dc;
 import com.crystaelix.simurail.api.math.SimurailMath;
+import com.crystaelix.simurail.api.track.TrackSegments;
 import com.crystaelix.simurail.api.track.TrackTypeOverrides;
 import com.crystaelix.simurail.api.util.SubLevelUtil;
 import com.google.common.collect.Multimaps;
@@ -193,7 +194,7 @@ public class CurvedTrackSegmentCache {
 									continue;
 								}
 								double distScore = checkSegment.distanceSquared(checkLocalPos);
-								double checkScore = distScore + TrackSegmentHelper.ORIENT_SCORE_WEIGHT * orientScore;
+								double checkScore = distScore + TrackSegments.ORIENT_SCORE_WEIGHT * orientScore;
 								if(checkScore < score) {
 									score = checkScore;
 									segment = checkSegment;

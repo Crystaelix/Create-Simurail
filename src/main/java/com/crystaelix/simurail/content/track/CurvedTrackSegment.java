@@ -6,6 +6,7 @@ import org.joml.Vector3d;
 
 import com.crystaelix.simurail.api.math.Frame3d;
 import com.crystaelix.simurail.api.math.SimurailMath;
+import com.crystaelix.simurail.api.track.TrackSegment;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
@@ -21,10 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public final class CurvedTrackSegment extends TrackSegment {
-
-	static {
-		READERS.put("curved", CurvedTrackSegment::read);
-	}
 
 	final BezierConnection curve;
 	final int segment;

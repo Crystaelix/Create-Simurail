@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
+import com.crystaelix.simurail.api.track.TrackSegment;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
@@ -20,10 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public final class StraightTrackSegment extends TrackSegment {
-
-	static {
-		READERS.put("straight", StraightTrackSegment::read);
-	}
 
 	final TrackNodeLocation trackStart;
 	final TrackNodeLocation trackEnd;

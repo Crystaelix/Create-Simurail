@@ -1,8 +1,4 @@
-package com.crystaelix.simurail.content.track;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiFunction;
+package com.crystaelix.simurail.api.track;
 
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -11,6 +7,7 @@ import com.crystaelix.simurail.api.math.Basis3d;
 import com.crystaelix.simurail.api.math.Basis3dc;
 import com.crystaelix.simurail.api.math.Frame3d;
 import com.crystaelix.simurail.api.math.SimurailMath;
+import com.crystaelix.simurail.content.track.TrackSegmentHelper;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
@@ -25,8 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public abstract class TrackSegment {
-
-	protected static final Map<String, BiFunction<ResourceKey<Level>, CompoundTag, ? extends TrackSegment>> READERS = new HashMap<>();
 
 	protected final ResourceKey<Level> dimension;
 	protected final Vector3dc start;
@@ -195,8 +190,12 @@ public abstract class TrackSegment {
 
 	public static TrackSegment read(CompoundTag tag) {
 		String type = tag.getString("type");
+		TrackSegmentReader<?> reader = TrackSegments.getSegmentReader(type);
+		if(reader == null) {
+			return null;
+		}
 		ResourceLocation dimensionKey = ResourceLocation.tryParse(tag.getString("dimension"));
 		ResourceKey<Level> dimension = dimensionKey == null ? Level.OVERWORLD : ResourceKey.create(Registries.DIMENSION, dimensionKey);
-		return READERS.getOrDefault(type, (d, t) -> null).apply(dimension, tag);
+		return reader.read(dimension, tag);
 	}
 }

@@ -1,8 +1,13 @@
 package com.crystaelix.simurail.content;
 
+import com.crystaelix.simurail.api.track.TrackSegments;
 import com.crystaelix.simurail.api.track.TrackTypeEntries;
 import com.crystaelix.simurail.api.track.TrackTypeEntry;
 import com.crystaelix.simurail.config.SimurailConfig;
+import com.crystaelix.simurail.content.track.CurvedTrackSegment;
+import com.crystaelix.simurail.content.track.CurvedTrackSegmentCache;
+import com.crystaelix.simurail.content.track.StraightTrackSegment;
+import com.crystaelix.simurail.content.track.TrackSegmentHelper;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
@@ -28,5 +33,11 @@ public class SimurailTracks {
 
 	public static void register() {
 		TrackTypeEntries.addEntry(STANDARD);
+
+		TrackSegments.addSegmentReader("straight", StraightTrackSegment::read);
+		TrackSegments.addSegmentReader("curved", CurvedTrackSegment::read);
+
+		TrackSegments.addSegmentFinder(TrackSegmentHelper::findBlockTrackSegment, 10);
+		TrackSegments.addSegmentFinder(CurvedTrackSegmentCache::findSegmentGlobal, 20);
 	}
 }

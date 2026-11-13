@@ -8,9 +8,9 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import com.crystaelix.simurail.api.math.SimurailMath;
-import com.crystaelix.simurail.content.track.TrackSegment;
-import com.crystaelix.simurail.content.track.TrackSegmentFinder;
-import com.crystaelix.simurail.content.track.TrackSegmentHelper;
+import com.crystaelix.simurail.api.track.TrackSegment;
+import com.crystaelix.simurail.api.track.TrackSegmentFinder;
+import com.crystaelix.simurail.api.track.TrackSegments;
 import com.crystaelix.simurail.mixin.compat.ip_aeronautics.IPStraddleSessionAccessor;
 import com.simibubi.create.content.trains.track.TrackMaterial.TrackType;
 
@@ -22,18 +22,12 @@ import net.minecraft.world.level.Level;
 import qouteall.imm_ptl.core.compat.sable_straddle.IPPortalIsometry;
 import qouteall.imm_ptl.core.compat.ship_portals.IPShipPortalAnchors;
 
-public class IPAProjectedTrackSegmentFinder {
+public class IPAProjectedTrackSegmentFinder implements TrackSegmentFinder {
 
-	private static final TrackSegmentFinder FINDER = IPAProjectedTrackSegmentFinder::findProjectedTrackSegment;
+	public static final IPAProjectedTrackSegmentFinder INSTANCE = new IPAProjectedTrackSegmentFinder();
 
-	static {
-		TrackSegmentHelper.addSegmentFinder(FINDER, -1000);
-	}
-
-	public static void register() {
-	}
-
-	public static ObjectDoublePair<IPAProjectedTrackSegment> findProjectedTrackSegment(Level level, SubLevel subLevel, Vector3dc globalPos, Vector3dc globalDir, Vector3dc globalVert, boolean inverted, Set<TrackType> validTypes) {
+	@Override
+	public ObjectDoublePair<IPAProjectedTrackSegment> findTrackSegment(Level level, SubLevel subLevel, Vector3dc globalPos, Vector3dc globalDir, Vector3dc globalVert, boolean inverted, Set<TrackType> validTypes) {
 		IPStraddleSessionAccessor session = IPAPortalUtil.getStraddleSession(level, subLevel, globalPos);
 		if(session == null) {
 			return null;
@@ -49,9 +43,9 @@ public class IPAProjectedTrackSegmentFinder {
 		IPAPortalUtil.transformNormal(dstGlobalDir, isometry, dstGlobalDir);
 		IPAPortalUtil.transformNormal(dstGlobalVert, isometry, dstGlobalVert);
 
-		ObjectDoublePair<? extends TrackSegment> dstSegment = TrackSegmentHelper.getSegmentFinders().
+		ObjectDoublePair<? extends TrackSegment> dstSegment = TrackSegments.getSegmentFinders().
 				stream().
-				filter(f -> f != FINDER).
+				filter(f -> f != this).
 				map(f -> f.findTrackSegment(dstLevel, subLevel, dstGlobalPos, dstGlobalDir, dstGlobalVert, inverted, validTypes)).
 				filter(Objects::nonNull).
 				reduce((r, e) -> r.rightDouble() - e.rightDouble() > SimurailMath.EPSILON ? e : r).

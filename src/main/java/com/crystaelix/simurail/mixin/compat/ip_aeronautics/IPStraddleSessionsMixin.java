@@ -1,7 +1,6 @@
 package com.crystaelix.simurail.mixin.compat.ip_aeronautics;
 
 import java.util.Map;
-import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,4 +1,4 @@
-package com.crystaelix.simurail.content.track;
+package com.crystaelix.simurail.api.track;
 
 import java.util.Set;
 

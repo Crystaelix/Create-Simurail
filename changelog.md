@@ -1,2 +1,2 @@
 # Changelog
-- `05e4a53` Moved track segment finder/reader registration to api package *(TheLMiffy1111)*
+- `bdf67f8` Fix inverted condition in bogie steering *(TheLMiffy1111)*

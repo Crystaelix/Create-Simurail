@@ -1040,7 +1040,7 @@ public class PhysicsBogeyAxle {
 				if(edge.isTurn()) {
 					turn = SimurailMath.cachedControlPoints(edge.getTurn()).curvature(0, turnCurvature).dot(trackLat);
 					if(Math.abs(turn) < SimurailMath.EPSILON) {
-						if(straightTarget != null) {
+						if(straightTarget == null) {
 							straightTarget = entry;
 						}
 					}
@@ -1085,6 +1085,10 @@ public class PhysicsBogeyAxle {
 						bestTarget = entry;
 					}
 				}
+			}
+			
+			if(bestTarget == null) {
+				return targets.get(0);
 			}
 
 			return bestTarget;

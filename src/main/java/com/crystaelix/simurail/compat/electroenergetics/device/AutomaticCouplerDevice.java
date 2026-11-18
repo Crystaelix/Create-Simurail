@@ -28,7 +28,7 @@ public class AutomaticCouplerDevice extends SimpleElectricalDevice {
 				be = null;
 			}
 			else if(be.isPrimary()) {
-				bridges.builder(pos).resistor(new InWorldNode(0, pos), new InWorldNode(0, be.getPartner()), 0.01);
+				bridges.builder(pos).resistor(new InWorldNode(0, pos), new InWorldNode(0, be.getCouplerPartner()), 0.01);
 			}
 		}
 	}

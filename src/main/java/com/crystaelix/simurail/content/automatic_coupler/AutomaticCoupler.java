@@ -25,12 +25,16 @@ public interface AutomaticCoupler extends HorizontalPointing, ConnectorConnectab
 
 	boolean hasCouplerPartner();
 
+	BlockPos getCouplerPartner();
+
+	boolean canCouplerConnect();
+
 	boolean hasCouplerJoint();
 
 	void removeCouplerJoint();
 
 	CouplerType getCouplerType();
-	
+
 	void setCouplerType(CouplerType type);
 
 	double getCouplerLength();

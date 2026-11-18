@@ -77,6 +77,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 	protected UUID partnerSubLevelID;
 	protected BlockPos connectedPos;
 	protected boolean connectedFront;
+	protected boolean disconnectHold;
 
 	protected double lastJointLength = 0;
 	protected GenericConstraintHandle joint;
@@ -166,6 +167,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			SubLevel partnerSubLevel = Sable.HELPER.getContaining(level, partner.getBlockPos());
 			if(partnerPos != null) {
 				removeCouplerPartner();
+				disconnectHold = false;
 			}
 			partnerPos = couplerPartnerPos;
 			partnerSubLevelID = partnerSubLevel == null ? null : partnerSubLevel.getUniqueId();
@@ -222,6 +224,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		}
 		partnerPos = null;
 		partnerSubLevelID = null;
+		disconnectHold = !isPowered();
 		if(!level.isClientSide()) {
 			if(connectedPos != null && level.getBlockEntity(connectedPos) instanceof PhysicsBogeyBlockEntity bogey) {
 				bogey.disconnect(connectedFront);
@@ -237,12 +240,18 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		return partnerPos != null;
 	}
 
-	public BlockPos getPartner() {
+	@Override
+	public BlockPos getCouplerPartner() {
 		return partnerPos;
 	}
 
-	public UUID getPartnerSubLevelID() {
+	public UUID getCouplerPartnerSubLevelID() {
 		return partnerSubLevelID;
+	}
+
+	@Override
+	public boolean canCouplerConnect() {
+		return !disconnectHold && !hasCouplerPartner() && !isPowered();
 	}
 
 	public boolean isPrimary() {
@@ -519,7 +528,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		getCouplerEndPos(endPos);
 		subLevel.logicalPose().transformPosition(endPos, globalEndPos);
 
-		if(!isPowered() && partnerPos == null) {
+		if(partnerPos == null && !isPowered()) {
 			removeCouplerJoint();
 			findPartner(subLevel);
 		}
@@ -619,6 +628,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 	}
 
 	protected void findPartner(ServerSubLevel subLevel) {
+		double checkDistSq = disconnectHold ? 0.1 : 0.02;
 		double minDistSq = Double.POSITIVE_INFINITY;
 		BlockPos pos = null;
 
@@ -638,11 +648,10 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 						checkPos.set(x, y, z);
 						if(level.isLoaded(checkPos) &&
 								level.getBlockEntity(checkPos) instanceof AutomaticCoupler checkPartner &&
-								!checkPartner.hasCouplerPartner() &&
-								!checkPartner.isPowered() &&
+								checkPartner.canCouplerConnect() &&
 								type.canConnectTo(checkPartner.getCouplerType())) {
 							double distSq = checkPartner.getCouplerEndPos(checkEndPos).distanceSquared(checkSelfEndPos);
-							if(distSq < 0.02 && distSq < minDistSq) {
+							if(distSq < checkDistSq && distSq < minDistSq) {
 								minDistSq = distSq;
 								pos = checkPos.immutable();
 							}
@@ -652,7 +661,10 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 			}
 		}
 
-		if(pos != null) {
+		if(pos == null) {
+			disconnectHold = false;
+		}
+		else if(!disconnectHold) {
 			setCouplerPartner(pos);
 			tryConnectGangway(level, 15);
 		}
@@ -789,6 +801,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 				tag.putUUID("partner_id", partner.getSecond());
 			}
 		}
+		tag.putBoolean("disconnect_hold", disconnectHold);
 
 		Pair<BlockPos, UUID> gangwayPartner = SchematicContextUtil.writeTransform(gangwayPartnerPos, gangwayPartnerSubLevelID);
 
@@ -837,6 +850,7 @@ public class CopycatAutomaticCouplerBlockEntity extends CopycatBlockEntity imple
 		Pair<BlockPos, UUID> partner = SchematicContextUtil.readTransform(
 				NbtUtils.readBlockPos(tag, "partner").orElse(null),
 				tag.hasUUID("partner_id") ? tag.getUUID("partner_id") : null);
+		disconnectHold = tag.getBoolean("disconnect_hold");
 
 		partnerPos = partner.getFirst();
 		partnerSubLevelID = partner.getSecond();

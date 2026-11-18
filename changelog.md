@@ -1,2 +1,2 @@
 # Changelog
-- `bdf67f8` Fix inverted condition in bogie steering *(TheLMiffy1111)*
+- `4933402` Add support for Loconautics schedule initiated decoupling *(TheLMiffy1111)*
